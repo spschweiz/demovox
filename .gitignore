@@ -36,6 +36,7 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
+/libs/composer/
 
 # TypeScript v1 declaration files
 typings/
@@ -83,7 +84,10 @@ typings/
 # JetBrains IDE
 /.idea/
 
-/libs/composer/
+# generated assets
 /.sass-cache/
-.map
-.min.js
+*.map
+*.min.js
+*.css
+/admin/js/Chart.js
+/admin/js/Chart.bundle.js
