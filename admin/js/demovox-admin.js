@@ -1,4 +1,3 @@
-const chart = require('chart.js');
 var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 (function ($) {
 	'use strict';

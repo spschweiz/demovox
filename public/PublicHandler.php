@@ -140,7 +140,7 @@ class PublicHandler
 		);
 		wp_enqueue_script(
 			$this->pluginName . '_pdf',
-			plugin_dir_url(__FILE__) . 'js/demovox-pdf.min.js',
+			plugin_dir_url(__FILE__) . 'js/demovox-public-pdf.min.js',
 			['jquery'],
 			$this->version,
 			false

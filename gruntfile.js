@@ -149,10 +149,10 @@ module.exports = function (grunt) {
 	grunt.registerTask('default', 'availabletasks');
 	grunt.registerTask('translations', 'shell:generateTranslations');
 	grunt.registerTask('buildAssets', [
-		'checkDependencies', 'clean', 'webpack:prod', 'copy:adminAssets', 'sass', 'cssmin',
+		'checkDependencies', 'clean', 'webpack:prod', 'copy:adminAssets', 'uglify', 'sass', 'cssmin',
 	]);
 	grunt.registerTask('buildZip', [
-		'checkDependencies', 'clean', 'translations', 'webpack:prod', 'copy:adminAssets', 'sass', 'cssmin',
+		'checkDependencies', 'clean', 'translations', 'webpack:prod', 'copy:adminAssets', 'uglify', 'sass', 'cssmin',
 		'mkdir', 'copy:buildDir', 'compress', 'clean',
 	]);
 };
