@@ -79,6 +79,7 @@ class Activator
 			wp_schedule_event(time(), 'hourly', 'demovox_send_mails');
 		}
 
+		// Create pages
 		$signatureSheetPageId = Config::getValue('signature_sheet_page_id');
 		if (empty($signatureSheetPageId)) {
 			$content = '<p>' . __('Almost there', 'demovox') . '</p>';
@@ -116,12 +117,22 @@ class Activator
 			Core::setOption('use_page_as_optin_link', $optinPageId);
 		}
 
-		$signsWithoutSerial = DB::getResults(['ID'], 'serial IS NULL');
-		foreach ($signsWithoutSerial as $sign) {
-			DB::updateStatus(
-				['serial' => Strings::getSerial($sign->ID)],
-				['ID' => $sign->ID]
-			);
+		// create capabilities
+		$role = get_role('super admin');
+		if ($role) {
+			$role->add_cap('demovox_overview');
+			$role->add_cap('demovox_stats');
+			$role->add_cap('demovox_import');
 		}
+
+		$role = get_role('administrator');
+		$role->add_cap('demovox_overview');
+		$role->add_cap('demovox_stats');
+		$role->add_cap('demovox_import');
+
+		$role = get_role('editor');
+		$role->add_cap('demovox_overview');
+		$role->add_cap('demovox_stats');
+		$role->add_cap('demovox_import');
 	}
 }

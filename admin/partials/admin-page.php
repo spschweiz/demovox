@@ -34,18 +34,15 @@ namespace Demovox;
 			<a href="<?= admin_url('/admin.php?page=demovoxFields1') ?>">in the settings</a>)
 		<?php } ?>
 	</p>
-	<p>
-		<a href="<?= Strings::getLinkAdmin('/admin-post.php', 'get_csv') ?>">
-			<button>Download CSV</button>
-		</a>
-	</p>
-	<p>
-		Don't forget to check the sysinfo page before publishing the plugin.
-	</p>
+	<?php if (!$count) { ?>
+		<h3>
+			Don't forget to check the <a href="<?= admin_url('/admin.php?page=demovoxSysinfo') ?>">System info page</a> before publishing the plugin
+		</h3>
+	<?php } ?>
 	<h3>Shortcodes</h3>
 	<p>Available shortcodes: [demovox_form] [demovox_count] [demovox_optin]</p>
-	<?php if ($count) { ?>
-		<h3>Sign-up chart</h3>
+	<?php if (current_user_can('demovox_stats') && $count) { ?>
+		<h3>Sign-up stats</h3>
 		<div class="row">
 			<div class="col-md-5">
 				<canvas id="pieChart"></canvas>

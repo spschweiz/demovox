@@ -56,13 +56,9 @@ class Admin
 
 		// Hook into the admin menu
 		add_action('admin_menu', [$this, 'setupAdminPages']);
-		add_action('admin_post_get_csv', [$this, 'getCsv']);
-		add_action('admin_post_run_cron', [$this, 'runCron']);
-		add_action('admin_post_cancel_cron', [$this, 'cancelCron']);
-		add_action('admin_post_charts_stats', [$this, 'statsCharts']);
-		add_action('admin_post_source_stats', [$this, 'statsSource']);
-		add_action('admin_post_encrypt_test', [$this, 'testEncrypt']);
-		add_action('admin_post_mail_test', [$this, 'testMail']);
+
+		// AJAX
+		$this->setupAdminAjaxActions();
 	}
 
 	/**
@@ -110,7 +106,7 @@ class Admin
 		wp_enqueue_script($this->pluginName . '_chart', plugin_dir_url(__FILE__) . 'js/Chart.bundle.min.js', [], $this->version, false);
 		wp_enqueue_script(
 			$this->pluginName . '_pdf',
-			plugin_dir_url(__FILE__) . '../public/js/demovox-pdf.min.js',
+			plugin_dir_url(__FILE__) . '../public/js/demovox-public-pdf.min.js',
 			['jquery'],
 			$this->version,
 			false
@@ -129,7 +125,8 @@ class Admin
 
 	public function getCsv()
 	{
-		Core::checkNonce();
+		$this->checkPermission('export');
+
 		$csvMapper = DB::getExportFields();
 		$csv = implode(',', $csvMapper) . "\n";
 		$allSignatures = DB::getResults(array_keys($csvMapper));
@@ -165,6 +162,22 @@ class Admin
 		wp_enqueue_script('bloody_tinymce_js_plugin', includes_url() . 'js/tinymce/plugins/compat3x/plugin.min.js');
 	}
 
+	public function setupAdminAjaxActions()
+	{
+		// export
+		add_action('admin_post_get_csv', [$this, 'getCsv']);
+
+		// manage_options
+		add_action('admin_post_run_cron', [$this, 'runCron']);
+		add_action('admin_post_cancel_cron', [$this, 'cancelCron']);
+		add_action('admin_post_encrypt_test', [$this, 'testEncrypt']);
+		add_action('admin_post_mail_test', [$this, 'testMail']);
+
+		// demovox_stats
+		add_action('admin_post_charts_stats', [$this, 'statsCharts']);
+		add_action('admin_post_source_stats', [$this, 'statsSource']);
+	}
+
 	public function setupAdminPages()
 	{
 		require_once Infos::getPluginDir() . 'admin/AdminSettings.php';
@@ -172,37 +185,48 @@ class Admin
 
 		// Add the menu item and page
 		$page_title = 'Overview';
-		$menu_title = 'demovox';
-		$capability = 'manage_options';
 		$slug = 'demovox';
-		$callback = [$this, 'pageOverview'];
 		$icon = 'dashicons-edit';
 		$position = 30;
-		add_menu_page($page_title, $menu_title, $capability, $slug, $callback, $icon, $position);
+
+		$capabilityOverview = 'demovox_overview';
+		$capabilityImport = 'demovox_import';
+		$capabilitySettings = 'manage_options';
+		$capabilityExport = 'export';
+
+		$menu_title = 'demovox';
+		$callback = [$this, 'pageOverview'];
+		add_menu_page($page_title, $menu_title, $capabilityOverview, $slug, $callback, $icon, $position);
 
 		$menu_title = 'Import';
 		$callback = [$this, 'pageImport'];
-		add_submenu_page($slug, $menu_title, $menu_title, $capability, $slug . 'Import', $callback);
+		add_submenu_page($slug, $menu_title, $menu_title, $capabilityImport, $slug . 'Import', $callback);
+
+		$menu_title = 'Signatures Data';
+		$callback = [$this, 'pageData'];
+		add_submenu_page($slug, $menu_title, $menu_title, $capabilityExport, $slug . 'Data', $callback);
+
+		add_submenu_page($slug, '', '', $capabilitySettings, $slug . 'Fields1', $callback);
 
 		$menu_title = 'Signature sheet';
 		$callback = [$adminSettings, 'pageSettings1'];
-		add_submenu_page($slug, $menu_title, $menu_title, $capability, $slug . 'Fields1', $callback);
+		add_submenu_page($slug, $menu_title, $menu_title, $capabilitySettings, $slug . 'Fields1', $callback);
 
 		$menu_title = 'Email';
 		$callback = [$adminSettings, 'pageSettings2'];
-		add_submenu_page($slug, $menu_title, $menu_title, $capability, $slug . 'Fields2', $callback);
+		add_submenu_page($slug, $menu_title, $menu_title, $capabilitySettings, $slug . 'Fields2', $callback);
 
 		$menu_title = 'Opt-in';
 		$callback = [$adminSettings, 'pageSettings3'];
-		add_submenu_page($slug, $menu_title, $menu_title, $capability, $slug . 'Fields3', $callback);
+		add_submenu_page($slug, $menu_title, $menu_title, $capabilitySettings, $slug . 'Fields3', $callback);
 
 		$menu_title = 'Advanced settings';
 		$callback = [$adminSettings, 'pageSettings4'];
-		add_submenu_page($slug, $menu_title, $menu_title, $capability, $slug . 'Fields4', $callback);
+		add_submenu_page($slug, $menu_title, $menu_title, $capabilitySettings, $slug . 'Fields4', $callback);
 
 		$menu_title = 'System info';
 		$callback = [$this, 'pageSysinfo'];
-		add_submenu_page($slug, $menu_title, $menu_title, $capability, $slug . 'Sysinfo', $callback);
+		add_submenu_page($slug, $menu_title, $menu_title, $capabilitySettings, $slug . 'Sysinfo', $callback);
 	}
 
 	public function pageOverview()
@@ -253,6 +277,12 @@ class Admin
 		include Infos::getPluginDir() . 'admin/partials/sysinfo.php';
 	}
 
+	public function pageData()
+	{
+		$page = 'demovoxData';
+		include Infos::getPluginDir() . 'admin/partials/data.php';
+	}
+
 	public function pageSettings1()
 	{
 		$page = 'demovoxFields1';
@@ -280,7 +310,8 @@ class Admin
 
 	public function statsCharts()
 	{
-		Core::checkNonce('charts');
+		$this->checkPermission('demovox_stats');
+
 		$countDategroupedOi = DB::getResults(['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
 			'is_optin = 1 AND is_step2_done = 1 AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)');
 		$countDategroupedOo = DB::getResults(['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
@@ -302,6 +333,8 @@ class Admin
 
 	public function statsSource()
 	{
+		$this->checkPermission('demovox_stats');
+
 		$sourceList = DB::getResults(
 			[
 				'source',
@@ -318,7 +351,8 @@ class Admin
 
 	public function testEncrypt()
 	{
-		Core::checkNonce('encrypt_test');
+		$this->checkPermission('manage_options');
+
 		if (isset($_REQUEST['fullLen']) && $_REQUEST['fullLen']) {
 			$lengths = [32, 255, 255, 10, 128, 64, 127, 10, 16, 64, 5, 4, 45, 2];
 		} else {
@@ -360,7 +394,8 @@ class Admin
 
 	public function testMail()
 	{
-		Core::checkNonce('encrypt_test');
+		$this->checkPermission('manage_options');
+
 		$mailTo = $this->getTestMailRecipient();
 		$langId = (isset($_REQUEST['lang']) && $_REQUEST['lang']) ? sanitize_text_field($_REQUEST['lang']) : 'de';
 		$mailFrom = Config::getValue('mail_reminder_from_address_' . $langId);
@@ -396,10 +431,8 @@ class Admin
 
 	public function runCron()
 	{
-		Core::checkNonce();
-		if (!current_user_can('manage_options')) {
-			wp_die(esc_html__('You are not allowed to run cron events.', 'wp-control'));
-		}
+		$this->checkPermission('manage_options');
+
 		$hook = sanitize_text_field($_REQUEST['cron']);
 		ManageCron::triggerCron($hook);
 		echo 'Event triggered at ' . date('d.m.Y I:m:s');
@@ -407,10 +440,8 @@ class Admin
 
 	public function cancelCron()
 	{
-		Core::checkNonce();
-		if (!current_user_can('manage_options')) {
-			wp_die(esc_html__('You are not allowed to run cron events.', 'wp-control'));
-		}
+		$this->checkPermission('manage_options');
+
 		ManageCron::cancelMail();
 		echo 'Cron cancelled at ' . date('d.m.Y I:m:s');
 	}
@@ -494,6 +525,14 @@ class Admin
 			$return .= Strings::wpMessage($count . ' failed sheet(s): ' . implode(', ', $fail), 'error');
 		}
 		return $return;
+	}
+
+	protected function checkPermission($capability = null)
+	{
+		Core::checkNonce();
+		if (!current_user_can($capability)) {
+			wp_die(esc_html__('You are not allowed to access this page.', 'wp-control'));
+		}
 	}
 
 	protected function getTestMailRecipient()
