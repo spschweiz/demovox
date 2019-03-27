@@ -1,0 +1,91 @@
+# Copyright (C) 2019 Democracy Booster
+# This file is distributed under the same license as the Democracy Booster package.
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Democracy Booster 0.0.1\n"
+"Report-Msgid-Bugs-To: https://github.com/spschweiz/demovox\n"
+"POT-Creation-Date: 2019-02-21 11:16+0100\n"
+"PO-Revision-Date: 2019-02-21 11:16+0100\n"
+"Language-Team: Fabian Horlacher <fabian.horlacher@sp-schweiz.ch>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: sign-1.php:22
+msgid "First Name"
+msgstr "Vorname"
+
+#: sign-1.php:26
+msgid "Last Name"
+msgstr "Nachname"
+
+#: sign-1.php:30
+msgid "Email"
+msgstr "E-Mail"
+
+#: sign-1.php:34
+msgid "Phone number"
+msgstr "Telefonnummer"
+
+#: sign-1.php:38
+msgid "Continue"
+msgstr "Weiter"
+
+#: sign-2.php:25
+msgid "Birth date"
+msgstr "Geburtsdatum"
+
+#: sign-2.php:36
+msgid "Swiss abroad"
+msgstr "Auslandschweizer*in"
+
+#: sign-2.php:29
+msgid "Country"
+msgstr "Land"
+
+#: sign-2.php:40
+msgid "Street"
+msgstr "Strasse"
+
+#: sign-2.php:44
+msgid "Street number"
+msgstr "Hausnummer"
+
+#: sign-2.php:50
+msgid "ZIP"
+msgstr "PLZ"
+
+#: sign-2.php:54
+msgid "City"
+msgstr "Wohnort"
+
+#: sign-2.php:66
+msgid "Political commune"
+msgstr "Politische Gemeinde"
+
+#: sign-2.php:72
+msgid "Canton"
+msgstr "Kanton"
+
+#: sign-3.php:25
+msgid "Print"
+msgstr "Drucken"
+
+#: sign-3.php:28
+msgid "Download signature sheet"
+msgstr "Unterschriftenbogen herunterladen"
+
+#: Activator.php:84
+msgid "Almost there"
+msgstr "Fast geschafft"
+
+#: Activator.php:85
+msgid "Print the following PDF, then fill it with your name and signature and send it to us:"
+msgstr "Drucke das folgende PDF, dann fülle deinen Namen und Unterschrift aus und sende es an uns:"
+
+#: SignSteps.php.php:177
+msgid "signature_sheet"
+msgstr "unterschriftenbogen"

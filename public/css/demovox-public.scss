@@ -1,0 +1,156 @@
+.demovox {
+	@import "../../node_modules/bootstrap/scss/functions";
+	@import "../../node_modules/bootstrap/scss/variables";
+	@import "../../node_modules/bootstrap/scss/mixins";
+
+	@import "../../node_modules/bootstrap/scss/grid";
+	@import "../../node_modules/bootstrap/scss/forms";
+
+	.hidden {
+		display: none;
+	}
+
+	.pdf-iframe {
+		height: 90vh;
+		width: 100%;
+		overflow: auto;
+		display: none;
+	}
+
+	.form-submit {
+		display: block;
+		width: 100%;
+		height: $input-height;
+		padding: $input-padding-y $input-padding-x;
+		font-family: $input-font-family;
+		@include font-size($input-font-size);
+		font-weight: $input-font-weight;
+		line-height: $input-line-height;
+		//color: $input-color;
+		//background-color: $input-bg;
+		//background-clip: padding-box;
+		//border: $input-border-width solid $input-border-color;
+
+		// Note: This has no effect on <select>s in some browsers, due to the limited stylability of `<select>`s in CSS.
+		@include border-radius($input-border-radius, 0);
+
+		@include box-shadow($input-box-shadow);
+		@include transition($input-transition);
+	}
+
+	input.parsley-error {
+		border-color: red;
+	}
+
+	ul.parsley-errors-list {
+		font-size: 80%;
+		font-weight: 400;
+		color: red;
+		padding-left: 0;
+		li {
+			list-style-type: none;
+		}
+	}
+}
+
+.errorTitle {
+	color: red;
+}
+
+.ui-datepicker {
+	direction: ltr;
+	display: none;
+	position: absolute;
+	top: 100%;
+	z-index: 1000;
+	float: left;
+	min-width: 160px;
+	padding: 5px 0;
+	margin: -2px 0 0;
+	font-size: 0.8em;
+	list-style: none;
+	background-color: #fff;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	border-radius: 4px;
+	-webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+	background-clip: padding-box;
+	.ui-datepicker-prev, .ui-datepicker-next {
+		position: absolute;
+		top: 2px;
+		width: 1.8em;
+		height: 1.8em;
+		font-size: 1.4em;
+		text-align: center;
+		cursor: pointer;
+		font-weight: bold;
+		color: black;
+		&.ui-state-disabled {
+			cursor: default;
+			font-weight: normal;
+			color: #777;
+		}
+	}
+	.ui-datepicker-next {
+		right: 2px;
+		.ui-icon {
+			display: none;
+		}
+		&:after {
+			content: "»";
+		}
+
+	}
+	.ui-datepicker-prev {
+		left: 2px;
+		.ui-icon {
+			display: none;
+		}
+		&:after {
+			content: "«";
+		}
+	}
+	.ui-datepicker-title {
+		margin: 0 2.3em;
+		line-height: 1.8em;
+		text-align: center;
+	}
+	table {
+		max-width: 100%;
+		background-color: transparent;
+		border-collapse: collapse;
+		border-spacing: 0;
+		margin: 0;
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+		tr td, tr th {
+			padding: 0;
+			text-align: center;
+			width: 2em;
+			height: 2em;
+			border-radius: 4px;
+			border: none;
+		}
+		tr td {
+			cursor: pointer;
+			&:hover {
+				background: #eee;
+			}
+			&.ui-datepicker-current-day {
+				background: #eeda6d;
+			}
+			&.ui-state-disabled, &.ui-datepicker-unselectable {
+				cursor: default;
+				color: #777;
+				background-color: transparent;
+			}
+			a {
+				color: black;
+			}
+		}
+	}
+}

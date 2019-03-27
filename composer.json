@@ -1,0 +1,10 @@
+{
+  "require": {
+    "hashids/hashids": "^3.0",
+    "defuse/php-encryption": "^2.2",
+    "umpirsky/country-list": "^2.0"
+  },
+  "config": {
+    "vendor-dir": "libs/composer"
+  }
+}
