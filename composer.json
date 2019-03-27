@@ -1,4 +1,11 @@
 {
+  "name": "spschweiz/demovox",
+  "authors": [
+    {
+      "name": "Fabian Horlacher",
+      "email": "fabian.horlacher@spschweiz.ch"
+    }
+  ],
   "require": {
     "hashids/hashids": "^3.0",
     "defuse/php-encryption": "^2.2",

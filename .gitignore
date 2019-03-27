@@ -83,7 +83,7 @@ typings/
 # JetBrains IDE
 /.idea/
 
-/libs/composer
-/.sass-cache
+/libs/composer/
+/.sass-cache/
 .map
 .min.js
