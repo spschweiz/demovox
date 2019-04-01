@@ -271,7 +271,7 @@ class ConfigVars
 			'section'      => 'mailConfig',
 			'type'         => 'number',
 			'default'      => 300,
-			'supplemental' => 'Send up to x reminder emails per cron execution',
+			'supplemental' => 'Send up to x emails per cron execution',
 		],
 		[
 			'uid'          => 'cron_max_load',
@@ -369,6 +369,14 @@ class ConfigVars
 			'type'         => 'checkbox',
 			'default'      => 1,
 			'supplemental' => 'If enabled later, confirmations will also be sent for previous signees which did not receive the mail yet.<br/>You must also set the mailserver settings in the advanced settings.',
+		];
+		$fields[] = [
+			'uid'          => 'mail_reminder_enabled',
+			'label'        => 'Mail reminder enabled',
+			'section'      => 'mailText',
+			'type'         => 'checkbox',
+			'default'      => 0,
+			'supplemental' => 'Send a reminder to signees which didn\'t send their signature sheets.',
 		];
 		$fields[] = [
 			'uid'          => 'mail_nl2br',
@@ -528,7 +536,6 @@ class ConfigVars
 				'section'      => 'mailConfirm_' . $langId,
 				'type'         => 'text',
 				'supplemental' => 'Available placeholders: {first_name}, {last_name}. This mail is sent to the signee after signing up.',
-				'class'        => 'showOnMailConfirmEnabled',
 			];
 			$fields[] = [
 				'uid'          => 'mail_confirm_body' . $glueLangId,
@@ -536,7 +543,6 @@ class ConfigVars
 				'section'      => 'mailConfirm_' . $langId,
 				'type'         => 'textarea',
 				'supplemental' => 'Available placeholders: {first_name}, {last_name}, {mail}, {link_pdf}, {link_optin}, {subject}. ',
-				'class'        => 'showOnMailConfirmEnabled',
 			];
 
 			// TODO: Mail reminder
@@ -608,5 +614,37 @@ class ConfigVars
 		}
 		self::$fieldsCache = $fields;
 		return $fields;
+	}
+
+	public static function getSections()
+	{
+		$sections = self::$sections;
+		$glueLang = Config::GLUE_LANG;
+		foreach (i18n::getLangs() as $langId => $language) {
+			$langEnabled = Config::getValue('is_language_enabled' . $glueLang . $langId);
+
+			$sections['signatureSheetFields_' . $langId] = [
+				'title'   => 'Signature sheet field positions ' . $language,
+				'page'    => 'demovoxFields1',
+				'addPre'  => $langEnabled ? '' : '<div class="hidden">',
+				'addPost' => '<br/><div id="preview-' . $langId . '">' . '<input type="button" class="showPdf" data-lang="' . $langId
+					. '" href="#" value="Show preview"/>' . '<iframe src="about:blank" class="pdf-iframe"></iframe></div>	'
+					. ($langEnabled ? '' : '</div>'),
+			];
+			$sections['mailConfirm_' . $langId] = [
+				'title'   => $language . '<br/>Mail confirmation',
+				'page'    => 'demovoxFields2',
+				'addPre'  => $langEnabled ? '' : '<div class="hidden showOnMailConfirmEnabled">',
+				'addPost' => $langEnabled ? '' : '</div>',
+			];
+			$sections['mailRemind_' . $langId] = [
+				'title'   => $language . '<br/>Mail reminder ',
+				'page'    => 'demovoxFields2',
+				'addPre'  => $langEnabled ? '' : '<div class="hidden showOnMailRemindEnabled">',
+				'addPost' => $langEnabled ? '' : '</div>',
+			];
+		}
+
+		return $sections;
 	}
 }

@@ -97,38 +97,6 @@ class Config
 		return $value;
 	}
 
-	public static function getSections()
-	{
-		$sections = ConfigVars::$sections;
-		$glueLang = Config::GLUE_LANG;
-		foreach (i18n::getLangs() as $langId => $language) {
-			$langEnabled = Config::getValue('is_language_enabled' . $glueLang . $langId);
-
-			$sections['signatureSheetFields_' . $langId] = [
-				'title'   => 'Signature sheet field positions ' . $language,
-				'page'    => 'demovoxFields1',
-				'addPre'  => $langEnabled ? '' : '<div class="hidden">',
-				'addPost' => '<br/><div id="preview-' . $langId . '">' . '<input type="button" class="showPdf" data-lang="' . $langId
-					. '" href="#" value="Show preview"/>' . '<iframe src="about:blank" class="pdf-iframe"></iframe></div>	'
-					. ($langEnabled ? '' : '</div>'),
-			];
-			$sections['mailConfirm_' . $langId] = [
-				'title'   => $language . '<br/>Mail confirmation',
-				'page'    => 'demovoxFields2',
-				'addPre'  => $langEnabled ? '' : '<div class="hidden">',
-				'addPost' => $langEnabled ? '' : '</div>',
-			];
-			$sections['mailRemind_' . $langId] = [
-				'title'   => $language . '<br/>Mail reminder ',
-				'page'    => 'demovoxFields2',
-				'addPre'  => $langEnabled ? '' : '<div class="hidden">',
-				'addPost' => $langEnabled ? '' : '</div>',
-			];
-		}
-
-		return $sections;
-	}
-
 	/**
 	 * Delete all fields (plugin settings)
 	 */

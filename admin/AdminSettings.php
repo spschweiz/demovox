@@ -76,7 +76,7 @@ class AdminSettings
 
 	public function setupSections()
 	{
-		$areas = Config::getSections();
+		$areas = ConfigVars::getSections();
 		foreach ($areas as $name => $section) {
 			add_settings_section($name, $section['title'], null, $section['page']);
 		}
@@ -117,7 +117,7 @@ class AdminSettings
 			return;
 		}
 
-		$sections = Config::getSections();
+		$sections = ConfigVars::getSections();
 
 		foreach ((array)$wp_settings_sections[$page] as $section) {
 			if (isset($sections[$section['id']]['addPre'])) {
@@ -150,7 +150,7 @@ class AdminSettings
 
 	public function setupFields()
 	{
-		$sections = Config::getSections();
+		$sections = ConfigVars::getSections();
 		$fields = ConfigVars::getFields();
 		$callback = [$this, 'fieldCallback',];
 		foreach ($fields as $field) {
