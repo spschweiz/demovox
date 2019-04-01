@@ -12,7 +12,7 @@ class CronSendMails extends CronBase
 
 	public function run()
 	{
-		if (!Config::getValue('mail_reminder_enabled')) {
+		if (!Config::getValue('mail_confirmation_enabled')) {
 			$this->setSkipped('Reminder mails are disabled in config');
 			return;
 		}
@@ -38,8 +38,8 @@ class CronSendMails extends CronBase
 		add_action('phpmailer_init', [$mail, 'config'], 10, 1);
 		foreach ($rows as $row) {
 			$clientLang = $row->language;
-			$fromAddress = Config::getValueByLang('mail_reminder_from_address', $clientLang);
-			$fromName = Config::getValueByLang('mail_reminder_from_name', $clientLang);
+			$fromAddress = Config::getValueByLang('mail_from_address', $clientLang);
+			$fromName = Config::getValueByLang('mail_from_name', $clientLang);
 
 			$mailSubject = Mail::getMailSubject($row);
 			$mailText = Mail::getMailText($row, $mailSubject);

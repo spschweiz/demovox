@@ -126,9 +126,9 @@ class PublicHandler
 			$demovoxJsArr['apiAddressEnabled'] = 1;
 			$demovoxJsArr['apiAddressKey'] = $apiAddressKey;
 			$demovoxJsArr['apiAddressUrl'] = Config::getValue('api_address_url');//'https://test-tel.sp-ps.ch/signatures/commune_suggestion';
-			$demovoxJsArr['apiAddressCityInput'] = !!Config::getValue('api_address_city_input');
-			$demovoxJsArr['apiAddressGdeInput'] = !!Config::getValue('api_address_gde_input');
-			$demovoxJsArr['apiAddressGdeSelect'] = !!Config::getValue('api_address_gde_select');
+			$demovoxJsArr['apiAddressCityInput'] = Config::getValue('api_address_city_input');
+			$demovoxJsArr['apiAddressGdeInput'] = Config::getValue('api_address_gde_input');
+			$demovoxJsArr['apiAddressGdeSelect'] = Config::getValue('api_address_gde_select');
 		}
 
 		wp_enqueue_script(

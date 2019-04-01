@@ -24,7 +24,7 @@ namespace Demovox;
 		<input name="sign" type="hidden" value="<?= $guid ?>">
 		<div class="form-group">
 			<div class="form-check">
-				<input class="form-check-input" type="checkbox" value="true" id="is_optin" name="is_optin" <?= $isOptIn ? 'checked="checked"' : '' ?>>
+				<input class="form-check-input" type="checkbox" value="1" id="is_optin" name="is_optin" <?= $isOptIn ? 'checked="checked"' : '' ?>>
 				<label class="form-check-label" for="is_optin">
 					<?= $textOptin ?>
 				</label>

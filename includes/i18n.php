@@ -56,6 +56,7 @@ class i18n
 		'zg' => 'Zug',
 		'zh' => 'Zürich',
 	];
+
 	public static $languages = [
 		'de' => 'German',
 		'fr' => 'French',
@@ -63,6 +64,24 @@ class i18n
 		'rm' => 'Romansh',
 		'en' => 'English',
 	];
+
+	public static function getLangsEnabled()
+	{
+		$languages = [];
+		$glueLang = Config::GLUE_LANG;
+		foreach (self::$languages as $langId => $lang) {
+			if (ConfigVars::getFields('is_language_enabled' . $glueLang . $langId)) {
+				$languages[$langId] = $lang;
+			}
+		}
+		return $languages;
+	}
+
+	public static function getLangs()
+	{
+		return self::$languages;
+	}
+
 	public static $defaultCountry = 'CH';
 
 	/**

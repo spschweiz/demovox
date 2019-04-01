@@ -224,7 +224,7 @@ namespace Demovox;
 			<button class="ajaxButton"
 					data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?lang='.$langId, 'mail_test') ?>">
 				<?= $language ?>
-				(<?= Config::getValue('mail_reminder_from_address_' . $langId) ?: 'mail address missing' ?>)
+				(<?= Config::getValue('mail_confirm_from_address_' . $langId) ?: 'mail address missing' ?>)
 			</button>
 		<?php } ?>
 		<br/>

@@ -31,7 +31,7 @@ namespace Demovox;
 		<b><?= $count ?></b> visitors have signed up
 		<?php if ($addCount) { ?>
 			(and additional <?= $addCount ?> signatures
-			<a href="<?= admin_url('/admin.php?page=demovoxFields1') ?>">in the settings</a>)
+			<a href="<?= admin_url('/admin.php?page=demovoxFields') ?>">in the settings</a>)
 		<?php } ?>
 	</p>
 	<?php if (!$count) { ?>

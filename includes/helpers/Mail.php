@@ -50,7 +50,7 @@ class Mail
 		/*
 		if ($fromAddress = Options::getValue('mail_reminder_from_address')) {
 			try {
-				$mailer->setFrom($fromAddress, Options::getValue('mail_reminder_from_name'));
+				$mailer->setFrom($fromAddress, Options::getValue('mail_confirm_from_name'));
 			} catch (\phpmailerException $e) {
 				Core::logMessage($e->getMessage(), 'mail');
 			}
@@ -97,7 +97,7 @@ class Mail
 	 */
 	static function getMailSubject($sign)
 	{
-		$subject = Config::getValueByLang('text_mail_subj', $sign->language);
+		$subject = Config::getValueByLang('mail_confirm_subj', $sign->language);
 		$subject = str_replace('{first_name}', $sign->first_name, $subject);
 		$subject = str_replace('{last_name}', $sign->last_name, $subject);
 		return $subject;
@@ -111,7 +111,7 @@ class Mail
 	static function getMailText($sign, $mailSubject)
 	{
 		$clientLang = $sign->language;
-		$text = Config::getValueByLang('text_mail', $clientLang);
+		$text = Config::getValueByLang('mail_confirm_body', $clientLang);
 		if (Config::getValue('mail_nl2br')) {
 			$text = Strings::nl2br($text);
 		}

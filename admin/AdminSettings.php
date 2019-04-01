@@ -14,65 +14,64 @@ namespace Demovox;
  */
 class AdminSettings
 {
-
-	/**
-	 * The ID of this plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      string $pluginName The ID of this plugin.
-	 */
-	private $pluginName;
-
-	/**
-	 * The version of this plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      string $version The current version of this plugin.
-	 */
-	private $version;
-
 	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
-	 * @param      string $pluginName The name of this plugin.
-	 * @param      string $version The version of this plugin.
 	 */
-	public function __construct($pluginName, $version)
+	public function __construct()
 	{
-		$this->pluginName = $pluginName;
-		$this->version    = $version;
-
 		// Hook into the admin menu
 		add_action('admin_init', [$this, 'setupFields']);
 		add_action('admin_init', [$this, 'setupSections']);
 	}
 
+	public function pageSettings()
+	{
+		$tabs = [
+			'General',
+			'Signature sheet',
+			'Email',
+			'Opt-in',
+			'Advanced',
+		];
+		$firstTab = array_keys($tabs);
+		$currentTab = !empty($_GET['tab']) && array_key_exists($_GET['tab'], $tabs) ? sanitize_title($_GET['tab']) : $firstTab[0];
+		$page = 'demovoxSettings';
+		$languages = i18n::getLangs();
+		include Infos::getPluginDir() . 'admin/partials-settings/settings-tabs.php';
+	}
+
+	public function pageSettings0()
+	{
+		$page = 'demovoxFields0';
+		$languages = i18n::getLangs();
+		include Infos::getPluginDir() . 'admin/partials-settings/settings-0.php';
+	}
+
 	public function pageSettings1()
 	{
-		$page      = 'demovoxFields1';
-		$languages = i18n::$languages;
-		include Infos::getPluginDir() . 'admin/partials/settings-1.php';
+		$page = 'demovoxFields1';
+		$languages = i18n::getLangs();
+		include Infos::getPluginDir() . 'admin/partials-settings/settings-1.php';
 	}
 
 	public function pageSettings2()
 	{
 		$page = 'demovoxFields2';
-		include Infos::getPluginDir() . 'admin/partials/settings-2.php';
+		include Infos::getPluginDir() . 'admin/partials-settings/settings-2.php';
 	}
 
 	public function pageSettings3()
 	{
 		$page = 'demovoxFields3';
-		include Infos::getPluginDir() . 'admin/partials/settings-3.php';
+		include Infos::getPluginDir() . 'admin/partials-settings/settings-3.php';
 	}
 
 	public function pageSettings4()
 	{
 		$page = 'demovoxFields4';
-		include Infos::getPluginDir() . 'admin/partials/settings-4.php';
+		include Infos::getPluginDir() . 'admin/partials-settings/settings-4.php';
 	}
 
 	public function setupSections()
@@ -85,7 +84,7 @@ class AdminSettings
 
 	protected function languageChangeWarning($uid)
 	{
-		$wpid         = Core::getWpId($uid);
+		$wpid = Core::getWpId($uid);
 		$currUserLang = defined('ICL_LANGUAGE_CODE') ? ICL_LANGUAGE_CODE : '-';
 		$lastUserLang = Core::getOption($uid . Config::GLUE_PART . Config::PART_LAST_LANG);
 		if ($currUserLang != $lastUserLang && $lastUserLang !== false) {
@@ -152,11 +151,11 @@ class AdminSettings
 	public function setupFields()
 	{
 		$sections = Config::getSections();
-		$fields   = ConfigVars::getFields();
+		$fields = ConfigVars::getFields();
 		$callback = [$this, 'fieldCallback',];
 		foreach ($fields as $field) {
-			$page      = $sections[$field['section']]['page'];
-			$id        = Core::getWpId($field['uid']);
+			$page = $sections[$field['section']]['page'];
+			$id = Core::getWpId($field['uid']);
 			$fieldType = isset($field['type']) ? $field['type'] : null;
 			switch ($fieldType) {
 				default:
@@ -187,9 +186,9 @@ class AdminSettings
 
 	public function fieldCallback($arguments)
 	{
-		$uid         = $arguments['uid'];
-		$wpid        = Core::getWpId($uid);
-		$type        = $arguments['type'];
+		$uid = $arguments['uid'];
+		$wpid = Core::getWpId($uid);
+		$type = $arguments['type'];
 		$placeholder = (isset($arguments['placeholder']) && $arguments['placeholder'] !== false && $arguments['placeholder'] !== 0)
 			? $arguments['placeholder'] : '';
 
@@ -211,10 +210,10 @@ class AdminSettings
 			case 'checkbox':
 				$value = Config::getValue($uid);
 				printf(
-					'<input name="%1$s" id="%1$s" type="%2$s" value="true" %3$s/>',
+					'<input name="%1$s" id="%1$s" type="%2$s" value="1" %3$s/>',
 					$wpid,
 					$type,
-					checked($value, 'true', false)
+					$value ? 'checked="checked"' : ''
 				);
 				break;
 			case 'pos':
@@ -245,7 +244,7 @@ class AdminSettings
 			case 'pos_rot':
 				$valuePosX = Config::getValue($uid, Config::PART_POS_X, true);
 				$valuePosY = Config::getValue($uid, Config::PART_POS_Y, true);
-				$valueRot  = Config::getValue($uid, Config::PART_ROTATION, true);
+				$valueRot = Config::getValue($uid, Config::PART_ROTATION, true);
 				printf(
 					'<input name="%1$s" id="%1$s" type="number" placeholder="%2$s" value="%3$s" size="5" />',
 					$wpid . Config::GLUE_PART . Config::PART_POS_X,
@@ -297,7 +296,7 @@ class AdminSettings
 				break;
 			case 'wpPage': // If it is a select dropdown
 				$value = Config::getValue($uid);
-				$args  = [
+				$args = [
 					'name'             => $wpid,
 					'selected'         => $value,
 					'suppress_filters' => true, // disable WPML language filtering

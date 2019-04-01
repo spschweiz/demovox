@@ -34,11 +34,14 @@ class Config
 		}
 		$field = $fields[$key];
 		$value = isset($field['default']) ? $field['default'] : ''; // Set to our default
+		if ($field['checkbox']) {
+			$value = !!$value;
+		}
 
 		return self::valueFormat($valPart, $value, $field);
 	}
 
-	protected static function valueFormat( $valPart, $value, $field = null)
+	protected static function valueFormat($valPart, $value, $field = null)
 	{
 		if ($valPart == self::PART_POS_X) {
 			if (isset($field['defaultX'])) {
@@ -97,17 +100,29 @@ class Config
 	public static function getSections()
 	{
 		$sections = ConfigVars::$sections;
-		foreach (i18n::$languages as $langid => $language) {
-			$sections['signatureSheetFields_' . $langid] = [
+		$glueLang = Config::GLUE_LANG;
+		foreach (i18n::getLangs() as $langId => $language) {
+			$langEnabled = Config::getValue('is_language_enabled' . $glueLang . $langId);
+
+			$sections['signatureSheetFields_' . $langId] = [
 				'title'   => 'Signature sheet field positions ' . $language,
 				'page'    => 'demovoxFields1',
-				'addPre'  => '',
-				'addPost' => '<br/><div id="preview-' . $langid . '">' . '<input type="button" class="showPdf" data-lang="' . $langid
-					. '" href="#" value="Show preview"/>' . '<iframe src="about:blank" class="pdf-iframe"></iframe></div>	',
+				'addPre'  => $langEnabled ? '' : '<div class="hidden">',
+				'addPost' => '<br/><div id="preview-' . $langId . '">' . '<input type="button" class="showPdf" data-lang="' . $langId
+					. '" href="#" value="Show preview"/>' . '<iframe src="about:blank" class="pdf-iframe"></iframe></div>	'
+					. ($langEnabled ? '' : '</div>'),
 			];
-			$sections['mailText_' . $langid] = [
-				'title' => 'Translations ' . $language,
-				'page'  => 'demovoxFields2',
+			$sections['mailConfirm_' . $langId] = [
+				'title'   => $language . '<br/>Mail confirmation',
+				'page'    => 'demovoxFields2',
+				'addPre'  => $langEnabled ? '' : '<div class="hidden">',
+				'addPost' => $langEnabled ? '' : '</div>',
+			];
+			$sections['mailRemind_' . $langId] = [
+				'title'   => $language . '<br/>Mail reminder ',
+				'page'    => 'demovoxFields2',
+				'addPre'  => $langEnabled ? '' : '<div class="hidden">',
+				'addPost' => $langEnabled ? '' : '</div>',
 			];
 		}
 

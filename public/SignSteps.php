@@ -91,7 +91,7 @@ class SignSteps
 		$textOptin = Config::getValueByUserlang('text_optin');
 		$apiAddressEnabled = !empty(Config::getValue('api_address_key'));
 		$cantons = i18n::$cantons;
-		$allowSwissAbroad = !!Config::getValue('allow_swiss_abroad');
+		$allowSwissAbroad = Config::getValue('allow_swiss_abroad');
 
 		// Render view
 		include Infos::getPluginDir() . 'public/partials/sign-2.php';

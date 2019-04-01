@@ -8,7 +8,11 @@ class ConfigVars
 	static public $sections = [
 		'base'                 => [
 			'title' => 'Base settings',
-			'page'  => 'demovoxFields1',
+			'page'  => 'demovoxFields0',
+		],
+		'enabledLanguages'     => [
+			'title' => 'Enabled languages',
+			'page'  => 'demovoxFields0',
 		],
 		'signatureSheet'       => [
 			'title' => 'Signature sheet',
@@ -27,6 +31,10 @@ class ConfigVars
 		],
 		'mailText'             => [
 			'title' => 'Email settings',
+			'page'  => 'demovoxFields2',
+		],
+		'mailSender'           => [
+			'title' => 'Email sender',
 			'page'  => 'demovoxFields2',
 		],
 		'optIn'                => [
@@ -151,7 +159,6 @@ class ConfigVars
 			'label'   => 'Save client IP address',
 			'section' => 'security',
 			'type'    => 'checkbox',
-			'default' => 0,
 			'class'   => 'showOnEncrypt',
 		],
 		[
@@ -345,7 +352,6 @@ class ConfigVars
 			'label'        => 'Drop signatures on uninstall',
 			'section'      => 'danger',
 			'type'         => 'checkbox',
-			'default'      => 0,
 			'supplemental' => 'Drops all signature information when this plugin is uninstalled!',
 		],
 	];
@@ -357,51 +363,61 @@ class ConfigVars
 		}
 		$fields = self::$fields;
 		$fields[] = [
-			'uid'     => 'default_language',
-			'label'   => 'Default language',
-			'section' => 'base', // TODO: move to a better place
-			'type'    => 'select',
-			'options' => i18n::$languages,
-			'default' => 'de',
-		];
-		$fields[] = [
-			'uid'          => 'mail_reminder_enabled',
-			'label'        => 'Mail reminder enabled',
+			'uid'          => 'mail_confirmation_enabled',
+			'label'        => 'Mail confirmation enabled',
 			'section'      => 'mailText',
 			'type'         => 'checkbox',
 			'default'      => 1,
-			'supplemental' => 'If enabled later, reminders will also be sent for previous signees which did not receive the mail yet.<br/>You must also set the mailserver settings in the advanced settings.',
+			'supplemental' => 'If enabled later, confirmations will also be sent for previous signees which did not receive the mail yet.<br/>You must also set the mailserver settings in the advanced settings.',
 		];
 		$fields[] = [
 			'uid'          => 'mail_nl2br',
 			'label'        => 'Newline to BR',
 			'section'      => 'mailText',
 			'type'         => 'checkbox',
-			'default'      => 0,
 			'supplemental' => 'Inserts HTML line breaks before all newlines in mail body',
 		];
-		foreach (i18n::$languages as $langId => $language) {
+		$glueLang = Config::GLUE_LANG;
+		$wpMailAddress = get_bloginfo('admin_email');
+		$wpMailName = get_bloginfo('name');
+
+		foreach (i18n::getLangs() as $langId => $language) {
+			$langEnabled = Config::getValue('is_language_enabled' . $glueLang . $langId);
+			$class = $langEnabled ? '' : ' hidden';
+			$glueLangId = $glueLang . $langId;
+
+			// language
+			$fields[] = [
+				'uid'     => 'is_language_enabled' . $glueLangId,
+				'label'   => $language,
+				'section' => 'enabledLanguages',
+				'type'    => 'checkbox',
+				'default' => 1,
+			];
+
 			// signatureSheet_LANG
 			$fields[] = [
-				'uid'     => 'signature_sheet_' . $langId,
+				'uid'     => 'signature_sheet' . $glueLangId,
 				'label'   => $language,
 				'section' => 'signatureSheetPdf',
 				'type'    => 'wpMedia',
 				'options' => 0,
+				'class'   => $class,
 			];
 
 			// optIn
 			$fields[] = [
-				'uid'     => 'text_optin_' . $langId,
+				'uid'     => 'text_optin' . $glueLangId,
 				'label'   => $language,
 				'section' => 'optInText',
 				'type'    => 'text',
 				'class'   => 'hideOnOptinDisabled',
+				'class'   => $class,
 			];
 
 			// signatureSheetFields_LANG
 			$fields[] = [
-				'uid'          => 'field_canton_' . $langId,
+				'uid'          => 'field_canton' . $glueLangId,
 				'label'        => 'Canton',
 				'section'      => 'signatureSheetFields_' . $langId,
 				'type'         => 'pos_rot',
@@ -410,7 +426,7 @@ class ConfigVars
 				'defaultY'     => 655,
 			];
 			$fields[] = [
-				'uid'      => 'field_zip_' . $langId,
+				'uid'      => 'field_zip' . $glueLangId,
 				'label'    => 'ZIP',
 				'section'  => 'signatureSheetFields_' . $langId,
 				'type'     => 'pos_rot',
@@ -418,7 +434,7 @@ class ConfigVars
 				'defaultY' => 655,
 			];
 			$fields[] = [
-				'uid'      => 'field_commune_' . $langId,
+				'uid'      => 'field_commune' . $glueLangId,
 				'label'    => 'Commune',
 				'section'  => 'signatureSheetFields_' . $langId,
 				'type'     => 'pos_rot',
@@ -426,7 +442,7 @@ class ConfigVars
 				'defaultY' => 655,
 			];
 			$fields[] = [
-				'uid'      => 'field_birthdate_day_' . $langId,
+				'uid'      => 'field_birthdate_day' . $glueLangId,
 				'label'    => 'Birth date day',
 				'section'  => 'signatureSheetFields_' . $langId,
 				'type'     => 'pos_rot',
@@ -434,7 +450,7 @@ class ConfigVars
 				'defaultY' => 617,
 			];
 			$fields[] = [
-				'uid'      => 'field_birthdate_month_' . $langId,
+				'uid'      => 'field_birthdate_month' . $glueLangId,
 				'label'    => 'Birth date month',
 				'section'  => 'signatureSheetFields_' . $langId,
 				'type'     => 'pos_rot',
@@ -442,7 +458,7 @@ class ConfigVars
 				'defaultY' => 617,
 			];
 			$fields[] = [
-				'uid'      => 'field_birthdate_year_' . $langId,
+				'uid'      => 'field_birthdate_year' . $glueLangId,
 				'label'    => 'Birth date year',
 				'section'  => 'signatureSheetFields_' . $langId,
 				'type'     => 'pos_rot',
@@ -450,7 +466,7 @@ class ConfigVars
 				'defaultY' => 617,
 			];
 			$fields[] = [
-				'uid'      => 'field_street_' . $langId,
+				'uid'      => 'field_street' . $glueLangId,
 				'label'    => 'Street',
 				'section'  => 'signatureSheetFields_' . $langId,
 				'type'     => 'pos_rot',
@@ -458,17 +474,17 @@ class ConfigVars
 				'defaultY' => 617,
 			];
 			$fields[] = [
-				'uid'        => 'field_qr_img_' . $langId,
+				'uid'        => 'field_qr_img' . $glueLangId,
 				'label'      => 'QR code image',
 				'section'    => 'signatureSheetFields_' . $langId,
 				'type'       => 'pos_rot',
-				'class'      => 'showOnQr',
 				'defaultX'   => 579,
 				'defaultY'   => 370,
 				'defaultRot' => 180,
+				'class'      => 'showOnQr',
 			];
 			$fields[] = [
-				'uid'          => 'field_qr_img_size_' . $langId,
+				'uid'          => 'field_qr_img_size' . $glueLangId,
 				'label'        => 'QR code image size',
 				'section'      => 'signatureSheetFields_' . $langId,
 				'type'         => 'number',
@@ -477,63 +493,76 @@ class ConfigVars
 				'class'        => 'showOnQr',
 			];
 			$fields[] = [
-				'uid'        => 'field_qr_text_' . $langId,
+				'uid'        => 'field_qr_text' . $glueLangId,
 				'label'      => 'QR code text',
 				'section'    => 'signatureSheetFields_' . $langId,
 				'type'       => 'pos_rot',
-				'class'      => 'showOnQr',
 				'defaultX'   => 558,
 				'defaultY'   => 373,
 				'defaultRot' => 180,
+				'class'      => 'showOnQr',
 			];
 
-			// mailText
+			// Mail sender
 			$fields[] = [
-				'uid'     => 'mail_reminder_from_address_' . $langId,
-				'label'   => 'Reminder from address',
-				'section' => 'mailText_' . $langId,
+				'uid'     => 'mail_from_name' . $glueLangId,
+				'label'   => $language . '<br/>From name',
+				'section' => 'mailSender',
 				'type'    => 'text',
-				'class'   => 'showOnMailReminderEnabled',
+				'default' => $wpMailName,
+				'class'   => $class,
 			];
 			$fields[] = [
-				'uid'     => 'mail_reminder_from_name_' . $langId,
-				'label'   => 'Reminder from name',
-				'section' => 'mailText_' . $langId,
+				'uid'     => 'mail_from_address' . $glueLangId,
+				'label'   => 'From address',
+				'section' => 'mailSender',
 				'type'    => 'text',
-				'class'   => 'showOnMailReminderEnabled',
+				'default' => $wpMailAddress,
+				'class'   => $class,
 			];
+
+			// Mail confirmation
 			$fields[] = [
-				'uid'          => 'text_mail_subj_' . $langId,
-				'label'        => 'Reminder subject',
-				'section'      => 'mailText_' . $langId,
+				'uid'          => 'mail_confirm_subj' . $glueLangId,
+				'label'        => 'Subject',
+				'section'      => 'mailConfirm_' . $langId,
 				'type'         => 'text',
 				'supplemental' => 'Available placeholders: {first_name}, {last_name}. This mail is sent to the signee after signing up.',
-				'class'        => 'showOnMailReminderEnabled',
+				'class'        => 'showOnMailConfirmEnabled',
 			];
 			$fields[] = [
-				'uid'          => 'text_mail_' . $langId,
-				'label'        => 'Reminder content',
-				'section'      => 'mailText_' . $langId,
+				'uid'          => 'mail_confirm_body' . $glueLangId,
+				'label'        => 'Body',
+				'section'      => 'mailConfirm_' . $langId,
 				'type'         => 'textarea',
 				'supplemental' => 'Available placeholders: {first_name}, {last_name}, {mail}, {link_pdf}, {link_optin}, {subject}. ',
-				'class'        => 'showOnMailReminderEnabled',
+				'class'        => 'showOnMailConfirmEnabled',
 			];
-			/*
+
+			// TODO: Mail reminder
 			$fields[] = [
-				'uid'          => 'text_mail_reminder_subj_' . $langId,
-				'label'        => 'Signature sheet mail',
-				'section'      => 'mailText_' . $langId,
+				'uid'          => 'mail_reminder_subj' . $glueLangId,
+				'label'        => 'Subject',
+				'section'      => 'mailRemind_' . $langId,
 				'type'         => 'text',
-				'supplemental' => 'Mail is sent to visitor if he did not send the signature sheet',
+				'supplemental' => 'Available placeholders: {first_name}, {last_name}. This mail is sent to the signee after signing up.',
 			];
 			$fields[] = [
-				'uid'     => 'text_mail_reminder_' . $langId,
-				'label'   => 'Reminder mail',
-				'section' => 'mailText_' . $langId,
-				'type'    => 'wysiwyg',
+				'uid'          => 'mail_reminder_body' . $glueLangId,
+				'label'        => 'Body',
+				'section'      => 'mailRemind_' . $langId,
+				'type'         => 'textarea',
+				'supplemental' => 'Available placeholders: {first_name}, {last_name}, {mail}, {link_pdf}, {link_optin}, {subject}. ',
 			];
-			*/
 		}
+		$fields[] = [
+			'uid'     => 'default_language',
+			'label'   => 'Default language',
+			'section' => 'enabledLanguages',
+			'type'    => 'select',
+			'options' => i18n::getLangs(),
+			'default' => 'de',
+		];
 		if (WP_DEBUG) {
 			$fields[] = [
 				'uid'          => 'redirect_http_to_https',

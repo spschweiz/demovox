@@ -80,7 +80,7 @@ class Infos
 			return $lang;
 		}
 		$lang = strtolower(substr($lang, 0, 2));
-		$availableLangs = i18n::$languages;
+		$availableLangs = i18n::getLangsEnabled();
 		if (!isset($availableLangs[$lang])) {
 			$lang = Config::getValue('default_language');
 		}

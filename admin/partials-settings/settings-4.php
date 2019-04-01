@@ -1,14 +1,18 @@
-<div class="wrap demovox">
-	<h2>Advanced settings</h2>
-	<form method="post" action="options.php">
-		<?php
-		submit_button();
-		settings_fields($page);
-		$this->doSettingsSections($page);
-		submit_button();
-		?>
-	</form>
-</div>
+<?php
+
+namespace Demovox;
+
+/**
+ * @var $this AdminSettings
+ * @var $page string
+ */
+?>
+<?php
+submit_button();
+settings_fields($page);
+$this->doSettingsSections($page);
+submit_button();
+?>
 <script>
 	hideOnSet($('#demovox_encrypt_signees'), $('.showOnEncrypt'), 'disabled');
 	showOnSet($('#demovox_mail_method'), $('.showOnMethodSmtp'), 'smtp');
