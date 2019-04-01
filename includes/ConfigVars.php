@@ -5,6 +5,7 @@ namespace Demovox;
 class ConfigVars
 {
 	static private $fieldsCache = null;
+	static private $fieldCache = [];
 	static public $sections = [
 		'base'                 => [
 			'title' => 'Base settings',
@@ -94,7 +95,7 @@ class ConfigVars
 		],
 		[
 			'uid'          => 'use_page_as_mail_link',
-			'label'        => 'Link this page in mail',
+			'label'        => 'Link this page in mails',
 			'section'      => 'signatureSheet',
 			'type'         => 'wpPage',
 			'supplemental' => 'You should include [demovox_form] on that page to show the signature sheet. ',
@@ -152,7 +153,8 @@ class ConfigVars
 				'1'        => 'Yes, php-encryption (requires at least PHP 5.6 and OpenSSL 1.0.1)',
 			],
 			'default'      => 'disabled',
-			'supplemental' => 'Encrypt personal details, only affects new entries. DEMOVOX_ENC_KEY has to be set in wp-config.php',
+			'supplemental' => 'Encrypt personal details, only affects new entries. DEMOVOX_ENC_KEY has to be set in wp-config.php. '
+				. 'Protects against DB data theft like SQL injections, but does not on file system access.',
 		],
 		[
 			'uid'     => 'save_ip',
@@ -356,6 +358,18 @@ class ConfigVars
 		],
 	];
 
+	public static function getField($id)
+	{
+		$fields = ConfigVars::getFields();
+		$key = array_search($id, array_column($fields, 'uid'));
+		if ($key === false) {
+			Core::logMessage('Option field "' . $id . '" does not exist.');
+			return null;
+		}
+		$field = $fields[$key];
+		return $field;
+	}
+
 	public static function getFields()
 	{
 		if (self::$fieldsCache !== null) {
@@ -390,7 +404,7 @@ class ConfigVars
 		$wpMailName = get_bloginfo('name');
 
 		foreach (i18n::getLangs() as $langId => $language) {
-			$langEnabled = Config::getValue('is_language_enabled' . $glueLang . $langId, false, 1);
+			$langEnabled = self::getConfigValue('is_language_enabled' . $glueLang . $langId, null, true);
 			$class = $langEnabled ? '' : ' hidden';
 			$glueLangId = $glueLang . $langId;
 
@@ -545,7 +559,6 @@ class ConfigVars
 				'supplemental' => 'Available placeholders: {first_name}, {last_name}, {mail}, {link_pdf}, {link_optin}, {subject}. ',
 			];
 
-			// TODO: Mail reminder
 			$fields[] = [
 				'uid'          => 'mail_reminder_subj' . $glueLangId,
 				'label'        => 'Subject',
@@ -621,7 +634,7 @@ class ConfigVars
 		$sections = self::$sections;
 		$glueLang = Config::GLUE_LANG;
 		foreach (i18n::getLangs() as $langId => $language) {
-			$langEnabled = Config::getValue('is_language_enabled' . $glueLang . $langId, 1);
+			$langEnabled = self::getConfigValue('is_language_enabled' . $glueLang . $langId, null, true);
 
 			$sections['signatureSheetFields_' . $langId] = [
 				'title'   => 'Signature sheet field positions ' . $language,
@@ -634,17 +647,36 @@ class ConfigVars
 			$sections['mailConfirm_' . $langId] = [
 				'title'   => $language . '<br/>Mail confirmation',
 				'page'    => 'demovoxFields2',
-				'addPre'  => $langEnabled ? '' : '<div class="hidden showOnMailConfirmEnabled">',
-				'addPost' => $langEnabled ? '' : '</div>',
+				'addPre'  => '<div class="showOnMailConfirmEnabled' . ($langEnabled ? ' hidden' : '') . '">',
+				'addPost' => '</div>',
 			];
 			$sections['mailRemind_' . $langId] = [
 				'title'   => $language . '<br/>Mail reminder ',
 				'page'    => 'demovoxFields2',
-				'addPre'  => $langEnabled ? '' : '<div class="hidden showOnMailRemindEnabled">',
-				'addPost' => $langEnabled ? '' : '</div>',
+				'addPre'  => '<div class="showOnMailRemindEnabled' . ($langEnabled ? ' hidden' : '') . '">',
+				'addPost' => '</div>',
 			];
 		}
 
 		return $sections;
+	}
+
+	/**
+	 * Access config values from this class without creating loops.
+	 * Use Config::getValue() from other locations!
+	 *
+	 * @param $id string
+	 * @param $valPart null|string
+	 * @param $default null|mixed Default value (ignore value in ConfigVars, for example to avoid function nesting)
+	 * @return mixed Value set for the config.
+	 */
+	protected static function getConfigValue($id, $valPart = null, $default = null)
+	{
+		$fullId = $id . ($valPart ? config::GLUE_PART . $valPart : '');
+		$value = Core::getOption($fullId);
+		if ($value !== false) {
+			return $value;
+		}
+		return $default;
 	}
 }

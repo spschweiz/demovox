@@ -14,28 +14,21 @@ class Config
 	/**
 	 * @param $id string
 	 * @param $valPart null|string
-	 * @param $default null|mixed Default value (ignore value in ConfigVars, for example to avoid function nesting)
 	 * @return mixed Value set for the config.
 	 */
-	public static function getValue($id, $valPart = null, $default = null)
+	public static function getValue($id, $valPart = null)
 	{
 		$fullId = $id . ($valPart ? self::GLUE_PART . $valPart : '');
+		$field = ConfigVars::getField($id);
+		if ($field === null) {
+			return null;
+		}
 		$value = Core::getOption($fullId);
 		if ($value !== false) {
 			return self::valueFormat($valPart, $value);
 		}
-		if ($default !== null) {
-			return $default;
-		}
 
 		// No value is set yet, get default value
-		$fields = ConfigVars::getFields();
-		$key = array_search($id, array_column($fields, 'uid'));
-		if ($key === false) {
-			Core::logMessage('Option field "' . $id . '" does not exist.');
-			return false;
-		}
-		$field = $fields[$key];
 		$value = isset($field['default']) ? $field['default'] : ''; // Set to our default
 
 		return self::valueFormat($valPart, $value, $field);
@@ -49,25 +42,16 @@ class Config
 			if (isset($field['defaultX'])) {
 				$value = intval($field['defaultX']);
 			}
-			if (!$value) {
-				$value = 0;
-			}
 		} elseif ($valPart == self::PART_POS_Y) {
 			if (isset($field['defaultY'])) {
 				$value = intval($field['defaultY']);
 			}
 			$value = intval($value);
-			if (!$value) {
-				$value = 0;
-			}
 		} elseif ($valPart == self::PART_ROTATION) {
 			if (isset($field['defaultRot'])) {
 				$value = intval($field['defaultRot']);
 			}
 			$value = intval($value);
-			if (!$value) {
-				$value = 0;
-			}
 		}
 		return $value;
 	}

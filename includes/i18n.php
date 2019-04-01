@@ -70,7 +70,7 @@ class i18n
 		$languages = [];
 		$glueLang = Config::GLUE_LANG;
 		foreach (self::$languages as $langId => $lang) {
-			if (ConfigVars::getFields('is_language_enabled' . $glueLang . $langId)) {
+			if (Config::getValue('is_language_enabled' . $glueLang . $langId)) {
 				$languages[$langId] = $lang;
 			}
 		}
