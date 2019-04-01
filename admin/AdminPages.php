@@ -19,9 +19,9 @@ class AdminPages
 		$count = DB::countSignatures(false);
 		$addCount = Config::getValue('add_count');
 		$userLang = Infos::getUserLanguage();
-		$countOptin = intval(DB::getRow(['COUNT(*) as count'], 'is_optin = 1 AND is_step2_done = 1 AND is_deleted = 0')->count);
-		$countOptout = intval(DB::getRow(['COUNT(*) as count'], 'is_optin = 0 AND is_step2_done = 1 AND is_deleted = 0')->count);
-		$countUnfinished = intval(DB::getRow(['COUNT(*) as count'], 'is_step2_done = 0 AND is_deleted = 0')->count);
+		$countOptin = DB::count('is_optin = 1 AND is_step2_done = 1 AND is_deleted = 0');
+		$countOptout = DB::count('is_optin = 0 AND is_step2_done = 1 AND is_deleted = 0');
+		$countUnfinished = DB::count('is_step2_done = 0 AND is_deleted = 0');
 		include Infos::getPluginDir() . 'admin/partials/admin-page.php';
 	}
 
@@ -40,6 +40,11 @@ class AdminPages
 	public function pageData()
 	{
 		$page = 'demovoxData';
+		$countOptin = DB::count($this->getWhere('optin'));
+		$countFinished = DB::count($this->getWhere('finished'));
+		$countUnfinished = DB::count($this->getWhere('unfinished'));
+		$countDeleted = DB::count($this->getWhere('deleted'));
+
 		include Infos::getPluginDir() . 'admin/partials/data.php';
 	}
 
@@ -82,7 +87,7 @@ class AdminPages
 
 	public function statsCharts()
 	{
-		$this->checkPermission('demovox_stats');
+		Admin::checkAccess('demovox_stats');
 
 		$countDategroupedOi = DB::getResults(['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
 			'is_optin = 1 AND is_step2_done = 1 AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)');
@@ -105,7 +110,7 @@ class AdminPages
 
 	public function statsSource()
 	{
-		$this->checkPermission('demovox_stats');
+		Admin::checkAccess('demovox_stats');
 
 		$sourceList = DB::getResults(
 			[
@@ -123,7 +128,7 @@ class AdminPages
 
 	public function testEncrypt()
 	{
-		$this->checkPermission('manage_options');
+		Admin::checkAccess('manage_options');
 
 		if (isset($_REQUEST['fullLen']) && $_REQUEST['fullLen']) {
 			$lengths = [32, 255, 255, 10, 128, 64, 127, 10, 16, 64, 5, 4, 45, 2];
@@ -166,7 +171,7 @@ class AdminPages
 
 	public function testMail()
 	{
-		$this->checkPermission('manage_options');
+		Admin::checkAccess('manage_options');
 
 		$mailTo = $this->getWpMailAddress();
 		$langId = (isset($_REQUEST['lang']) && $_REQUEST['lang']) ? sanitize_text_field($_REQUEST['lang']) : 'de';
@@ -191,7 +196,7 @@ class AdminPages
 
 	public function runCron()
 	{
-		$this->checkPermission('manage_options');
+		Admin::checkAccess('manage_options');
 
 		$hook = sanitize_text_field($_REQUEST['cron']);
 		ManageCron::triggerCron($hook);
@@ -200,18 +205,10 @@ class AdminPages
 
 	public function cancelCron()
 	{
-		$this->checkPermission('manage_options');
+		Admin::checkAccess('manage_options');
 
 		ManageCron::cancelMail();
 		echo 'Cron cancelled at ' . date('d.m.Y I:m:s');
-	}
-
-	protected function checkPermission($capability = null)
-	{
-		Core::checkNonce();
-		if (!current_user_can($capability)) {
-			wp_die(esc_html__('You are not allowed to access this page.', 'wp-control'));
-		}
 	}
 
 	protected function getWpMailAddress()
@@ -303,5 +300,59 @@ class AdminPages
 			$return .= Strings::wpMessage($count . ' failed sheet(s): ' . implode(', ', $fail), 'error');
 		}
 		return $return;
+	}
+
+	public function getCsv()
+	{
+		Admin::checkAccess('export');
+
+		$csvMapper = DB::getExportFields();
+		$csv = implode(',', $csvMapper) . "\n";
+		$type = isset($_REQUEST['type']) ? sanitize_text_field($_REQUEST['type']) : '';
+		$where = $this->getWhere($type);
+		$allSignatures = DB::getResults(array_keys($csvMapper), $where);
+
+		foreach ($allSignatures as $signature) {
+			$csvSignature = [];
+
+			foreach ($csvMapper as $key => $value) {
+				$valueEscaped = str_replace('"', '""', $signature->$key);
+				$csvSignature[] = '"' . $valueEscaped . '"';
+			}
+
+			$csv .= implode(',', $csvSignature) . "\n";
+		}
+
+		header("Pragma: public");
+		header("Expires: 0");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Cache-Control: private", false);
+		header("Content-Type: application/octet-stream");
+		header('Content-Disposition: attachment; filename="demovox-' . $type . '.csv";');
+		header("Content-Transfer-Encoding: binary");
+
+		echo $csv;
+	}
+
+	protected function getWhere($type)
+	{
+		switch ($type) {
+			case 'optin':
+				$where = 'is_optin <> 0 AND is_deleted = 0';
+				break;
+			case 'finished':
+				$where = 'is_step2_done <> 0 AND is_deleted = 0';
+				break;
+			case 'unfinished':
+				$where = 'is_step2_done = 0 AND is_deleted = 0';
+				break;
+			case 'deleted':
+				$where = 'is_deleted <> 0';
+				break;
+			default:
+				$where = '';
+				break;
+		}
+		return $where;
 	}
 }

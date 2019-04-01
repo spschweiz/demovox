@@ -123,36 +123,6 @@ class Admin
 		//add_action( 'admin_enqueueScripts', [$this, 'loadBloodyTinymce']);
 	}
 
-	public function getCsv()
-	{
-		$this->checkPermission('export');
-
-		$csvMapper = DB::getExportFields();
-		$csv = implode(',', $csvMapper) . "\n";
-		$allSignatures = DB::getResults(array_keys($csvMapper));
-
-		foreach ($allSignatures as $signature) {
-			$csvSignature = [];
-
-			foreach ($csvMapper as $key => $value) {
-				$valueEscaped = str_replace('"', '""', $signature->$key);
-				$csvSignature[] = '"' . $valueEscaped . '"';
-			}
-
-			$csv .= implode(',', $csvSignature) . "\n";
-		}
-
-		header("Pragma: public");
-		header("Expires: 0");
-		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-		header("Cache-Control: private", false);
-		header("Content-Type: application/octet-stream");
-		header("Content-Disposition: attachment; filename=\"" . $this->pluginName . "-Export.csv\";");
-		header("Content-Transfer-Encoding: binary");
-
-		echo $csv;
-	}
-
 	/**
 	 * todo: remove if it stays unused
 	 */
@@ -253,6 +223,13 @@ class Admin
 			foreach ( self::$messages as $message ) {
 				echo '<div id="message" class="updated inline"><p><strong>' . esc_html( $message ) . '</strong></p></div>';
 			}
+		}
+	}
+
+	public static function checkAccess($capability){
+		Core::checkNonce();
+		if (!current_user_can($capability)) {
+			wp_die(esc_html__('You are not allowed to access this page.', 'wp-control'));
 		}
 	}
 }

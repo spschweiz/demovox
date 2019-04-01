@@ -55,6 +55,7 @@ class DB
 		'is_sheet_received'   => 'Received signatures',
 		'creation_date'       => 'Creation Date',
 		'sheet_received_date' => 'Sheet received Date',
+		'serial'              => 'Serial (QR code)',
 	];
 
 	/**
@@ -71,9 +72,7 @@ class DB
 	 */
 	public static function countSignatures($publicValue = true)
 	{
-		global $wpdb;
-		$table_name = self::getTableName();
-		$count = $wpdb->get_var("SELECT COUNT(ID) as total FROM `{$table_name}` WHERE is_deleted = 0 AND is_step2_done = 1");
+		$count = self::count('is_deleted = 0 AND is_step2_done = 1');
 		if ($publicValue) {
 			$count += intval(Config::getValue('add_count'));
 		}
@@ -124,6 +123,23 @@ class DB
 			$result = self::decryptRow($result);
 		}
 		return $results;
+	}
+
+	/**
+	 * Count results for a where statement
+	 *
+	 * @param null|string $where
+	 * @return int
+	 */
+	public static function count($where = null)
+	{
+		global $wpdb;
+		$tableName = self::getTableName();
+		if ($where !== null) {
+			$where = 'WHERE ' . $where;
+		}
+		$count = $wpdb->get_var('SELECT COUNT(ID) as count FROM `' . $tableName . '`' . $where);
+		return intval($count);
 	}
 
 	/**
