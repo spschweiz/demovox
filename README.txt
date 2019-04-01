@@ -17,7 +17,7 @@ signature sheet.
 
 == Installation ==
 
-1. Upload `demovox.php` to the `/wp-content/plugins/` directory
+1. Upload directory `demovox` to the Wordpress Plugin directory (/wp-content/plugins/)
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Configure the plugin in WordPress admin
 4. Place shortcodes `[demovox_form_shortcode]` and `[demovox_count_shortcode]` on a WordPress page or post
@@ -59,12 +59,14 @@ plugins where more information needs to be conveyed that doesn't fit into the ca
 == DEV preparation ==
 
 = Preparation =
-Install node.js:
-https://nodejs.org/en/download/package-manager/
-Install required packages:
+Install Python, node.js and composer:
+* https://www.python.org/
+* https://nodejs.org/
+* https://getcomposer.org/
+Download required packages:
 `$npm install
 $composer install`
-buildAssets:
+Generate assets:
 `$grunt buildAssets`
 Compile .mo translation files:
 `$grunt translations`
