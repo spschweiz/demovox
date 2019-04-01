@@ -4,6 +4,7 @@ namespace Demovox;
  * @var $this Admin
  * @var $configPath null|string
  * @var $encKey true|string
+ * @var $hashKey true|string
  * @var $saltsFailed bool
  * @var $phpShowErrors bool
  * @var $httpsEnforced bool
@@ -19,12 +20,12 @@ namespace Demovox;
 	<h3>Wordpress</h3>
 	<?php
 	$wpErr = false;
-	if ($encKey !== true) {
+	if ($encKey !== true || $hashKey !== true) {
 		$wpErr = true;
 		?>
-		<h4 style="color:red">Encryption key needs to be set in config</h4>
+		<h4 class="error">Keys need to be set in config to enable encryption or reminder mail</h4>
 		<p>
-			You need to put the following line at the end of wp-config.php:
+			You need to put the following line at the end of wp-config.php and backup them in a secure location:
 		</p>
 		<pre>define('DEMOVOX_ENC_KEY', '<?= $encKey ?>');</pre>
 		<p>
@@ -35,13 +36,13 @@ namespace Demovox;
 	if (WP_DEBUG) {
 		$wpErr = true;
 		?>
-		<h4 style="color:red">WP_DEBUG is enabled</h4>
+		<h4 class="error">WP_DEBUG is enabled</h4>
 		<?php
 	}
 	if ($saltsFailed) {
 		$wpErr = true;
 		?>
-		<h4 style="color:red">Configured salts are insecure</h4>
+		<h4 class="error">Configured salts are insecure</h4>
 		<p>
 			Please <a href="https://api.wordpress.org/secret-key/1.1/salt/">generate missing salts</a> and save them in
 			wp-config.php<br/>
@@ -52,7 +53,7 @@ namespace Demovox;
 	if (defined('DISABLE_WP_CRON') && DISABLE_WP_CRON) {
 		$wpErr = true;
 		?>
-		<h4 style="color:red">DISABLE_WP_CRON is enabled, cronjobs like sending mails will not be executed</h4>
+		<h4 class="error">DISABLE_WP_CRON is enabled, cronjobs like sending mails will not be executed</h4>
 		<?php
 	}
 	if (!$wpErr) {
@@ -82,7 +83,7 @@ namespace Demovox;
 	if ($phpShowErrors) {
 		$phpErr = true;
 		?>
-		<h4 style="color:red">show errors is enabled</h4>
+		<h4 class="error">show errors is enabled</h4>
 		<p>
 			PHP stack traces can display the arguments passed to methods on the call stack.<br/>
 			The value of encryption passwords and other personally sensitive data may be leaked out to an attacker.</br>
@@ -100,7 +101,7 @@ namespace Demovox;
 	<?php
 	if (!$httpsEnforced) {
 		?>
-		<h4 style="color:red">Un-encrypted connections are allowed - DO NOT USE THIS SERVER IN PRODUCTION</h4>
+		<h4 class="error">Un-encrypted connections are allowed - DO NOT USE THIS SERVER IN PRODUCTION</h4>
 		<p>
 			Wordpress can be accessed without a secured HTTPS connection. Personal signature data can be stolen
 			easily.<br/>
@@ -167,8 +168,8 @@ namespace Demovox;
 	Current load: <?= Infos::getLoad() ?>% / Absolute load: <?= Infos::getLoad(false) ?>%<br/>
 	Is high load (&gt; <?= intval(Config::getValue('cron_max_load')) ?>%): <?=
 	Infos::isHighLoad()
-		? '<span style="color:red;font-weight: bold;">Yes</span> (would NOT execute CRON)'
-		: '<span style="color:green;font-weight: bold;">No</span> (would execute CRON)' ?><br/>
+		? '<span class="error">Yes</span> (would NOT execute CRON)'
+		: '<span class="success">No</span> (would execute CRON)' ?><br/>
 	Recognized Cores: <?= Infos::countCores() ?> / Configured cores: <?= intval(Config::getValue('cron_cores')) ?>
 	(this value is used to
 	calculate current load from absolute load)
@@ -222,7 +223,7 @@ namespace Demovox;
 		Send test mail to <?= $mailRecipient ?>
 		<?php foreach ($languages as $langId => $language) { ?>
 			<button class="ajaxButton"
-					data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?lang='.$langId, 'mail_test') ?>">
+					data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?lang=' . $langId, 'mail_test') ?>">
 				<?= $language ?>
 				(<?= Config::getValue('mail_confirm_from_address_' . $langId) ?: 'mail address missing' ?>)
 			</button>

@@ -141,7 +141,9 @@ function showOnSet($check, $showHide, value) {
 
 function showHide($el, show) {
 	if (show) {
-		$el.show();
+		if (!$el.hasClass('hidden')) {
+			$el.show();
+		}
 	} else {
 		$el.hide();
 	}

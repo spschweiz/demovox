@@ -50,14 +50,14 @@ class AdminPages
 
 	public function pageSysinfo()
 	{
-		if (defined('DEMOVOX_ENC_KEY')) {
+		if (defined('DEMOVOX_ENC_KEY') && defined('DEMOVOX_HASH_KEY')) {
 			$encKey = true;
 		} else {
 			try {
 				$key = \Defuse\Crypto\Key::createNewRandomKey();
 				$encKey = $key->saveToAsciiSafeString();
 			} catch (\Defuse\Crypto\Exception\EnvironmentIsBrokenException $e) {
-				echo '<span style="color:red">Crypto error: ' . $e->getMessage() . '</span>';
+				echo '<span class="error">Crypto error: ' . $e->getMessage() . '</span>';
 			}
 		}
 		$salts = [

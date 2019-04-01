@@ -16,6 +16,16 @@
 		height: 80vh;
 		width: 100%;
 		overflow: auto;
-		display:none;
+		display: none;
+	}
+
+	.error {
+		color: red;
+		font-weight: bold;
+	}
+
+	.success {
+		color: green;
+		font-weight: bold;
 	}
 }
