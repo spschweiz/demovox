@@ -621,7 +621,7 @@ class ConfigVars
 		$sections = self::$sections;
 		$glueLang = Config::GLUE_LANG;
 		foreach (i18n::getLangs() as $langId => $language) {
-			$langEnabled = Config::getValue('is_language_enabled' . $glueLang . $langId);
+			$langEnabled = Config::getValue('is_language_enabled' . $glueLang . $langId, 1);
 
 			$sections['signatureSheetFields_' . $langId] = [
 				'title'   => 'Signature sheet field positions ' . $language,
