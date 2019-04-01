@@ -390,7 +390,7 @@ class ConfigVars
 		$wpMailName = get_bloginfo('name');
 
 		foreach (i18n::getLangs() as $langId => $language) {
-			$langEnabled = Config::getValue('is_language_enabled' . $glueLang . $langId);
+			$langEnabled = Config::getValue('is_language_enabled' . $glueLang . $langId, false, 1);
 			$class = $langEnabled ? '' : ' hidden';
 			$glueLangId = $glueLang . $langId;
 

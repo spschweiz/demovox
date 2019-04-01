@@ -4,25 +4,28 @@ namespace Demovox;
 
 class Config
 {
-	const PART_ROTATION = 'rot';
-	const PART_LAST_LANG = 'lastLang';
-	const GLUE_PART = '_';
-	const PART_POS_X = 'x';
 	const GLUE_LANG = '_';
+	const GLUE_PART = '_';
+	const PART_ROTATION = 'rot';
+	const PART_POS_X = 'x';
 	const PART_POS_Y = 'y';
+	const PART_PREVIOUS_LANG = 'prevLang';
 
 	/**
 	 * @param $id string
-	 * @param $valPart false|string
-	 * @param $retString bool Always return $valPart results as string, used for config outputs
+	 * @param $valPart null|string
+	 * @param $default null|mixed Default value (ignore value in ConfigVars, for example to avoid function nesting)
 	 * @return mixed Value set for the config.
 	 */
-	public static function getValue($id, $valPart = false, $retString = false)
+	public static function getValue($id, $valPart = null, $default = null)
 	{
 		$fullId = $id . ($valPart ? self::GLUE_PART . $valPart : '');
 		$value = Core::getOption($fullId);
 		if ($value !== false) {
 			return self::valueFormat($valPart, $value);
+		}
+		if ($default !== null) {
+			return $default;
 		}
 
 		// No value is set yet, get default value
@@ -34,16 +37,15 @@ class Config
 		}
 		$field = $fields[$key];
 		$value = isset($field['default']) ? $field['default'] : ''; // Set to our default
-		if ($field['checkbox']) {
-			$value = !!$value;
-		}
 
 		return self::valueFormat($valPart, $value, $field);
 	}
 
 	protected static function valueFormat($valPart, $value, $field = null)
 	{
-		if ($valPart == self::PART_POS_X) {
+		if (isset($field['checkbox']) && $field['checkbox']) {
+			$value = !!$value;
+		} elseif ($valPart == self::PART_POS_X) {
 			if (isset($field['defaultX'])) {
 				$value = intval($field['defaultX']);
 			}

@@ -86,7 +86,7 @@ class AdminSettings
 	{
 		$wpid = Core::getWpId($uid);
 		$currUserLang = defined('ICL_LANGUAGE_CODE') ? ICL_LANGUAGE_CODE : '-';
-		$lastUserLang = Core::getOption($uid . Config::GLUE_PART . Config::PART_LAST_LANG);
+		$lastUserLang = Core::getOption($uid . Config::GLUE_PART . Config::PART_PREVIOUS_LANG);
 		if ($currUserLang != $lastUserLang && $lastUserLang !== false) {
 			echo Strings::wpMessage(
 				'<b>Error: Previously selected page can not be loaded.</b> Don\'t click on "Save" or you might lose this setting.<br/>'
@@ -98,7 +98,7 @@ class AdminSettings
 		}
 		printf(
 			'<input name="%1$s" id="%1$s" type="hidden" value="%2$s" />',
-			$wpid . Config::GLUE_PART . Config::PART_LAST_LANG,
+			$wpid . Config::GLUE_PART . Config::PART_PREVIOUS_LANG,
 			$currUserLang
 		);
 	}
@@ -178,7 +178,7 @@ class AdminSettings
 				case'wpPage':
 					add_settings_field($id, $field['label'], $callback, $page, $field['section'], $field);
 					register_setting($page, $id);
-					register_setting($page, $id . Config::GLUE_PART . Config::PART_LAST_LANG);
+					register_setting($page, $id . Config::GLUE_PART . Config::PART_PREVIOUS_LANG);
 					break;
 			}
 		}
@@ -217,8 +217,8 @@ class AdminSettings
 				);
 				break;
 			case 'pos':
-				$valuePosX = Config::getValue($uid, Config::PART_POS_X, true);
-				$valuePosY = Config::getValue($uid, Config::PART_POS_Y, true);
+				$valuePosX = Config::getValue($uid, Config::PART_POS_X);
+				$valuePosY = Config::getValue($uid, Config::PART_POS_Y);
 				printf(
 					'<input name="%1$s" id="%1$s" type="number" placeholder="%2$s" value="%3$s" size="5" />',
 					$wpid . Config::GLUE_PART . Config::PART_POS_X,
@@ -242,9 +242,9 @@ class AdminSettings
 				);
 				break;
 			case 'pos_rot':
-				$valuePosX = Config::getValue($uid, Config::PART_POS_X, true);
-				$valuePosY = Config::getValue($uid, Config::PART_POS_Y, true);
-				$valueRot = Config::getValue($uid, Config::PART_ROTATION, true);
+				$valuePosX = Config::getValue($uid, Config::PART_POS_X);
+				$valuePosY = Config::getValue($uid, Config::PART_POS_Y);
+				$valueRot = Config::getValue($uid, Config::PART_ROTATION);
 				printf(
 					'<input name="%1$s" id="%1$s" type="number" placeholder="%2$s" value="%3$s" size="5" />',
 					$wpid . Config::GLUE_PART . Config::PART_POS_X,
