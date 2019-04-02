@@ -8,8 +8,8 @@ class Strings
 	/**
 	 * Get permalink to page where to find the PDF
 	 *
-	 * @param $signGuid string
-	 * @param $pageId null|int
+	 * @param string $signGuid
+	 * @param  null|int $pageId
 	 * @param $baseUrl null|string
 	 * @param $text null|string
 	 * @return string
@@ -90,7 +90,7 @@ class Strings
 			'txt',
 			'xliff',
 			'xml',
-			'yaml'
+			'yaml',
 		];
 		if (!in_array($format, $availableFormats)) {
 			Core::showError('getCountries: invalid format ' . $format . ' was requested', 500);
@@ -163,10 +163,11 @@ class Strings
 	}
 
 	/**
-	 * @param $options array
-	 * @param $value string
-	 * @param $name string
-	 * @param $id string
+	 *
+	 * @param array $options
+	 * @param string $value
+	 * @param string $name
+	 * @param string $id
 	 * @return string select id
 	 */
 	public static function createSelect($options, $value, $name, $id = null, $attributes = [])
@@ -189,8 +190,14 @@ class Strings
 
 		return $id;
 	}
+
+	/**
+	 * Convert newline to html <br/>
+	 * @param string $text
+	 * @return string
+	 */
 	public static function nl2br($text)
 	{
-		return str_replace(["\r\n", "\r", "\n"], "<br />", $text);
+		return str_replace(["\r\n", "\r", "\n"], "<br/>", $text);
 	}
 }

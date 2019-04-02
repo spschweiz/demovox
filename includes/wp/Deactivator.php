@@ -35,11 +35,11 @@ class Deactivator
 	 */
 	public static function deactivate()
 	{
-		wp_clear_scheduled_hook('demovox_send_mails');
+		ManageCron::deactivate();
 
 		// remove capabilities
 		$role = get_role('super admin');
-		if($role){
+		if ($role) {
 			$role->remove_cap('demovox_overview');
 			$role->remove_cap('demovox_stats');
 			$role->remove_cap('demovox_import');

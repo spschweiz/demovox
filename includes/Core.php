@@ -205,9 +205,7 @@ class Core
 
 	private function defineCronHooks()
 	{
-		$cronHandler = new ManageCron($this->getPluginName(), $this->getVersion());
-
-		$this->loader->addAction('demovox_send_mails', $cronHandler, 'sendMails');
+		ManageCron::registerHooks($this->loader);
 	}
 
 	/**

@@ -207,7 +207,8 @@ class AdminPages
 	{
 		Admin::checkAccess('manage_options');
 
-		ManageCron::cancelMail();
+		$hook = sanitize_text_field($_REQUEST['cron']);
+		ManageCron::cancel($hook);
 		echo 'Cron cancelled at ' . date('d.m.Y I:m:s');
 	}
 

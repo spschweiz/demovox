@@ -40,7 +40,7 @@ class ManageCron
 	{
 		$crons = [];
 		foreach (self::$crons as $cron) {
-			$className = '\Demovox\Cron' . ucfirst($cron);
+			$className = '\\' . __NAMESPACE__ . '\\' . ucfirst($cron);
 			$crons[] = new $className;
 		}
 		return $crons;
@@ -52,27 +52,73 @@ class ManageCron
 		require_once $pluginDir . 'includes/cron/CronBase.php';
 		$crons = self::$crons;
 		foreach ($crons as $cron) {
-			require_once $pluginDir . 'includes/cron/Cron' . $cron . '.php';
+			require_once $pluginDir . 'includes/cron/' . $cron . '.php';
 		}
 	}
 
-	public function sendMails()
+	public static function run($name)
 	{
-		$sendMails = new CronSendMails();
+		$sendMails = self::getClass($name);
 		$sendMails->run();
 		return false;
-	}
-
-	public function cancelMail()
-	{
-		$sendMails = new CronSendMails();
-		$sendMails->cancelRunning();
 	}
 
 	public static function triggerCron($hook)
 	{
 		wp_schedule_single_event(time() - 1, $hook);
 		spawn_cron();
+	}
+
+	public static function cancel($name)
+	{
+		$sendMails = self::getClass($name);
+		$sendMails->cancelRunning();
+	}
+
+	/**
+	 * @param $name
+	 * @return CronBase
+	 */
+	protected static function getClass($name)
+	{
+		if (!in_array($name, self::$crons)) {
+			Core::showError('Invalid cron ' . $name, 400);
+		}
+		$name = __NAMESPACE__ . '\\' . $name;
+		return new $name();
+	}
+
+	/**
+	 * @param Loader $loader
+	 */
+	public static function registerHooks($loader)
+	{
+		$cronNames = ManageCron::getAllCrons();
+		foreach ($cronNames as $cron) {
+			$hook = $cron->getHookName();
+			$loader->addAction($hook, $cron, 'run');
+		}
+	}
+
+	public static function activate()
+	{
+		$cronNames = ManageCron::getAllCrons();
+		foreach ($cronNames as $cron) {
+			$hook = $cron->getHookName();
+			if (!wp_next_scheduled($hook)) {
+				$recurrence = $cron->getRecurrence();
+				wp_schedule_event(time(), $recurrence, $hook);
+			}
+		}
+	}
+
+	public static function deactivate()
+	{
+		$cronNames = ManageCron::getAllCrons();
+		foreach ($cronNames as $cron) {
+			$hook = $cron->getHookName();
+			wp_clear_scheduled_hook($hook);
+		}
 	}
 
 	public static function deleteOptions()

@@ -4,28 +4,41 @@ namespace Demovox;
 
 class CronBase
 {
+	protected $namespace;
 	protected $cronId;
-	protected $cronName;
+	protected $className;
+	protected $scheduleRecurrence = 'hourly';
 
-	public function __construct($cronName)
+	public function __construct()
 	{
-		$this->cronId = lcfirst($cronName);
-		$this->cronName = ucfirst($cronName);
+		list($namespace, $className) = explode('\\', get_class($this));
+		$cronId = strtolower(preg_replace(
+			'/(?<=[a-z])([A-Z]+)/', '_$1', $className
+		));
+		$this->namespace = $namespace;
+		$this->cronId = $cronId;
+		$this->className = $className;
+		return;
 	}
 
 	public function getName()
 	{
-		return $this->cronName;
+		return $this->cronId;
+	}
+
+	public function getClassName()
+	{
+		return $this->className;
 	}
 
 	public function getHookName()
 	{
-		return 'demovox_send_mails';
+		return strtolower($this->namespace) . '_' . $this->cronId;
 	}
 
-	public function getId()
+	public function getRecurrence()
 	{
-		return $this->cronId;
+		return $this->scheduleRecurrence;
 	}
 
 	/**
@@ -53,21 +66,34 @@ class CronBase
 		return $this->getOption('lock');
 	}
 
-	public function getRunningStart()
+	public function getStausDateStart()
 	{
 		$time = $this->getOption('start');
 		return $time;
 	}
 
-	public function getSkipped()
+	public function getStatusSkipped()
 	{
-		$lastSkipped = $this->getOption('lastSkipped');
-		return $lastSkipped
-			? [$lastSkipped, $this->getOption('lastSkippedReason')]
-			: null;
+		return $this->getOption('lastSkipped');
 	}
 
-	public function getRunningStop()
+	public function setStatusMessage($msg, $success = true)
+	{
+		$this->setOption('statusMsg', $msg);
+		$this->setOption('statusSuccess', $success);
+	}
+
+	public function getStatusMessage()
+	{
+		return $this->getOption('statusMsg');
+	}
+
+	public function getStatusSuccess()
+	{
+		return $this->getOption('statusSuccess');
+	}
+
+	public function getStatusDateStop()
 	{
 		$time = $this->getOption('stop');
 		return $time;
@@ -75,37 +101,38 @@ class CronBase
 
 	protected function setRunningStart()
 	{
-		Core::logMessage('Cron ' . $this->getName() . ' started');
+		Core::logMessage('Cron ' . $this->className . ' started');
 		$this->setOption('lock', true);
 		$this->setOption('start', time());
 		$this->setOption('lastSkipped', null);
 		$this->setOption('lastFailed', null);
+		$this->setStatusMessage(null);
 	}
 
 	public function cancelRunning()
 	{
-		Core::logMessage('Cron ' . $this->getName() . ' cancelled by user "' . Infos::getUserName() . '"', 'notice');
+		Core::logMessage('Cron ' . $this->className . ' cancelled by user "' . Infos::getUserName() . '"', 'notice');
 		$this->setOption('lock', false);
 		$this->setOption('stop', time());
 	}
 
 	protected function setSkipped($reason)
 	{
-		Core::logMessage('Cron ' . $this->getName() . ' execution skipped. Reason: ' . $reason, 'notice');
+		Core::logMessage('Cron ' . $this->className . ' execution skipped. Reason: ' . $reason, 'notice');
 		$this->setOption('lastSkipped', time());
-		$this->setOption('lastSkippedReason', $reason);
+		$this->setStatusMessage($reason);
 	}
 
 	protected function setRunningStop()
 	{
-		Core::logMessage('Cron ' . $this->getName() . ' ended', 'notice');
+		Core::logMessage('Cron ' . $this->className . ' ended', 'notice');
 		$this->setOption('lock', false);
 		$this->setOption('stop', time());
 	}
 
 	protected function log($msg, $level = 'error')
 	{
-		Core::logMessage('Cron ' . $this->getName() . ' message: ' . $msg, $level);
+		Core::logMessage('Cron ' . $this->className . ' message: ' . $msg, $level);
 	}
 
 	/**
@@ -114,7 +141,7 @@ class CronBase
 	 */
 	protected function getOption($id)
 	{
-		return Core::getOption('cron_' . $this->cronId . '_' . $id);
+		return Core::getOption($this->cronId . '_' . $id);
 	}
 
 	/**
@@ -126,6 +153,6 @@ class CronBase
 	 */
 	protected function setOption($id, $value)
 	{
-		return Core::setOption('cron_' . $this->cronId . '_' . $id, $value);
+		return Core::setOption($this->cronId . '_' . $id, $value);
 	}
 }

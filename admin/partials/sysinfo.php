@@ -132,9 +132,11 @@ namespace Demovox;
 	$cronNames = ManageCron::getAllCrons();
 	foreach ($cronNames as $cronName) {
 		$cron = $cronName;
-		$dateStart = $cron->getRunningStart();
-		$dateStop = $cron->getRunningStop();
-		$lastSkipped = $cron->getSkipped();
+		$dateStart = $cron->getStausDateStart();
+		$dateStop = $cron->getStatusDateStop();
+		$lastSkipped = $cron->getStatusSkipped();
+		$lastMessage = $cron->getStatusMessage();
+		$lastSuccess = $cron->getStatusSuccess();
 		?>
 		<h4><?= $cron->getName() ?></h4>
 		<p>
@@ -146,7 +148,7 @@ namespace Demovox;
 			<br/>
 			Status: <?php if ($cron->isRunning()) { ?>currently running
 				<button class="ajaxButton"
-						data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php', 'cancel_cron') ?>"
+						data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?cron='.$cron->getClassName(), 'cancel_cron') ?>"
 						data-confirm="Force cancel?" data-container=".ajaxCancelContainer">
 					cancel execution
 				</button><span class="ajaxCancelContainer"></span>
@@ -156,9 +158,13 @@ namespace Demovox;
 			Last started: <?= $dateStart ? date('d.m.Y G:i:s', $dateStart) : '-' ?><br/>
 			Last ended: <?= $dateStop ? date('d.m.Y G:i:s', $dateStop) : '-' ?><br/>
 			<?php if ($lastSkipped) { ?>
-				Last skipped execution: <?= date('d.m.Y G:i:s', $lastSkipped[0]) ?> (Reason: <?= $lastSkipped[1] ?>)
+				Last skipped execution: <?= date('d.m.Y G:i:s', $lastSkipped) ?> (Reason: <?= $lastMessage ?>)
 				<br/>
-			<?php } ?>
+			<?php } elseif ($lastMessage) {
+				echo 'Last status: '
+					. ($lastSuccess ? '<span class="success">success' : '<span class="error">error'). '</span>: '
+					. $lastMessage;
+			} ?>
 		</p>
 		<?php
 

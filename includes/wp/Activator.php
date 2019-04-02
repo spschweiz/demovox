@@ -75,9 +75,8 @@ class Activator
 	{
 		$update = DB::createUpdateTable(self::$tableDefinition);
 
-		if (!wp_next_scheduled('demovox_send_mails')) {
-			wp_schedule_event(time(), 'hourly', 'demovox_send_mails');
-		}
+		// cron
+		ManageCron::activate();
 
 		// Create pages
 		$signatureSheetPageId = Config::getValue('signature_sheet_page_id');
