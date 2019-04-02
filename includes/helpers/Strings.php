@@ -200,4 +200,16 @@ class Strings
 	{
 		return str_replace(["\r\n", "\r", "\n"], "<br/>", $text);
 	}
+
+	/**
+	 * @param string $email
+	 * @return false|string
+	 */
+	public static function hashMail($email)
+	{
+		if (!defined('DEMOVOX_HASH_KEY')) {
+			Core::showError('Mail hashing failed: Constant DEMOVOX_HASH_KEY is not defined in wp-config.php', 500);
+		}
+		return hash_hmac('md5', $email, DEMOVOX_HASH_KEY);
+	}
 }

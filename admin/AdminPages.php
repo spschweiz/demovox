@@ -60,6 +60,15 @@ class AdminPages
 				echo '<span class="error">Crypto error: ' . $e->getMessage() . '</span>';
 			}
 		}
+		if (defined('DEMOVOX_ENC_KEY') && defined('DEMOVOX_HASH_KEY')) {
+			$hashKey = true;
+		} else {
+			try {
+				$hashKey = bin2hex(random_bytes(30));
+			} catch (\Exception $e) {
+				echo '<span class="error">Error on creating random bytes: ' . $e->getMessage() . '</span>';
+			}
+		}
 		$salts = [
 			'AUTH_KEY',
 			'SECURE_AUTH_KEY',
@@ -267,7 +276,7 @@ class AdminPages
 				continue;
 			}
 
-			$row = DB::getRow(['ID'], "serial = '" . $serial . "'");
+			$row = DB::getRow(['ID', 'mail'], "serial = '" . $serial . "'");
 			if (!$row) {
 				$fail[] = $serial;
 				Core::logMessage('doCsvImport: Could not find serial = "' . $serial . '"');
@@ -281,7 +290,8 @@ class AdminPages
 				],
 				['ID' => $row->ID]
 			);
-			if ($save) {
+			$saveMail = $this->mailSetSheetReceived($row->mail);
+			if ($save && $saveMail) {
 				$ok++;
 				$totalSignCount += $signCount;
 			} else {
@@ -301,6 +311,24 @@ class AdminPages
 			$return .= Strings::wpMessage($count . ' failed sheet(s): ' . implode(', ', $fail), 'error');
 		}
 		return $return;
+	}
+
+	/**
+	 * @param $mail
+	 * @return bool success
+	 */
+	protected function mailSetSheetReceived($mail)
+	{
+		if (!Config::getValue('mail_reminder_enabled') || !Config::getValue('mail_reminder_dedup')) {
+			return true;
+		}
+		$where = 'mail = ' . $mail;
+		$mail = DB::getRow(['ID'], $where, DB::TABLE_MAIL);
+		if ($mail !== null) {
+			$update = DB::updateStatus(['is_sheet_received' => 1], ['ID' => $mail->ID], DB::TABLE_MAIL);
+			return !!$update;
+		}
+		return true;
 	}
 
 	public function getCsv()

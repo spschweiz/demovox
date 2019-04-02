@@ -24,43 +24,55 @@ namespace Demovox;
  */
 class Activator
 {
-	private static $tableDefinition = '
-          ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-          guid CHAR(36) NOT NULL,
-          serial CHAR(6) NULL,
-          language CHAR(2) NOT NULL,
-          ip_address CHAR(232) NULL,
-          first_name VARCHAR(678) NOT NULL,
-          last_name VARCHAR(678) NOT NULL,
-          birth_date VARCHAR(188) NULL,
-          mail VARCHAR(424) NOT NULL,
-          phone VARCHAR(296) NULL,
-          country CHAR(2) NULL,
-          street VARCHAR(422) NULL,
-          street_no VARCHAR(188) NULL,
-          zip VARCHAR(200) NULL,
-          city VARCHAR(296) NULL,
-          gde_no VARCHAR(178) NULL,
-          gde_zip VARCHAR(176) NULL,
-          gde_name VARCHAR(258) NULL,
-          gde_canton VARCHAR(172) NULL,
-          is_optin TINYINT NULL,
-          is_step2_done TINYINT DEFAULT 0 NOT NULL,
-          is_mail_sent TINYINT DEFAULT 0 NOT NULL,
-          is_sheet_received TINYINT DEFAULT 0 NOT NULL,
-          is_reminder_sent TINYINT DEFAULT 0 NOT NULL,
-          is_exported TINYINT DEFAULT 0 NOT NULL,
-          is_encrypted TINYINT DEFAULT 0 NOT NULL,
-          is_deleted TINYINT DEFAULT 0 NOT NULL,
-          link_pdf VARCHAR(255) NOT NULL,
-          link_optin VARCHAR(255) NOT NULL,
-          creation_date DATETIME NOT NULL DEFAULT NOW(),
-          edit_date DATETIME NULL,
-          sheet_received_date DATETIME NULL,
-          reminder_sent_date DATETIME NULL,
-          source VARCHAR(127) NULL,
+	private static $tableDefinitionSignatures = '
+          ID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+          guid char(36) NOT NULL,
+          serial char(6) NULL,
+          language char(2) NOT NULL,
+          ip_address char(232) NULL,
+          first_name varchar(678) NOT NULL,
+          last_name varchar(678) NOT NULL,
+          birth_date varchar(188) NULL,
+          mail varchar(424) NOT NULL,
+          phone varchar(296) NULL,
+          country char(2) NULL,
+          street varchar(422) NULL,
+          street_no varchar(188) NULL,
+          zip varchar(200) NULL,
+          city varchar(296) NULL,
+          gde_no varchar(178) NULL,
+          gde_zip varchar(176) NULL,
+          gde_name varchar(258) NULL,
+          gde_canton varchar(172) NULL,
+          is_optin tinyint(4) NULL,
+          is_step2_done tinyint(4) DEFAULT 0 NOT NULL,
+          is_mail_sent tinyint(4) DEFAULT 0 NOT NULL,
+          is_sheet_received tinyint(4) DEFAULT 0 NOT NULL,
+          is_reminder_sent tinyint(4) DEFAULT 0 NOT NULL,
+          is_exported tinyint(4) DEFAULT 0 NOT NULL,
+          is_encrypted tinyint(4) DEFAULT 0 NOT NULL,
+          is_deleted tinyint(4) DEFAULT 0 NOT NULL,
+          link_pdf varchar(255) NOT NULL,
+          link_optin varchar(255) NOT NULL,
+          creation_date datetime NOT NULL DEFAULT NOW(),
+          edit_date datetime NULL,
+          sheet_received_date datetime NULL,
+          reminder_sent_date datetime NULL,
+          source varchar(127) NULL,
           PRIMARY KEY (ID),
           UNIQUE KEY guid_index (guid),
+          INDEX creation_date_index (creation_date)
+    ';
+
+	private static $tableDefinitionMails = '
+          ID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+          sign_ID bigint(20) UNSIGNED NOT NULL,
+          mail varchar(424) NOT NULL,
+          creation_date datetime NOT NULL,
+          is_sheet_received tinyint(4) DEFAULT 0 NOT NULL,
+          is_reminder_sent tinyint(4) DEFAULT 0 NOT NULL,
+          PRIMARY KEY (ID),
+          UNIQUE mail_index (creation_date),
           INDEX creation_date_index (creation_date)
     ';
 
@@ -73,7 +85,8 @@ class Activator
 	 */
 	public static function activate()
 	{
-		$update = DB::createUpdateTable(self::$tableDefinition);
+		$updateSigns = DB::createUpdateTable(self::$tableDefinitionSignatures);
+		$updateMails = DB::createUpdateTable(self::$tableDefinitionMails, DB::TABLE_MAIL);
 
 		// cron
 		ManageCron::activate();

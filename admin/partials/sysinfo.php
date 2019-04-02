@@ -27,7 +27,15 @@ namespace Demovox;
 		<p>
 			You need to put the following line at the end of wp-config.php and backup them in a secure location:
 		</p>
-		<pre>define('DEMOVOX_ENC_KEY', '<?= $encKey ?>');</pre>
+		<pre><?php
+			if ($encKey !== true) {
+				?>define('DEMOVOX_ENC_KEY', '<?= $encKey ?>');
+				<?php
+			}
+			if ($hashKey !== true) {
+				?>define('DEMOVOX_HASH_KEY', '<?= $hashKey ?>');<?php
+			}
+			?></pre>
 		<p>
 			If you have restored this wordpress with the demovox database, you need to set the original encryption key.
 		</p>

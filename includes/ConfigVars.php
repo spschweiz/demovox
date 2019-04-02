@@ -350,7 +350,7 @@ class ConfigVars
 			'supplemental' => 'Drops configuration when this plugin is uninstalled',
 		],
 		[
-			'uid'          => 'drop_table_on_uninstall',
+			'uid'          => 'drop_tables_on_uninstall',
 			'label'        => 'Drop signatures on uninstall',
 			'section'      => 'danger',
 			'type'         => 'checkbox',
@@ -391,6 +391,15 @@ class ConfigVars
 			'type'         => 'checkbox',
 			'default'      => 0,
 			'supplemental' => 'Send a reminder to signees which didn\'t send their signature sheets.',
+		];
+		$fields[] = [
+			'uid'          => 'mail_reminder_dedup',
+			'label'        => 'Only send one reminder per mail adress',
+			'section'      => 'mailText',
+			'type'         => 'checkbox',
+			'default'      => 1,
+			'supplemental' => 'Might weaken email address encryption security.',
+			'class'        => 'showOnMailRemindEnabled',
 		];
 		$fields[] = [
 			'uid'          => 'mail_nl2br',
