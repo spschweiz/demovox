@@ -86,7 +86,7 @@ class PublicHandler
 
 	public function initPlugin()
 	{
-		if (!session_id()) //checking if session already exists
+		if (!session_id() && !headers_sent()) //checking if session already exists
 		{
 			session_start();
 		}
