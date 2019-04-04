@@ -9,7 +9,6 @@ class CronMailsRemindIndex extends CronBase
 	const STATUS_FINISHED = 2;
 
 	protected $maxSignsPerCall = 200;
-	protected $hookName = 'mails_remind_index';
 
 	public function run()
 	{
@@ -34,7 +33,7 @@ class CronMailsRemindIndex extends CronBase
 		// Set state
 		$status = Core::getOption('cron_index_mail_status');
 		$lastImportId = Core::getOption('cron_index_mail_last_import_id');
-		if ($status === false || $status = self::STATUS_INIT) {
+		if ($status === false || $status === self::STATUS_INIT) {
 			$statusRun = self::STATUS_INIT;
 		} else {
 			$statusRun = self::STATUS_RUNNING;
@@ -48,12 +47,12 @@ class CronMailsRemindIndex extends CronBase
 		}
 
 		Core::setOption('cron_index_mail_last_import_id', $lastImportId);
-		if ($statusRun = self::STATUS_INIT && $count > count($rows)) {
+		if ($statusRun === self::STATUS_INIT && $count > count($rows)) {
 			$statusEnd = self::STATUS_INIT;
-			$this->setStatusMessage('Imported ' . count($rows) . ' mails, ' . $count . ' to go');
+			$this->setStatusMessage('Imported ' . count($rows) . ' mail addresses, ' . $count - count($rows) . ' more to go');
 		} else {
 			$statusEnd = self::STATUS_FINISHED;
-			$this->setStatusMessage('Imported ' . count($rows) . ' mails');
+			$this->setStatusMessage('Imported ' . count($rows) . ' mail addresses');
 		}
 		Core::setOption('cron_index_mail_status', $statusEnd);
 	}
@@ -110,7 +109,9 @@ class CronMailsRemindIndex extends CronBase
 	 */
 	protected function getRowsToImport($lastImportId)
 	{
-		$where = 'is_deleted = 0';
+		// To ensure we dont skip any signature the client is still working on, wait for all php sessions to die
+		$maxDate = date("Y-m-d", strtotime('12 hour ago'));
+		$where = "is_deleted = 0 AND is_step2_done = 1 AND creation_date < '{$maxDate}'";
 		if ($lastImportId) {
 			$where .= ' AND ID > ' . $lastImportId;
 		}

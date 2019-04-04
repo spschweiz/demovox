@@ -401,6 +401,15 @@ class ConfigVars
 			'class'        => 'showOnMailRemindEnabled',
 		];
 		$fields[] = [
+			'uid'          => 'mail_reminder_min_age',
+			'label'        => 'Minimum signature age',
+			'section'      => 'mailText',
+			'type'         => 'number',
+			'default'      => 30,
+			'supplemental' => 'Minimum age of a signature before a reminder is sent.',
+			'class'        => 'showOnMailRemindEnabled',
+		];
+		$fields[] = [
 			'uid'          => 'mail_nl2br',
 			'label'        => 'Newline to BR',
 			'section'      => 'mailText',

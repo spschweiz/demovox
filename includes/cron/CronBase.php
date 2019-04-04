@@ -57,6 +57,11 @@ class CronBase
 		return true;
 	}
 
+	public function run()
+	{
+		Core::showError('Not implemented', 500);
+	}
+
 	/**
 	 * TODO: recognize old tasks as not running
 	 * @return mixed
@@ -81,6 +86,7 @@ class CronBase
 	{
 		$this->setOption('statusMsg', $msg);
 		$this->setOption('statusSuccess', $success);
+		$this->log(($success ? 'Success: ' : 'Error: ') . $msg, 'notice');
 	}
 
 	public function getStatusMessage()

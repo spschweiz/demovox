@@ -149,6 +149,24 @@ class DB
 	}
 
 	/**
+	 * Delete entries for a where statement
+	 *
+	 * @param null|array $where
+	 * @param null|int $table
+	 * @return int|false The number of rows updated, or false on error.
+	 */
+	public static function delete($where = null, $table = null)
+	{
+		global $wpdb;
+		$tableName = self::getTableName($table);
+		if ($tableName === self::$tableNameSignatures) {
+			return self::updateStatus(['is_deleted' => 1], $where, $table);
+		} else {
+			return $wpdb->delete($tableName, $where);
+		}
+	}
+
+	/**
 	 * @param $data
 	 * @param null|int $table
 	 * @return false|int
