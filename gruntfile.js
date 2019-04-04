@@ -33,10 +33,11 @@ module.exports = function (grunt) {
 				}],
 			},
 		},
-		shell: {
-			generateTranslations: {
-				command: 'cd languages/ && /usr/bin/env bash ./compile.sh'
-			}
+		po2mo: {
+			files: {
+				src: 'languages/*.po',
+				expand: true,
+			},
 		},
 		mkdir: {
 			build: {
@@ -144,10 +145,11 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-mkdir');
 	grunt.loadNpmTasks('grunt-contrib-compress');
 	grunt.loadNpmTasks('grunt-shell');
+        grunt.loadNpmTasks('grunt-po2mo');
 
 	// define Tasks
 	grunt.registerTask('default', 'availabletasks');
-	grunt.registerTask('translations', 'shell:generateTranslations');
+	grunt.registerTask('translations', 'po2mo');
 	grunt.registerTask('buildAssets', [
 		'checkDependencies', 'clean', 'webpack:prod', 'copy:adminAssets', 'uglify', 'sass', 'cssmin',
 	]);
