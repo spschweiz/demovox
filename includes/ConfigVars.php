@@ -413,7 +413,7 @@ class ConfigVars
 		$wpMailName = get_bloginfo('name');
 
 		foreach (i18n::getLangs() as $langId => $language) {
-			$langEnabled = self::getConfigValue('is_language_enabled' . $glueLang . $langId, null, true);
+			$langEnabled = !!self::getConfigValue('is_language_enabled' . $glueLang . $langId, null, true);
 			$class = $langEnabled ? '' : ' hidden';
 			$glueLangId = $glueLang . $langId;
 
@@ -643,7 +643,7 @@ class ConfigVars
 		$sections = self::$sections;
 		$glueLang = Config::GLUE_LANG;
 		foreach (i18n::getLangs() as $langId => $language) {
-			$langEnabled = self::getConfigValue('is_language_enabled' . $glueLang . $langId, null, true);
+			$langEnabled = !!self::getConfigValue('is_language_enabled' . $glueLang . $langId, null, true);
 
 			$sections['signatureSheetFields_' . $langId] = [
 				'title'   => 'Signature sheet field positions ' . $language,
@@ -656,13 +656,13 @@ class ConfigVars
 			$sections['mailConfirm_' . $langId] = [
 				'title'   => $language . '<br/>Mail confirmation',
 				'page'    => 'demovoxFields2',
-				'addPre'  => '<div class="showOnMailConfirmEnabled' . ($langEnabled ? ' hidden' : '') . '">',
+				'addPre'  => '<div class="showOnMailConfirmEnabled' . ($langEnabled ?'': ' hidden') . '">',
 				'addPost' => '</div>',
 			];
 			$sections['mailRemind_' . $langId] = [
 				'title'   => $language . '<br/>Mail reminder ',
 				'page'    => 'demovoxFields2',
-				'addPre'  => '<div class="showOnMailRemindEnabled' . ($langEnabled ? ' hidden' : '') . '">',
+				'addPre'  => '<div class="showOnMailRemindEnabled' . ($langEnabled ?'': ' hidden') . '">',
 				'addPost' => '</div>',
 			];
 		}

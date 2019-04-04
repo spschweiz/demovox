@@ -25,7 +25,7 @@ class Config
 		}
 		$value = Core::getOption($fullId);
 		if ($value !== false) {
-			return self::valueFormat($valPart, $value);
+			return self::valueFormat($valPart, $value, $field);
 		}
 
 		// No value is set yet, get default value
@@ -36,7 +36,7 @@ class Config
 
 	protected static function valueFormat($valPart, $value, $field = null)
 	{
-		if (isset($field['checkbox']) && $field['checkbox']) {
+		if (isset($field['type']) && $field['type'] === 'checkbox') {
 			$value = !!$value;
 		} elseif ($valPart == self::PART_POS_X) {
 			if (isset($field['defaultX'])) {

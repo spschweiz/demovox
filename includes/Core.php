@@ -275,7 +275,7 @@ class Core
 
 	/**
 	 * @param string $id
-	 * @return mixed Value set for the option.
+	 * @return mixed Value set for the option. False if not set.
 	 */
 	public static function getOption($id)
 	{
