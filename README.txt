@@ -59,12 +59,14 @@ plugins where more information needs to be conveyed that doesn't fit into the ca
 == DEV preparation ==
 
 = Preparation =
-Install Python, node.js and composer:
-* https://www.python.org/
-* https://nodejs.org/
-* https://getcomposer.org/
+Install:
+* Python (https://www.python.org/)
+* Ruby (https://www.ruby-lang.org/)
+* node.js (https://nodejs.org/)
+* composer (https://getcomposer.org/)
 Download required packages:
 `$npm install
+$npm install grunt-cli sass -g
 $composer install`
 Generate assets:
 `$grunt buildAssets`
