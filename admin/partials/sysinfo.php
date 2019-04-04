@@ -29,11 +29,13 @@ namespace Demovox;
 		</p>
 		<pre><?php
 			if ($encKey !== true) {
-				?>define('DEMOVOX_ENC_KEY', '<?= $encKey ?>');
-				<?php
+				echo "define('DEMOVOX_ENC_KEY', '{$encKey}');";
+				if ($hashKey !== true) {
+					echo "\n";
+				}
 			}
 			if ($hashKey !== true) {
-				?>define('DEMOVOX_HASH_KEY', '<?= $hashKey ?>');<?php
+				echo "define('DEMOVOX_HASH_KEY', '{$hashKey}');";
 			}
 			?></pre>
 		<p>
@@ -94,8 +96,7 @@ namespace Demovox;
 		<h4 class="error">show errors is enabled</h4>
 		<p>
 			PHP stack traces can display the arguments passed to methods on the call stack.<br/>
-			The value of encryption passwords and other personally sensitive data may be leaked out to an attacker.</br>
-
+			The value of encryption passwords and other personally sensitive data may be leaked out to an attacker.
 		</p>
 		<?php
 	}
@@ -156,7 +157,7 @@ namespace Demovox;
 			<br/>
 			Status: <?php if ($cron->isRunning()) { ?>currently running
 				<button class="ajaxButton"
-						data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?cron='.$cron->getClassName(), 'cancel_cron') ?>"
+						data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?cron=' . $cron->getClassName(), 'cancel_cron') ?>"
 						data-confirm="Force cancel?" data-container=".ajaxCancelContainer">
 					cancel execution
 				</button><span class="ajaxCancelContainer"></span>
@@ -170,7 +171,7 @@ namespace Demovox;
 				<br/>
 			<?php } elseif ($lastMessage) {
 				echo 'Last status: '
-					. ($lastSuccess ? '<span class="success">success' : '<span class="error">error'). '</span>: '
+					. ($lastSuccess ? '<span class="success">success' : '<span class="error">error') . '</span>: '
 					. $lastMessage;
 			} ?>
 		</p>

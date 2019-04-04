@@ -5,7 +5,6 @@ namespace Demovox;
 class ConfigVars
 {
 	static private $fieldsCache = null;
-	static private $fieldCache = [];
 	static public $sections = [
 		'base'                 => [
 			'title' => 'Base settings',
@@ -442,8 +441,7 @@ class ConfigVars
 				'label'   => $language,
 				'section' => 'optInText',
 				'type'    => 'text',
-				'class'   => 'hideOnOptinDisabled',
-				'class'   => $class,
+				'class'   => 'hideOnOptinDisabled' . $class,
 			];
 
 			// signatureSheetFields_LANG
@@ -638,6 +636,9 @@ class ConfigVars
 		return $fields;
 	}
 
+	/**
+	 * @return array
+	 */
 	public static function getSections()
 	{
 		$sections = self::$sections;

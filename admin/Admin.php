@@ -120,16 +120,6 @@ class Admin
 			],
 		];
 		wp_localize_script($this->pluginName . '_admin', 'demovoxAdmin', $demovoxJsArr);
-		//add_action( 'admin_enqueueScripts', [$this, 'loadBloodyTinymce']);
-	}
-
-	/**
-	 * todo: remove if it stays unused
-	 */
-	function loadBloodyTinymce()
-	{
-		wp_enqueue_script('bloody_tinymce_js_main', includes_url() . 'js/tinymce/tinymce.min.js');
-		wp_enqueue_script('bloody_tinymce_js_plugin', includes_url() . 'js/tinymce/plugins/compat3x/plugin.min.js');
 	}
 
 	public function setupAdminAjaxActions()
