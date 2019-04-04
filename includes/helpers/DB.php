@@ -171,7 +171,7 @@ class DB
 	 * @param null|int $table
 	 * @return false|int
 	 */
-	public static function insert($data, $table)
+	public static function insert($data, $table = null)
 	{
 		global $wpdb;
 		if (self::isEncryptionEnabled() && (!$table || $table === self::TABLE_SIGN)) {
