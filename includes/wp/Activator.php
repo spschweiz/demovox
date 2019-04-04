@@ -24,7 +24,8 @@ namespace Demovox;
  */
 class Activator
 {
-	private static $tableDefinitionSignatures = '
+	private static $tableDefinitions = [
+		DB::TABLE_SIGN => '
           ID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
           guid char(36) NOT NULL,
           serial char(6) NULL,
@@ -61,10 +62,8 @@ class Activator
           source varchar(127) NULL,
           PRIMARY KEY (ID),
           UNIQUE KEY guid_index (guid),
-          INDEX creation_date_index (creation_date)
-    ';
-
-	private static $tableDefinitionMails = '
+          INDEX creation_date_index (creation_date)',
+		DB::TABLE_MAIL => '
           ID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
           sign_ID bigint(20) UNSIGNED NOT NULL,
           mail varchar(424) NOT NULL,
@@ -73,9 +72,10 @@ class Activator
           is_sheet_received tinyint(4) DEFAULT 0 NOT NULL,
           is_reminder_sent tinyint(4) DEFAULT 0 NOT NULL,
           PRIMARY KEY (ID),
-          UNIQUE mail_index (creation_date),
-          INDEX creation_date_index (creation_date)
-    ';
+          UNIQUE KEY sign_ID_index (sign_ID),
+          UNIQUE KEY mail_index (mail),
+          INDEX creation_date_index (creation_date)',
+	];
 
 	/**
 	 * Short Description. (use period)
@@ -86,10 +86,10 @@ class Activator
 	 */
 	public static function activate()
 	{
-		$updateSigns = DB::createUpdateTable(self::$tableDefinitionSignatures);
-		$updateMails = DB::createUpdateTable(self::$tableDefinitionMails, DB::TABLE_MAIL);
+		foreach (self::$tableDefinitions as $tableId => $sql) {
+			$update = DB::createUpdateTable($sql, $tableId);
+		}
 
-		// cron
 		ManageCron::activate();
 
 		// Create pages
