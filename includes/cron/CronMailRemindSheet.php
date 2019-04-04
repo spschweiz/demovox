@@ -2,11 +2,32 @@
 
 namespace Demovox;
 
-class CronMailsRemindSend extends CronBase
+class CronMailRemindSheet extends CronBase
 {
 	protected $scheduleRecurrence = 'daily';
 	/** @var bool */
 	protected $isDedup = false;
+
+	public function run()
+	{
+		if (!Config::getValue('mail_reminder_enabled')) {
+			$this->setSkipped('Reminder mails are disabled in config');
+			return;
+		}
+		if (!Config::getValue('mail_reminder_dedup')) {
+			$importStatus = Core::getOption('cron_index_mail_status');
+			if ($importStatus === false || $importStatus === CronMailIndex::STATUS_INIT) {
+				$this->setSkipped('Reminder mail deduplication indexing (CronMailsRemindIndex) has not finished initial index yet');
+				return;
+			}
+		}
+		if (!$this->prepareRun()) {
+			return;
+		}
+		$this->setRunningStart();
+		$this->sendPendingMails();
+		$this->setRunningStop();
+	}
 
 	protected function sendPendingMails()
 	{
@@ -67,27 +88,6 @@ class CronMailsRemindSend extends CronBase
 		}
 
 		$this->setStatusMessage('Sent ' . count($rows) . ' mails');
-	}
-
-	public function run()
-	{
-		if (!Config::getValue('mail_reminder_enabled')) {
-			$this->setSkipped('Reminder mails are disabled in config');
-			return;
-		}
-		if (!Config::getValue('mail_reminder_dedup')) {
-			$importStatus = Core::getOption('cron_index_mail_status');
-			if ($importStatus === false || $importStatus === CronMailsRemindIndex::STATUS_INIT) {
-				$this->setSkipped('Reminder mail deduplication indexing (CronMailsRemindIndex) has not finished initial index yet');
-				return;
-			}
-		}
-		if (!$this->prepareRun()) {
-			return;
-		}
-		$this->setRunningStart();
-		$this->sendMails();
-		$this->setRunningStop();
 	}
 
 	/**

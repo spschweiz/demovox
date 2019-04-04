@@ -2,7 +2,7 @@
 
 namespace Demovox;
 
-class CronMailsRemindIndex extends CronBase
+class CronMailIndex extends CronBase
 {
 	const STATUS_INIT = 0;
 	const STATUS_RUNNING = 1;
@@ -65,7 +65,7 @@ class CronMailsRemindIndex extends CronBase
 	{
 		$hashedMail = Strings::hashMail($row->mail);
 		$mailRow = DB::getRow(
-			['ID', 'creation_date', 'is_sheet_received', 'is_reminder_sent'],
+			['ID', 'creation_date', 'is_step2_done', 'is_sheet_received', 'is_reminder_sent'],
 			"mail = '" . $hashedMail . "''",
 			DB::TABLE_MAIL
 		);
@@ -76,6 +76,7 @@ class CronMailsRemindIndex extends CronBase
 					'sign_ID'           => $row->ID,
 					'mail'              => $hashedMail,
 					'creation_date'     => $row->creation_date,
+					'is_step2_done'     => $row->is_step2_done,
 					'is_sheet_received' => $row->is_sheet_received ? 1 : 0,
 					'is_reminder_sent'  => $row->is_reminder_sent ? 1 : 0,
 				],
@@ -85,6 +86,9 @@ class CronMailsRemindIndex extends CronBase
 			$setMailData = [];
 			$setMailData['sign_ID'] = $row->ID;
 			$setMailData['creation_date'] = $row->creation_date;
+			if (!$mailRow->is_step2_done && $row->is_step2_done) {
+				$setMailData['is_step2_done'] = 1;
+			}
 			if (!$mailRow->is_sheet_received && $row->is_sheet_received) {
 				$setMailData['is_sheet_received'] = 1;
 			}
@@ -109,9 +113,9 @@ class CronMailsRemindIndex extends CronBase
 	 */
 	protected function getRowsToImport($lastImportId)
 	{
-		// To ensure we dont skip any signature the client is still working on, wait for all php sessions to die
+		// To ensure we get the correct is_step2_done for signatures a client is still working on, wait for all php sessions to die
 		$maxDate = date("Y-m-d", strtotime('12 hour ago'));
-		$where = "is_deleted = 0 AND is_step2_done = 1 AND creation_date < '{$maxDate}'";
+		$where = "is_deleted = 0 AND creation_date < '{$maxDate}'";
 		if ($lastImportId) {
 			$where .= ' AND ID > ' . $lastImportId;
 		}

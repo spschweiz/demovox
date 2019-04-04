@@ -69,6 +69,7 @@ class Activator
           sign_ID bigint(20) UNSIGNED NOT NULL,
           mail varchar(424) NOT NULL,
           creation_date datetime NOT NULL,
+          is_step2_done tinyint(4) DEFAULT 0 NOT NULL,
           is_sheet_received tinyint(4) DEFAULT 0 NOT NULL,
           is_reminder_sent tinyint(4) DEFAULT 0 NOT NULL,
           PRIMARY KEY (ID),
