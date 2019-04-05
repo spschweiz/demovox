@@ -235,14 +235,32 @@ namespace Demovox;
 	</p>
 	<h2>Email config test</h2>
 	<p>
-		Send test mail to <?= $mailRecipient ?>
-		<?php foreach ($languages as $langId => $language) { ?>
-			<button class="ajaxButton"
-					data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?lang=' . $langId, 'mail_test') ?>">
-				<?= $language ?>
-				(<?= Config::getValue('mail_confirm_from_address_' . $langId) ?: 'mail address missing' ?>)
-			</button>
-		<?php } ?>
+
+		<?php
+		function createMailButton($langId, $language, $mailType = Mail::TYPE_CONFIRM){
+		?>
+		<button class="ajaxButton"
+				data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?lang=' . $langId . '&mailType=' . $mailType, 'mail_test') ?>">
+			<?= $language ?>
+			(<?= Config::getValue('mail_confirm_from_address_' . $langId) ?: 'mail from address not set' ?>)
+		</button>
+		<?php
+		}
+		?>
+		Send test mails to <?= $mailRecipient ?>.<br/>
+		Confirmation mail:
+		<?php foreach ($languages as $langId => $language) {
+			createMailButton($langId, $language, $mailType = Mail::TYPE_CONFIRM);
+		} ?><br/>
+		Sheet reminder mail:
+		<?php foreach ($languages as $langId => $language) {
+			createMailButton($langId, $language, $mailType = Mail::TYPE_REMIND_SHEET);
+		} ?>
+		<br/>
+		Form reminder mail:
+		<?php foreach ($languages as $langId => $language) {
+			createMailButton($langId, $language, $mailType = Mail::TYPE_REMIND_FORM);
+		} ?>
 		<br/>
 		<span class="ajaxContainer"></span>
 	</p>

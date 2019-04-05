@@ -12,6 +12,9 @@ namespace Demovox;
  */
 class Mail
 {
+	const TYPE_CONFIRM = 0;
+	const TYPE_REMIND_SHEET = 1;
+	const TYPE_REMIND_FORM = 2;
 
 	static function send($to, $subject, $body, $fromAddress = '', $fromName = '')
 	{
@@ -93,11 +96,24 @@ class Mail
 
 	/**
 	 * @param signObject $sign
+	 * @param int $mailType
 	 * @return string
 	 */
-	static function getMailSubject($sign)
+	static function getMailSubject($sign, $mailType)
 	{
-		$subject = Config::getValueByLang('mail_confirm_subj', $sign->language);
+		switch($mailType){
+			case self::TYPE_REMIND_SHEET:
+				$confName = 'mail_remind_sheet_subj';
+				break;
+			case self::TYPE_REMIND_FORM:
+				$confName = 'mail_remind_form_subj';
+				break;
+			case self::TYPE_CONFIRM:
+			default:
+				$confName = 'mail_confirm_subj';
+				break;
+		}
+		$subject = Config::getValueByLang($confName, $sign->language);
 		$subject = str_replace('{first_name}', $sign->first_name, $subject);
 		$subject = str_replace('{last_name}', $sign->last_name, $subject);
 		return $subject;
@@ -106,12 +122,25 @@ class Mail
 	/**
 	 * @param signObject $sign
 	 * @param string $mailSubject
+	 * @param int $mailType
 	 * @return string
 	 */
-	static function getMailText($sign, $mailSubject)
+	static function getMailText($sign, $mailSubject, $mailType)
 	{
 		$clientLang = $sign->language;
-		$text = Config::getValueByLang('mail_confirm_body', $clientLang);
+		switch($mailType){
+			case self::TYPE_REMIND_SHEET:
+				$confName = 'mail_remind_sheet_body';
+				break;
+			case self::TYPE_REMIND_FORM:
+				$confName = 'mail_remind_form_body';
+				break;
+			case self::TYPE_CONFIRM:
+			default:
+				$confName = 'mail_confirm_body';
+				break;
+		}
+		$text = Config::getValueByLang($confName, $clientLang);
 		if (Config::getValue('mail_nl2br')) {
 			$text = Strings::nl2br($text);
 		}

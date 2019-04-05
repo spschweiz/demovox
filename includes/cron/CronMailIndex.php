@@ -12,7 +12,7 @@ class CronMailIndex extends CronBase
 
 	public function run()
 	{
-		if (!Config::getValue('mail_reminder_enabled')) {
+		if (!Config::getValue('mail_reminder_sheet_enabled')) {
 			$this->setSkipped('Reminder mails are disabled in config');
 			return;
 		}

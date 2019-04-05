@@ -15,5 +15,6 @@ submit_button();
 ?>
 <script>
 	showOnChecked($('#demovox_mail_confirmation_enabled'), $('.showOnMailConfirmEnabled'));
-	showOnChecked($('#demovox_mail_reminder_enabled'), $('.showOnMailRemindEnabled'));
+	showOnChecked($('#demovox_mail_reminder_sheet_enabled'), $('.showOnMailRemindSheetEnabled'));
+	showOnChecked($('#demovox_mail_reminder_form_enabled'), $('.showOnMailRemindFormEnabled'));
 </script>

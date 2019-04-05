@@ -186,7 +186,7 @@ class ConfigVars
 				'2' => '2',
 			],
 			'default' => '2',
-			'c'       => 'hideOnOptinDisabled',
+			'class'   => 'hideOnOptinDisabled',
 		],
 		[
 			'uid'          => 'use_page_as_optin_link',
@@ -384,12 +384,38 @@ class ConfigVars
 			'supplemental' => 'If enabled later, confirmations will also be sent for previous signees which did not receive the mail yet.<br/>You must also set the mailserver settings in the advanced settings.',
 		];
 		$fields[] = [
-			'uid'          => 'mail_reminder_enabled',
-			'label'        => 'Mail reminder enabled',
+			'uid'          => 'mail_reminder_sheet_enabled',
+			'label'        => 'Mail sheet reminder enabled',
 			'section'      => 'mailText',
 			'type'         => 'checkbox',
 			'default'      => 0,
 			'supplemental' => 'Send a reminder to signees which didn\'t send their signature sheets.',
+		];
+		$fields[] = [
+			'uid'          => 'mail_reminder_sheet_min_age',
+			'label'        => 'Minimum signature age',
+			'section'      => 'mailText',
+			'type'         => 'number',
+			'default'      => 30,
+			'supplemental' => 'Minimum age of a signature before a sheet reminder is sent.',
+			'class'        => 'showOnMailRemindSheetEnabled',
+		];
+		$fields[] = [
+			'uid'          => 'mail_reminder_form_enabled',
+			'label'        => 'Mail form reminder enabled',
+			'section'      => 'mailText',
+			'type'         => 'checkbox',
+			'default'      => 0,
+			'supplemental' => 'Send a reminder to signees which didn\'t finish filling the sign-up form.',
+		];
+		$fields[] = [
+			'uid'          => 'mail_reminder_form_min_age',
+			'label'        => 'Minimum signature age',
+			'section'      => 'mailText',
+			'type'         => 'number',
+			'default'      => 5,
+			'supplemental' => 'Minimum age of a signature before a form reminder is sent.',
+			'class'        => 'showOnMailRemindSheetEnabled',
 		];
 		$fields[] = [
 			'uid'          => 'mail_reminder_dedup',
@@ -398,23 +424,13 @@ class ConfigVars
 			'type'         => 'checkbox',
 			'default'      => 1,
 			'supplemental' => 'Might weaken email address encryption security.',
-			'class'        => 'showOnMailRemindEnabled',
-		];
-		$fields[] = [
-			'uid'          => 'mail_reminder_min_age',
-			'label'        => 'Minimum signature age',
-			'section'      => 'mailText',
-			'type'         => 'number',
-			'default'      => 30,
-			'supplemental' => 'Minimum age of a signature before a reminder is sent.',
-			'class'        => 'showOnMailRemindEnabled',
 		];
 		$fields[] = [
 			'uid'          => 'mail_nl2br',
 			'label'        => 'Newline to BR',
 			'section'      => 'mailText',
 			'type'         => 'checkbox',
-			'supplemental' => 'Inserts HTML line breaks before all newlines in mail body',
+			'supplemental' => 'Inserts HTML line breaks before all newlines in mail body. Don\'t activate this if you set the mail body in HTML.',
 		];
 		$glueLang = Config::GLUE_LANG;
 		$wpMailAddress = get_bloginfo('admin_email');
@@ -576,16 +592,31 @@ class ConfigVars
 			];
 
 			$fields[] = [
-				'uid'          => 'mail_reminder_subj' . $glueLangId,
+				'uid'          => 'mail_remind_sheet_subj' . $glueLangId,
 				'label'        => 'Subject',
-				'section'      => 'mailRemind_' . $langId,
+				'section'      => 'mailRemindSheet_' . $langId,
 				'type'         => 'text',
 				'supplemental' => 'Available placeholders: {first_name}, {last_name}. This mail is sent to the signee after signing up.',
 			];
 			$fields[] = [
-				'uid'          => 'mail_reminder_body' . $glueLangId,
+				'uid'          => 'mail_remind_sheet_body' . $glueLangId,
 				'label'        => 'Body',
-				'section'      => 'mailRemind_' . $langId,
+				'section'      => 'mailRemindSheet_' . $langId,
+				'type'         => 'textarea',
+				'supplemental' => 'Available placeholders: {first_name}, {last_name}, {mail}, {link_pdf}, {link_optin}, {subject}. ',
+			];
+
+			$fields[] = [
+				'uid'          => 'mail_remind_form_subj' . $glueLangId,
+				'label'        => 'Subject',
+				'section'      => 'mailRemindForm_' . $langId,
+				'type'         => 'text',
+				'supplemental' => 'Available placeholders: {first_name}, {last_name}. This mail is sent to the signee after signing up.',
+			];
+			$fields[] = [
+				'uid'          => 'mail_remind_form_body' . $glueLangId,
+				'label'        => 'Body',
+				'section'      => 'mailRemindForm_' . $langId,
 				'type'         => 'textarea',
 				'supplemental' => 'Available placeholders: {first_name}, {last_name}, {mail}, {link_pdf}, {link_optin}, {subject}. ',
 			];
@@ -669,10 +700,16 @@ class ConfigVars
 				'addPre'  => '<div class="showOnMailConfirmEnabled' . ($langEnabled ?'': ' hidden') . '">',
 				'addPost' => '</div>',
 			];
-			$sections['mailRemind_' . $langId] = [
-				'title'   => $language . '<br/>Mail reminder ',
+			$sections['mailRemindSheet_' . $langId] = [
+				'title'   => $language . '<br/>Mail sheet reminder ',
 				'page'    => 'demovoxFields2',
-				'addPre'  => '<div class="showOnMailRemindEnabled' . ($langEnabled ?'': ' hidden') . '">',
+				'addPre'  => '<div class="showOnMailRemindSheetEnabled' . ($langEnabled ?'': ' hidden') . '">',
+				'addPost' => '</div>',
+			];
+			$sections['mailRemindForm_' . $langId] = [
+				'title'   => $language . '<br/>Mail form reminder ',
+				'page'    => 'demovoxFields2',
+				'addPre'  => '<div class="showOnMailRemindFormEnabled' . ($langEnabled ?'': ' hidden') . '">',
 				'addPost' => '</div>',
 			];
 		}

@@ -10,7 +10,7 @@ class CronMailRemindSheet extends CronBase
 
 	public function run()
 	{
-		if (!Config::getValue('mail_reminder_enabled')) {
+		if (!Config::getValue('mail_reminder_sheet_enabled')) {
 			$this->setSkipped('Reminder mails are disabled in config');
 			return;
 		}
@@ -43,7 +43,7 @@ class CronMailRemindSheet extends CronBase
 			'is_reminder_sent',
 		];
 
-		$minAge = intval(Config::getValue('mail_reminder_min_age'));
+		$minAge = intval(Config::getValue('mail_reminder_sheet_min_age'));
 		$maxDate = date("Y-m-d", strtotime($minAge . ' day ago'));
 		$where = "creation_date < '{$maxDate}' AND is_sheet_received = 0 "
 			. 'AND is_reminder_sent <= 0 AND is_reminder_sent > -3 ';
@@ -100,8 +100,8 @@ class CronMailRemindSheet extends CronBase
 		$fromAddress = Config::getValueByLang('mail_from_address', $clientLang);
 		$fromName = Config::getValueByLang('mail_from_name', $clientLang);
 
-		$mailSubject = Mail::getMailSubject($row);
-		$mailText = Mail::getMailText($row, $mailSubject);
+		$mailSubject = Mail::getMailSubject($row, Mail::TYPE_REMIND_SHEET);
+		$mailText = Mail::getMailText($row, $mailSubject, Mail::TYPE_REMIND_SHEET);
 
 		$isSent = Mail::send($row->mail, $mailSubject, $mailText, $fromAddress, $fromName);
 		$isSentCount = $isSent ? 1 : ($row->is_mail_sent - 1);

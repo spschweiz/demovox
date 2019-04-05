@@ -184,6 +184,7 @@ class AdminPages
 
 		$mailTo = $this->getWpMailAddress();
 		$langId = (isset($_REQUEST['lang']) && $_REQUEST['lang']) ? sanitize_text_field($_REQUEST['lang']) : 'de';
+		$mailType = isset($_REQUEST['mailType']) ? intval($_REQUEST['mailType']) : Mail::TYPE_CONFIRM;
 		$mailFrom = Config::getValueByLang('mail_confirm_from_address', $langId);
 		$nameFrom = Config::getValueByLang('mail_confirm_from_name', $langId);
 
@@ -192,8 +193,8 @@ class AdminPages
 		define('WP_SMTPDEBUG', true);
 		add_action('phpmailer_init', [new Mail(), 'config'], 10, 1);
 
-		$mailSubject = Mail::getMailSubject($sign);
-		$mailText = Mail::getMailText($sign, $mailSubject);
+		$mailSubject = Mail::getMailSubject($sign, $mailType);
+		$mailText = Mail::getMailText($sign, $mailSubject, $mailType);
 
 		ob_start();
 		$isSent = Mail::send($mailTo, $mailSubject, $mailText, $mailFrom, $nameFrom);
@@ -319,7 +320,7 @@ class AdminPages
 	 */
 	protected function mailSetSheetReceived($mail)
 	{
-		if (!Config::getValue('mail_reminder_enabled') || !Config::getValue('mail_reminder_dedup')) {
+		if (!Config::getValue('mail_reminder_sheet_enabled') || !Config::getValue('mail_reminder_dedup')) {
 			return true;
 		}
 		$where = 'mail = ' . $mail;
