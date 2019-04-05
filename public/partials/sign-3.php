@@ -35,6 +35,8 @@ namespace Demovox;
 	<span id="demovox-permalink" style="display: none;"><?= $permalink; ?></span>
 	<!--<embed type="application/pdf" src="" class="pdfDocument" width="100%" height="100%"/>-->
 	<script>
-		createPdf(jQuery('#demovox-pdf'), '<?= $title ?>', '<?= $pdfUrl ?>', <?= $fields ?>, <?= $qrData ?>);
+		jQuery(function () {
+			window.createPdf(jQuery('#demovox-pdf'), '<?= $title ?>', '<?= $pdfUrl ?>', <?= $fields ?>, <?= $qrData ?>);
+		});
 	</script>
 </div>
