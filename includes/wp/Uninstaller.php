@@ -44,9 +44,6 @@ class Uninstaller
 			Config::deleteAll();
 			ManageCron::deleteOptions();
 		}
-
-		$signatureSheetPageId = Config::getValue('signature_sheet_page_id');
-		wp_delete_post($signatureSheetPageId);
 	}
 
 }
