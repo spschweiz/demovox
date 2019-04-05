@@ -5,17 +5,16 @@ namespace DemovoxLibs;
 class BaseIntEncoder
 {
 
-	//const $codeset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	//readable character set excluded (0,O,1,l)
-	const codeset = "23456789abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ";
+	private $codeset = "23456789abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ";
 
 	static function encode($n)
 	{
-		$base = strlen(self::codeset);
+		$base = strlen(self::$codeset);
 		$converted = '';
 
 		while ($n > 0) {
-			$converted = substr(self::codeset, bcmod($n, $base), 1) . $converted;
+			$converted = substr(self::$codeset, bcmod($n, $base), 1) . $converted;
 			$n = self::bcFloor(bcdiv($n, $base));
 		}
 
@@ -24,10 +23,10 @@ class BaseIntEncoder
 
 	static function decode($code)
 	{
-		$base = strlen(self::codeset);
+		$base = strlen(self::$codeset);
 		$c = '0';
 		for ($i = strlen($code); $i; $i--) {
-			$c = bcadd($c, bcmul(strpos(self::codeset, substr($code, (-1 * ($i - strlen($code))), 1))
+			$c = bcadd($c, bcmul(strpos(self::$codeset, substr($code, (-1 * ($i - strlen($code))), 1))
 				, bcpow($base, $i - 1)));
 		}
 
