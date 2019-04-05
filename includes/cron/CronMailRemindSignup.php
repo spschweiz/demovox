@@ -2,7 +2,7 @@
 
 namespace Demovox;
 
-class CronMailRemindSheet extends CronBase
+class CronMailRemindSignup extends CronBase
 {
 	protected $scheduleRecurrence = 'daily';
 	/** @var bool */
@@ -10,7 +10,7 @@ class CronMailRemindSheet extends CronBase
 
 	public function run()
 	{
-		if (!Config::getValue('mail_remind_sheet_enabled')) {
+		if (!Config::getValue('mail_remind_signup_enabled')) {
 			$this->setSkipped('Reminder mails are disabled in config');
 			return;
 		}
@@ -40,20 +40,20 @@ class CronMailRemindSheet extends CronBase
 			'last_name',
 			'mail',
 			'language',
-			'is_remind_sheet_sent',
+			'is_remind_signup_sent',
 		];
 
-		$minAge = intval(Config::getValue('mail_remind_sheet_min_age'));
+		$minAge = intval(Config::getValue('mail_remind_signup_min_age'));
 		$maxDate = date("Y-m-d", strtotime($minAge . ' day ago'));
-		$where = "creation_date < '{$maxDate}' AND is_sheet_received = 0 "
-			. 'AND is_remind_sheet_sent <= 0 AND is_remind_sheet_sent > -3 ';
+		$where = "creation_date < '{$maxDate}' AND is_step2_done = 0 "
+			. 'AND is_remind_signup_sent <= 0 AND is_remind_signup_sent > -3 ';
 
 		$maxMails = intval(Config::getValue('mail_max_per_execution'));
 		$sqlAppend = 'ORDER BY ID ASC LIMIT ' . $maxMails;
 
 		if ($this->isDedup) {
 			$rows = DB::getResults(
-				['ID', 'sign_ID', 'is_remind_sheet_sent'],
+				['ID', 'sign_ID', 'is_remind_signup_sent'],
 				$where,
 				$sqlAppend,
 				DB::TABLE_MAIL
@@ -73,7 +73,7 @@ class CronMailRemindSheet extends CronBase
 			if ($this->isDedup) {
 				$rowMail = $row;
 				$row = DB::getRow($colsSign, 'ID = ' . $rowMail->sign_ID);
-				$row->is_remind_sheet_sent = $rowMail->is_remind_sheet_sent;
+				$row->is_remind_signup_sent = $rowMail->is_remind_signup_sent;
 				if ($row->is_deleted) {
 					DB::delete(['ID' => $rowMail->ID], DB::TABLE_SIGN);
 					continue;
@@ -81,7 +81,7 @@ class CronMailRemindSheet extends CronBase
 
 				$isSent = $this->sendMail($row);
 
-				DB::updateStatus(['is_remind_sheet_sent' => $isSent], ['ID = ' . $rowMail->ID]);
+				DB::updateStatus(['is_remind_signup_sent' => $isSent], ['ID = ' . $rowMail->ID]);
 			} else {
 				$this->sendMail($row);
 			}
@@ -100,13 +100,13 @@ class CronMailRemindSheet extends CronBase
 		$fromAddress = Config::getValueByLang('mail_from_address', $clientLang);
 		$fromName = Config::getValueByLang('mail_from_name', $clientLang);
 
-		$mailSubject = Mail::getMailSubject($row, Mail::TYPE_REMIND_SHEET);
-		$mailText = Mail::getMailText($row, $mailSubject, Mail::TYPE_REMIND_SHEET);
+		$mailSubject = Mail::getMailSubject($row, Mail::TYPE_REMIND_SIGNUP);
+		$mailText = Mail::getMailText($row, $mailSubject, Mail::TYPE_REMIND_SIGNUP);
 
 		$isSent = Mail::send($row->mail, $mailSubject, $mailText, $fromAddress, $fromName);
-		$isSentCount = $isSent ? 1 : ($row->is_mail_sent - 1);
+		$isSentCount = $isSent ? 1 : ($row->is_remind_signup_sent - 1);
 
-		DB::updateStatus(['is_remind_sheet_sent' => $isSentCount], ['ID' => $row->ID]);
+		DB::updateStatus(['is_remind_signup_sent' => $isSentCount], ['ID' => $row->ID]);
 		$this->log(
 			'Mail ' . ($isSent ? '' : 'NOT ') . 'sent for signature ID "' . $row->ID
 			. '" with language "' . $row->language . '" with sender ' . $fromName . ' (' . $fromAddress . ')',

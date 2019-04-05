@@ -4,6 +4,7 @@ namespace Demovox;
 
 /**
  * The DB plugin class.
+ * Handles DB access (by default table 'demovox_signatures') and en-/decryption
  *
  * @since      1.0.0
  * @package    Demovox
@@ -18,7 +19,7 @@ class DB
 	private static $tableNameMails = 'demovox_mails';
 	private static $fieldNameEncrypted = 'is_encrypted';
 	/**
-	 * Before adding field here, check if it is set with DB::update(). If yes, $isEncrypted has to be passed
+	 * Before adding field here, check if it is set with self::update(). If yes, $isEncrypted has to be passed
 	 * @var array
 	 */
 	private static $encryptFields = [
@@ -118,7 +119,7 @@ class DB
 		global $wpdb;
 		$sql = self::prepareSelect($select, $table);
 		if ($where) {
-			$sql .= " WHERE " . $where;
+			$sql .= ' WHERE ' . $where;
 		}
 		if ($sqlAppend) {
 			$sql .= ' ' . $sqlAppend;
@@ -246,7 +247,7 @@ class DB
 	{
 		global $wpdb;
 		$charsetCollate = $wpdb->get_charset_collate();
-		$sql = 'CREATE TABLE ' . DB::getTableName($table)
+		$sql = 'CREATE TABLE ' . self::getTableName($table)
 			. ' (' . $tableDefinition . ') '
 			. $charsetCollate . ';';
 
@@ -262,10 +263,10 @@ class DB
 	{
 		global $wpdb;
 
-		$tableName = DB::getTableName();
+		$tableName = self::getTableName();
 		$drop = $wpdb->query("DROP TABLE IF EXISTS `{$tableName}`");
 
-		$tableNameMail = DB::getTableName(self::TABLE_MAIL);
+		$tableNameMail = self::getTableName(self::TABLE_MAIL);
 		$dropMail = $wpdb->query("DROP TABLE IF EXISTS `{$tableNameMail}`");
 
 		return $drop && $dropMail;
@@ -373,7 +374,7 @@ class DB
 		}
 
 		$select = implode(', ', $select);
-		$sql = "SELECT " . $select . " FROM " . DB::getTableName($table);
+		$sql = "SELECT " . $select . " FROM " . self::getTableName($table);
 
 		return $sql;
 	}

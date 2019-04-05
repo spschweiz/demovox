@@ -257,9 +257,9 @@ namespace Demovox;
 			createMailButton($langId, $language, $mailType = Mail::TYPE_REMIND_SHEET);
 		} ?>
 		<br/>
-		Form reminder mail:
+		Sign reminder mail:
 		<?php foreach ($languages as $langId => $language) {
-			createMailButton($langId, $language, $mailType = Mail::TYPE_REMIND_FORM);
+			createMailButton($langId, $language, $mailType = Mail::TYPE_REMIND_SIGNUP);
 		} ?>
 		<br/>
 		<span class="ajaxContainer"></span>

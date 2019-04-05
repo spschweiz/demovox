@@ -48,8 +48,8 @@ class CronMailConfirm extends CronBase
 		$fromAddress = Config::getValueByLang('mail_from_address', $clientLang);
 		$fromName = Config::getValueByLang('mail_from_name', $clientLang);
 
-		$mailSubject = Mail::getMailSubject($row);
-		$mailText = Mail::getMailText($row, $mailSubject);
+		$mailSubject = Mail::getMailSubject($row, Mail::TYPE_CONFIRM);
+		$mailText = Mail::getMailText($row, $mailSubject, Mail::TYPE_CONFIRM);
 
 		$isSent = Mail::send($row->mail, $mailSubject, $mailText, $fromAddress, $fromName);
 		$isSentCount = $isSent ? 1 : ($row->is_mail_sent - 1);

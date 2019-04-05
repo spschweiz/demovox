@@ -14,7 +14,7 @@ class Mail
 {
 	const TYPE_CONFIRM = 0;
 	const TYPE_REMIND_SHEET = 1;
-	const TYPE_REMIND_FORM = 2;
+	const TYPE_REMIND_SIGNUP = 2;
 
 	static function send($to, $subject, $body, $fromAddress = '', $fromName = '')
 	{
@@ -50,15 +50,6 @@ class Mail
 		$mailer->isHTML();
 		$mailer->SMTPDebug = defined('WP_SMTPDEBUG') && WP_SMTPDEBUG ? 2 : 0; // write 0 if you don't want to see client/server communication in page
 		$mailer->CharSet = "utf-8";
-		/*
-		if ($fromAddress = Options::getValue('mail_reminder_from_address')) {
-			try {
-				$mailer->setFrom($fromAddress, Options::getValue('mail_confirm_from_name'));
-			} catch (\phpmailerException $e) {
-				Core::logMessage($e->getMessage(), 'mail');
-			}
-		}
-		*/
 
 		Core::logMessage('Mailer is configured to use method "' . $method . '"', 'notice', 'mail');
 		switch ($method) {
@@ -105,8 +96,8 @@ class Mail
 			case self::TYPE_REMIND_SHEET:
 				$confName = 'mail_remind_sheet_subj';
 				break;
-			case self::TYPE_REMIND_FORM:
-				$confName = 'mail_remind_form_subj';
+			case self::TYPE_REMIND_SIGNUP:
+				$confName = 'mail_remind_signup_subj';
 				break;
 			case self::TYPE_CONFIRM:
 			default:
@@ -132,8 +123,8 @@ class Mail
 			case self::TYPE_REMIND_SHEET:
 				$confName = 'mail_remind_sheet_body';
 				break;
-			case self::TYPE_REMIND_FORM:
-				$confName = 'mail_remind_form_body';
+			case self::TYPE_REMIND_SIGNUP:
+				$confName = 'mail_remind_signup_body';
 				break;
 			case self::TYPE_CONFIRM:
 			default:

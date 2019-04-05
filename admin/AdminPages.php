@@ -320,7 +320,7 @@ class AdminPages
 	 */
 	protected function mailSetSheetReceived($mail)
 	{
-		if (!Config::getValue('mail_reminder_sheet_enabled') || !Config::getValue('mail_reminder_dedup')) {
+		if (!Config::getValue('mail_remind_sheet_enabled') || !Config::getValue('mail_remind_dedup')) {
 			return true;
 		}
 		$where = 'mail = ' . $mail;
