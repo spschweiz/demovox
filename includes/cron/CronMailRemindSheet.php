@@ -49,7 +49,7 @@ class CronMailRemindSheet extends CronBase
 			. 'AND is_reminder_sent <= 0 AND is_reminder_sent > -3 ';
 
 		$maxMails = intval(Config::getValue('mail_max_per_execution'));
-		$sqlAppend = ' LIMIT ' . $maxMails . ' ORDER BY ID ASC';
+		$sqlAppend = 'ORDER BY ID ASC LIMIT ' . $maxMails;
 
 		if ($this->isDedup) {
 			$rows = DB::getResults(
