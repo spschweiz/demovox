@@ -402,7 +402,7 @@ class ConfigVars
 		];
 		$fields[] = [
 			'uid'          => 'mail_remind_signup_enabled',
-			'label'        => 'Mail sign reminder enabled',
+			'label'        => 'Mail signup reminder enabled',
 			'section'      => 'mailText',
 			'type'         => 'checkbox',
 			'default'      => 0,
@@ -415,7 +415,7 @@ class ConfigVars
 			'type'         => 'number',
 			'default'      => 5,
 			'supplemental' => 'Minimum age of a signature before a form reminder is sent.',
-			'class'        => 'showOnMailRemindSheetEnabled',
+			'class'        => 'showOnMailRemindSignupEnabled',
 		];
 		$fields[] = [
 			'uid'          => 'mail_remind_dedup',
@@ -609,14 +609,14 @@ class ConfigVars
 			$fields[] = [
 				'uid'          => 'mail_remind_signup_subj' . $glueLangId,
 				'label'        => 'Subject',
-				'section'      => 'mailRemindForm_' . $langId,
+				'section'      => 'mailRemindSignup_' . $langId,
 				'type'         => 'text',
 				'supplemental' => 'Available placeholders: {first_name}, {last_name}. This mail is sent to the signee after signing up.',
 			];
 			$fields[] = [
 				'uid'          => 'mail_remind_signup_body' . $glueLangId,
 				'label'        => 'Body',
-				'section'      => 'mailRemindForm_' . $langId,
+				'section'      => 'mailRemindSignup_' . $langId,
 				'type'         => 'textarea',
 				'supplemental' => 'Available placeholders: {first_name}, {last_name}, {mail}, {link_pdf}, {link_optin}, {subject}. ',
 			];
@@ -706,10 +706,10 @@ class ConfigVars
 				'addPre'  => '<div class="showOnMailRemindSheetEnabled' . ($langEnabled ?'': ' hidden') . '">',
 				'addPost' => '</div>',
 			];
-			$sections['mailRemindForm_' . $langId] = [
-				'title'   => $language . '<br/>Mail sign reminder ',
+			$sections['mailRemindSignup_' . $langId] = [
+				'title'   => $language . '<br/>Mail signup reminder ',
 				'page'    => 'demovoxFields2',
-				'addPre'  => '<div class="showOnMailRemindSheetEnabled' . ($langEnabled ?'': ' hidden') . '">',
+				'addPre'  => '<div class="showOnMailRemindSignupEnabled' . ($langEnabled ?'': ' hidden') . '">',
 				'addPost' => '</div>',
 			];
 		}
