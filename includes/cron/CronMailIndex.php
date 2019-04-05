@@ -76,7 +76,7 @@ class CronMailIndex extends CronBase
 					'sign_ID'           => $row->ID,
 					'mail'              => $hashedMail,
 					'creation_date'     => $row->creation_date,
-					'is_step2_done'     => $row->is_step2_done,
+					'is_step2_done'     => $row->is_step2_done ? 1 : 0,
 					'is_sheet_received' => $row->is_sheet_received ? 1 : 0,
 					'is_reminder_sent'  => $row->is_reminder_sent ? 1 : 0,
 				],
