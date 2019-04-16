@@ -185,8 +185,8 @@ class AdminPages
 		$mailTo = $this->getWpMailAddress();
 		$langId = (isset($_REQUEST['lang']) && $_REQUEST['lang']) ? sanitize_text_field($_REQUEST['lang']) : 'de';
 		$mailType = isset($_REQUEST['mailType']) ? intval($_REQUEST['mailType']) : Mail::TYPE_CONFIRM;
-		$mailFrom = Config::getValueByLang('mail_confirm_from_address', $langId);
-		$nameFrom = Config::getValueByLang('mail_confirm_from_name', $langId);
+		$mailFrom = Config::getValueByLang('mail_from_address', $langId);
+		$nameFrom = Config::getValueByLang('mail_from_name', $langId);
 
 		$sign = new signObject($langId, $nameFrom, 'last name', $mailFrom);
 
