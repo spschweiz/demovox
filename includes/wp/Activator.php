@@ -119,7 +119,7 @@ class Activator
 
 		$optinPageId = Config::getValue('use_page_as_optin_link');
 		if (empty($optinPageId)) {
-			$content .= '[demovox_optin]';
+			$content .= 'Would you like to opt-in to or opt-out from our List?<br/>[demovox_optin]';
 			$post_data = [
 				'post_status'  => 'publish',
 				'post_type'    => 'page',
