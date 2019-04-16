@@ -65,7 +65,14 @@ class CronMailIndex extends CronBase
 	{
 		$hashedMail = Strings::hashMail($row->mail);
 		$mailRow = DB::getRow(
-			['ID', 'creation_date', 'is_step2_done', 'is_sheet_received', 'is_remind_sheet_sent', 'is_remind_signup_sent'],
+			[
+				'ID',
+				'creation_date',
+				'is_step2_done',
+				'is_sheet_received',
+				'is_remind_sheet_sent',
+				'is_remind_signup_sent',
+			],
 			"mail = '" . $hashedMail . "''",
 			DB::TABLE_MAIL
 		);
@@ -73,13 +80,13 @@ class CronMailIndex extends CronBase
 		if (!$mailRow) {
 			$save = DB::insert(
 				[
-					'sign_ID'                => $row->ID,
-					'mail'                   => $hashedMail,
-					'creation_date'          => $row->creation_date,
-					'is_step2_done'          => $row->is_step2_done ? 1 : 0,
-					'is_sheet_received'      => $row->is_sheet_received ? 1 : 0,
-					'is_remind_sheet_sent' => $row->is_remind_sheet_sent ? 1 : 0,
-					'is_remind_signup_sent'  => $row->is_remind_signup_sent ? 1 : 0,
+					'sign_ID'               => $row->ID,
+					'mail'                  => $hashedMail,
+					'creation_date'         => $row->creation_date,
+					'is_step2_done'         => $row->is_step2_done ? 1 : 0,
+					'is_sheet_received'     => $row->is_sheet_received ? 1 : 0,
+					'is_remind_sheet_sent'  => $row->is_remind_sheet_sent,
+					'is_remind_signup_sent' => $row->is_remind_signup_sent,
 				],
 				DB::TABLE_MAIL
 			);
@@ -93,10 +100,10 @@ class CronMailIndex extends CronBase
 			if (!$mailRow->is_sheet_received && $row->is_sheet_received) {
 				$setMailData['is_sheet_received'] = 1;
 			}
-			if (!$mailRow->is_remind_sheet_sent && $row->is_remind_sheet_sent) {
+			if ($mailRow->is_remind_sheet_sent !== 1 && $row->is_remind_sheet_sent == 1) {
 				$setMailData['is_remind_sheet_sent'] = 1;
 			}
-			if (!$mailRow->is_remind_signup_sent && $row->is_remind_signup_sent) {
+			if ($mailRow->is_remind_signup_sent !== 1 && $row->is_remind_signup_sent == 1) {
 				$setMailData['is_remind_signup_sent'] = 1;
 			}
 			$save = DB::updateStatus($setMailData, ['ID' => $mailRow->ID], DB::TABLE_MAIL);

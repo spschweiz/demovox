@@ -81,7 +81,7 @@ class CronMailRemindSignup extends CronBase
 
 				$isSent = $this->sendMail($row);
 
-				DB::updateStatus(['is_remind_signup_sent' => $isSent], ['ID = ' . $rowMail->ID]);
+				DB::updateStatus(['is_remind_signup_sent' => $isSent], ['ID = ' . $rowMail->ID], DB::TABLE_MAIL);
 			} else {
 				$this->sendMail($row);
 			}
