@@ -24,12 +24,6 @@ class Config
 			return null;
 		}
 		$value = Core::getOption($fullId);
-		if ($value !== false) {
-			return self::valueFormat($valPart, $value, $field);
-		}
-
-		// No value is set yet, get default value
-		$value = isset($field['default']) ? $field['default'] : ''; // Set to our default
 
 		return self::valueFormat($valPart, $value, $field);
 	}
@@ -37,21 +31,29 @@ class Config
 	protected static function valueFormat($valPart, $value, $field = null)
 	{
 		if (isset($field['type']) && $field['type'] === 'checkbox') {
-			$value = !!$value;
-		} elseif ($valPart == self::PART_POS_X) {
+			if ($value === false) {
+				$value = isset($field['default']) ? $field['default'] : false; // Set to our default
+			} else {
+				$value = !!$value;
+			}
+		} elseif ($value === false && $valPart == self::PART_POS_X) {
 			if (isset($field['defaultX'])) {
 				$value = intval($field['defaultX']);
 			}
 		} elseif ($valPart == self::PART_POS_Y) {
-			if (isset($field['defaultY'])) {
+			if ($value === false && isset($field['defaultY'])) {
 				$value = intval($field['defaultY']);
 			}
 			$value = intval($value);
 		} elseif ($valPart == self::PART_ROTATION) {
-			if (isset($field['defaultRot'])) {
+			if ($value === false && isset($field['defaultRot'])) {
 				$value = intval($field['defaultRot']);
 			}
 			$value = intval($value);
+		} else {
+			if ($value === false) {
+				$value = isset($field['default']) ? $field['default'] : false; // Set to our default
+			}
 		}
 		return $value;
 	}
