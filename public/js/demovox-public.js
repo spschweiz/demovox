@@ -226,7 +226,7 @@ $(() => {
 			}
 		}
 		if (currentPage === 'opt-in') {
-			replace = false;
+			replace = true;
 		}
 		$.ajax({
 			method: "POST",

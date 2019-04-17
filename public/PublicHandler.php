@@ -49,9 +49,9 @@ class PublicHandler
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since    1.0.0
-	 * @param      string $pluginName The name of the plugin.
-	 * @param      string $version The version of this plugin.
+	 * @param string $pluginName The name of the plugin.
+	 * @param string $version The version of this plugin.
+	 * @since 1.0.0
 	 */
 	public function __construct($pluginName, $version)
 	{
@@ -195,6 +195,7 @@ class PublicHandler
 		if (!$success) {
 			Core::showError('DB update failed: ' . DB::getError(), 500);
 		}
+		wp_die(Strings::wpMessage(__('Your settings were saved', 'demovox'), 'success'));
 	}
 
 	public function signShortcode()

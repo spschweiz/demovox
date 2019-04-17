@@ -86,3 +86,7 @@ msgstr "Imprimez le PDF suivant, complétez votre nom et votre signature et envo
 #: SignSteps.php.php:177
 msgid "signature_sheet"
 msgstr "feuille_de_signature"
+
+#: PublicHandler.php.php:198
+msgid "Your settings were saved"
+msgstr "Vos paramètres ont été sauvegardés"

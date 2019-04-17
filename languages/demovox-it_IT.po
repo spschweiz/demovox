@@ -1,3 +1,6 @@
+# Copyright (C) 2019 Democracy Booster
+# This file is distributed under the same license as the Democracy Booster package.
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Democracy Booster 0.0.1\n"
@@ -5,7 +8,7 @@ msgstr ""
 "POT-Creation-Date: 2019-02-21 11:16+0100\n"
 "PO-Revision-Date: 2019-02-21 11:16+0100\n"
 "Language-Team: Fabian Horlacher <fabian.horlacher@sp-schweiz.ch>\n"
-"Language: fr\n"
+"Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,11 +16,11 @@ msgstr ""
 
 #: sign-1.php:22
 msgid "First Name"
-msgstr "Prénom"
+msgstr "Nome"
 
 #: sign-1.php:26
 msgid "Last Name"
-msgstr "Nom"
+msgstr "Cognome"
 
 #: sign-1.php:30
 msgid "Email"
@@ -25,64 +28,68 @@ msgstr "E-mail"
 
 #: sign-1.php:34
 msgid "Phone number"
-msgstr "Numéro de téléphone"
+msgstr "Numero telefonico"
 
 #: sign-1.php:38
 msgid "Continue"
-msgstr "Continuer"
+msgstr "Avanti"
 
 #: sign-2.php:25
 msgid "Birth date"
-msgstr "Date de naissance"
+msgstr "Compleanno"
 
 #: sign-2.php:36
 msgid "Swiss abroad"
-msgstr "Suisse de l'étranger"
+msgstr "Svizzere o Svizzeri all’estero"
 
 #: sign-2.php:29
 msgid "Country"
-msgstr "Pays"
+msgstr "Paese"
 
 #: sign-2.php:40
 msgid "Street"
-msgstr "Rue"
+msgstr "Strada"
 
 #: sign-2.php:44
 msgid "Street number"
-msgstr "Numéro"
+msgstr "Civico"
 
 #: sign-2.php:50
 msgid "ZIP"
-msgstr "NP"
+msgstr "CAP"
 
 #: sign-2.php:54
 msgid "City"
-msgstr "Ville"
+msgstr "Città"
 
 #: sign-2.php:66
 msgid "Political commune"
-msgstr "Commune politique"
+msgstr "Comune politico"
 
 #: sign-2.php:72
 msgid "Canton"
-msgstr "Canton"
+msgstr "Cantone"
 
 #: sign-3.php:25
 msgid "Print"
-msgstr "Imprimer"
+msgstr "Stampare"
 
 #: sign-3.php:27
 msgid "Download signature sheet"
-msgstr "Télécharger la feuille de signature"
+msgstr "Scarica il formulario raccolta firme"
 
 #: Activator.php:84
 msgid "Almost there"
-msgstr "Presque fini"
+msgstr "Quasi fatto"
 
 #: Activator.php:85
 msgid "Print the following PDF, then fill it with your name and signature and send it to us:"
-msgstr "Imprimez le PDF suivant, complétez votre nom et votre signature et envoyez-le nous:"
+msgstr "Stampa il seguente PDF, quindi compila il tuo nome e firma e inviacelo:"
 
 #: SignSteps.php.php:177
 msgid "signature_sheet"
-msgstr "feuille_de_signature"
+msgstr "formulario_raccolta_firme"
+
+#: PublicHandler.php.php:198
+msgid "Your settings were saved"
+msgstr "Le tue impostazioni sono state registrate."

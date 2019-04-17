@@ -8,7 +8,7 @@ msgstr ""
 "POT-Creation-Date: 2019-02-21 11:16+0100\n"
 "PO-Revision-Date: 2019-02-21 11:16+0100\n"
 "Language-Team: Fabian Horlacher <fabian.horlacher@sp-schweiz.ch>\n"
-"Language: de_CH\n"
+"Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16,76 +16,80 @@ msgstr ""
 
 #: sign-1.php:22
 msgid "First Name"
-msgstr "Vorname"
+msgstr "Nome"
 
 #: sign-1.php:26
 msgid "Last Name"
-msgstr "Nachname"
+msgstr "Cognome"
 
 #: sign-1.php:30
 msgid "Email"
-msgstr "E-Mail"
+msgstr "E-mail"
 
 #: sign-1.php:34
 msgid "Phone number"
-msgstr "Telefonnummer"
+msgstr "Numero telefonico"
 
 #: sign-1.php:38
 msgid "Continue"
-msgstr "Weiter"
+msgstr "Avanti"
 
 #: sign-2.php:25
 msgid "Birth date"
-msgstr "Geburtsdatum"
+msgstr "Compleanno"
 
 #: sign-2.php:36
 msgid "Swiss abroad"
-msgstr "Auslandschweizer*in"
+msgstr "Svizzere o Svizzeri all’estero"
 
 #: sign-2.php:29
 msgid "Country"
-msgstr "Land"
+msgstr "Paese"
 
 #: sign-2.php:40
 msgid "Street"
-msgstr "Strasse"
+msgstr "Strada"
 
 #: sign-2.php:44
 msgid "Street number"
-msgstr "Hausnummer"
+msgstr "Civico"
 
 #: sign-2.php:50
 msgid "ZIP"
-msgstr "PLZ"
+msgstr "CAP"
 
 #: sign-2.php:54
 msgid "City"
-msgstr "Wohnort"
+msgstr "Città"
 
 #: sign-2.php:66
 msgid "Political commune"
-msgstr "Politische Gemeinde"
+msgstr "Comune politico"
 
 #: sign-2.php:72
 msgid "Canton"
-msgstr "Kanton"
+msgstr "Cantone"
 
 #: sign-3.php:25
 msgid "Print"
-msgstr "Drucken"
+msgstr "Stampare"
 
-#: sign-3.php:28
+#: sign-3.php:27
 msgid "Download signature sheet"
-msgstr "Unterschriftenbogen herunterladen"
+msgstr "Scarica il formulario raccolta firme"
 
 #: Activator.php:84
 msgid "Almost there"
-msgstr "Fast geschafft"
+msgstr "Quasi fatto"
 
 #: Activator.php:85
 msgid "Print the following PDF, then fill it with your name and signature and send it to us:"
-msgstr "Drucke das folgende PDF, dann fülle deinen Namen und Unterschrift aus und sende es an uns:"
+msgstr "Stampa il seguente PDF, quindi compila il tuo nome e firma e inviacelo:"
 
 #: SignSteps.php.php:177
 msgid "signature_sheet"
-msgstr "unterschriftenbogen"
+msgstr "formulario_raccolta_firme"
+
+#: PublicHandler.php.php:198
+msgid "Your settings were saved"
+msgstr "Le tue impostazioni sono state registrate."
