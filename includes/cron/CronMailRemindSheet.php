@@ -40,20 +40,20 @@ class CronMailRemindSheet extends CronBase
 			'last_name',
 			'mail',
 			'language',
-			'is_remind_sheet_sent',
+			'state_remind_sheet_sent',
 		];
 
 		$minAge = intval(Config::getValue('mail_remind_sheet_min_age'));
 		$maxDate = date("Y-m-d", strtotime($minAge . ' day ago'));
 		$where = "creation_date < '{$maxDate}' AND is_sheet_received = 0 "
-			. 'AND is_remind_sheet_sent <= 0 AND is_remind_sheet_sent > -3 ';
+			. 'AND state_remind_sheet_sent <= 0 AND state_remind_sheet_sent > -3 ';
 
 		$maxMails = intval(Config::getValue('mail_max_per_execution'));
 		$sqlAppend = 'ORDER BY ID ASC LIMIT ' . $maxMails;
 
 		if ($this->isDedup) {
 			$rows = DB::getResults(
-				['ID', 'sign_ID', 'is_remind_sheet_sent'],
+				['ID', 'sign_ID', 'state_remind_sheet_sent'],
 				$where,
 				$sqlAppend,
 				DB::TABLE_MAIL
@@ -73,7 +73,7 @@ class CronMailRemindSheet extends CronBase
 			if ($this->isDedup) {
 				$rowMail = $row;
 				$row = DB::getRow($colsSign, 'ID = ' . $rowMail->sign_ID);
-				$row->is_remind_sheet_sent = $rowMail->is_remind_sheet_sent;
+				$row->state_remind_sheet_sent = $rowMail->state_remind_sheet_sent;
 				if ($row->is_deleted) {
 					DB::delete(['ID' => $rowMail->ID], DB::TABLE_SIGN);
 					continue;
@@ -81,7 +81,7 @@ class CronMailRemindSheet extends CronBase
 
 				$isSent = $this->sendMail($row);
 
-				DB::updateStatus(['is_remind_sheet_sent' => $isSent], ['ID = ' . $rowMail->ID], DB::TABLE_MAIL);
+				DB::updateStatus(['state_remind_sheet_sent' => $isSent], ['ID = ' . $rowMail->ID], DB::TABLE_MAIL);
 			} else {
 				$this->sendMail($row);
 			}
@@ -104,14 +104,14 @@ class CronMailRemindSheet extends CronBase
 		$mailText = Mail::getMailText($row, $mailSubject, Mail::TYPE_REMIND_SHEET);
 
 		$isSent = Mail::send($row->mail, $mailSubject, $mailText, $fromAddress, $fromName);
-		$isSentCount = $isSent ? 1 : ($row->is_mail_sent - 1);
+		$stateSent = $isSent ? 1 : ($row->state_confirm_sent - 1);
 
-		DB::updateStatus(['is_remind_sheet_sent' => $isSentCount], ['ID' => $row->ID]);
+		DB::updateStatus(['state_remind_sheet_sent' => $stateSent], ['ID' => $row->ID]);
 		$this->log(
 			'Mail ' . ($isSent ? '' : 'NOT ') . 'sent for signature ID "' . $row->ID
 			. '" with language "' . $row->language . '" with sender ' . $fromName . ' (' . $fromAddress . ')',
 			$isSent ? 'notice' : 'error'
 		);
-		return $isSentCount;
+		return $stateSent;
 	}
 }
