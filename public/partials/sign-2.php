@@ -40,12 +40,12 @@ namespace Demovox;
 	<div class="form-row">
 		<div class="form-group col-md-8">
 			<label for="street"><?= __('Street', 'demovox') ?></label>
-			<input name="street" id="street" autocomplete="street-address" class="form-control" type="text" minlength="4" maxlength="127"
+			<input name="street" id="street" autocomplete="off" class="form-control" type="text" minlength="4" maxlength="127"
 				   required=""/>
 		</div>
 		<div class="form-group col-md-4">
 			<label for="street_no"><?= __('Street number', 'demovox') ?></label>
-			<input name="street_no" id="street_no" class="form-control" type="text" maxlength="5" required=""/>
+			<input name="street_no" id="street_no" autocomplete="off" class="form-control" type="text" maxlength="5" required=""/>
 		</div>
 	</div>
 	<div class="form-row">
