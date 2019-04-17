@@ -153,7 +153,6 @@ module.exports = function (grunt) {
 		'checkDependencies', 'clean', 'webpack:prod', 'copy:adminAssets', 'uglify', 'sass', 'cssmin', 'po2mo',
 	]);
 	grunt.registerTask('buildZip', [
-		'checkDependencies', 'clean', 'translations', 'webpack:prod', 'copy:adminAssets', 'uglify', 'sass', 'cssmin', 'po2mo',
-		'mkdir', 'copy:buildDir', 'compress', 'clean',
+		'buildAssets', 'mkdir', 'copy:buildDir', 'compress', 'clean',
 	]);
 };
