@@ -139,13 +139,17 @@ function showOnSet($check, $showHide, value) {
 	showHide($showHide, $check.val() === value);
 }
 
-function showHide($el, show) {
+function showHide($els, show) {
 	if (show) {
-		if (!$el.hasClass('hidden')) {
-			$el.show();
-		}
+		var $el;
+		$els.each(function () {
+			$el = $(this);
+			if (!$el.hasClass('hidden')) {
+				$el.show();
+			}
+		});
 	} else {
-		$el.hide();
+		$els.hide();
 	}
 }
 
