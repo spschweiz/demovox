@@ -210,7 +210,7 @@ class AdminPages
 
 		$hook = sanitize_text_field($_REQUEST['cron']);
 		ManageCron::triggerCron($hook);
-		echo 'Event triggered at ' . date('d.m.Y I:m:s');
+		echo 'Event triggered at ' . date('d.m.Y G:i:s');
 	}
 
 	public function cancelCron()
@@ -219,7 +219,7 @@ class AdminPages
 
 		$hook = sanitize_text_field($_REQUEST['cron']);
 		ManageCron::cancel($hook);
-		echo 'Cron cancelled at ' . date('d.m.Y I:m:s');
+		echo 'Cron cancelled at ' . date('d.m.Y G:i:s');
 	}
 
 	protected function getWpMailAddress()
