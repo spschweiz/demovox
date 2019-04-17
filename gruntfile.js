@@ -145,16 +145,15 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-mkdir');
 	grunt.loadNpmTasks('grunt-contrib-compress');
 	grunt.loadNpmTasks('grunt-shell');
-        grunt.loadNpmTasks('grunt-po2mo');
+	grunt.loadNpmTasks('grunt-po2mo');
 
 	// define Tasks
 	grunt.registerTask('default', 'availabletasks');
-	grunt.registerTask('translations', 'po2mo');
 	grunt.registerTask('buildAssets', [
-		'checkDependencies', 'clean', 'webpack:prod', 'copy:adminAssets', 'uglify', 'sass', 'cssmin',
+		'checkDependencies', 'clean', 'webpack:prod', 'copy:adminAssets', 'uglify', 'sass', 'cssmin', 'po2mo',
 	]);
 	grunt.registerTask('buildZip', [
-		'checkDependencies', 'clean', 'translations', 'webpack:prod', 'copy:adminAssets', 'uglify', 'sass', 'cssmin',
+		'checkDependencies', 'clean', 'translations', 'webpack:prod', 'copy:adminAssets', 'uglify', 'sass', 'cssmin', 'po2mo',
 		'mkdir', 'copy:buildDir', 'compress', 'clean',
 	]);
 };
