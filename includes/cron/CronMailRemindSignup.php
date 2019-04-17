@@ -14,12 +14,13 @@ class CronMailRemindSignup extends CronBase
 			$this->setSkipped('Reminder mails are disabled in config');
 			return;
 		}
-		if (!Config::getValue('mail_remind_dedup')) {
+		if (Config::getValue('mail_remind_dedup')) {
 			$importStatus = Core::getOption('cron_index_mail_status');
 			if ($importStatus === false || $importStatus === CronMailIndex::STATUS_INIT) {
 				$this->setSkipped('Reminder mail deduplication indexing (CronMailsRemindIndex) has not finished initial index yet');
 				return;
 			}
+			$this->isDedup = true;
 		}
 		if (!$this->prepareRun()) {
 			return;
