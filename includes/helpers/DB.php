@@ -179,9 +179,13 @@ class DB
 	public static function insert($data, $table = null)
 	{
 		global $wpdb;
-		if (self::isEncryptionEnabled() && self::isTableEncAllowed($table)) {
-			$row[self::$fieldNameEncrypted] = self::getEncryptionMode();
-			$data = self::encryptRow($data);
+		if (self::isTableEncAllowed($table)) {
+			if (self::isEncryptionEnabled()) {
+				$data[self::$fieldNameEncrypted] = self::getEncryptionMode();
+				$data = self::encryptRow($data);
+			} else {
+				$data[self::$fieldNameEncrypted] = 0;
+			}
 		}
 		return $wpdb->insert(
 			self::getTableName($table),

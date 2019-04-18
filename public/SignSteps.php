@@ -55,7 +55,6 @@ class SignSteps
 			'phone'        => $phone,
 			'link_pdf'     => $linkPdf,
 			'link_optin'   => $linkOptin,
-			'is_encrypted' => 0,
 		];
 		if (Config::getValue('save_ip') && Config::getValue('encrypt_signees') !== 'disabled') {
 			$data['ip_address'] = Infos::getClientIp();
@@ -205,8 +204,7 @@ class SignSteps
 				"ID = '" . $signId . "'"
 			);
 			$guid = $row->guid;
-			if ($row->is_step2_done) {
-			} else {
+			if (!$row->is_step2_done) {
 				list($birthDate, $street, $streetNo, $gdeZip, $gdeName, $gdeCanton, $zip, $city, $country)
 					= $this->saveStep2($signId, $row->is_encrypted);
 				$loadFromDb = false;
@@ -233,7 +231,6 @@ class SignSteps
 					'zip',
 					'city',
 					'country',
-					'is_encrypted',
 				],
 				"guid = '" . $guid . "'"
 			);
