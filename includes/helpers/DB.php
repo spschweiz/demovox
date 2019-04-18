@@ -179,7 +179,7 @@ class DB
 	public static function insert($data, $table = null)
 	{
 		global $wpdb;
-		if (self::isEncryptionEnabled() && (!$table || $table === self::TABLE_SIGN)) {
+		if (self::isEncryptionEnabled() && self::isTableEncAllowed($table)) {
 			$row[self::$fieldNameEncrypted] = self::getEncryptionMode();
 			$data = self::encryptRow($data);
 		}
@@ -199,7 +199,7 @@ class DB
 	public static function update($data, $where, $isEncrypted, $table = null)
 	{
 		global $wpdb;
-		if ($isEncrypted && (!$table || $table === self::TABLE_SIGN)) {
+		if ($isEncrypted && self::isTableEncAllowed($table)) {
 			$data = self::encryptRow($data);
 		}
 		return $wpdb->update(
@@ -355,6 +355,11 @@ class DB
 		return null;
 	}
 
+	protected static function isTableEncAllowed($table = null)
+	{
+		return ($table === null || $table === self::TABLE_SIGN);
+	}
+
 	/**
 	 * add "is_encrypted" if required and convert to string
 	 *
@@ -364,21 +369,24 @@ class DB
 	 */
 	protected static function prepareSelect($select, $table = null)
 	{
-		$decryptRequired = false;
-		foreach ($select as $fieldName) {
-			if (in_array($fieldName, self::$encryptFields)) {
-				$decryptRequired = true;
-				break;
+		if (self::isTableEncAllowed($table)) {
+			$decryptRequired = false;
+			foreach ($select as $fieldName) {
+				if (in_array($fieldName, self::$encryptFields)) {
+					$decryptRequired = true;
+					break;
+				}
 			}
-		}
-		if ($decryptRequired) {
-			if (!in_array(self::$fieldNameEncrypted, $select)) {
-				$select[] = self::$fieldNameEncrypted;
+			if ($decryptRequired) {
+				if (!in_array(self::$fieldNameEncrypted, $select)) {
+					$select[] = self::$fieldNameEncrypted;
+				}
 			}
 		}
 
+		$tableName = self::getTableName($table);
 		$select = implode(', ', $select);
-		$sql = "SELECT " . $select . " FROM " . self::getTableName($table);
+		$sql = "SELECT " . $select . " FROM " . $tableName;
 
 		return $sql;
 	}
