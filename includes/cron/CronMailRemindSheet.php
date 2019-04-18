@@ -64,7 +64,7 @@ class CronMailRemindSheet extends CronBase
 			$rows = DB::getResults(
 				$colsSign,
 				$where . ' AND is_step2_done = 1',
-				DB::TABLE_MAIL,
+				DB::TABLE_SIGN,
 				$sqlAppend
 			);
 		}

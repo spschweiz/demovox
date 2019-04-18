@@ -89,6 +89,7 @@ class DB
 	 * @param array $select Fields to select
 	 * @param string|null $where SQL where statement
 	 * @param null|int $table
+	 * @param string|null $sqlAppend Append SQL statements
 	 * @return object|null Database query results
 	 */
 	public static function getRow($select, $where = null, $table = null, $sqlAppend = null)
@@ -113,8 +114,8 @@ class DB
 	 *
 	 * @param array $select Fields to select
 	 * @param string|null $where SQL where statement
-	 * @param string|null $sqlAppend Append SQL statements
 	 * @param null|int $table
+	 * @param string|null $sqlAppend Append SQL statements
 	 * @return array|object|null Database query results
 	 */
 	public static function getResults($select, $where = null, $table = null, $sqlAppend = null)
@@ -384,7 +385,7 @@ class DB
 
 	/**
 	 * @param array|object|null $row
-	 * @return string
+	 * @return array|object|null
 	 */
 	protected static function decryptRow($row)
 	{
