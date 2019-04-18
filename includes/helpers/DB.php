@@ -91,13 +91,16 @@ class DB
 	 * @param null|int $table
 	 * @return object|null Database query results
 	 */
-	public static function getRow($select, $where = null, $table = null)
+	public static function getRow($select, $where = null, $table = null, $sqlAppend = null)
 	{
 		global $wpdb;
 
 		$sql = self::prepareSelect($select, $table);
 		if ($where) {
 			$sql .= " WHERE " . $where;
+		}
+		if ($sqlAppend) {
+			$sql .= ' ' . $sqlAppend;
 		}
 		$row = $wpdb->get_row($sql);
 		$row = self::decryptRow($row);
@@ -114,7 +117,7 @@ class DB
 	 * @param null|int $table
 	 * @return array|object|null Database query results
 	 */
-	public static function getResults($select, $where = null, $sqlAppend = null, $table = null)
+	public static function getResults($select, $where = null, $table = null, $sqlAppend = null)
 	{
 		global $wpdb;
 		$sql = self::prepareSelect($select, $table);

@@ -24,6 +24,7 @@ class CronMailConfirm extends CronBase
 		$rows = DB::getResults(
 			['ID', 'link_optin', 'link_pdf', 'guid', 'first_name', 'last_name', 'mail', 'language', 'state_confirm_sent'],
 			' state_confirm_sent <= 0 AND state_confirm_sent > -3 AND is_step2_done = 1 AND is_deleted = 0',
+			DB::TABLE_SIGN,
 			' LIMIT ' . $maxMails
 		);
 

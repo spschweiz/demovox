@@ -131,6 +131,7 @@ class AdminPages
 				'SUM((is_step2_done=0 AND is_deleted = 0)) AS unfinished',
 			],
 			'',
+			DB::TABLE_SIGN,
 			'GROUP BY source ORDER BY source');
 		include Infos::getPluginDir() . 'admin/partials/statsSource.php';
 	}

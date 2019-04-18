@@ -56,12 +56,17 @@ class CronMailRemindSignup extends CronBase
 			$rows = DB::getResults(
 				['ID', 'sign_ID', 'state_remind_signup_sent'],
 				$where,
-				$sqlAppend,
-				DB::TABLE_MAIL
+				DB::TABLE_MAIL,
+				$sqlAppend
 			);
 		} else {
 			$where .= 'AND is_deleted = 0';
-			$rows = DB::getResults($colsSign, $where . ' AND is_step2_done = 1', $sqlAppend);
+			$rows = DB::getResults(
+				$colsSign,
+				$where . ' AND is_step2_done = 1',
+				DB::TABLE_MAIL,
+				$sqlAppend
+			);
 		}
 		$this->log('Loaded ' . count($rows) . ' signatures to send mails (select is limited to ' . $maxMails
 			. ' per cron execution)', 'notice');

@@ -32,7 +32,7 @@ class CronMailIndex extends CronBase
 	{
 		// Set state
 		$status = Core::getOption('cron_index_mail_status');
-		$lastImportId = Core::getOption('cron_index_mail_last_import_id');
+		$lastImportId = DB::getRow('sign_ID', null, DB::TABLE_MAIL, 'ORDER BY sign_ID ASC')->sign_ID;
 		if ($status === false || $status === self::STATUS_INIT) {
 			$statusRun = self::STATUS_INIT;
 		} else {
@@ -48,24 +48,21 @@ class CronMailIndex extends CronBase
 			$inserted = null;
 			foreach ($rows as $row) {
 				$inserted = $this->importRow($row);
-				if($inserted){
+				if ($inserted) {
 					$countInserted++;
 				}
 			}
 
-			if ($inserted !== null) {
-				Core::setOption('cron_index_mail_last_import_id', intval($row->ID));
-			}
 			$countProceeded = count($rows);
 		}
 
 		if ($statusRun === self::STATUS_INIT && $countTotal > $countProceeded) {
 			$statusEnd = self::STATUS_INIT;
-			$this->setStatusMessage('Proceeded '. $countProceeded . ' new mail addresses, thereof ' . $countInserted
+			$this->setStatusMessage('Proceeded ' . $countProceeded . ' new mail addresses, thereof ' . $countInserted
 				. ' unique adresses imported. ' . $countTotal - $countProceeded . ' more to go');
 		} else {
 			$statusEnd = self::STATUS_FINISHED;
-			$this->setStatusMessage('Proceeded '. $countProceeded . ' new mail addresses, thereof ' . $countInserted
+			$this->setStatusMessage('Proceeded ' . $countProceeded . ' new mail addresses, thereof ' . $countInserted
 				. ' unique adresses imported. ');
 		}
 		Core::setOption('cron_index_mail_status', $statusEnd);
@@ -164,8 +161,8 @@ class CronMailIndex extends CronBase
 				'state_remind_signup_sent',
 			],
 			$where,
-			$sqlAppend,
-			DB::TABLE_SIGN
+			DB::TABLE_SIGN,
+			$sqlAppend
 		);
 
 		$this->log('Loaded ' . count($rows) . ' signatures to index their mail (there is a total of ' . $countTotal
