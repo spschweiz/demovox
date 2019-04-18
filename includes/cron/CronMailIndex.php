@@ -32,7 +32,6 @@ class CronMailIndex extends CronBase
 	{
 		// Set state
 		$status = Core::getOption('cron_index_mail_status');
-		$lastImportId = DB::getRow('sign_ID', null, DB::TABLE_MAIL, 'ORDER BY sign_ID ASC')->sign_ID;
 		if ($status === false || $status === self::STATUS_INIT) {
 			$statusRun = self::STATUS_INIT;
 		} else {
@@ -40,7 +39,7 @@ class CronMailIndex extends CronBase
 		}
 		Core::setOption('cron_index_mail_status', $statusRun);
 
-		list($countTotal, $rows) = $this->getRowsToImport($lastImportId);
+		list($countTotal, $rows) = $this->getRowsToImport();
 
 		$countProceeded = 0;
 		$countInserted = 0;
@@ -132,16 +131,17 @@ class CronMailIndex extends CronBase
 	}
 
 	/**
-	 * @param int $lastImportId
 	 * @return array|null
 	 */
-	protected function getRowsToImport($lastImportId)
+	protected function getRowsToImport()
 	{
 		// To ensure we get the correct is_step2_done for signatures a client is still working on, wait for all php sessions to die
 		$maxDate = date("Y-m-d G:i:s", strtotime('12 hour ago'));
 		$where = "is_deleted = 0 AND creation_date < '{$maxDate}'";
-		if ($lastImportId !== false) {
-			$where .= ' AND ID > ' . $lastImportId;
+
+		$lastImport = DB::getRow('sign_ID', null, DB::TABLE_MAIL, 'ORDER BY sign_ID ASC');
+		if ($lastImport) {
+			$where .= ' AND ID > ' . $lastImport->sign_ID;
 		}
 		$countTotal = DB::count($where, DB::TABLE_SIGN);
 		if (!$countTotal) {
