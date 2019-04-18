@@ -139,7 +139,7 @@ class CronMailIndex extends CronBase
 		$maxDate = date("Y-m-d G:i:s", strtotime('12 hour ago'));
 		$where = "is_deleted = 0 AND creation_date < '{$maxDate}'";
 
-		$lastImport = DB::getRow('sign_ID', null, DB::TABLE_MAIL, 'ORDER BY sign_ID ASC');
+		$lastImport = DB::getRow(['sign_ID'], null, DB::TABLE_MAIL, 'ORDER BY sign_ID DESC');
 		if ($lastImport) {
 			$where .= ' AND ID > ' . $lastImport->sign_ID;
 		}
