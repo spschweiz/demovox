@@ -22,8 +22,9 @@ class CronMailConfirm extends CronBase
 	{
 		$maxMails = intval(Config::getValue('mail_max_per_execution'));
 		$rows = DB::getResults(
-			['ID', 'link_optin', 'link_pdf', 'guid', 'first_name', 'last_name', 'mail', 'language', 'is_mail_sent'],
-			' is_mail_sent <= 0 AND is_mail_sent > -3 AND is_step2_done = 1 AND is_deleted = 0',
+			['ID', 'link_optin', 'link_pdf', 'guid', 'first_name', 'last_name', 'mail', 'language', 'state_confirm_sent'],
+			' state_confirm_sent <= 0 AND state_confirm_sent > -3 AND is_step2_done = 1 AND is_deleted = 0',
+			DB::TABLE_SIGN,
 			' LIMIT ' . $maxMails
 		);
 
@@ -52,9 +53,9 @@ class CronMailConfirm extends CronBase
 		$mailText = Mail::getMailText($row, $mailSubject, Mail::TYPE_CONFIRM);
 
 		$isSent = Mail::send($row->mail, $mailSubject, $mailText, $fromAddress, $fromName);
-		$isSentCount = $isSent ? 1 : ($row->is_mail_sent - 1);
+		$stateSent = $isSent ? 1 : ($row->state_confirm_sent - 1);
 
-		DB::updateStatus(['is_mail_sent' => $isSentCount], ['ID' => $row->ID]);
+		DB::updateStatus(['state_confirm_sent' => $stateSent], ['ID' => $row->ID]);
 		$this->log(
 			'Mail ' . ($isSent ? '' : 'NOT ') . 'sent for signature ID "' . $row->ID
 			. '" with language "' . $row->language . '" with sender ' . $fromName . ' (' . $fromAddress . ')',

@@ -12,7 +12,7 @@ class CronMailIndex extends CronBase
 
 	public function run()
 	{
-		if (!Config::getValue('mail_remind_sheet_enabled')) {
+		if (!Config::getValue('mail_remind_sheet_enabled') && !Config::getValue('mail_remind_signup_enabled')) {
 			$this->setSkipped('Reminder mails are disabled in config');
 			return;
 		}
@@ -32,7 +32,6 @@ class CronMailIndex extends CronBase
 	{
 		// Set state
 		$status = Core::getOption('cron_index_mail_status');
-		$lastImportId = Core::getOption('cron_index_mail_last_import_id');
 		if ($status === false || $status === self::STATUS_INIT) {
 			$statusRun = self::STATUS_INIT;
 		} else {
@@ -40,49 +39,67 @@ class CronMailIndex extends CronBase
 		}
 		Core::setOption('cron_index_mail_status', $statusRun);
 
-		list($count, $rows) = $this->getRowsToImport($lastImportId);
+		list($countTotal, $rows) = $this->getRowsToImport();
 
-		foreach ($rows as $row) {
-			$lastImportId = $this->importRow($row);
+		$countProceeded = 0;
+		$countInserted = 0;
+		if ($countTotal) {
+			$inserted = null;
+			foreach ($rows as $row) {
+				$inserted = $this->importRow($row);
+				if ($inserted) {
+					$countInserted++;
+				}
+			}
+
+			$countProceeded = count($rows);
 		}
 
-		Core::setOption('cron_index_mail_last_import_id', $lastImportId);
-		if ($statusRun === self::STATUS_INIT && $count > count($rows)) {
+		if ($statusRun === self::STATUS_INIT && $countTotal > $countProceeded) {
 			$statusEnd = self::STATUS_INIT;
-			$this->setStatusMessage('Imported ' . count($rows) . ' mail addresses, ' . $count - count($rows) . ' more to go');
+			$this->setStatusMessage('Proceeded ' . $countProceeded . ' new mail addresses, thereof ' . $countInserted
+				. ' unique adresses imported. ' . $countTotal - $countProceeded . ' more to go');
 		} else {
 			$statusEnd = self::STATUS_FINISHED;
-			$this->setStatusMessage('Imported ' . count($rows) . ' mail addresses');
+			$this->setStatusMessage('Proceeded ' . $countProceeded . ' new mail addresses, thereof ' . $countInserted
+				. ' unique adresses imported. ');
 		}
 		Core::setOption('cron_index_mail_status', $statusEnd);
 	}
 
 	/**
-	 * @param $row
-	 * @return mixed
+	 * @param object $row signature row
+	 * @return bool|null inserted | null for errors
 	 */
 	protected function importRow($row)
 	{
+		$inserted = null;
 		$hashedMail = Strings::hashMail($row->mail);
 		$mailRow = DB::getRow(
-			['ID', 'creation_date', 'is_step2_done', 'is_sheet_received', 'is_remind_sheet_sent', 'is_remind_signup_sent'],
-			"mail = '" . $hashedMail . "''",
+			[
+				'ID',
+				'creation_date',
+				'is_step2_done',
+				'is_sheet_received',
+				'state_remind_sheet_sent',
+				'state_remind_signup_sent',
+			],
+			"mail = '" . $hashedMail . "'",
 			DB::TABLE_MAIL
 		);
 
 		if (!$mailRow) {
-			$save = DB::insert(
-				[
-					'sign_ID'                => $row->ID,
-					'mail'                   => $hashedMail,
-					'creation_date'          => $row->creation_date,
-					'is_step2_done'          => $row->is_step2_done ? 1 : 0,
-					'is_sheet_received'      => $row->is_sheet_received ? 1 : 0,
-					'is_remind_sheet_sent' => $row->is_remind_sheet_sent ? 1 : 0,
-					'is_remind_signup_sent'  => $row->is_remind_signup_sent ? 1 : 0,
-				],
-				DB::TABLE_MAIL
-			);
+			$setMailData = [
+				'sign_ID'                  => $row->ID,
+				'mail'                     => $hashedMail,
+				'creation_date'            => $row->creation_date,
+				'is_step2_done'            => $row->is_step2_done ? 1 : 0,
+				'is_sheet_received'        => $row->is_sheet_received ? 1 : 0,
+				'state_remind_sheet_sent'  => $row->state_remind_sheet_sent,
+				'state_remind_signup_sent' => $row->state_remind_signup_sent,
+			];
+			$save = DB::insert($setMailData, DB::TABLE_MAIL);
+			$inserted = true;
 		} else {
 			$setMailData = [];
 			$setMailData['sign_ID'] = $row->ID;
@@ -93,50 +110,64 @@ class CronMailIndex extends CronBase
 			if (!$mailRow->is_sheet_received && $row->is_sheet_received) {
 				$setMailData['is_sheet_received'] = 1;
 			}
-			if (!$mailRow->is_remind_sheet_sent && $row->is_remind_sheet_sent) {
-				$setMailData['is_remind_sheet_sent'] = 1;
+			if ($mailRow->state_remind_sheet_sent !== 1 && $row->state_remind_sheet_sent == 1) {
+				$setMailData['state_remind_sheet_sent'] = 1;
 			}
-			if (!$mailRow->is_remind_signup_sent && $row->is_remind_signup_sent) {
-				$setMailData['is_remind_signup_sent'] = 1;
+			if ($mailRow->state_remind_signup_sent !== 1 && $row->state_remind_signup_sent == 1) {
+				$setMailData['state_remind_signup_sent'] = 1;
 			}
 			$save = DB::updateStatus($setMailData, ['ID' => $mailRow->ID], DB::TABLE_MAIL);
+			$inserted = false;
 		}
 
-		if (!$save) {
-			$this->setStatusMessage('Could not save mail from signature ID ' . $row->ID, false);
+		if ($save === false) {
 			$msg = 'Exception on save mail status with sign_ID=' . $row->ID . ' with error:' . DB::getError();
 			Core::showError($msg, 500);
+			$this->setStatusMessage('Could not save mail from signature ID ' . $row->ID, false);
+			return null;
 		}
 
-		return $row->ID;
+		return $inserted;
 	}
 
 	/**
-	 * @param $lastImportId
-	 * @return array
+	 * @return array|null
 	 */
-	protected function getRowsToImport($lastImportId)
+	protected function getRowsToImport()
 	{
 		// To ensure we get the correct is_step2_done for signatures a client is still working on, wait for all php sessions to die
-		$maxDate = date("Y-m-d", strtotime('12 hour ago'));
+		$maxDate = date("Y-m-d G:i:s", strtotime('12 hour ago'));
 		$where = "is_deleted = 0 AND creation_date < '{$maxDate}'";
-		if ($lastImportId) {
-			$where .= ' AND ID > ' . $lastImportId;
-		}
-		$count = DB::count($where, DB::TABLE_SIGN);
 
-		$sqlAppend = ($count > $this->maxSignsPerCall ? ' LIMIT ' . $this->maxSignsPerCall : '')
+		$lastImport = DB::getRow(['sign_ID'], null, DB::TABLE_MAIL, 'ORDER BY sign_ID DESC');
+		if ($lastImport) {
+			$where .= ' AND ID > ' . $lastImport->sign_ID;
+		}
+		$countTotal = DB::count($where, DB::TABLE_SIGN);
+		if (!$countTotal) {
+			return null;
+		}
+
+		$sqlAppend = ($countTotal > $this->maxSignsPerCall ? ' LIMIT ' . $this->maxSignsPerCall : '')
 			. ' ORDER BY ID ASC';
 		$rows = DB::getResults(
-			['ID', 'mail', 'creation_date', 'is_sheet_received', 'is_remind_sheet_sent', 'is_remind_signup_sent',],
+			[
+				'ID',
+				'mail',
+				'creation_date',
+				'is_step2_done',
+				'is_sheet_received',
+				'state_remind_sheet_sent',
+				'state_remind_signup_sent',
+			],
 			$where,
-			$sqlAppend,
-			DB::TABLE_SIGN
+			DB::TABLE_SIGN,
+			$sqlAppend
 		);
 
-		$this->log('Loaded ' . count($rows) . ' signatures to index their mail (there is a total of ' . $count
+		$this->log('Loaded ' . count($rows) . ' signatures to index their mail (there is a total of ' . $countTotal
 			. ' to import, max ' . $this->maxSignsPerCall . ' per execution)', 'notice');
 
-		return [$count, $rows];
+		return [$countTotal, $rows];
 	}
 }

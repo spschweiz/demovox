@@ -45,9 +45,9 @@ class Admin
 	/**
 	 * Initialize the class and set its properties.
 	 *
+	 * @param string $pluginName The name of this plugin.
+	 * @param string $version The version of this plugin.
 	 * @since    1.0.0
-	 * @param      string $pluginName The name of this plugin.
-	 * @param      string $version The version of this plugin.
 	 */
 	public function __construct($pluginName, $version)
 	{
@@ -126,19 +126,20 @@ class Admin
 	{
 		require_once Infos::getPluginDir() . 'admin/AdminPages.php';
 		$adminPages = new AdminPages();
+		$prefix = 'admin_post_demovox_';
 
 		// export
-		add_action('admin_post_get_csv', [$adminPages, 'getCsv']);
+		add_action($prefix . 'get_csv', [$adminPages, 'getCsv']);
 
 		// manage_options
-		add_action('admin_post_run_cron', [$adminPages, 'runCron']);
-		add_action('admin_post_cancel_cron', [$adminPages, 'cancelCron']);
-		add_action('admin_post_encrypt_test', [$adminPages, 'testEncrypt']);
-		add_action('admin_post_mail_test', [$adminPages, 'testMail']);
+		add_action($prefix . 'run_cron', [$adminPages, 'runCron']);
+		add_action($prefix . 'cancel_cron', [$adminPages, 'cancelCron']);
+		add_action($prefix . 'encrypt_test', [$adminPages, 'testEncrypt']);
+		add_action($prefix . 'mail_test', [$adminPages, 'testMail']);
 
 		// demovox_stats
-		add_action('admin_post_charts_stats', [$adminPages, 'statsCharts']);
-		add_action('admin_post_source_stats', [$adminPages, 'statsSource']);
+		add_action($prefix . 'charts_stats', [$adminPages, 'statsCharts']);
+		add_action($prefix . 'source_stats', [$adminPages, 'statsSource']);
 	}
 
 	public function setupAdminMenu()
@@ -188,7 +189,8 @@ class Admin
 	 *
 	 * @param string $text Message.
 	 */
-	public static function addMessage( $text ) {
+	public static function addMessage($text)
+	{
 		self::$messages[] = $text;
 	}
 
@@ -197,26 +199,29 @@ class Admin
 	 *
 	 * @param string $text Message.
 	 */
-	public static function addError( $text ) {
+	public static function addError($text)
+	{
 		self::$errors[] = $text;
 	}
 
 	/**
 	 * Output messages + errors.
 	 */
-	public static function showMessages() {
-		if ( count( self::$errors ) > 0 ) {
-			foreach ( self::$errors as $error ) {
-				echo '<div id="message" class="error inline"><p><strong>' . esc_html( $error ) . '</strong></p></div>';
+	public static function showMessages()
+	{
+		if (count(self::$errors) > 0) {
+			foreach (self::$errors as $error) {
+				echo '<div id="message" class="error inline"><p><strong>' . esc_html($error) . '</strong></p></div>';
 			}
-		} elseif ( count( self::$messages ) > 0 ) {
-			foreach ( self::$messages as $message ) {
-				echo '<div id="message" class="updated inline"><p><strong>' . esc_html( $message ) . '</strong></p></div>';
+		} elseif (count(self::$messages) > 0) {
+			foreach (self::$messages as $message) {
+				echo '<div id="message" class="updated inline"><p><strong>' . esc_html($message) . '</strong></p></div>';
 			}
 		}
 	}
 
-	public static function checkAccess($capability){
+	public static function checkAccess($capability)
+	{
 		Core::checkNonce();
 		if (!current_user_can($capability)) {
 			wp_die(esc_html__('You are not allowed to access this page.', 'wp-control'));

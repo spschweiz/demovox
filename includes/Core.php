@@ -376,7 +376,7 @@ class Core
 		if ($source['function'] == 'showError' && $source['function'] == 'Demovox\Core') {
 			$source = $trace[2];
 		}
-		$date   = date('Y-m-d H:m', time());
+		$date   = date('Y-m-d G:i:s', time());
 		$string = $date . ' [' . $level . '] ' . $source['file'] . ':' . $source['line'] . "\n" . $message . "\n";
 
 		$fn = Infos::getPluginDir() . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'debug.demovox' . ($type ? '.' . $type : '') . '.php';

@@ -89,15 +89,19 @@ class DB
 	 * @param array $select Fields to select
 	 * @param string|null $where SQL where statement
 	 * @param null|int $table
+	 * @param string|null $sqlAppend Append SQL statements
 	 * @return object|null Database query results
 	 */
-	public static function getRow($select, $where = null, $table = null)
+	public static function getRow($select, $where = null, $table = null, $sqlAppend = null)
 	{
 		global $wpdb;
 
 		$sql = self::prepareSelect($select, $table);
 		if ($where) {
 			$sql .= " WHERE " . $where;
+		}
+		if ($sqlAppend) {
+			$sql .= ' ' . $sqlAppend;
 		}
 		$row = $wpdb->get_row($sql);
 		$row = self::decryptRow($row);
@@ -110,11 +114,11 @@ class DB
 	 *
 	 * @param array $select Fields to select
 	 * @param string|null $where SQL where statement
-	 * @param string|null $sqlAppend Append SQL statements
 	 * @param null|int $table
+	 * @param string|null $sqlAppend Append SQL statements
 	 * @return array|object|null Database query results
 	 */
-	public static function getResults($select, $where = null, $sqlAppend = null, $table = null)
+	public static function getResults($select, $where = null, $table = null, $sqlAppend = null)
 	{
 		global $wpdb;
 		$sql = self::prepareSelect($select, $table);
@@ -175,9 +179,13 @@ class DB
 	public static function insert($data, $table = null)
 	{
 		global $wpdb;
-		if (self::isEncryptionEnabled() && (!$table || $table === self::TABLE_SIGN)) {
-			$row[self::$fieldNameEncrypted] = self::getEncryptionMode();
-			$data = self::encryptRow($data);
+		if (self::isTableEncAllowed($table)) {
+			if (self::isEncryptionEnabled()) {
+				$data[self::$fieldNameEncrypted] = self::getEncryptionMode();
+				$data = self::encryptRow($data);
+			} else {
+				$data[self::$fieldNameEncrypted] = 0;
+			}
 		}
 		return $wpdb->insert(
 			self::getTableName($table),
@@ -195,7 +203,7 @@ class DB
 	public static function update($data, $where, $isEncrypted, $table = null)
 	{
 		global $wpdb;
-		if ($isEncrypted && (!$table || $table === self::TABLE_SIGN)) {
+		if ($isEncrypted && self::isTableEncAllowed($table)) {
 			$data = self::encryptRow($data);
 		}
 		return $wpdb->update(
@@ -351,6 +359,11 @@ class DB
 		return null;
 	}
 
+	protected static function isTableEncAllowed($table = null)
+	{
+		return ($table === null || $table === self::TABLE_SIGN);
+	}
+
 	/**
 	 * add "is_encrypted" if required and convert to string
 	 *
@@ -360,28 +373,31 @@ class DB
 	 */
 	protected static function prepareSelect($select, $table = null)
 	{
-		$decryptRequired = false;
-		foreach ($select as $fieldName) {
-			if (in_array($fieldName, self::$encryptFields)) {
-				$decryptRequired = true;
-				break;
+		if (self::isTableEncAllowed($table)) {
+			$decryptRequired = false;
+			foreach ($select as $fieldName) {
+				if (in_array($fieldName, self::$encryptFields)) {
+					$decryptRequired = true;
+					break;
+				}
 			}
-		}
-		if ($decryptRequired) {
-			if (!in_array(self::$fieldNameEncrypted, $select)) {
-				$select[] = self::$fieldNameEncrypted;
+			if ($decryptRequired) {
+				if (!in_array(self::$fieldNameEncrypted, $select)) {
+					$select[] = self::$fieldNameEncrypted;
+				}
 			}
 		}
 
+		$tableName = self::getTableName($table);
 		$select = implode(', ', $select);
-		$sql = "SELECT " . $select . " FROM " . self::getTableName($table);
+		$sql = "SELECT " . $select . " FROM " . $tableName;
 
 		return $sql;
 	}
 
 	/**
 	 * @param array|object|null $row
-	 * @return string
+	 * @return array|object|null
 	 */
 	protected static function decryptRow($row)
 	{

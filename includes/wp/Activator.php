@@ -47,13 +47,13 @@ class Activator
           gde_canton varchar(172) NULL,
           is_optin tinyint(4) NULL,
           is_step2_done tinyint(4) DEFAULT 0 NOT NULL,
-          is_mail_sent tinyint(4) DEFAULT 0 NOT NULL,
           is_sheet_received tinyint(4) DEFAULT 0 NOT NULL,
-          is_remind_sheet_sent tinyint(4) DEFAULT 0 NOT NULL,
-          is_remind_signup_sent tinyint(4) DEFAULT 0 NOT NULL,
           is_exported tinyint(4) DEFAULT 0 NOT NULL,
           is_encrypted tinyint(4) DEFAULT 0 NOT NULL,
           is_deleted tinyint(4) DEFAULT 0 NOT NULL,
+          state_confirm_sent tinyint(4) DEFAULT 0 NOT NULL,
+          state_remind_sheet_sent tinyint(4) DEFAULT 0 NOT NULL,
+          state_remind_signup_sent tinyint(4) DEFAULT 0 NOT NULL,
           link_pdf varchar(255) NOT NULL,
           link_optin varchar(255) NOT NULL,
           creation_date datetime NOT NULL DEFAULT NOW(),
@@ -71,8 +71,8 @@ class Activator
           creation_date datetime NOT NULL,
           is_step2_done tinyint(4) DEFAULT 0 NOT NULL,
           is_sheet_received tinyint(4) DEFAULT 0 NOT NULL,
-          is_remind_sheet_sent tinyint(4) DEFAULT 0 NOT NULL,
-          is_remind_signup_sent tinyint(4) DEFAULT 0 NOT NULL,
+          state_remind_sheet_sent tinyint(4) DEFAULT 0 NOT NULL,
+          state_remind_signup_sent tinyint(4) DEFAULT 0 NOT NULL,
           PRIMARY KEY (ID),
           UNIQUE KEY sign_ID_index (sign_ID),
           UNIQUE KEY mail_index (mail),
@@ -119,7 +119,7 @@ class Activator
 
 		$optinPageId = Config::getValue('use_page_as_optin_link');
 		if (empty($optinPageId)) {
-			$content .= '[demovox_optin]';
+			$content .= 'Would you like to opt-in to or opt-out from our List?<br/>[demovox_optin]';
 			$post_data = [
 				'post_status'  => 'publish',
 				'post_type'    => 'page',

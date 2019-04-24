@@ -89,3 +89,7 @@ msgstr "Drucke das folgende PDF, dann fülle deinen Namen und Unterschrift aus u
 #: SignSteps.php.php:177
 msgid "signature_sheet"
 msgstr "unterschriftenbogen"
+
+#: PublicHandler.php.php:198
+msgid "Your settings were saved"
+msgstr "Deine Einstellungen wurden gespeichert"

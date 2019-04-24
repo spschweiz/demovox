@@ -131,6 +131,7 @@ class AdminPages
 				'SUM((is_step2_done=0 AND is_deleted = 0)) AS unfinished',
 			],
 			'',
+			DB::TABLE_SIGN,
 			'GROUP BY source ORDER BY source');
 		include Infos::getPluginDir() . 'admin/partials/statsSource.php';
 	}
@@ -185,8 +186,8 @@ class AdminPages
 		$mailTo = $this->getWpMailAddress();
 		$langId = (isset($_REQUEST['lang']) && $_REQUEST['lang']) ? sanitize_text_field($_REQUEST['lang']) : 'de';
 		$mailType = isset($_REQUEST['mailType']) ? intval($_REQUEST['mailType']) : Mail::TYPE_CONFIRM;
-		$mailFrom = Config::getValueByLang('mail_confirm_from_address', $langId);
-		$nameFrom = Config::getValueByLang('mail_confirm_from_name', $langId);
+		$mailFrom = Config::getValueByLang('mail_from_address', $langId);
+		$nameFrom = Config::getValueByLang('mail_from_name', $langId);
 
 		$sign = new signObject($langId, $nameFrom, 'last name', $mailFrom);
 
@@ -210,7 +211,7 @@ class AdminPages
 
 		$hook = sanitize_text_field($_REQUEST['cron']);
 		ManageCron::triggerCron($hook);
-		echo 'Event triggered at ' . date('d.m.Y I:m:s');
+		echo 'Event triggered at ' . date('d.m.Y G:i:s');
 	}
 
 	public function cancelCron()
@@ -219,7 +220,7 @@ class AdminPages
 
 		$hook = sanitize_text_field($_REQUEST['cron']);
 		ManageCron::cancel($hook);
-		echo 'Cron cancelled at ' . date('d.m.Y I:m:s');
+		echo 'Cron cancelled at ' . date('d.m.Y G:i:s');
 	}
 
 	protected function getWpMailAddress()
@@ -323,7 +324,7 @@ class AdminPages
 		if (!Config::getValue('mail_remind_sheet_enabled') || !Config::getValue('mail_remind_dedup')) {
 			return true;
 		}
-		$where = 'mail = ' . $mail;
+		$where = "mail = '" . $mail . "'";
 		$mail = DB::getRow(['ID'], $where, DB::TABLE_MAIL);
 		if ($mail !== null) {
 			$update = DB::updateStatus(['is_sheet_received' => 1], ['ID' => $mail->ID], DB::TABLE_MAIL);
