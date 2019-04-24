@@ -1,4 +1,6 @@
 [![SP Schweiz](https://www.sp-ps.ch/sites/all/themes/sp_ps/logo.png)](http://sp-ps.ch)
+
+![Demovox](assets/logo-demovox-small.png?raw=true "Demovox")
 # Demovox
 
 We use Github to maintain our Code. If you want to use our Plugin as a prebuilt Zip-File, visit our Website and download it from there.
