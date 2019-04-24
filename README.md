@@ -1,7 +1,7 @@
 [![SP Schweiz](https://www.sp-ps.ch/sites/all/themes/sp_ps/logo.png)](http://sp-ps.ch)
 # Demovox
 
-We use Guthub to maintain our Code. If you want to use out Plugin in a prebuilt Zip-File, visit our Website and Download it from there.
+We use Github to maintain our Code. If you want to use our Plugin as a prebuilt Zip-File, visit our Website and Download it from there.
 You cant get the latest Stable Version at https://demovox.ch
 
 ## Description
