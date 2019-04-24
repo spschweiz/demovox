@@ -8,6 +8,19 @@ You cant get the latest Stable Version at https://demovox.ch
 
 demovox is a tool to collect signatures for Swiss popular initiatives by offering the visitor a personalized signature sheet.
 
+## Donations
+
+This Plugin was developed by the [Socialist Party of Switzerland](https://www.sp-ps.ch)
+
+If you want to use this Plugin for a Swiss Referendum or a Initiative consider a donation at https://demovox.ch
+
+
+## Requirements
+* PHP 7
+* WordPress
+* SSL certificate for HTTPS (unsecure connection is not allowed)
+* Optional feature requires the PHP modules "GMP" or "BC Math"
+
 ## Dev preparation
 
 Please install the following:
@@ -56,13 +69,3 @@ open the Advanced settings of the plugin in the WordPress backend and disable "R
 | Version | Description |
 | ------- | ----------- |
 | 1.0 | First release |
-
-## Requirements
-* PHP 7
-* WordPress
-* SSL certificate for HTTPS (unsecure connection is not allowed)
-* Optional feature requires the PHP modules "GMP" or "BC Math"
-
-## Donations
-
-If you want to use this Plugin for a Swiss Referendum or a Initiative consider a donation at https://demovox.ch
