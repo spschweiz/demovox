@@ -20,7 +20,7 @@ namespace Demovox;
  *
  * @package    Demovox
  * @subpackage Demovox/public
- * @author     Fabian Horlacher / SP Schweiz <nospam@nospam.com>
+ * @author     Fabian Horlacher / SP Schweiz
  */
 class PublicHandler
 {

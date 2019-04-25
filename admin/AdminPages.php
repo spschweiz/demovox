@@ -10,7 +10,7 @@ namespace Demovox;
  *
  * @package    Demovox
  * @subpackage Demovox/admin
- * @author     Fabian Horlacher / SP Schweiz <nospam@nospam.com>
+ * @author     Fabian Horlacher / SP Schweiz
  */
 class AdminPages
 {
