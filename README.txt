@@ -21,21 +21,9 @@ Security is of great concern to us. That's why we've added a few power features.
 = Fast =
 In order to be able to use this plugin even when a lot of people want to sign, we have outsourced the hardest work and made sure that regular tasks are only executed when the load on the server is not too high.
 
+== Screenshots ==
 
-== Installation ==
-
-1. Upload directory `demovox` to the Wordpress Plugin directory (/wp-content/plugins/)
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Configure the plugin in WordPress admin
-4. Place shortcodes `[demovox_form_shortcode]` and `[demovox_count_shortcode]` on a WordPress page or post
-3. Configure demovox in WordPress
-4. Place shortcodes [demovox_form] on a page
-5. Optionally use and [demovox_count] to get the number of collected signatures and [demovox_optin] for the opt-in form.
-
-== Changelog ==
-
-= 1.0 =
-* First release
+1. Example of a demovox installation on the popular initiative "Prämien-Entlastungs-Initiative", for which the plugin was initially built for
 
 == Requirements ==
 * PHP 7
@@ -43,8 +31,14 @@ In order to be able to use this plugin even when a lot of people want to sign, w
 * SSL certificate for HTTPS (unsecure connection is not allowed)
 * Optional feature requires the PHP modules "GMP" or "BC Math"
 
-= Unencrypted access =
-As developer you might want to work on a web server without SSL configured. Enable `WP_DEBUG` in `wp-config.php`. Then
-open the Advanced settings of the plugin in the WordPress backend and disable "Redirect clients to secure HTTPS".
+== Installation ==
+1. Upload directory `demovox` to the Wordpress Plugin directory (/wp-content/plugins/)
+2. Activate the plugin through the 'Plugins' menu in WordPress
+3. Configure the plugin in WordPress admin
+4. Place shortcodes [demovox_form] on a page
+5. Optionally use and [demovox_count] to get the number of collected signatures and [demovox_optin] for the opt-in form.
 
-[![SP Schweiz](https://www.sp-ps.ch/sites/all/themes/sp_ps/logo.png)](http://sp-ps.ch)
+== Changelog ==
+
+= 1.0 =
+* First release
