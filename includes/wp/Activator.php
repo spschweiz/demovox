@@ -20,7 +20,7 @@ namespace Demovox;
  * @since      1.0.0
  * @package    Demovox
  * @subpackage Demovox/includes
- * @author     Fabian Horlacher / SP Schweiz <nospam@nospam.com>
+ * @author     Fabian Horlacher / SP Schweiz
  */
 class Activator
 {
