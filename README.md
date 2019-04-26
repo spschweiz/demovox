@@ -87,10 +87,10 @@ There are no automated tests available yet, feel free to implement them and send
 ## Authors
 
 Thanks goes to these wonderful people:
-- @horlacher - Initial work
-- @tsueri - Testing, website [demovox.ch](https://demovox.ch)
-- @dbu - Code review
-- @sweleck - Contributions
+- [@horlacher](https://github.com/Horlacher) - Initial work
+- [@tsueri](https://github.com/tsueri) - Testing, website [demovox.ch](https://demovox.ch)
+- [@dbu](https://github.com/dbu) - Code review
+- [@sweleck](https://github.com/sweleck) - Contributions
 
 See also the list of [contributors](https://github.com/spschweiz/demovox/contributors) who participated in this project.
 
