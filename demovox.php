@@ -17,7 +17,7 @@ namespace Demovox;
  * @wordpress-plugin
  * Plugin Name:       demovox
  * Plugin URI:        https://demovox.ch/
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description:       demovox is a tool to collect signatures for Swiss popular initiatives by offering the visitor a personalized signature sheet.
  * Version:           1.0.1
  * Author:            Fabian Horlacher / SP Schweiz
  * Author URI:        https://www.spschweiz.ch/
