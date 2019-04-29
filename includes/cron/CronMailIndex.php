@@ -148,8 +148,7 @@ class CronMailIndex extends CronBase
 			return null;
 		}
 
-		$sqlAppend = ($countTotal > $this->maxSignsPerCall ? ' LIMIT ' . $this->maxSignsPerCall : '')
-			. ' ORDER BY ID ASC';
+		$sqlAppend = ($countTotal > $this->maxSignsPerCall ? ' ORDER BY ID ASC LIMIT ' . $this->maxSignsPerCall : '');
 		$rows = DB::getResults(
 			[
 				'ID',
