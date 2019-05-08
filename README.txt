@@ -1,10 +1,11 @@
 === demovox ===
-Contributors: (this should be a list of wordpress.org userid's)
+Contributors: spschweiz
 Donate link: https://github.com/spschweiz/demovox
-Tags: initiative, switzerland, collect, signature, signatures
-Requires at least: 1.0
-Tested up to: 1.0
+Tags: initiative, referendum, switzerland, collect, signature, signatures, online
+Requires at least: 4.9
+Tested up to: 5.2
 Stable tag: 1.0
+Requires PHP: 7.0.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -25,6 +26,20 @@ In order to be able to use this plugin even when a lot of people want to sign, w
 
 1. Example of a demovox installation on the popular initiative "Prämien-Entlastungs-Initiative", for which the plugin was initially built for
 
+== Frequently Asked Questions ==
+
+= Do you provide support to run this plugin? =
+
+We don't provide free support. You can contact us at [demovox.ch](https://demovox.ch).
+
+= Is there a documentation? =
+
+Yes. Checkout [demovox.ch/docs/demovox/](https://demovox.ch/docs/demovox/)
+
+= How can I contribute to this project? =
+
+Our code is on [github.com/spschweiz/demovox](https://github.com/spschweiz/demovox). If you want to make a donation, we're happy if you do that on [demovox.ch](https://demovox.ch).
+
 == Requirements ==
 * PHP 7
 * WordPress
@@ -37,6 +52,9 @@ In order to be able to use this plugin even when a lot of people want to sign, w
 3. Configure the plugin in WordPress admin
 4. Place shortcodes [demovox_form] on a page
 5. Optionally use and [demovox_count] to get the number of collected signatures and [demovox_optin] for the opt-in form.
+
+== Upgrade Notice ==
+* 1.0 This is the first stable Release.
 
 == Changelog ==
 
