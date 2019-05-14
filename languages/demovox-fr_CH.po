@@ -53,7 +53,7 @@ msgstr "Numéro"
 
 #: sign-2.php:50
 msgid "ZIP"
-msgstr "NP"
+msgstr "NPA"
 
 #: sign-2.php:54
 msgid "City"
