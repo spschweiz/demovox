@@ -7,9 +7,6 @@ namespace Demovox;
  * @var $hashKey true|string
  * @var $saltsFailed bool
  * @var $phpShowErrors bool
- * @var $httpsEnforced bool
- * @var $httpStatus string
- * @var $httpRedirect string
  * @var $languages array
  * @var $mailRecipient string
  */
@@ -107,35 +104,12 @@ namespace Demovox;
 		</p>
 	<?php } ?>
 	<h3>SSL</h3>
-	<?php
-	if (!$httpsEnforced) {
-		?>
-		<h4 class="error">Un-encrypted connections are allowed - DO NOT USE THIS SERVER IN PRODUCTION</h4>
-		<p>
-			Wordpress can be accessed without a secured HTTPS connection. Personal signature data can be stolen
-			easily.<br/>
-			Tell your hoster to enable HTTPS (SSL) and an automatic redirection on the whole site from HTTP to
-			HTTPS.<br/>
-			All user passwords should be changed as they are considered unsafe.<br/>
-			Technical info: calling the site with HTTP returned status code "<span><?= $httpStatus ?></span>" (30x
-			expected),
-			redirect url is "<span><?= $httpRedirect ?></span>" ("<?= 'https://' . $_SERVER['HTTP_HOST'] ?>" expected)
-		</p>
-		<?php
-	} else {
-		?>
-		<p>
-			Success: Wordpress is not accessible through unencrypted HTTP.<br/>
-			<?php if ($httpRedirect) { ?>
-				Success: Client forwarding from HTTP to HTTPS was recognized.<br/>
-			<?php } else { ?>
-				Warning: Client forwarding from HTTP (port 80) to HTTPS was not recognized.<br/>
-			<?php } ?>
-			You should also check the encryption, for example on
-			<a href="https://www.ssllabs.com/ssltest/analyze.html?d=<?= $_SERVER['HTTP_HOST'] ?>&hideResults=on"
-			   target="_blank">ssllabs.com</a>
-		</p>
-	<?php } ?>
+	<p>
+		Notice: The plugin form is not available through unencrypted HTTP, please make sure the clients are forwarded to HTTPS.<br/>
+		You should also check the encryption quality, for example on
+		<a href="https://www.ssllabs.com/ssltest/analyze.html?d=<?= $_SERVER['HTTP_HOST'] ?>&hideResults=on"
+		   target="_blank">ssllabs.com</a>.
+	</p>
 	<h3>Cron</h3>
 	<?php
 	$cronNames = ManageCron::getAllCrons();

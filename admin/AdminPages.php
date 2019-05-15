@@ -87,7 +87,6 @@ class AdminPages
 		}
 		$configPath = dirname(ABSPATH) . '/wp-config.php';
 		$phpShowErrors = !!ini_get('display_errors');
-		list($httpsEnforced, $httpStatus, $httpRedirect) = Infos::checkHttp2Https();
 		$mailRecipient = $this->getWpMailAddress();
 		$languages = i18n::getLangsEnabled();
 
