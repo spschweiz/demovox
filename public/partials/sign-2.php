@@ -122,6 +122,6 @@ namespace Demovox;
 		</div>
 	<?php } ?>
 	<div class="form-group">
-		<input type="submit" id="demovox-ajax-button" class="form-submit" value="<?= __('Continue', 'demovox') ?>">
+		<input type="submit" id="demovox-ajax-button" class="form-submit btn btn-primary" value="<?= __('Continue', 'demovox') ?>" />
 	</div>
 </form>

@@ -18,6 +18,6 @@ namespace Demovox;
 ?>
 <div class="demovox">
 	<div id="demovox-buttons" class="form-row">
-		<a href="<?= $pdfUrl ?>" class="button col-md-12" target="_blank"><?= __('Download signature sheet', 'demovox') ?></a>
+		<a href="<?= $pdfUrl ?>" class="button col-md-12 btn btn-primary" target="_blank"><?= __('Download signature sheet', 'demovox') ?></a>
 	</div>
 </div>
