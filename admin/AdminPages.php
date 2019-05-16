@@ -85,7 +85,6 @@ class AdminPages
 				$saltsFailed = true;
 			}
 		}
-		$configPath = dirname(ABSPATH) . '/wp-config.php';
 		$phpShowErrors = !!ini_get('display_errors');
 		$mailRecipient = $this->getWpMailAddress();
 		$languages = i18n::getLangsEnabled();

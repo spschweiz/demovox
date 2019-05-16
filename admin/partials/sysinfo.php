@@ -2,7 +2,6 @@
 namespace Demovox;
 /**
  * @var $this Admin
- * @var $configPath null|string
  * @var $encKey true|string
  * @var $hashKey true|string
  * @var $saltsFailed bool
@@ -70,7 +69,7 @@ namespace Demovox;
 		</p>
 	<?php } else { ?>
 		<h4>Config</h4>
-		<p>You can find the Wordpress config here: <?= $configPath ?></p>
+		<p>You can find the Wordpress config here: <?= dirname(ABSPATH) ?>/wp-config.php</p>
 	<?php } ?>
 	<h3>PHP</h3>
 	<?php
