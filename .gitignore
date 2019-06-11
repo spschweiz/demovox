@@ -92,3 +92,6 @@ typings/
 /admin/js/Chart.js
 /admin/js/Chart.bundle.js
 /languages/*.mo
+
+/build/
+/buildWpOrg/

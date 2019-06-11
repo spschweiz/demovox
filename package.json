@@ -15,7 +15,7 @@
     "grunt-po2mo": "^0.1.2",
     "grunt-pot": "^0.3.0",
     "grunt-wp-i18n": "^1.0.3",
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.1",
     "parsleyjs": "^2.8.2",
     "pdf-lib": "0.6.0-rc2",
     "print-js": "^1.0.54",

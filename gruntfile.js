@@ -2,7 +2,9 @@ const webpackPubConfig = require('./webpack.config'),
 	pubCss = './public/css/',
 	pubJs = './public/js/',
 	adminCss = './admin/css/',
-	adminJs = './admin/js/';
+	adminJs = './admin/js/',
+	buildComposer = './build/libs/composer/',
+	buildCountryList = buildComposer + 'umpirsky/country-list/data/*/';
 
 module.exports = function (grunt) {
 	grunt.initConfig({
@@ -12,11 +14,15 @@ module.exports = function (grunt) {
 				files: [{
 					expand: true,
 					cwd: 'node_modules/chart.js/dist',
-					src: '*.js', dest: adminJs, filter: 'isFile'
+					src: '*.js',
+					dest: adminJs,
+					filter: 'isFile'
 				}, {
 					expand: true,
 					cwd: 'node_modules/chart.js/dist',
-					src: '*.css', dest: adminCss, filter: 'isFile'
+					src: '*.css',
+					dest: adminCss,
+					filter: 'isFile'
 				}],
 			},
 			buildDir: {
@@ -26,11 +32,25 @@ module.exports = function (grunt) {
 						'*.php', '*.txt',
 						'public/**/**.php', 'public/**/**.min.js', 'public/**/**.min.css',
 						'admin/**/**.php', 'admin/**/**.min.css', 'admin/**/**.min.js',
-						'assets/**', 'includes/**',
-						'languages/*.mo', 'libs/**',
+						'includes/**', 'languages/*.mo', 'libs/**',
 					],
 					dest: 'build/'
 				}],
+			},
+			buildWpOrg: {
+				files: [
+					{
+						expand: true,
+						cwd: 'build/',
+						src: '**',
+						dest: 'buildWpOrg/trunk/'
+					}, {
+						expand: true,
+						cwd: 'assets/',
+						src: '**',
+						dest: 'buildWpOrg/assets/'
+					}
+				],
 			},
 		},
 		po2mo: {
@@ -43,6 +63,11 @@ module.exports = function (grunt) {
 			build: {
 				options: {
 					create: ['build']
+				},
+			},
+			buildWpOrg: {
+				options: {
+					create: ['buildWpOrg']
 				},
 			},
 		},
@@ -104,7 +129,15 @@ module.exports = function (grunt) {
 			}
 		},
 		clean: {
-			build: ['build/'],
+			build: ['build/',],
+			buildComposer: [
+				buildCountryList + '*.csv', buildCountryList + '*.html',
+				buildCountryList + '*.sql', buildCountryList + '*.txt',
+				buildCountryList + '*.xliff', buildCountryList + '*.xml',
+				buildCountryList + '*.yaml',
+				buildComposer + 'defuse/php-encryption/docs',
+			],
+			buildWpOrg: ['buildWpOrg/',],
 			public: [pubCss + '*.css', pubCss + '*.map', pubJs + '*.min.js', pubJs + '*.map',],
 			admin: [adminCss + '*.css', adminCss + '*.map', adminJs + 'demovox-admin.min.js', adminJs + 'Chart.*',],
 		},
@@ -152,7 +185,13 @@ module.exports = function (grunt) {
 	grunt.registerTask('buildAssets', [
 		'checkDependencies', 'clean', 'webpack:prod', 'copy:adminAssets', 'uglify', 'sass', 'cssmin', 'po2mo',
 	]);
+	grunt.registerTask('build', [
+		'buildAssets', 'mkdir:build', 'copy:buildDir', 'clean:buildCountryList',
+	]);
 	grunt.registerTask('buildZip', [
-		'buildAssets', 'mkdir', 'copy:buildDir', 'compress', 'clean',
+		'build', 'compress', 'clean:build',
+	]);
+	grunt.registerTask('buildWpOrg', [
+		'build', 'copy:buildWpOrg', 'clean:build',
 	]);
 };

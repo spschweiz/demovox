@@ -39,11 +39,12 @@ If you want to use this Plugin for a Swiss Referendum or a Initiative consider a
 
 ### Required packages
 
-Please install the following:
+Please install the following build dependencies:
 * [Python](https://www.python.org/)
 * [Ruby](https://www.ruby-lang.org/)
 * [node.js](https://nodejs.org/) (tested with v8.10.0)
 * [composer](https://getcomposer.org/)
+* [gettext](https://packages.ubuntu.com/bionic/gettext)
 
 Download required packages:
 
