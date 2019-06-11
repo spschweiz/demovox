@@ -4,7 +4,7 @@ const webpackPubConfig = require('./webpack.config'),
 	adminCss = './admin/css/',
 	adminJs = './admin/js/',
 	buildComposer = './build/libs/composer/',
-	buildCountryList = buildComposer + 'umpirsky/country-list/data/*/';
+	buildCountryList = buildComposer + 'umpirsky/country-list/data/';
 
 module.exports = function (grunt) {
 	grunt.initConfig({
@@ -131,10 +131,11 @@ module.exports = function (grunt) {
 		clean: {
 			build: ['build/',],
 			buildComposer: [
-				buildCountryList + '*.csv', buildCountryList + '*.html',
-				buildCountryList + '*.sql', buildCountryList + '*.txt',
-				buildCountryList + '*.xliff', buildCountryList + '*.xml',
-				buildCountryList + '*.yaml',
+				buildCountryList + '*_*',
+				buildCountryList + '*/*.csv', buildCountryList + '*/*.html',
+				buildCountryList + '*/*.sql', buildCountryList + '*/*.txt',
+				buildCountryList + '*/*.xliff', buildCountryList + '*/*.xml',
+				buildCountryList + '*/*.yaml',
 				buildComposer + 'defuse/php-encryption/docs',
 			],
 			buildWpOrg: ['buildWpOrg/',],
@@ -186,7 +187,7 @@ module.exports = function (grunt) {
 		'checkDependencies', 'clean', 'webpack:prod', 'copy:adminAssets', 'uglify', 'sass', 'cssmin', 'po2mo',
 	]);
 	grunt.registerTask('build', [
-		'buildAssets', 'mkdir:build', 'copy:buildDir', 'clean:buildCountryList',
+		'buildAssets', 'mkdir:build', 'copy:buildDir', 'clean:buildComposer',
 	]);
 	grunt.registerTask('buildZip', [
 		'build', 'compress', 'clean:build',
