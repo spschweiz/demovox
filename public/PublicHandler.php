@@ -153,7 +153,11 @@ class PublicHandler
 	 */
 	public function countShortcode()
 	{
-		return DB::countSignatures();
+		$count = DB::countSignatures();
+		if ($sep = Config::getValue('count_thousands_sep')){
+			$count = number_format(DB::countSignatures(), 0, '', $sep);
+		}
+		return $count;
 	}
 
 	public function optInShortcode()

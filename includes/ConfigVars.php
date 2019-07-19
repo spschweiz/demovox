@@ -77,6 +77,13 @@ class ConfigVars
 			'supplemental' => 'Add to public count to include manually collected signs',
 		],
 		[
+			'uid'          => 'count_thousands_sep',
+			'label'        => 'Thousands separator on signature count',
+			'section'      => 'base',
+			'type'         => 'text',
+			'default'      => "'",
+		],
+		[
 			'uid'          => 'allow_swiss_abroad',
 			'label'        => 'Swiss abroad',
 			'section'      => 'base',
