@@ -164,7 +164,7 @@ class DB
 	{
 		global $wpdb;
 		$tableName = self::getTableName($table);
-		if ($tableName === self::$tableNameSignatures) {
+		if ($tableName === self::getTableName(DB::TABLE_SIGN)) {
 			return self::updateStatus(['is_deleted' => 1], $where, $table);
 		} else {
 			return $wpdb->delete($tableName, $where);
@@ -298,7 +298,7 @@ class DB
 	/**
 	 * @return bool
 	 */
-	protected static function isEncryptionEnabled()
+	public static function isEncryptionEnabled()
 	{
 		return self::getEncryptionMode() !== 'disabled';
 	}

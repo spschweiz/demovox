@@ -156,21 +156,21 @@ class Admin
 		$position = 30;
 
 		$capabilityOverview = 'demovox_overview';
+		$capabilityExport = 'export';
 		$capabilityImport = 'demovox_import';
 		$capabilitySettings = 'manage_options';
-		$capabilityExport = 'export';
 
 		$menuTitle = 'demovox';
 		$callback = [$adminPages, 'pageOverview'];
 		add_menu_page($page_title, $menuTitle, $capabilityOverview, $slug, $callback, $icon, $position);
 
-		$menuTitle = 'Import';
-		$callback = [$adminPages, 'pageImport'];
-		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityImport, $slug . 'Import', $callback);
-
 		$menuTitle = 'Signatures Data';
 		$callback = [$adminPages, 'pageData'];
 		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityExport, $slug . 'Data', $callback);
+
+		$menuTitle = 'Import';
+		$callback = [$adminPages, 'pageImport'];
+		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityImport, $slug . 'Import', $callback);
 
 		$menuTitle = 'Settings';
 		$callback = [$adminSettings, 'pageSettings'];

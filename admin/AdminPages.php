@@ -45,6 +45,17 @@ class AdminPages
 		$countUnfinished = DB::count($this->getWhere('unfinished'));
 		$countDeleted = DB::count($this->getWhere('deleted'));
 
+		$option = 'per_page';
+		$args = [
+			'label'   => 'Signatures',
+			'default' => 5,
+			'option'  => 'signatures_per_page',
+		];
+		add_screen_option($option, $args);
+
+		require_once Infos::getPluginDir() . 'admin/SignatureList.php';
+		$signatureList = new SignatureList();
+
 		include Infos::getPluginDir() . 'admin/partials/data.php';
 	}
 
