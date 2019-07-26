@@ -24,7 +24,8 @@ In order to be able to use this plugin even when a lot of people want to sign, w
 
 == Screenshots ==
 
-1. Example of a demovox installation on the popular initiative "Prämien-Entlastungs-Initiative", for which the plugin was initially built for
+1. Example of a demovox installation on the popular initiative [Prämien-Entlastungs-Initiative](https://bezahlbare-praemien.ch/), for which the plugin was initially built for
+2. demovox installation on the [Initiative pour les glaciers](https://glaciers.pssuisse.ch/) (or [Gletscher-Initiative](https://gletscher.spschweiz.ch/) in german)
 
 == Frequently Asked Questions ==
 
