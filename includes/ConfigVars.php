@@ -351,7 +351,7 @@ class ConfigVars
 			'section'      => 'api_export',
 			'type'         => 'textarea',
 			'class'        => 'showOnApiExport',
-			'default'      => '[ "firstname": "{first_name}", "api_key": "X8ZoPz3G2UxApfYpAfjE", ]',
+			'default'      => '{"firstname": "{first_name}", "api_key": "X8ZoPz3G2UxApfYpAfjE"}',
 			'supplemental' => 'JSON which will be used to generate the POST data payload for to the REST API.'
 							  . '<br/>Avaiblable placeholders: {language} {ip_address} {first_name} {last_name} '
 							  .'{birth_date} {mail} {phone} {country} {street} {street_no} {zip} {city} {gde_no} '

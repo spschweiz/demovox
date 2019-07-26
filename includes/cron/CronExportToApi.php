@@ -83,7 +83,7 @@ class CronExportToApi extends CronBase
 			echo "API request failed: $error_message";
 			$this->log('API request failed: ' . $error_message, 'error');
 		} else {
-			$this->log('Response: ' . $response, 'notice');
+			$this->log('Response: ' . print_r($response, 1), 'notice');
 		}
 		$stateExported = $error ? ($row->is_exported - 1) : 1;
 
