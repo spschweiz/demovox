@@ -42,8 +42,9 @@ Yes. Checkout [demovox.ch/docs/demovox/](https://demovox.ch/docs/demovox/)
 Our code is on [github.com/spschweiz/demovox](https://github.com/spschweiz/demovox). If you want to make a donation, we're happy if you do that on [demovox.ch](https://demovox.ch).
 
 == Requirements ==
-* PHP 7
-* WordPress
+* PHP >= 7.0
+* MySQL >= 5.6.5
+* WordPress >= 4.9
 * SSL certificate for HTTPS (unsecure connection is not allowed)
 * Optional feature requires the PHP modules "GMP" or "BC Math"
 

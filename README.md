@@ -1,7 +1,7 @@
 [![SP Schweiz](https://www.sp-ps.ch/sites/all/themes/sp_ps/logo.png)](https://www.sp-ps.ch)
 
 [![Demovox](assets/logo-demovox-small.png?raw=true "Demovox")](https://demovox.ch)
-# Demovox
+# Demovox (dev readme)
 
 We use Github to maintain our Code. If you want to use our WordPress Plugin as a prebuilt Zip-File, visit our Website and download it from there.
 
@@ -22,8 +22,9 @@ If you want to use this Plugin for a Swiss Referendum or a Initiative consider a
 
 ## Requirements
 
-* PHP 7
-* WordPress
+* PHP >= 7.0
+* MySQL >= 5.6.5
+* WordPress >= 4.9
 * SSL certificate for HTTPS (unsecure connection is only allowed for development)
 * Optional feature requires the PHP modules "GMP" or "BC Math"
 
@@ -81,9 +82,7 @@ There are no automated tests available yet, feel free to implement them and send
 
 ## Changelog
 
-| Version | Description |
-| ------- | ----------- |
-| 1.0 | First release |
+See README.txt
 
 ## Authors
 
