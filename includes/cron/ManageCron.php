@@ -25,7 +25,7 @@ class ManageCron
 	/**
 	 * @var $crons array
 	 */
-	static private $crons = ['CronMailConfirm', 'CronMailIndex', 'CronMailRemindSheet', 'CronMailRemindSignup',];
+	static private $crons = ['CronMailConfirm', 'CronMailIndex', 'CronMailRemindSheet', 'CronMailRemindSignup', 'CronExportToApi',];
 
 	public function __construct($pluginName, $version)
 	{

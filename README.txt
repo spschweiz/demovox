@@ -60,3 +60,8 @@ Our code is on [github.com/spschweiz/demovox](https://github.com/spschweiz/demov
 
 = 1.0 =
 * First release
+
+= 1.1 =
+* Signatures can now be listed and searched in the backend
+* The signature counter now features a thousands separator
+* Admin option to export signatures to an API

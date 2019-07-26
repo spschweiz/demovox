@@ -57,8 +57,12 @@ class ConfigVars
 			'title' => 'Cron',
 			'page'  => 'demovoxFields4',
 		],
-		'api'                  => [
-			'title' => 'API settings',
+		'api_address'                  => [
+			'title' => 'Address information API',
+			'page'  => 'demovoxFields4',
+		],
+		'api_export'                  => [
+			'title' => 'Export API',
 			'page'  => 'demovoxFields4',
 		],
 		'danger'               => [
@@ -77,11 +81,11 @@ class ConfigVars
 			'supplemental' => 'Add to public count to include manually collected signs',
 		],
 		[
-			'uid'          => 'count_thousands_sep',
-			'label'        => 'Thousands separator on signature count',
-			'section'      => 'base',
-			'type'         => 'text',
-			'default'      => "'",
+			'uid'     => 'count_thousands_sep',
+			'label'   => 'Thousands separator on signature count',
+			'section' => 'base',
+			'type'    => 'text',
+			'default' => "'",
 		],
 		[
 			'uid'          => 'allow_swiss_abroad',
@@ -160,7 +164,7 @@ class ConfigVars
 			],
 			'default'      => 'disabled',
 			'supplemental' => 'Encrypt personal details, only affects new entries. DEMOVOX_ENC_KEY has to be set in wp-config.php. '
-				. 'Protects against DB data theft like SQL injections, but does not on file system access.',
+							  . 'Protects against DB data theft like SQL injections, but does not on file system access.',
 		],
 		[
 			'uid'     => 'save_ip',
@@ -201,7 +205,7 @@ class ConfigVars
 			'section'      => 'optIn',
 			'type'         => 'wpPage',
 			'supplemental' => 'You should include the text [demovox_optin] on selected page to show the signature sheet. '
-				. 'Link is generated only one at on sign-up.',
+							  . 'Link is generated only one at on sign-up.',
 			'class'        => 'hideOnOptinDisabled',
 		],
 		[
@@ -274,12 +278,11 @@ class ConfigVars
 			'class'   => 'showOnMethodSmtp',
 		],
 		[
-			'uid'          => 'mail_max_per_execution',
-			'label'        => 'Send up to x emails per cron execution',
-			'section'      => 'mailConfig',
-			'type'         => 'number',
-			'default'      => 300,
-			'supplemental' => 'Send up to x emails per cron execution',
+			'uid'     => 'mail_max_per_execution',
+			'label'   => 'Send up to x emails per cron execution',
+			'section' => 'mailConfig',
+			'type'    => 'number',
+			'default' => 300,
 		],
 		[
 			'uid'          => 'cron_max_load',
@@ -298,22 +301,22 @@ class ConfigVars
 			'supplemental' => 'Required to recognize correct load',
 		],
 		[
-			'uid'     => 'api_address_key',
-			'label'   => 'Key addressinformation',
-			'section' => 'api',
+			'uid'     => 'api_address_url',
+			'label'   => 'URL addressinformation',
+			'section' => 'api_address',
 			'type'    => 'text',
 		],
 		[
-			'uid'     => 'api_address_url',
-			'label'   => 'URL addressinformation',
-			'section' => 'api',
+			'uid'     => 'api_address_key',
+			'label'   => 'Key',
+			'section' => 'api_address',
 			'type'    => 'text',
 			'class'   => 'showOnApiAddress',
 		],
 		[
 			'uid'     => 'api_address_city_input',
 			'label'   => 'Allow custom city name',
-			'section' => 'api',
+			'section' => 'api_address',
 			'type'    => 'checkbox',
 			'default' => 1,
 			'class'   => 'showOnApiAddress',
@@ -321,7 +324,7 @@ class ConfigVars
 		[
 			'uid'     => 'api_address_gde_input',
 			'label'   => 'Allow custom commune name',
-			'section' => 'api',
+			'section' => 'api_address',
 			'type'    => 'checkbox',
 			'default' => 1,
 			'class'   => 'showOnApiAddress',
@@ -329,23 +332,47 @@ class ConfigVars
 		[
 			'uid'     => 'api_address_gde_select',
 			'label'   => 'Allow custom commune selection',
-			'section' => 'api',
+			'section' => 'api_address',
 			'type'    => 'checkbox',
 			'default' => 1,
 			'class'   => 'showOnApiAddress',
 		],
 		[
-			'uid'     => 'api_export_key',
-			'label'   => 'Key data export',
-			'section' => 'api',
-			'type'    => 'text',
+			'uid'          => 'api_export_url',
+			'label'        => 'API URL',
+			'section'      => 'api_export',
+			'type'         => 'text',
+			'default'      => 'https://',
+			'supplemental' => 'URL of a HTTPS REST API to send the signatures to. Ex: "https://server.ch/api/rest/"',
 		],
 		[
-			'uid'     => 'api_export_url',
-			'label'   => 'URL data export',
-			'section' => 'api',
-			'type'    => 'text',
+			'uid'          => 'api_export_data',
+			'label'        => 'Export Data (JSON payload)',
+			'section'      => 'api_export',
+			'type'         => 'textarea',
+			'class'        => 'showOnApiExport',
+			'default'      => '[ "firstname": "{first_name}", "api_key": "X8ZoPz3G2UxApfYpAfjE", ]',
+			'supplemental' => 'JSON which will be used to generate the POST data payload for to the REST API.'
+							  . '<br/>Avaiblable placeholders: {language} {ip_address} {first_name} {last_name} '
+							  .'{birth_date} {mail} {phone} {country} {street} {street_no} {zip} {city} {gde_no} '
+							  .'{gde_zip} {gde_name} {gde_canton} {is_optin} {creation_date} {source}',
+		],
+		[
+			'uid'     => 'api_export_max_per_execution',
+			'label'   => 'Send upto x rows per cron execution',
+			'section' => 'api_export',
+			'type'    => 'number',
 			'class'   => 'showOnApiExport',
+			'default' => 300,
+		],
+		[
+			'uid'          => 'api_export_no_optin',
+			'label'        => 'Optin not required',
+			'section'      => 'api_export',
+			'type'         => 'checkbox',
+			'class'   => 'showOnApiExport',
+			'default'      => 0,
+			'supplemental' => 'Also export signatures without optin',
 		],
 		[
 			'uid'          => 'drop_config_on_uninstall',
@@ -367,7 +394,7 @@ class ConfigVars
 	public static function getField($id)
 	{
 		$fields = ConfigVars::getFields();
-		$key = array_search($id, array_column($fields, 'uid'));
+		$key    = array_search($id, array_column($fields, 'uid'));
 		if ($key === false) {
 			Core::logMessage('Option field "' . $id . '" does not exist.');
 			return null;
@@ -381,8 +408,8 @@ class ConfigVars
 		if (self::$fieldsCache !== null) {
 			return self::$fieldsCache;
 		}
-		$fields = self::$fields;
-		$fields[] = [
+		$fields        = self::$fields;
+		$fields[]      = [
 			'uid'          => 'mail_confirmation_enabled',
 			'label'        => 'Mail confirmation enabled',
 			'section'      => 'mailText',
@@ -390,7 +417,7 @@ class ConfigVars
 			'default'      => 1,
 			'supplemental' => 'If enabled later, confirmations will also be sent for previous signees which did not receive the mail yet.<br/>You must also set the mailserver settings in the advanced settings.',
 		];
-		$fields[] = [
+		$fields[]      = [
 			'uid'          => 'mail_remind_sheet_enabled',
 			'label'        => 'Mail sheet reminder enabled',
 			'section'      => 'mailText',
@@ -398,7 +425,7 @@ class ConfigVars
 			'default'      => 0,
 			'supplemental' => 'Send a reminder to signees which didn\'t send their signature sheets.',
 		];
-		$fields[] = [
+		$fields[]      = [
 			'uid'          => 'mail_remind_sheet_min_age',
 			'label'        => 'Minimum signature age',
 			'section'      => 'mailText',
@@ -407,7 +434,7 @@ class ConfigVars
 			'supplemental' => 'Minimum age of a signature before a sheet reminder is sent.',
 			'class'        => 'showOnMailRemindSheetEnabled',
 		];
-		$fields[] = [
+		$fields[]      = [
 			'uid'          => 'mail_remind_signup_enabled',
 			'label'        => 'Mail signup reminder enabled',
 			'section'      => 'mailText',
@@ -415,7 +442,7 @@ class ConfigVars
 			'default'      => 0,
 			'supplemental' => 'Send a reminder to signees which didn\'t finish filling the sign-up form.',
 		];
-		$fields[] = [
+		$fields[]      = [
 			'uid'          => 'mail_remind_signup_min_age',
 			'label'        => 'Minimum signature age',
 			'section'      => 'mailText',
@@ -424,7 +451,7 @@ class ConfigVars
 			'supplemental' => 'Minimum age of a signature before a form reminder is sent.',
 			'class'        => 'showOnMailRemindSignupEnabled',
 		];
-		$fields[] = [
+		$fields[]      = [
 			'uid'          => 'mail_remind_dedup',
 			'label'        => 'Only send one reminder per mail adress',
 			'section'      => 'mailText',
@@ -432,21 +459,21 @@ class ConfigVars
 			'default'      => 1,
 			'supplemental' => 'Might weaken email address encryption security.',
 		];
-		$fields[] = [
+		$fields[]      = [
 			'uid'          => 'mail_nl2br',
 			'label'        => 'Newline to BR',
 			'section'      => 'mailText',
 			'type'         => 'checkbox',
 			'supplemental' => 'Inserts HTML line breaks before all newlines in mail body. Don\'t activate this if you set the mail body in HTML.',
 		];
-		$glueLang = Config::GLUE_LANG;
+		$glueLang      = Config::GLUE_LANG;
 		$wpMailAddress = get_bloginfo('admin_email');
-		$wpMailName = get_bloginfo('name');
+		$wpMailName    = get_bloginfo('name');
 
 		foreach (i18n::getLangs() as $langId => $language) {
 			$langEnabled = !!self::getConfigValue('is_language_enabled' . $glueLang . $langId, null, true);
-			$class = $langEnabled ? '' : ' hidden';
-			$glueLangId = $glueLang . $langId;
+			$class       = $langEnabled ? '' : ' hidden';
+			$glueLangId  = $glueLang . $langId;
 
 			// language
 			$fields[] = [
@@ -698,25 +725,25 @@ class ConfigVars
 				'page'    => 'demovoxFields1',
 				'addPre'  => $langEnabled ? '' : '<div class="hidden">',
 				'addPost' => '<br/><div id="preview-' . $langId . '">' . '<input type="button" class="showPdf" data-lang="' . $langId
-					. '" href="#" value="Show preview"/>' . '<iframe src="about:blank" class="pdf-iframe"></iframe></div>	'
-					. ($langEnabled ? '' : '</div>'),
+							 . '" value="Show preview"/>' . '<iframe src="about:blank" class="pdf-iframe"></iframe></div>	'
+							 . ($langEnabled ? '' : '</div>'),
 			];
-			$sections['mailConfirm_' . $langId] = [
+			$sections['mailConfirm_' . $langId]          = [
 				'title'   => $language . '<br/>Mail confirmation',
 				'page'    => 'demovoxFields2',
-				'addPre'  => '<div class="showOnMailConfirmEnabled' . ($langEnabled ?'': ' hidden') . '">',
+				'addPre'  => '<div class="showOnMailConfirmEnabled' . ($langEnabled ? '' : ' hidden') . '">',
 				'addPost' => '</div>',
 			];
-			$sections['mailRemindSheet_' . $langId] = [
+			$sections['mailRemindSheet_' . $langId]      = [
 				'title'   => $language . '<br/>Mail sheet reminder ',
 				'page'    => 'demovoxFields2',
-				'addPre'  => '<div class="showOnMailRemindSheetEnabled' . ($langEnabled ?'': ' hidden') . '">',
+				'addPre'  => '<div class="showOnMailRemindSheetEnabled' . ($langEnabled ? '' : ' hidden') . '">',
 				'addPost' => '</div>',
 			];
-			$sections['mailRemindSignup_' . $langId] = [
+			$sections['mailRemindSignup_' . $langId]     = [
 				'title'   => $language . '<br/>Mail signup reminder ',
 				'page'    => 'demovoxFields2',
-				'addPre'  => '<div class="showOnMailRemindSignupEnabled' . ($langEnabled ?'': ' hidden') . '">',
+				'addPre'  => '<div class="showOnMailRemindSignupEnabled' . ($langEnabled ? '' : ' hidden') . '">',
 				'addPost' => '</div>',
 			];
 		}
@@ -728,15 +755,16 @@ class ConfigVars
 	 * Access config values from this class without creating loops.
 	 * Use Config::getValue() from other locations!
 	 *
-	 * @param $id string
+	 * @param $id      string
 	 * @param $valPart null|string
 	 * @param $default null|mixed Default value (ignore value in ConfigVars, for example to avoid function nesting)
+	 *
 	 * @return mixed Value set for the config.
 	 */
 	protected static function getConfigValue($id, $valPart = null, $default = null)
 	{
 		$fullId = $id . ($valPart ? config::GLUE_PART . $valPart : '');
-		$value = Core::getOption($fullId);
+		$value  = Core::getOption($fullId);
 		if ($value !== false) {
 			return $value;
 		}

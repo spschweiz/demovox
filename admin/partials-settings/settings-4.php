@@ -16,6 +16,6 @@ submit_button();
 <script>
 	hideOnSet($('#demovox_encrypt_signees'), $('.showOnEncrypt'), 'disabled');
 	showOnSet($('#demovox_mail_method'), $('.showOnMethodSmtp'), 'smtp');
-	hideOnSet($('#demovox_api_address_key'), $('.showOnApiAddress'), '');
-	hideOnSet($('#demovox_api_export_key'), $('.showOnApiExport'), '');
+	hideOnSet($('#demovox_api_address_url'), $('.showOnApiAddress'), '');
+	hideOnSet($('#demovox_api_export_url'), $('.showOnApiExport'), '');
 </script>

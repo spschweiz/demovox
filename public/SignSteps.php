@@ -88,7 +88,7 @@ class SignSteps
 
 		// Prepare view variables
 		$textOptin = Config::getValueByUserlang('text_optin');
-		$apiAddressEnabled = !empty(Config::getValue('api_address_key'));
+		$apiAddressEnabled = !empty(Config::getValue('api_address_url'));
 		$cantons = i18n::$cantons;
 		$allowSwissAbroad = Config::getValue('allow_swiss_abroad');
 
