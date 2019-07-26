@@ -95,14 +95,15 @@ class Activator
 		ManageCron::activate();
 
 		// Create pages
-		$signatureSheetPageId = Config::getValue('signature_sheet_page_id');
-		if (empty($signatureSheetPageId)) {
-			$content = '<p>' . __('Almost there', 'demovox') . '</p>';
-			$content .= '<p>' .
-				__('Print the following PDF, then fill it with your name and signature and send it to us:', 'demovox') .
-				'</p>';
-			$content .= '[demovox_form]';
-			$postData = [
+		$signatureSheetPageId = Core::getOption('signature_sheet_page_id');
+		if (!self::isPostVisible($signatureSheetPageId)) {
+			$content              = '<p>' . __('Almost there', 'demovox') . '</p>';
+			$content              .= '<p>' .
+									 __('Print the following PDF, then fill it with your name and signature and send it to us:', 'demovox')
+									 .
+									 '</p>';
+			$content              .= '[demovox_form]';
+			$postData             = [
 				'post_status'  => 'publish',
 				'post_type'    => 'page',
 				'ping_status'  => get_option('default_ping_status'),
@@ -118,9 +119,10 @@ class Activator
 		}
 
 		$optinPageId = Config::getValue('use_page_as_optin_link');
-		if (empty($optinPageId)) {
-			$content .= 'Would you like to opt-in to or opt-out from our List?<br/>[demovox_optin]';
-			$post_data = [
+
+		if (!self::isPostVisible($optinPageId)) {
+			$content     .= 'Would you like to opt-in to or opt-out from our List?<br/>[demovox_optin]';
+			$post_data   = [
 				'post_status'  => 'publish',
 				'post_type'    => 'page',
 				'ping_status'  => get_option('default_ping_status'),
@@ -129,7 +131,7 @@ class Activator
 				'post_title'   => 'Opt-in',
 			];
 			$optinPageId = wp_insert_post($post_data);
-			Core::setOption('use_page_as_optin_link', $optinPageId);
+			Config::setValue('use_page_as_optin_link', $optinPageId);
 		}
 
 		// create capabilities
@@ -149,5 +151,24 @@ class Activator
 		$role->add_cap('demovox_overview');
 		$role->add_cap('demovox_stats');
 		$role->add_cap('demovox_import');
+	}
+
+	/**
+	 * @param $post Post to check if visible
+	 *
+	 * @return bool
+	 */
+	protected static function isPostVisible($post)
+	{
+		if (!empty($post)) {
+			$post_info = get_post($post);
+			if (!$post_info) {
+				return false;
+			}
+			$status = $post_info->post_status;
+
+			return $status !== 'trash';
+		}
+		return false;
 	}
 }

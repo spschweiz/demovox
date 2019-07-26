@@ -28,6 +28,18 @@ class Config
 		return self::valueFormat($valPart, $value, $field);
 	}
 
+	/**
+	 * @param $id string
+	 * @param $value mixed Option value to set
+	 * @param $valPart null|string
+	 * @return mixed Value set for the config.
+	 */
+	public static function setValue($id, $value, $valPart = null)
+	{
+		$fullId = $id . ($valPart ? self::GLUE_PART . $valPart : '');
+		return Core::setOption($fullId, $value);
+	}
+
 	protected static function valueFormat($valPart, $value, $field = null)
 	{
 		if (isset($field['type']) && $field['type'] === 'checkbox') {
