@@ -381,7 +381,7 @@ class Core
 
 		$fn = Infos::getPluginDir() . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'debug.demovox' . ($type ? '.' . $type : '') . '.php';
 		if (!file_exists($fn)) {
-			$string = '<?php exit;' . "\n" . $string;
+			$string = '<?php die(\'silenzio\') ?>' . "\n" . $string;
 		}
 		$fp = fopen($fn, 'a');
 		fputs($fp, $string);
