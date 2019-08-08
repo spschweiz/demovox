@@ -243,7 +243,7 @@ class SignSteps
 			$signId = $row->ID;
 			$gdeCanton = $row->gde_canton;
 			$gdeName = $row->gde_name;
-			$gdeZip = $row->gde_zip;
+			$gdeZip = $row->gde_zip ?: $row->zip;
 			$birthDate = date_parse($row->birth_date);
 			$street = $row->street;
 			$streetNo = $row->street_no;
