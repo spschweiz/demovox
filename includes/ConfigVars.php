@@ -62,13 +62,13 @@ class ConfigVars
 			'title' => 'Cron',
 			'page'  => 'demovoxFields4',
 		],
-		'api_address'                  => [
-			'title' => 'Address information API',
+		'api_address'          => [
+			'title' => 'Address lookup API',
 			'page'  => 'demovoxFields4',
 			'sub'   => 'Lookup API for the address information, used in the address form for autocompletion and commune identification. '
 					   . 'Check <a href="https://demovox.ch/" target="_blank">documentation on demovox.ch</a> if you want to use our service.',
 		],
-		'api_export'                  => [
+		'api_export'           => [
 			'title' => 'Export API',
 			'page'  => 'demovoxFields4',
 			'sub'   => 'Used to export signup data to a REST API of a CRM (server-side based submission, HTTPS required!).',
@@ -171,8 +171,8 @@ class ConfigVars
 				'1'        => 'Yes, php-encryption (requires at least PHP 5.6 and OpenSSL 1.0.1)',
 			],
 			'default'      => 'disabled',
-			'supplemental' => 'Encrypt personal details, only affects new entries. DEMOVOX_ENC_KEY has to be set in wp-config.php. '
-							  . 'Protects against DB data theft like SQL injections, but does not on file system access.',
+			'supplemental' => 'Encrypt personal details, only affects new entries. DEMOVOX_ENC_KEY has to be set in wp-config.php (see <i>System info</i>). '
+							  . 'Protects against DB data theft like SQL injections, but does not on file system access. Recommended!',
 		],
 		[
 			'uid'     => 'save_ip',
@@ -362,8 +362,8 @@ class ConfigVars
 			'default'      => '{"firstname": "{first_name}", "api_key": "X8ZoPz3G2UxApfYpAfjE"}',
 			'supplemental' => 'JSON which will be used to generate the POST data payload for to the REST API.'
 							  . '<br/>Avaiblable placeholders: {language} {ip_address} {first_name} {last_name} '
-							  .'{birth_date} {mail} {phone} {country} {street} {street_no} {zip} {city} {gde_no} '
-							  .'{gde_zip} {gde_name} {gde_canton} {is_optin} {creation_date} {source}',
+							  . '{birth_date} {mail} {phone} {country} {street} {street_no} {zip} {city} {gde_no} '
+							  . '{gde_zip} {gde_name} {gde_canton} {is_optin} {creation_date} {source}',
 		],
 		[
 			'uid'     => 'api_export_max_per_execution',
@@ -378,7 +378,7 @@ class ConfigVars
 			'label'        => 'Optin not required',
 			'section'      => 'api_export',
 			'type'         => 'checkbox',
-			'class'   => 'showOnApiExport',
+			'class'        => 'showOnApiExport',
 			'default'      => 0,
 			'supplemental' => 'Also export signatures without optin',
 		],
