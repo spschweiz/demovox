@@ -11,8 +11,13 @@ class ConfigVars
 			'page'  => 'demovoxFields0',
 		],
 		'enabledLanguages'     => [
-			'title' => 'Enabled languages',
+			'title' => 'demovox option languages',
 			'page'  => 'demovoxFields0',
+			'sub'   => 'Enable languages for the demovox option translations like signature sheets, mails and opt-in text.<br/>'
+					   . ' The frontend language, like the translation of the form input titles, is affected by the WordPress option'
+					   . '<i>Site Language</i> under <i>General Settings</i>.'
+					   . ' Another way is to set the language by an internationalisation plugin to allow multiple languages for the client'
+					   . ' (currently tested with <a href="https://wpml.org/" target="_blank">WPML</a>).',
 		],
 		'signatureSheet'       => [
 			'title' => 'Signature sheet',
@@ -656,12 +661,13 @@ class ConfigVars
 			];
 		}
 		$fields[] = [
-			'uid'     => 'default_language',
-			'label'   => 'Default language',
-			'section' => 'enabledLanguages',
-			'type'    => 'select',
-			'options' => i18n::getLangs(),
-			'default' => 'de',
+			'uid'          => 'default_language',
+			'label'        => 'Default language',
+			'section'      => 'enabledLanguages',
+			'type'         => 'select',
+			'options'      => i18n::getLangs(),
+			'default'      => 'de',
+			'supplemental' => 'Fallback language if the WordPress frontend is not set to any of the enabled demovox languages',
 		];
 		if (WP_DEBUG) {
 			$fields[] = [
