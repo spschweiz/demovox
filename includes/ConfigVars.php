@@ -472,6 +472,7 @@ class ConfigVars
 			'label'        => 'Newline to BR',
 			'section'      => 'mailText',
 			'type'         => 'checkbox',
+			'default'      => 1,
 			'supplemental' => 'Inserts HTML line breaks before all newlines in mail body. Don\'t activate this if you set the mail body in HTML.',
 		];
 		$glueLang      = Config::GLUE_LANG;
