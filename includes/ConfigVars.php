@@ -65,10 +65,13 @@ class ConfigVars
 		'api_address'                  => [
 			'title' => 'Address information API',
 			'page'  => 'demovoxFields4',
+			'sub'   => 'Lookup API for the address information, used in the address form for autocompletion and commune identification. '
+					   . 'Check <a href="https://demovox.ch/" target="_blank">documentation on demovox.ch</a> if you want to use our service.',
 		],
 		'api_export'                  => [
 			'title' => 'Export API',
 			'page'  => 'demovoxFields4',
+			'sub'   => 'Used to export signup data to a REST API of a CRM (server-side based submission, HTTPS required!).',
 		],
 		'danger'               => [
 			'title' => 'Danger area',
