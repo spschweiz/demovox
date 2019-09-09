@@ -122,10 +122,10 @@ class PublicHandler
 			'apiAddressEnabled' => '',
 			'successPageRedir'  => $successPage || $successPage === '0',
 		];
-		if ($apiAddressKey = Config::getValue('api_address_url')) {
+		if ($apiAddressUrl = Config::getValue('api_address_url')) {
 			$demovoxJsArr['apiAddressEnabled'] = 1;
-			$demovoxJsArr['apiAddressKey'] = $apiAddressKey;
-			$demovoxJsArr['apiAddressUrl'] = Config::getValue('api_address_url');//'https://test-tel.sp-ps.ch/signatures/commune_suggestion';
+			$demovoxJsArr['apiAddressKey'] = Config::getValue('api_address_key');
+			$demovoxJsArr['apiAddressUrl'] = $apiAddressUrl;
 			$demovoxJsArr['apiAddressCityInput'] = Config::getValue('api_address_city_input');
 			$demovoxJsArr['apiAddressGdeInput'] = Config::getValue('api_address_gde_input');
 			$demovoxJsArr['apiAddressGdeSelect'] = Config::getValue('api_address_gde_select');
