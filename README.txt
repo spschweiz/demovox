@@ -67,3 +67,6 @@ Our code is on [github.com/spschweiz/demovox](https://github.com/spschweiz/demov
 * Signatures can now be listed and searched in the backend
 * The signature counter now features a thousands separator
 * Admin option to export signatures to an API
+
+= 1.2 =
+* Support for local initiatives (commune or canton)
