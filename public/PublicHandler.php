@@ -50,13 +50,14 @@ class PublicHandler
 	 * Initialize the class and set its properties.
 	 *
 	 * @param string $pluginName The name of the plugin.
-	 * @param string $version The version of this plugin.
+	 * @param string $version    The version of this plugin.
+	 *
 	 * @since 1.0.0
 	 */
 	public function __construct($pluginName, $version)
 	{
 		$this->pluginName = $pluginName;
-		$this->version = $version;
+		$this->version    = $version;
 
 		add_action('init', [$this, 'initPlugin']);
 
@@ -114,7 +115,7 @@ class PublicHandler
 	 */
 	public function enqueueScripts()
 	{
-		$successPage = Config::getValue('use_page_as_success');
+		$successPage  = Config::getValue('use_page_as_success');
 		$demovoxJsArr = [
 			'language'          => Infos::getUserLanguage(),
 			'ajaxUrl'           => admin_url('admin-ajax.php'),
@@ -123,11 +124,11 @@ class PublicHandler
 			'successPageRedir'  => $successPage || $successPage === '0',
 		];
 		if ($apiAddressUrl = Config::getValue('api_address_url')) {
-			$demovoxJsArr['apiAddressEnabled'] = 1;
-			$demovoxJsArr['apiAddressKey'] = Config::getValue('api_address_key');
-			$demovoxJsArr['apiAddressUrl'] = $apiAddressUrl;
+			$demovoxJsArr['apiAddressEnabled']   = 1;
+			$demovoxJsArr['apiAddressKey']       = Config::getValue('api_address_key');
+			$demovoxJsArr['apiAddressUrl']       = $apiAddressUrl;
 			$demovoxJsArr['apiAddressCityInput'] = Config::getValue('api_address_city_input');
-			$demovoxJsArr['apiAddressGdeInput'] = Config::getValue('api_address_gde_input');
+			$demovoxJsArr['apiAddressGdeInput']  = Config::getValue('api_address_gde_input');
 			$demovoxJsArr['apiAddressGdeSelect'] = Config::getValue('api_address_gde_select');
 		}
 
@@ -154,7 +155,7 @@ class PublicHandler
 	public function countShortcode()
 	{
 		$count = DB::countSignatures();
-		if ($sep = Config::getValue('count_thousands_sep')){
+		if ($sep = Config::getValue('count_thousands_sep')) {
 			$count = number_format(DB::countSignatures(), 0, '', $sep);
 		}
 		return $count;
@@ -173,8 +174,8 @@ class PublicHandler
 		if (!$row) {
 			return 'Signature with GUID "' . $guid . '" was not found';
 		}
-		$signId = $row->ID;
-		$isOptIn = $row->is_optin;
+		$signId    = $row->ID;
+		$isOptIn   = $row->is_optin;
 		$textOptin = Config::getValueByUserlang('text_optin');
 
 		// Render view
@@ -186,7 +187,7 @@ class PublicHandler
 	public function saveOptIn()
 	{
 		$optIn = isset($_REQUEST['is_optin']) && $_REQUEST['is_optin'] ? 1 : 0;
-		$guid = isset($_REQUEST['sign']) ? sanitize_key($_REQUEST['sign']) : null;
+		$guid  = isset($_REQUEST['sign']) ? sanitize_key($_REQUEST['sign']) : null;
 
 		// Save data
 		$success = DB::updateStatus(
