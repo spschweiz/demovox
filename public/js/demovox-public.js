@@ -9,6 +9,11 @@
  * @property {bool} apiAddressCityInput
  * @property {bool} apiAddressGdeInput
  * @property {bool} apiAddressGdeSelect
+ * @property {string} localIniMode
+ * @property {string} localIniCanton
+ * @property {int} localIniCommune
+ * @property {int} localIniErrRedir
+ * @property {string} localIniErrMsg
  */
 import $ from 'jquery';
 import 'select2'; // globally assign select2 fn to $ element
@@ -460,6 +465,25 @@ $(() => {
 				$el.gdeCanton.val(data.kanton.toLowerCase()).trigger('change');
 				$el.gdeId.val(data.gde_nr);
 				$el.gdeZip.val(data.zip);
+				if (demovox.localIniMode) {
+					var $parsleyEl;
+					if (demovox.localIniMode === 'canton') {
+						$parsleyEl = jQuery('#gde_canton').parsley();
+					} else if (demovox.localIniMode === 'commune') {
+						$parsleyEl = jQuery('#gde_name').parsley();
+					}
+					$parsleyEl.removeError('localIni');
+					if (
+						demovox.localIniMode === 'canton' && data.kanton && data.kanton !== demovox.localIniCanton
+						|| demovox.localIniMode === 'commune' && data.gde_nr && data.gde_nr !== demovox.localIniCommune.toString()
+					) {
+						if (demovox.localIniErrRedir) {
+							window.location = demovox.localIniErrRedir;
+						} else {
+							$parsleyEl.addError('localIni', {message: demovox.localIniErrMsg,});
+						}
+					}
+				}
 			});
 
 			if ($el.zip.is("input")) {

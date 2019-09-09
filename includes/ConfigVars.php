@@ -68,6 +68,11 @@ class ConfigVars
 			'sub'   => 'Lookup API for the address information, used in the address form for autocompletion and commune identification. '
 					   . 'Check <a href="https://demovox.ch/" target="_blank">documentation on demovox.ch</a> if you want to use our service.',
 		],
+		'local_initiative'     => [
+			'title' => 'Local initiative',
+			'page'  => 'demovoxFields4',
+			'sub'   => 'Requires Address lookup API for the address information to be set up first.',
+		],
 		'api_export'           => [
 			'title' => 'Export API',
 			'page'  => 'demovoxFields4',
@@ -343,6 +348,19 @@ class ConfigVars
 			'section' => 'api_address',
 			'type'    => 'checkbox',
 			'default' => 1,
+			'class'   => 'showOnApiAddress',
+		],
+		[
+			'uid'     => 'local_initiative_mode',
+			'label'   => 'Restriction mode',
+			'section' => 'local_initiative',
+			'default' => 'disabled',
+			'type'    => 'select',
+			'options' => [
+				'disabled' => 'Disabled',
+				'canton'   => 'Canton',
+				'commune'  => 'Commune',
+			],
 			'class'   => 'showOnApiAddress',
 		],
 		[
@@ -664,7 +682,43 @@ class ConfigVars
 				'supplemental' => 'Available placeholders: {first_name}, {last_name}, {mail}, {link_pdf}, {link_optin}, {subject}. ',
 			];
 		}
-		$fields[] = [
+		$cantons     = i18n::$cantons;
+		$cantons[''] = 'Please select';
+		$fields[]    = [
+			'uid'     => 'local_initiative_canton',
+			'label'   => 'Restrict on canton',
+			'section' => 'local_initiative',
+			'default' => 'disabled',
+			'type'    => 'select',
+			'options' => $cantons,
+			'class'   => 'showOnLocalInitiativeCanton',
+		];
+		$fields[]    = [
+			'uid'          => 'local_initiative_commune',
+			'label'        => 'Restrict on commune',
+			'section'      => 'local_initiative',
+			'default'      => 'disabled',
+			'type'         => 'number',
+			'supplemental' => 'Commune ID from API',
+			'class'        => 'showOnLocalInitiativeCommune',
+		];
+		$fields[]    = [
+			'uid'          => 'local_initiative_error_redirect',
+			'label'        => 'Redirect disallowed users',
+			'section'      => 'local_initiative',
+			'type'         => 'wpPage',
+			'optionNone'   => '[No, show error message on current page]',
+			'supplemental' => 'Redirect user if he has an address outside the allowed area.',
+			'class'        => 'showOnLocalInitiative',
+		];
+		$fields[]    = [
+			'uid'     => 'local_initiative_error_message',
+			'label'   => 'Message for disallowed',
+			'section' => 'local_initiative',
+			'type'    => 'text',
+			'class'   => 'showOnLocalInitiative showOnLocalInitiativeNoredir',
+		];
+		$fields[]    = [
 			'uid'          => 'default_language',
 			'label'        => 'Default language',
 			'section'      => 'enabledLanguages',

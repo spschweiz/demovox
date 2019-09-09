@@ -130,6 +130,14 @@ class PublicHandler
 			$demovoxJsArr['apiAddressCityInput'] = Config::getValue('api_address_city_input');
 			$demovoxJsArr['apiAddressGdeInput']  = Config::getValue('api_address_gde_input');
 			$demovoxJsArr['apiAddressGdeSelect'] = Config::getValue('api_address_gde_select');
+			if (($localIniMode = Config::getValue('local_initiative_mode')) !== 'disabled') {
+				$demovoxJsArr['localIniMode']     = $localIniMode;
+				$demovoxJsArr['localIniCanton']   = Config::getValue('local_initiative_canton');
+				$demovoxJsArr['localIniCommune']  = Config::getValue('local_initiative_commune');
+				$redirect                         = Config::getValue('local_initiative_error_redirect');
+				$demovoxJsArr['localIniErrRedir'] = $redirect ? get_permalink($redirect) : false;
+				$demovoxJsArr['localIniErrMsg']   = Config::getValue('local_initiative_error_message');
+			}
 		}
 
 		wp_enqueue_script(
