@@ -156,12 +156,21 @@ $(() => {
 				type: 'POST',
 				data: reqData,
 				dataType: 'json',
-				success: function (data) {
+				beforeSend: function() {
+					ajaxIsLoading();
+				},
+			})
+				.done(function (data) {
 					//do something
 					apiCache.set(cacheKey, data);
 					getAdressDataSuccess(data);
-				}
-			});
+				})
+				.fail(function (data) {
+					trace('getAdressData: AJAX call failed', data);
+				})
+				.always(function () {
+					ajaxIsLoading(true);
+				});
 		}
 	}
 
@@ -236,7 +245,10 @@ $(() => {
 		$.ajax({
 			method: "POST",
 			url: demovox.ajaxUrl,
-			data: formData
+			data: formData,
+			beforeSend: function() {
+				ajaxIsLoading();
+			},
 		})
 			.done(function (data) {
 				if (redirect) {
