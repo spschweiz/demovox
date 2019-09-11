@@ -9,11 +9,6 @@
  * @property {bool} apiAddressCityInput
  * @property {bool} apiAddressGdeInput
  * @property {bool} apiAddressGdeSelect
- * @property {string} localIniMode
- * @property {string} localIniCanton
- * @property {int} localIniCommune
- * @property {int} localIniErrRedir
- * @property {string} localIniErrMsg
  */
 import $ from 'jquery';
 import 'select2'; // globally assign select2 fn to $ element
@@ -174,6 +169,13 @@ $(() => {
 		}
 	}
 
+	function ajaxIsLoading(stop, $cont) {
+		stop = (typeof stop !== 'undefined') ? stop : false;
+		$cont = (typeof $cont !== 'undefined') ? $cont : $('body');
+		$cont.css('cursor', stop ? 'auto' : 'progress');
+		console.log('ajaxIsLoading', stop ? 'auto' : 'progress');
+	}
+
 	function getAdressDataSuccess(ajaxData) {
 		let city = (ajaxData.hasOwnProperty('city_names') && ajaxData.city_names.length === 1)
 			? ajaxData.city_names[0]
@@ -259,7 +261,10 @@ $(() => {
 				}
 			})
 			.fail(function (data) {
-				trace('AJAX call failed', data);
+				trace('submitDemovoxForm: AJAX call failed', data);
+			})
+			.always(function () {
+				ajaxIsLoading(true);
 			});
 	}
 
@@ -338,6 +343,7 @@ $(() => {
 			});
 			$el.birthDate.focus();
 			$el.gdeCanton.select2();
+
 			if ($el.swissAbroad.length) {
 				$el.gdeCanton.select2();
 				let $country = $('#country'),
@@ -384,6 +390,7 @@ $(() => {
 				});
 			}
 		}
+
 		if (currentPage === 2 && demovox.apiAddressEnabled) {
 			$el.city = $('#city');
 			$el.gdeName = $('#gde_name');
@@ -465,6 +472,7 @@ $(() => {
 				minimumResultsForSearch: demovox.apiAddressGdeInput ? 0 : -1,
 				createTag: createGde,
 			});
+
 			$el.gdeName.on('select2:select', function (e) {
 				let data = e.params.data;
 				/**
@@ -477,25 +485,6 @@ $(() => {
 				$el.gdeCanton.val(data.kanton.toLowerCase()).trigger('change');
 				$el.gdeId.val(data.gde_nr);
 				$el.gdeZip.val(data.zip);
-				if (demovox.localIniMode) {
-					var $parsleyEl;
-					if (demovox.localIniMode === 'canton') {
-						$parsleyEl = jQuery('#gde_canton').parsley();
-					} else if (demovox.localIniMode === 'commune') {
-						$parsleyEl = jQuery('#gde_name').parsley();
-					}
-					$parsleyEl.removeError('localIni');
-					if (
-						demovox.localIniMode === 'canton' && data.kanton && data.kanton !== demovox.localIniCanton
-						|| demovox.localIniMode === 'commune' && data.gde_nr && data.gde_nr !== demovox.localIniCommune.toString()
-					) {
-						if (demovox.localIniErrRedir) {
-							window.location = demovox.localIniErrRedir;
-						} else {
-							$parsleyEl.addError('localIni', {message: demovox.localIniErrMsg,});
-						}
-					}
-				}
 			});
 
 			if ($el.zip.is("input")) {
@@ -512,9 +501,6 @@ $(() => {
 			if (e.originalEvent && $(this).find(".select2-selection--single").length > 0) {
 				var isOpen = $(this).hasClass('select2-container--open'),
 					hasFocus = $(this).hasClass('select2-container--focus');
-				// console.log('2focus select2', {
-				// 	isOpen: isOpen, hasFocus: hasFocus, originalEvent: e.originalEvent, e: e
-				// });
 
 				if (!isOpen && !hasFocus) {
 					$(this).siblings('select:enabled').select2('open');

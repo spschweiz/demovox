@@ -70,6 +70,7 @@ var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 			if (typeof confirmTxt !== 'undefined' && !confirm(confirmTxt)) {
 				return;
 			}
+			$ajaxContainer.css('cursor','progress');
 			$ajaxContainer.html('Loading...');
 			$.get(ajaxUrl)
 				.done(function (data) {
@@ -77,6 +78,9 @@ var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 				})
 				.fail(function () {
 					$ajaxContainer.html('Error');
+				})
+				.always(function () {
+					$ajaxContainer.css('cursor','auto');
 				});
 		});
 	});
@@ -115,7 +119,7 @@ function showOnChecked($check, $showHide) {
 	showHide($showHide, $check.is(':checked'));
 }
 
-function hideOnSet($check, $showHide, value) {
+function hideOnVal($check, $showHide, value) {
 	if ($check.is("input")) {
 		$check.keyup(function () {
 			showHide($showHide, $(this).val() !== value);
@@ -127,7 +131,7 @@ function hideOnSet($check, $showHide, value) {
 	showHide($showHide, $check.val() !== value);
 }
 
-function showOnSet($check, $showHide, value) {
+function showOnVal($check, $showHide, value) {
 	if ($check.is("input")) {
 		$check.keyup(function () {
 			showHide($showHide, $(this).val() === value);
@@ -137,6 +141,24 @@ function showOnSet($check, $showHide, value) {
 		showHide($showHide, $(this).val() === value);
 	});
 	showHide($showHide, $check.val() === value);
+}
+
+function setOnVal($check, $set, checkValue, setValue) {
+	if ($check.is("input")) {
+		$check.keyup(function () {
+			if($(this).val() === checkValue){
+				$set.val(setValue).change();
+			}
+		});
+	}
+	$check.change(function () {
+		if($(this).val() === checkValue){
+			$set.val(setValue).change();
+		}
+	});
+	if($check.val() === checkValue){
+		$set.val(setValue).change();
+	}
 }
 
 function showHide($els, show) {
