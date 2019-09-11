@@ -76,7 +76,7 @@ class DB
 	 */
 	public static function countSignatures($publicValue = true)
 	{
-		$count = self::count('is_deleted = 0 AND is_step2_done = 1');
+		$count = self::count('is_deleted = 0 AND is_step2_done = 1 AND is_outside_scope = 0');
 		if ($publicValue) {
 			$count += intval(Config::getValue('add_count'));
 		}

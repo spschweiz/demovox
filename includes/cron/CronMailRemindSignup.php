@@ -35,7 +35,6 @@ class CronMailRemindSignup extends CronBase
 		$colsSign = [
 			'ID',
 			'link_optin',
-			'link_pdf',
 			'guid',
 			'first_name',
 			'last_name',
@@ -47,7 +46,7 @@ class CronMailRemindSignup extends CronBase
 		$minAge = intval(Config::getValue('mail_remind_signup_min_age'));
 		$maxDate = date("Y-m-d", strtotime($minAge . ' day ago'));
 		$where = "creation_date < '{$maxDate}' AND is_step2_done = 0 "
-			. 'AND state_remind_signup_sent <= 0 AND state_remind_signup_sent > -3 ';
+			. 'AND state_remind_signup_sent <= 0 AND state_remind_signup_sent > -3 AND is_outside_scope = 0';
 
 		$maxMails = intval(Config::getValue('mail_max_per_execution'));
 		$sqlAppend = 'ORDER BY ID ASC LIMIT ' . $maxMails;

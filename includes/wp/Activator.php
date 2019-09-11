@@ -47,6 +47,7 @@ class Activator
           gde_canton varchar(172) NULL,
           is_optin tinyint(4) NULL,
           is_step2_done tinyint(4) DEFAULT 0 NOT NULL,
+          is_outside_scope tinyint(4) DEFAULT 0 NOT NULL,
           is_sheet_received tinyint(4) DEFAULT 0 NOT NULL,
           is_exported tinyint(4) DEFAULT 0 NOT NULL,
           is_encrypted tinyint(4) DEFAULT 0 NOT NULL,
