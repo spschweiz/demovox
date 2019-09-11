@@ -64,6 +64,8 @@ class PublicHandler
 		// Shortcodes
 		add_shortcode('demovox_form', [$this, 'signShortcode',]);
 		add_shortcode('demovox_count', [$this, 'countShortcode',]);
+		add_shortcode('demovox_firstname', [$this, 'firstNameShortcode',]);
+		add_shortcode('demovox_lastname', [$this, 'lastNameShortcode',]);
 		add_shortcode('demovox_optin', [$this, 'optInShortcode',]);
 
 		// Deprecated
@@ -130,14 +132,6 @@ class PublicHandler
 			$demovoxJsArr['apiAddressCityInput'] = Config::getValue('api_address_city_input');
 			$demovoxJsArr['apiAddressGdeInput']  = Config::getValue('api_address_gde_input');
 			$demovoxJsArr['apiAddressGdeSelect'] = Config::getValue('api_address_gde_select');
-			if (($localIniMode = Config::getValue('local_initiative_mode')) !== 'disabled') {
-				$demovoxJsArr['localIniMode']     = $localIniMode;
-				$demovoxJsArr['localIniCanton']   = Config::getValue('local_initiative_canton');
-				$demovoxJsArr['localIniCommune']  = Config::getValue('local_initiative_commune');
-				$redirect                         = Config::getValue('local_initiative_error_redirect');
-				$demovoxJsArr['localIniErrRedir'] = $redirect ? get_permalink($redirect) : false;
-				$demovoxJsArr['localIniErrMsg']   = Config::getValue('local_initiative_error_message');
-			}
 		}
 
 		wp_enqueue_script(
@@ -169,19 +163,31 @@ class PublicHandler
 		return $count;
 	}
 
+	public function firstNameShortcode()
+	{
+		$row = $this->getRow(['first_name']);
+		if (!$row) {
+			return '';
+		}
+		return $row->first_name;
+	}
+
+	public function lastNameShortcode()
+	{
+		$row = $this->getRow(['last_name']);
+		if (!$row) {
+			return '';
+		}
+		return $row->last_name;
+	}
+
 	public function optInShortcode()
 	{
-		$this->init();
-
-		ob_start();
-		$guid = isset($_REQUEST['sign']) ? sanitize_key($_REQUEST['sign']) : null;
-		if (!$guid) {
-			return 'request variable "sign" is required';
-		}
-		$row = DB::getRow(['ID', 'is_optin'], "guid = '" . $guid . "'");
+		$row = $this->getRow(['first_name']);
 		if (!$row) {
-			return 'Signature with GUID "' . $guid . '" was not found';
+			return '- Record not found -';
 		}
+
 		$signId    = $row->ID;
 		$isOptIn   = $row->is_optin;
 		$textOptin = Config::getValueByUserlang('text_optin');
@@ -190,6 +196,22 @@ class PublicHandler
 		include Infos::getPluginDir() . 'public/partials/opt-in.php';
 
 		return ob_get_clean();
+	}
+
+	protected function getRow($select){
+		$this->init();
+
+		ob_start();
+		$guid = isset($_REQUEST['sign']) ? sanitize_key($_REQUEST['sign']) : null;
+		if (!$guid) {
+			Core::logMessage(400 . ' - equest variable "sign" is required', 'info');
+			return null;
+		}
+		$row = DB::getRow($select, "guid = '" . $guid . "'");
+		if (!$row) {
+			Core::logMessage(404 . ' - Signature with GUID "' . $guid . '" was not found', 'error');
+		}
+		return $row;
 	}
 
 	public function saveOptIn()

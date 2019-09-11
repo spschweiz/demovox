@@ -6,15 +6,14 @@ class Strings
 {
 
 	/**
-	 * Get permalink to page where to find the PDF
+	 * Get permalink to page where to find a visitor specific demovox page
 	 *
 	 * @param string $signGuid
-	 * @param  null|int $pageId
+	 * @param null|int $pageId
 	 * @param $baseUrl null|string
-	 * @param $text null|string
 	 * @return string
 	 */
-	public static function getLinkPdf($signGuid, $pageId = null, $baseUrl = null, $text = null)
+	public static function getPdfUrl($signGuid, $pageId = null, $baseUrl = null)
 	{
 		$pageId = $pageId ?: Config::getValue('use_page_as_success');
 		$url = get_permalink($pageId);
@@ -22,15 +21,14 @@ class Strings
 			$lengthCut = strlen(home_url());
 			$url = $baseUrl . substr($url, $lengthCut);
 		}
-		if (strpos($url, '?') === false) {
-			$url .= '?';
-		} else {
-			$url .= '&';
+		if($signGuid) {
+			if (strpos($url, '?') === false) {
+				$url .= '?';
+			} else {
+				$url .= '&';
+			}
 		}
 		$url .= 'sign=' . $signGuid;
-		if ($text !== null) {
-			$url = '<a href="' . $url . '">' . $text . '</a>';
-		}
 		return $url;
 	}
 
