@@ -202,7 +202,7 @@ class SignSteps
 	 *
 	 * @return array
 	 */
-	protected function saveStep2PagesUrl($guid, ?string $country, string $gdeCanton, string $gdeId, array $data): array
+	protected function saveStep2PagesUrl($guid, string $country, string $gdeCanton, string $gdeId, array $data): array
 	{
 		$abroadRedirect   = Config::getValue('swiss_abroad_redirect');
 		$isAbroadRedirect = $abroadRedirect && $country !== i18n::$defaultCountry;
