@@ -110,6 +110,7 @@ namespace Demovox;
 		   target="_blank">ssllabs.com</a>.
 	</p>
 	<h3>Cron</h3>
+	<p>cron manager plugin is recommended for detailed configuration</p>
 	<?php
 	$cronNames = ManageCron::getAllCrons();
 	foreach ($cronNames as $cronName) {

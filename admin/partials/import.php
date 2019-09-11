@@ -22,6 +22,10 @@ namespace Demovox;
 ?>
 <div class="wrap demovox">
 	<h2>Import received signature sheets</h2>
+	<p>
+		To send reminder mails and create statistics, you need to record the received signatures here.
+		You need to scan the QR code from the sheets, we recommend to use a smartphone app which can export the scanned serials as CSV.
+	</p>
 	<?= $statusMsg ?>
 	<form method="post" action="<?= $_SERVER['REQUEST_URI'] ?>">
 		<?php wp_nonce_field($page); ?>
@@ -63,5 +67,5 @@ namespace Demovox;
 	</form>
 </div>
 <script>
-	showOnSet($('#csvFormat'), $('.showOnFormat1'), '1');
+	showOnVal($('#csvFormat'), $('.showOnFormat1'), '1');
 </script>

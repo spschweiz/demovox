@@ -110,18 +110,20 @@ class ConfigVars
 		],
 		[
 			'uid'          => 'use_page_as_success',
-			'label'        => 'Redirect user after filling form',
+			'label'        => 'Success page redirect',
+			'supplemental' => 'Replace the user form by ajax with the signature sheet or redirect user to this page after successfully filling out the form.'
+							  . ' You might want to use the same page as set for "Link this page in mails" and you should include <code>[demovox_form]</code> on that page to show the signature sheet. ',
 			'section'      => 'signatureSheet',
 			'type'         => 'wpPage',
 			'optionNone'   => '[No, show on current page]',
-			'supplemental' => 'Replace the user form by ajax with the signature sheet or redirect user to this page after successfully filling out the form. You should include [demovox_form] on that page to show the signature sheet.',
 		],
 		[
 			'uid'          => 'use_page_as_mail_link',
 			'label'        => 'Link this page in mails',
 			'section'      => 'signatureSheet',
 			'type'         => 'wpPage',
-			'supplemental' => 'You should include [demovox_form] on that page to show the signature sheet. ',
+			'supplemental' => 'You should include <code>[demovox_form]</code> on that page to show the signature sheet.'
+							  . ' This setting is used for the link in mails as the placeholder {link_pdf}.',
 		],
 		[
 			'uid'          => 'show_pdf',
@@ -176,8 +178,8 @@ class ConfigVars
 				'1'        => 'Yes, php-encryption (requires at least PHP 5.6 and OpenSSL 1.0.1)',
 			],
 			'default'      => 'disabled',
-			'supplemental' => 'Encrypt personal details, only affects new entries. DEMOVOX_ENC_KEY has to be set in wp-config.php (see <i>System info</i>). '
-							  . 'Protects against DB data theft like SQL injections, but does not on file system access. Recommended!',
+			'supplemental' => 'Recommended! Encrypt personal details, only affects new entries. DEMOVOX_ENC_KEY has to be set in wp-config.php (see <i>System info</i>). '
+							  . 'Protects against DB data theft like SQL injections or direct database access by a intruder, but not on file system access. ',
 		],
 		[
 			'uid'     => 'save_ip',
@@ -217,8 +219,8 @@ class ConfigVars
 			'label'        => 'Link this page as opt-in page',
 			'section'      => 'optIn',
 			'type'         => 'wpPage',
-			'supplemental' => 'You should include the text [demovox_optin] on selected page to show the signature sheet. '
-							  . 'Link is generated only one at on sign-up.',
+			'supplemental' => 'You should include the text <code>[demovox_optin]</code> on selected page to show the opt-in edit form. '
+							  . 'When you change this page, already signed up users will still use the old page.',
 			'class'        => 'hideOnOptinDisabled',
 		],
 		[
@@ -683,7 +685,7 @@ class ConfigVars
 			];
 		}
 		$cantons     = i18n::$cantons;
-		$cantons[''] = 'Please select';
+		$cantons[''] = '[Please select]';
 		$fields[]    = [
 			'uid'     => 'local_initiative_canton',
 			'label'   => 'Restrict on canton',
@@ -704,11 +706,11 @@ class ConfigVars
 		];
 		$fields[]    = [
 			'uid'          => 'local_initiative_error_redirect',
-			'label'        => 'Redirect disallowed users',
+			'label'        => 'Success page for disallowed visitors',
 			'section'      => 'local_initiative',
 			'type'         => 'wpPage',
-			'optionNone'   => '[No, show error message on current page]',
-			'supplemental' => 'Redirect user if he has an address outside the allowed area.',
+			'optionNone'   => '[Please select]',
+			'supplemental' => 'Redirect user to this page if he has an address outside the allowed area.',
 			'class'        => 'showOnLocalInitiative',
 		];
 		$fields[]    = [

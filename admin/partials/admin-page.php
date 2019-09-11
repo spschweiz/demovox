@@ -40,7 +40,8 @@ namespace Demovox;
 		</h3>
 	<?php } ?>
 	<h3>Shortcodes</h3>
-	<p>Available shortcodes: [demovox_form] [demovox_count] [demovox_optin]</p>
+	<p>Global shortcodes: <code>[demovox_form]</code> <code>[demovox_count]</code></p>
+	<p>Opt-in page and success pages shortcodes: <code>[demovox_form]</code> <code>[demovox_optin]</code> <code>[demovox_firstname]</code> <code>[demovox_lastname]</code></p>
 	<?php if (current_user_can('demovox_stats') && $count) { ?>
 		<h3>Sign-up stats</h3>
 		<div class="row">
