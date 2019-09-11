@@ -32,8 +32,6 @@ if (!$tabExists) {
 		</nav>
 		<h1 class="screen-reader-text"><?php echo esc_html($currentTabLabel); ?></h1>
 		<?php
-		Admin::showMessages();
-
 		$this->{'pageSettings' . $currentTab}();
 		?>
 	</form>
