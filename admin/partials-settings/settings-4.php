@@ -14,12 +14,7 @@ $this->doSettingsSections($page);
 submit_button();
 ?>
 <script>
-	hideOnSet($('#demovox_encrypt_signees'), $('.showOnEncrypt'), 'disabled');
-	showOnSet($('#demovox_mail_method'), $('.showOnMethodSmtp'), 'smtp');
-	hideOnSet($('#demovox_api_address_url'), $('.showOnApiAddress'), '');
-	showOnSet($('#demovox_local_initiative_error_redirect'), $('.showOnLocalInitiativeNoredir'), '');
-	showOnSet($('#demovox_local_initiative_mode'), $('.showOnLocalInitiativeCanton'), 'canton');
-	showOnSet($('#demovox_local_initiative_mode'), $('.showOnLocalInitiativeCommune'), 'commune');
-	hideOnSet($('#demovox_local_initiative_mode'), $('.showOnLocalInitiative'), 'disabled');
-	hideOnSet($('#demovox_api_export_url'), $('.showOnApiExport'), '');
+	showOnChecked($('#demovox_mail_confirmation_enabled'), $('.showOnMailConfirmEnabled'));
+	showOnChecked($('#demovox_mail_remind_sheet_enabled'), $('.showOnMailRemindSheetEnabled'));
+	showOnChecked($('#demovox_mail_remind_signup_enabled'), $('.showOnMailRemindSignupEnabled'));
 </script>

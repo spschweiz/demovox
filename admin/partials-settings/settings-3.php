@@ -5,13 +5,16 @@ namespace Demovox;
 /**
  * @var $this AdminSettings
  * @var $page string
+ * @var $languages array
  */
 ?>
 <?php
+submit_button();
 settings_fields($page);
 $this->doSettingsSections($page);
 submit_button();
 ?>
 <script>
-	hideOnSet($('#demovox_optin_mode'), $('.hideOnOptinDisabled'), 'disabled');
+	showOnChecked($('#demovox_swiss_abroad_allow'), $('.showOnSwissAbroadChecked'));
+	hideOnVal($('#demovox_field_qr_mode'), $('.showOnQr'), 'disabled');
 </script>

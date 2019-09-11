@@ -7,7 +7,7 @@ class ConfigVars
 	static private $fieldsCache = null;
 	static public $sections = [
 		'base'                 => [
-			'title' => 'Base settings',
+			'title' => 'Signature counter',
 			'page'  => 'demovoxFields0',
 		],
 		'enabledLanguages'     => [
@@ -19,68 +19,76 @@ class ConfigVars
 					   . ' Another way is to set the language by an internationalisation plugin to allow multiple languages for the client'
 					   . ' (currently tested with <a href="https://wpml.org/" target="_blank">WPML</a>).',
 		],
+		'optIn'                => [
+			'title' => 'Opt-in',
+			'page'  => 'demovoxFields1',
+		],
+		'optInText'            => [
+			'title' => 'Text beside the checkbox',
+			'page'  => 'demovoxFields1',
+		],
 		'signatureSheet'       => [
 			'title' => 'Signature sheet',
-			'page'  => 'demovoxFields1',
-			'sub'   => '',
+			'page'  => 'demovoxFields2',
+			'sub'   => 'This page usually shows the link for the PDF download. When you change a page, already signed up users will still use the old previously configured.',
+		],
+		'swiss_abroad'         => [
+			'title' => 'Swiss Abroad',
+			'page'  => 'demovoxFields2',
+			'sub'   => 'Allow swiss abroad people to sign.',
+		],
+		'local_initiative'     => [
+			'title' => 'Local initiative',
+			'page'  => 'demovoxFields2',
+			'sub'   => 'Restrict initiative to a local area by redirecting other visitors to another success page.'
+					   . ' Disables reminder mails and ignores signature in the signature counter.'
+					   . ' Requires "Success page redirect" to be enabled.',
 		],
 		'signatureSheetPdf'    => [
 			'title' => 'Signature sheet PDF',
-			'page'  => 'demovoxFields1',
+			'page'  => 'demovoxFields3',
 			'sub'   => 'Upload and select the signature sheet. If you use language specific domains on your page, adapt the paths accordingly.',
 		],
 		'signatureSheetFields' => [
 			'title' => 'Signature sheet fields',
-			'page'  => 'demovoxFields1',
+			'page'  => 'demovoxFields3',
 			'sub'   => 'Fields on the signature sheet',
 		],
 		'mailText'             => [
 			'title' => 'Email settings',
-			'page'  => 'demovoxFields2',
+			'page'  => 'demovoxFields4',
+			'sub'   => 'To send test mails or to make sure the mail crons are executed, take a look at the <i>System info</i> page',
 		],
 		'mailSender'           => [
 			'title' => 'Email sender',
-			'page'  => 'demovoxFields2',
-		],
-		'optIn'                => [
-			'title' => 'Opt-in',
-			'page'  => 'demovoxFields3',
-		],
-		'optInText'            => [
-			'title' => 'Text beside the checkbox',
-			'page'  => 'demovoxFields3',
+			'page'  => 'demovoxFields4',
 		],
 		'security'             => [
 			'title' => 'Security',
-			'page'  => 'demovoxFields4',
+			'page'  => 'demovoxFields5',
 		],
 		'mailConfig'           => [
 			'title' => 'Email engine / server',
-			'page'  => 'demovoxFields4',
+			'page'  => 'demovoxFields5',
 		],
 		'cron'                 => [
 			'title' => 'Cron',
-			'page'  => 'demovoxFields4',
+			'page'  => 'demovoxFields5',
 		],
 		'api_address'          => [
 			'title' => 'Address lookup API',
-			'page'  => 'demovoxFields4',
+			'page'  => 'demovoxFields5',
 			'sub'   => 'Lookup API for the address information, used in the address form for autocompletion and commune identification. '
 					   . 'Check <a href="https://demovox.ch/" target="_blank">documentation on demovox.ch</a> if you want to use our service.',
 		],
-		'local_initiative'     => [
-			'title' => 'Local initiative',
-			'page'  => 'demovoxFields4',
-			'sub'   => 'Requires Address lookup API for the address information to be set up first.',
-		],
 		'api_export'           => [
 			'title' => 'Export API',
-			'page'  => 'demovoxFields4',
+			'page'  => 'demovoxFields5',
 			'sub'   => 'Used to export signup data to a REST API of a CRM (server-side based submission, HTTPS required!).',
 		],
 		'danger'               => [
 			'title' => 'Danger area',
-			'page'  => 'demovoxFields4',
+			'page'  => 'demovoxFields5',
 			'sub'   => 'This is where you can enable the dangerous stuff',
 		],
 	];
@@ -99,14 +107,6 @@ class ConfigVars
 			'section' => 'base',
 			'type'    => 'text',
 			'default' => "'",
-		],
-		[
-			'uid'          => 'allow_swiss_abroad',
-			'label'        => 'Swiss abroad',
-			'section'      => 'base',
-			'type'         => 'checkbox',
-			'supplemental' => 'Show a country selection for swiss abroad to sign the initiative',
-			'default'      => 1,
 		],
 		[
 			'uid'          => 'use_page_as_success',
@@ -131,6 +131,49 @@ class ConfigVars
 			'section'      => 'signatureSheet',
 			'type'         => 'checkbox',
 			'supplemental' => 'Show signature sheet PDF on the success page in an iFrame',
+		],
+		[
+			'uid'          => 'swiss_abroad_allow',
+			'label'        => 'Swiss abroad',
+			'section'      => 'swiss_abroad',
+			'type'         => 'checkbox',
+			'supplemental' => 'Show a country selection for swiss abroad to sign the initiative',
+			'default'      => 1,
+		],
+		[
+			'uid'          => 'swiss_abroad_redirect',
+			'label'        => 'Success page for swiss abroad',
+			'section'      => 'swiss_abroad',
+			'type'         => 'wpPage',
+			'optionNone'   => '[Disabled]',
+			'supplemental' => 'Redirect user to a different page if he has a swiss abroad address as you might want to add special'
+							  . ' instructions. You should include <code>[demovox_form]</code> on that page to show the signature sheet.'
+							  . ' This setting is also used for the link in mails as the placeholder {link_pdf}. '
+							  . ' Requires both "Success page redirect" and "Swiss abroad" to be enabled.',
+			'class'        => 'showOnRedirect',
+		],
+		[
+			'uid'          => 'local_initiative_mode',
+			'label'        => 'Restriction mode',
+			'section'      => 'local_initiative',
+			'default'      => 'disabled',
+			'type'         => 'select',
+			'options'      => [
+				'disabled' => 'Disabled',
+				'canton'   => 'Canton',
+				'commune'  => 'Commune',
+			],
+			'supplemental' => 'Commune requires Address lookup API for the address information to be set up first (see "advanced" tab).',
+			'class'        => 'showOnRedirect',
+		],
+		[
+			'uid'          => 'swiss_abroad_allow',
+			'label'        => 'Swiss abroad',
+			'section'      => 'signatureSheetPdf',
+			'type'         => 'checkbox',
+			'supplemental' => 'Needed to show/hide "Swiss abroad font size"',
+			'default'      => 1,
+			'class'        => 'hidden',
 		],
 		[
 			'uid'          => 'fontsize',
@@ -350,19 +393,6 @@ class ConfigVars
 			'section' => 'api_address',
 			'type'    => 'checkbox',
 			'default' => 1,
-			'class'   => 'showOnApiAddress',
-		],
-		[
-			'uid'     => 'local_initiative_mode',
-			'label'   => 'Restriction mode',
-			'section' => 'local_initiative',
-			'default' => 'disabled',
-			'type'    => 'select',
-			'options' => [
-				'disabled' => 'Disabled',
-				'canton'   => 'Canton',
-				'commune'  => 'Commune',
-			],
 			'class'   => 'showOnApiAddress',
 		],
 		[
@@ -714,13 +744,6 @@ class ConfigVars
 			'class'        => 'showOnLocalInitiative',
 		];
 		$fields[]    = [
-			'uid'     => 'local_initiative_error_message',
-			'label'   => 'Message for disallowed',
-			'section' => 'local_initiative',
-			'type'    => 'text',
-			'class'   => 'showOnLocalInitiative showOnLocalInitiativeNoredir',
-		];
-		$fields[]    = [
 			'uid'          => 'default_language',
 			'label'        => 'Default language',
 			'section'      => 'enabledLanguages',
@@ -788,7 +811,7 @@ class ConfigVars
 
 			$sections['signatureSheetFields_' . $langId] = [
 				'title'   => 'Signature sheet field positions ' . $language,
-				'page'    => 'demovoxFields1',
+				'page'    => 'demovoxFields3',
 				'addPre'  => $langEnabled ? '' : '<div class="hidden">',
 				'addPost' => '<br/><div id="preview-' . $langId . '">' . '<input type="button" class="showPdf" data-lang="' . $langId
 							 . '" value="Show preview"/>' . '<iframe src="about:blank" class="pdf-iframe"></iframe></div>	'
@@ -796,19 +819,19 @@ class ConfigVars
 			];
 			$sections['mailConfirm_' . $langId]          = [
 				'title'   => $language . '<br/>Mail confirmation',
-				'page'    => 'demovoxFields2',
+				'page'    => 'demovoxFields4',
 				'addPre'  => '<div class="showOnMailConfirmEnabled' . ($langEnabled ? '' : ' hidden') . '">',
 				'addPost' => '</div>',
 			];
 			$sections['mailRemindSheet_' . $langId]      = [
 				'title'   => $language . '<br/>Mail sheet reminder ',
-				'page'    => 'demovoxFields2',
+				'page'    => 'demovoxFields4',
 				'addPre'  => '<div class="showOnMailRemindSheetEnabled' . ($langEnabled ? '' : ' hidden') . '">',
 				'addPost' => '</div>',
 			];
 			$sections['mailRemindSignup_' . $langId]     = [
 				'title'   => $language . '<br/>Mail signup reminder ',
-				'page'    => 'demovoxFields2',
+				'page'    => 'demovoxFields4',
 				'addPre'  => '<div class="showOnMailRemindSignupEnabled' . ($langEnabled ? '' : ' hidden') . '">',
 				'addPost' => '</div>',
 			];

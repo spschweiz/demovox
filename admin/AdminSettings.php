@@ -30,9 +30,10 @@ class AdminSettings
 	{
 		$tabs = [
 			'General',
+			'Opt-in',
+			'Success page',
 			'Signature sheet',
 			'Email',
-			'Opt-in',
 			'Advanced',
 		];
 		$firstTab = array_keys($tabs);
@@ -59,6 +60,7 @@ class AdminSettings
 	public function pageSettings2()
 	{
 		$page = 'demovoxFields2';
+		$languages = i18n::getLangs();
 		include Infos::getPluginDir() . 'admin/partials-settings/settings-2.php';
 	}
 
@@ -72,6 +74,12 @@ class AdminSettings
 	{
 		$page = 'demovoxFields4';
 		include Infos::getPluginDir() . 'admin/partials-settings/settings-4.php';
+	}
+
+	public function pageSettings5()
+	{
+		$page = 'demovoxFields5';
+		include Infos::getPluginDir() . 'admin/partials-settings/settings-5.php';
 	}
 
 	public function setupSections()
