@@ -265,7 +265,7 @@ class SignatureList extends \WP_List_Table
 		if ('delete' === $this->current_action()) {
 			$nonce = esc_attr($_REQUEST['_wpnonce']);
 			if (!wp_verify_nonce($nonce, 'sp_delete_signature')) {
-				die('nonce check failed');
+				Core::showError('nonce check failed', 401);
 			}
 			self::delete_signature(absint($_GET['signature']));
 			wp_redirect(esc_url(add_query_arg()));

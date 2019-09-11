@@ -342,7 +342,7 @@ class SignSteps
 	private function verifyNonce()
 	{
 		if (!wp_verify_nonce($_REQUEST['nonce'], $this->nonceId)) {
-			die('nonce check failed');
+			Core::showError('nonce check failed', 401);
 		}
 	}
 

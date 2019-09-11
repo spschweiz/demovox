@@ -346,10 +346,13 @@ class Core
 			http_response_code($statusCode);
 			switch ($statusCode) {
 				default:
-					$msg = 'unknown error';
+					$msg = 'Unknown error';
 					break;
 				case 400:
 					$msg = 'Invalid form values received';
+					break;
+				case 401:
+					$msg = 'Unauthorized';
 					break;
 				case 404:
 					$msg = 'Resource not found';
