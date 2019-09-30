@@ -86,7 +86,6 @@ See README.txt
 
 ## Authors
 
-Thanks goes to these wonderful people:
 - [@horlacher](https://github.com/Horlacher) - Initial work
 - [@tsueri](https://github.com/tsueri) - Testing, website [demovox.ch](https://demovox.ch)
 - [@dbu](https://github.com/dbu) - Code review
