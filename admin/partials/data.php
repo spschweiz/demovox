@@ -15,6 +15,7 @@ namespace Demovox;
 /**
  * @var $countOptin int
  * @var $countFinished int
+ * @var $countOutsideScope int
  * @var $countUnfinished int
  * @var $countDeleted int
  * @var $signatureList SignatureList
@@ -28,6 +29,9 @@ namespace Demovox;
 		</a>
 		<a href="<?= Strings::getLinkAdmin('/admin-post.php?type=finished', 'demovox_get_csv') ?>">
 			<button>Form input finished (<?= $countFinished ?>)</button>
+		</a>
+		<a href="<?= Strings::getLinkAdmin('/admin-post.php?type=finishedOutsideScope', 'demovox_get_csv') ?>">
+			<button>Finished - Outside limited area (<?= $countOutsideScope ?>)</button>
 		</a>
 		<a href="<?= Strings::getLinkAdmin('/admin-post.php?type=unfinished', 'demovox_get_csv') ?>">
 			<button>Unfinished (<?= $countUnfinished ?>)</button>

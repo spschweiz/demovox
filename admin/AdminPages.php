@@ -42,6 +42,7 @@ class AdminPages
 		$page = 'demovoxData';
 		$countOptin = DB::count($this->getWhere('optin'));
 		$countFinished = DB::count($this->getWhere('finished'));
+		$countOutsideScope = DB::count($this->getWhere('finishedOutsideScope'));
 		$countUnfinished = DB::count($this->getWhere('unfinished'));
 		$countDeleted = DB::count($this->getWhere('deleted'));
 
@@ -381,7 +382,10 @@ class AdminPages
 				$where = 'is_optin <> 0 AND is_deleted = 0';
 				break;
 			case 'finished':
-				$where = 'is_step2_done <> 0 AND is_deleted = 0';
+				$where = 'is_step2_done <> 0 AND is_deleted = 0 AND is_outside_scope = 0';
+				break;
+			case 'finishedOutsideScope':
+				$where = 'is_step2_done <> 0 AND is_deleted = 0 AND is_outside_scope = 1';
 				break;
 			case 'unfinished':
 				$where = 'is_step2_done = 0 AND is_deleted = 0';

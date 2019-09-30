@@ -33,6 +33,7 @@ class SignatureList extends \WP_List_Table
 		'is_optin',
 		'is_step2_done',
 		'is_sheet_received',
+		'is_outside_scope',
 		'creation_date',
 		'sheet_received_date',
 		'serial',
@@ -149,6 +150,7 @@ class SignatureList extends \WP_List_Table
 		switch ($column_name) {
 			case 'is_optin':
 			case 'is_step2_done':
+			case 'is_outside_scope':
 				return $item->{$column_name} ? 'Yes' : 'No';
 			case 'is_sheet_received':
 				return $item->{$column_name} ?: 'None';
@@ -205,7 +207,9 @@ class SignatureList extends \WP_List_Table
 	{
 		$sortable_columns = [
 			'is_optin'            => ['is_optin', false],
+			'is_step2_done'       => ['is_step2_done', false],
 			'is_sheet_received'   => ['is_sheet_received', false],
+			'is_outside_scope'    => ['is_outside_scope', false],
 			'creation_date'       => ['creation_date', true],
 			'sheet_received_date' => ['sheet_received_date', false],
 		];
