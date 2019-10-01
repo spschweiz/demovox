@@ -137,7 +137,7 @@ class CronMailIndex extends CronBase
 	{
 		// To ensure we get the correct is_step2_done for signatures a client is still working on, wait for all php sessions to die
 		$maxDate = date("Y-m-d G:i:s", strtotime('12 hour ago'));
-		$where = "is_deleted = 0 AND creation_date < '{$maxDate}'";
+		$where = "is_deleted = 0 AND creation_date < '{$maxDate}' AND  is_outside_scope = 0";
 
 		$lastImport = DB::getRow(['sign_ID'], null, DB::TABLE_MAIL, 'ORDER BY sign_ID DESC');
 		if ($lastImport) {
