@@ -110,7 +110,7 @@ class CronMailRemindSheet extends CronBase
 		$mailText = Mail::getMailText($row, $mailSubject, Mail::TYPE_REMIND_SHEET);
 
 		$isSent = Mail::send($row->mail, $mailSubject, $mailText, $fromAddress, $fromName);
-		$stateSent = $isSent ? 1 : ($row->state_confirm_sent - 1);
+		$stateSent = $isSent ? 1 : ($row->state_remind_sheet_sent - 1);
 
 		DB::updateStatus(['state_remind_sheet_sent' => $stateSent], ['ID' => $row->ID]);
 		$this->log(

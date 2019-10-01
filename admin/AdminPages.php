@@ -334,13 +334,14 @@ class AdminPages
 		if (!Config::getValue('mail_remind_sheet_enabled') || !Config::getValue('mail_remind_dedup')) {
 			return true;
 		}
-		$where = "mail = '" . $mail . "'";
+		$hashedMail = Strings::hashMail($mail);
+		$where = "mail = '" . $hashedMail . "'";
 		$mail = DB::getRow(['ID'], $where, DB::TABLE_MAIL);
-		if ($mail !== null) {
-			$update = DB::updateStatus(['is_sheet_received' => 1], ['ID' => $mail->ID], DB::TABLE_MAIL);
-			return !!$update;
+		if ($mail === null) {
+			return true;
 		}
-		return true;
+		$update = DB::updateStatus(['is_sheet_received' => 1], ['ID' => $mail->ID], DB::TABLE_MAIL);
+		return !!$update;
 	}
 
 	public function getCsv()
