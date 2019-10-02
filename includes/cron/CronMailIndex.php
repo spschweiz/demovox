@@ -101,10 +101,13 @@ class CronMailIndex extends CronBase
 			$save = DB::insert($setMailData, DB::TABLE_MAIL);
 			$inserted = true;
 		} else {
+			if (!$mailRow->is_step2_done) {
+				return false;
+			}
 			$setMailData = [];
 			$setMailData['sign_ID'] = $row->ID;
 			$setMailData['creation_date'] = $row->creation_date;
-			if (!$mailRow->is_step2_done && $row->is_step2_done) {
+			if ($row->is_step2_done) {
 				$setMailData['is_step2_done'] = 1;
 			}
 			if (!$mailRow->is_sheet_received && $row->is_sheet_received) {
