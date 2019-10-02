@@ -46,7 +46,7 @@ class CronMailRemindSheet extends CronBase
 
 		$minAge = intval(Config::getValue('mail_remind_sheet_min_age'));
 		$maxDate = date("Y-m-d", strtotime($minAge . ' day ago'));
-		$where = "creation_date < '{$maxDate}' AND is_sheet_received = 0 "
+		$where = "creation_date < '{$maxDate}' AND is_step2_done = 0 AND is_sheet_received = 0 "
 			. 'AND state_remind_sheet_sent <= 0 AND state_remind_sheet_sent > -3';
 
 		$maxMails = intval(Config::getValue('mail_max_per_execution'));
@@ -63,7 +63,7 @@ class CronMailRemindSheet extends CronBase
 			$where .= 'AND is_deleted = 0 AND is_outside_scope = 0';
 			$rows = DB::getResults(
 				$colsSign,
-				$where . ' AND is_step2_done = 1',
+				$where,
 				DB::TABLE_SIGN,
 				$sqlAppend
 			);
