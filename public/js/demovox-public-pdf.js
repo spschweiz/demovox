@@ -2,7 +2,6 @@ import $ from 'jquery';
 import {PDFDocument, StandardFonts,} from 'pdf-lib';
 import qr from 'qr-image';
 import FileSaver from 'file-saver';
-// const printJS = require('print-js');
 import printJS from 'print-js';
 
 $(() => {
