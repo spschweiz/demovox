@@ -81,4 +81,8 @@ We do not provide any warranty or free support, but you're welcome to create an 
 * Shortcodes for first name and last name on opt-in page and success pages
 * Configuration GUI improvements
 
+= 1.3 =
+* Browser compatibility improvements
+* PDF print button
+
 For more details, see our commit log: https://github.com/spschweiz/demovox/commits/master
