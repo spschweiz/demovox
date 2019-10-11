@@ -57,7 +57,6 @@ var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 						"textY": getField('qr_text_' + lang + '_y'),
 						"textRotate": getField('qr_text_' + lang + '_rot'),
 						"textSize": fontSize,
-						"textFont": fontFamily,
 						"textColor": textColor
 					};
 			createPdf($container, 'preview', pdfUrl, fields, qrData);

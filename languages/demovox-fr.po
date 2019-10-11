@@ -67,13 +67,17 @@ msgstr "Commune politique"
 msgid "Canton"
 msgstr "Canton"
 
-#: sign-3.php:25
-msgid "Print"
-msgstr "Imprimer"
+#: sign-3.php:30
+msgid "Preparing your signature sheet, please wait..."
+msgstr "Préparation de votre fiche de signature, veuillez patienter..."
 
-#: sign-3.php:27
+#: sign-3.php:35
 msgid "Download signature sheet"
 msgstr "Télécharger la feuille de signature"
+
+#: sign-3.php:41
+msgid "Print signature sheet"
+msgstr "Imprimer la feuille de signature"
 
 #: Activator.php:84
 msgid "Almost there"

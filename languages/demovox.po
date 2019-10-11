@@ -70,12 +70,16 @@ msgstr ""
 msgid "Canton"
 msgstr ""
 
-#: sign-3.php:25
-msgid "Print"
+#: sign-3.php:30
+msgid "Preparing your signature sheet, please wait..."
 msgstr ""
 
-#: sign-3.php:27
+#: sign-3.php:35
 msgid "Download signature sheet"
+msgstr ""
+
+#: sign-3.php:41
+msgid "Print signature sheet"
 msgstr ""
 
 #: Activator.php:84

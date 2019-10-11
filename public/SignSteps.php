@@ -7,9 +7,6 @@ class SignSteps
 	/** @var $nonceId string */
 	private $nonceId = null;
 
-	/** @var $textFont string */
-	private $textFont = 'Helvetica';
-
 	/** @var $textColor string RGB */
 	private $textColor = [0, 0, 0];
 
@@ -370,7 +367,6 @@ class SignSteps
 				'textY'      => intval($qrTextPosY),
 				'textRotate' => intval(Config::getValueByUserlang('field_qr_text', Config::PART_ROTATION)),
 				'textSize'   => intval($fontSize),
-				'textFont'   => $this->textFont,
 				'textColor'  => $this->textColor,
 			];
 		}
@@ -420,7 +416,6 @@ class SignSteps
 	private function formatFields($fields)
 	{
 		$fontSize  = Config::getValue('fontsize');
-		$textFont  = $this->textFont;
 		$textColor = $this->textColor;
 
 		$return = [];
@@ -446,7 +441,6 @@ class SignSteps
 				'y'        => (int)$posY,
 				'rotate'   => (int)$rotate,
 				'size'     => (int)$fontSize,
-				'font'     => (string)$textFont,
 				'color'    => (array)$textColor,
 			];
 		}

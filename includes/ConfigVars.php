@@ -126,6 +126,21 @@ class ConfigVars
 							  . ' This setting is used for the link in mails as the placeholder {link_pdf}.',
 		],
 		[
+			'uid'          => 'download_pdf',
+			'label'        => 'Download button',
+			'section'      => 'signatureSheet',
+			'type'         => 'checkbox',
+			'supplemental' => 'Show button to download signature sheet on the on the success page',
+			'default'      => 1,
+		],
+		[
+			'uid'          => 'print_pdf',
+			'label'        => 'Print button',
+			'section'      => 'signatureSheet',
+			'type'         => 'checkbox',
+			'supplemental' => 'Show print button  on the success page. Not supported by Firefox, sheet will be opened in a new window instead.',
+		],
+		[
 			'uid'          => 'show_pdf',
 			'label'        => 'Show signature sheet',
 			'section'      => 'signatureSheet',

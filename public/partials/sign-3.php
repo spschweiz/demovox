@@ -12,26 +12,41 @@ namespace Demovox;
  * @subpackage Demovox/public/partials
  */
 /**
- * @var $this SignSteps
+ * @var $this      SignSteps
  * @var $permalink string
- * @var $title string
- * @var $pdfUrl string
- * @var $fields string
- * @var $qrData string
+ * @var $title     string
+ * @var $pdfUrl    string
+ * @var $fields    string
+ * @var $qrData    string
  */
 
+$showBoth = (Config::getValue('print_pdf') && Config::getValue('download_pdf'));
 ?>
 <div class="demovox" id="demovox-pdf">
-	<div id="demovox-buttons" class="form-row">
-        <button class="btn btn-success col-md-12 pdf-download"><?= __('Download signature sheet', 'demovox') ?></button>
+	<div class="demovox-pdf-error hidden alert alert-danger"></div>
+	<div class="demovox-pdf-loading">
+		<div class="spinner-border spinner-border-sm" role="status">
+			<span class="sr-only">Loading...</span>
+		</div>
+		<?= __('Preparing your signature sheet, please wait...', 'demovox') ?>
 	</div>
-	<?php if (Config::getValue('show_pdf')) { ?>
-		<iframe src="about:blank" class="pdf-iframe" type="application/pdf">PDF not yet ready</iframe>
-	<?php } ?>
-	<span id="demovox-permalink" style="display: none;"><?= $permalink; ?></span>
+	<div class="demovox-pdf-ok hidden">
+		<div id="demovox-buttons" class="form-row">
+			<?php if (Config::getValue('download_pdf')): ?>
+				<button class="btn btn-success <?= $showBoth?'col-md-6':'col-md-12' ?> pdf-download"><?= __('Download signature sheet', 'demovox') ?></button>
+			<?php endif;
+			if (Config::getValue('print_pdf')) : ?>
+				<button class="btn btn-success <?= $showBoth?'col-md-6':'col-md-12' ?> pdf-print"><?= __('Print signature sheet', 'demovox') ?></button>
+			<?php endif; ?>
+		</div>
+		<?php if (Config::getValue('show_pdf')): ?>
+			<iframe src="about:blank" class="pdf-iframe" type="application/pdf">PDF not yet ready</iframe>
+		<?php endif; ?>
+		<span id="demovox-permalink" style="display: none;"><?= $permalink; ?></span>
+	</div>
 	<script>
 		jQuery(function () {
-			window.createPdf(jQuery('#demovox-pdf'), '<?= $title ?>', '<?= $pdfUrl ?>', <?= $fields ?>, <?= $qrData ?>);
+			window.createPdf('<?= $title ?>', '<?= $pdfUrl ?>', <?= $fields ?>, <?= $qrData ?>);
 		});
 	</script>
 </div>
