@@ -59,7 +59,7 @@ var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 						"textSize": fontSize,
 						"textColor": textColor
 					};
-			createPdf($container, 'preview', pdfUrl, fields, qrData);
+			createPdf('preview', pdfUrl, fields, qrData, $container);
 		});
 		$('.ajaxButton').click(function () {
 			var cont = $(this).data('container'),

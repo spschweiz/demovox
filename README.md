@@ -86,7 +86,7 @@ See README.txt
 
 ## Authors
 
-- [@horlacher](https://github.com/Horlacher) - Initial work
+- [@Horlacher](https://github.com/Horlacher) - Initial work
 - [@tsueri](https://github.com/tsueri) - Testing, website [demovox.ch](https://demovox.ch)
 - [@dbu](https://github.com/dbu) - Code review
 - [@sweleck](https://github.com/sweleck) - Contributions

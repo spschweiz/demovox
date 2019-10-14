@@ -14,8 +14,13 @@ $(() => {
 	 * @param qrData array
 	 * @returns {Promise<void>}
 	 */
-	window.createPdf = async function (title, pdfUrl, fields, qrData) {
-		$container = $('#demovox-pdf');
+	window.createPdf = async function (title, pdfUrl, fields, qrData, $cont) {
+		if (typeof $cont === undefined) {
+			$container = $('#demovox-pdf');
+		} else {
+			$container = $cont;
+		}
+		showContainer('loading');
 
 		const xhr = new XMLHttpRequest();
 		xhr.open('GET', pdfUrl, true);
@@ -51,7 +56,7 @@ $(() => {
 	 * @param replaceContent undefined|string
 	 */
 	function showContainer(containerName, replaceContent) {
-		$container.find('.demovox-pdf-loading').addClass('hidden');
+		$container.find('.demovox-pdf-loading, .demovox-pdf-error, .demovox-pdf-ok').addClass('hidden');
 		const $el = $container.find('.demovox-pdf-' + containerName);
 		$el.removeClass('hidden');
 		if (replaceContent !== undefined) {

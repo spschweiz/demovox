@@ -828,8 +828,12 @@ class ConfigVars
 				'title'   => 'Signature sheet field positions ' . $language,
 				'page'    => 'demovoxFields3',
 				'addPre'  => $langEnabled ? '' : '<div class="hidden">',
-				'addPost' => '<br/><div id="preview-' . $langId . '">' . '<input type="button" class="showPdf" data-lang="' . $langId
-							 . '" value="Show preview"/>' . '<iframe src="about:blank" class="pdf-iframe"></iframe></div>	'
+				'addPost' => '<br/><div id="preview-' . $langId . '">'
+							 . '<input type="button" class="showPdf" data-lang="' . $langId . '" value="Show preview"/>'
+							 . '<div class="demovox-pdf-error hidden alert alert-danger"></div>'
+							 . '<div class="demovox-pdf-loading hidden">'
+							 . __('Preparing your signature sheet, please wait...', 'demovox') . '</div>'
+							 . '<div class="demovox-pdf-ok hidden"><iframe src="about:blank" class="pdf-iframe"></iframe></div>'
 							 . ($langEnabled ? '' : '</div>'),
 			];
 			$sections['mailConfirm_' . $langId]          = [
