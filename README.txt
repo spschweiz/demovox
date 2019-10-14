@@ -43,7 +43,7 @@ Yes, take a look at [demovox.ch/docs/demovox/](https://demovox.ch/docs/demovox/)
 = How can I donate? =
 If you want to make a donation, you're very welcome to do that on [demovox.ch](https://demovox.ch).
 = How can I contribute to this project? =
-Our code is on [github.com/spschweiz/demovox](https://gi 0thub.com/spschweiz/demovox).
+Our code is on [github.com/spschweiz/demovox](https://github.com/spschweiz/demovox).
 If you want to add a feature or add a bugfix, please submit a pull-request.
 = Something does not work as expected =
 We do not provide any warranty or free support, but you're welcome to create an issue on [github.com/spschweiz/demovox](https://github.com/spschweiz/demovox).
