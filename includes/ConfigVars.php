@@ -834,6 +834,7 @@ class ConfigVars
 							 . '<div class="demovox-pdf-loading hidden">'
 							 . __('Preparing your signature sheet, please wait...', 'demovox') . '</div>'
 							 . '<div class="demovox-pdf-ok hidden"><iframe src="about:blank" class="pdf-iframe"></iframe></div>'
+							 .'</div>'
 							 . ($langEnabled ? '' : '</div>'),
 			];
 			$sections['mailConfirm_' . $langId]          = [

@@ -15,7 +15,7 @@ $(() => {
 	 * @returns {Promise<void>}
 	 */
 	window.createPdf = async function (title, pdfUrl, fields, qrData, $cont) {
-		if (typeof $cont === undefined) {
+		if ($cont === undefined) {
 			$container = $('#demovox-pdf');
 		} else {
 			$container = $cont;
