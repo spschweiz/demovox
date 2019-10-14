@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import {PDFDocument, StandardFonts,} from 'pdf-lib';
+import {PDFDocument, StandardFonts, rgb, degrees} from 'pdf-lib';
 import qr from 'qr-image';
 import FileSaver from 'file-saver';
 import printJS from 'print-js';
@@ -84,8 +84,8 @@ $(() => {
 					y: value.y,
 					size: value.size,
 					font: helveticaFont,
-					colorRgb: value.color,
-					rotateDegrees: value.rotate,
+					color: rgb(value.color[0], value.color[1], value.color[2]),
+					rotate: degrees(value.rotate),
 				});
 			}
 		);
@@ -98,7 +98,7 @@ $(() => {
 				y: qrData.y,
 				width: pngImage.width,
 				height: pngImage.height,
-				rotateDegrees: qrData.rotate,
+				rotate: degrees(qrData.rotate),
 			});
 
 			page.drawText(qrData.text, {
@@ -106,8 +106,8 @@ $(() => {
 				y: qrData.textY,
 				size: qrData.textSize,
 				font: helveticaFont,
-				colorRgb: qrData.textColor,
-				rotateDegrees: qrData.textRotate,
+				color: rgb(qrData.textColor[0], qrData.textColor[1], qrData.textColor[2]),
+				rotate: degrees(qrData.textRotate),
 			});
 		}
 		return pdfDoc;
