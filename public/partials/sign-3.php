@@ -19,8 +19,6 @@ namespace Demovox;
  * @var $fields    string
  * @var $qrData    string
  */
-
-$showBoth = (Config::getValue('print_pdf') && Config::getValue('download_pdf'));
 ?>
 <div class="demovox" id="demovox-pdf">
 	<div class="demovox-pdf-error hidden alert alert-danger"></div>
@@ -31,12 +29,12 @@ $showBoth = (Config::getValue('print_pdf') && Config::getValue('download_pdf'));
 		<?= __('Preparing your signature sheet, please wait...', 'demovox') ?>
 	</div>
 	<div class="demovox-pdf-ok hidden">
-		<div id="demovox-buttons" class="form-row">
+		<div id="demovox-buttons">
 			<?php if (Config::getValue('download_pdf')): ?>
-				<button class="btn btn-success <?= $showBoth?'col-md-6':'col-md-12' ?> pdf-download"><?= __('Download signature sheet', 'demovox') ?></button>
+				<button class="btn btn-success pdf-download"><?= __('Download signature sheet', 'demovox') ?></button>
 			<?php endif;
 			if (Config::getValue('print_pdf')) : ?>
-				<button class="btn btn-success <?= $showBoth?'col-md-6':'col-md-12' ?> pdf-print"><?= __('Print signature sheet', 'demovox') ?></button>
+				<button class="btn btn-success pdf-print"><?= __('Print signature sheet', 'demovox') ?></button>
 			<?php endif; ?>
 		</div>
 		<?php if (Config::getValue('show_pdf')): ?>

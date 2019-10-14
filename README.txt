@@ -64,6 +64,7 @@ We do not provide any warranty or free support, but you're welcome to create an 
 
 == Upgrade Notice ==
 * 1.0 This is the first stable Release.
+* 1.3 Classes on success page elements have changed, check the design on your page
 
 == Changelog ==
 
