@@ -38,6 +38,7 @@ $(() => {
 					let pdfData = new Uint8Array(this.response),
 						pdfDoc = await editPdf(pdfData, fields, qrData);
 					await embedPdf(title, pdfDoc);
+					showContainer('ok');
 				} catch (e) {
 					showContainer('error', '<strong>PDF generation failed</strong> Please try again later or contact the site owner');
 					console.error(e);
@@ -158,7 +159,5 @@ $(() => {
 			let url = window.URL.createObjectURL(blob);
 			$container.find('.pdf-iframe').prop('src', url).show();
 		}
-
-		showContainer('ok');
 	}
 });
