@@ -91,13 +91,13 @@ $(() => {
 		);
 		if (qrData) {
 			let pngBytes = createQrPng(qrData.text, qrData.size),
-				[pngImage, pngDims] = await pdfDoc.embedPng(pngBytes);
+				pngImage = await pdfDoc.embedPng(pngBytes);
 
 			page.drawImage(pngImage, {
 				x: qrData.x,
 				y: qrData.y,
-				width: pngDims.width,
-				height: pngDims.height,
+				width: pngImage.width,
+				height: pngImage.height,
 				rotateDegrees: qrData.rotate,
 			});
 
