@@ -42,26 +42,31 @@ class Config
 
 	protected static function valueFormat($valPart, $value, $field = null)
 	{
+		if($valPart){
+			if ($valPart == self::PART_POS_X) {
+				if ($value === false && isset($field['defaultX'])) {
+					$value = $field['defaultX'];
+				}
+				$value = intval($value);
+			} elseif ($valPart == self::PART_POS_Y) {
+				if ($value === false && isset($field['defaultY'])) {
+					$value = $field['defaultY'];
+				}
+				$value = intval($value);
+			} elseif ($valPart == self::PART_ROTATION) {
+				if ($value === false && isset($field['defaultRot'])) {
+					$value = $field['defaultRot'];
+				}
+				$value = intval($value);
+			}
+			return $value;
+		}
 		if (isset($field['type']) && $field['type'] === 'checkbox') {
 			if ($value === false) {
 				$value = isset($field['default']) ? $field['default'] : false; // Set to our default
 			} else {
 				$value = !!$value;
 			}
-		} elseif ($value === false && $valPart == self::PART_POS_X) {
-			if (isset($field['defaultX'])) {
-				$value = intval($field['defaultX']);
-			}
-		} elseif ($valPart == self::PART_POS_Y) {
-			if ($value === false && isset($field['defaultY'])) {
-				$value = intval($field['defaultY']);
-			}
-			$value = intval($value);
-		} elseif ($valPart == self::PART_ROTATION) {
-			if ($value === false && isset($field['defaultRot'])) {
-				$value = intval($field['defaultRot']);
-			}
-			$value = intval($value);
 		} else {
 			if ($value === false) {
 				$value = isset($field['default']) ? $field['default'] : false; // Set to our default
