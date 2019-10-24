@@ -25,12 +25,11 @@ $(() => {
 		const xhr = new XMLHttpRequest();
 		xhr.open('GET', pdfUrl, true);
 		xhr.responseType = 'arraybuffer';
-
 		xhr.onload = async function () {
 			if (this.status === 200) {
 				// response is unsigned 8 bit integer
 				if (typeof this.response !== 'object' || this.response.constructor !== ArrayBuffer) {
-					showContainer('error', '<strong>PDF invalid</strong> Please try again later or contact the site owner');
+					showContainer('error', '<strong>PDF invalid</strong> Please try again later or contact the site owner, who should check the JavaScript console');
 					console.error('Loaded PDF is invalid. Url: ' + pdfUrl);
 					return;
 				}
@@ -47,6 +46,10 @@ $(() => {
 				showContainer('error', '<strong>PDF download failed</strong> Please try again later or contact the site owner');
 				console.error('Could not load PDF. HTTP status: ' + this.status + ' Url: ' + pdfUrl);
 			}
+		};
+		xhr.onerror = async function () {
+			showContainer('error', '<strong>PDF download failed</strong> Please try again later or contact the site owner, who should check the JavaScript console');
+			console.error('Could not load PDF. Network error, for example server was not found or CORS error occurred. Url: ' + pdfUrl);
 		};
 
 		xhr.send();
