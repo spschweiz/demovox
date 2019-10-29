@@ -3,9 +3,17 @@
 [![Demovox](assets/logo-demovox-small.png?raw=true "Demovox")](https://demovox.ch)
 # Demovox (dev readme)
 
-We use Github to maintain our Code. If you want to use our WordPress Plugin as a prebuilt Zip-File, visit our Website and download it from there.
+[![open issues](https://img.shields.io/github/issues/spschweiz/demovox?logo=GitHub)](https://github.com/spschweiz/demovox/issues)
+[![last commit](https://img.shields.io/github/last-commit/spschweiz/demovox?logo=GitHub)](https://github.com/spschweiz/demovox/issues)
+[![WordPress plugin downloads](https://img.shields.io/wordpress/plugin/dt/demovox?logo=WordPress)](https://wordpress.org/plugins/demovox/)
+[![WordPress plugin version](https://img.shields.io/wordpress/plugin/v/demovox?label=plugin&logo=WordPress)](https://wordpress.org/plugins/demovox/)
+[![WordPress tested version](https://img.shields.io/wordpress/plugin/tested/demovox?logo=WordPress)](https://wordpress.org/plugins/demovox/)
 
-Get the latest Stable Version: https://demovox.ch
+We use Github to maintain our Code.
+
+Install the the WordPress plugin [demovox](https://wordpress.org/plugins/demovox/) from within the Plugin manager of your WordPress installation.
+
+If you want to install the plugin manually from a prebuilt Zip-File, visit [our Website](https://demovox.ch) and download it from there.
 
 ## Description
 
