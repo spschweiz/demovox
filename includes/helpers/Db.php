@@ -211,12 +211,11 @@ class Db
 	 *
 	 * @return array
 	 */
-	static function createUpdateTable($tableDefinition)
+	static function createUpdateTable($tableDefinition, $tableName)
 	{
 		global $wpdb;
 		$charsetCollate = $wpdb->get_charset_collate();
-		$sql            = 'CREATE TABLE ' . self::getTableName()
-						  . ' (' . $tableDefinition . ') ' . $charsetCollate . ';';
+		$sql            = 'CREATE TABLE ' . $tableName . ' (' . $tableDefinition . ') ' . $charsetCollate . ';';
 
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 		$dbResult = dbDelta($sql);
