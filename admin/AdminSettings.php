@@ -14,18 +14,6 @@ namespace Demovox;
  */
 class AdminSettings
 {
-	/**
-	 * Initialize the class and set its properties.
-	 *
-	 * @since    1.0.0
-	 */
-	public function __construct()
-	{
-		// Hook into the admin menu
-		add_action('admin_init', [$this, 'setupFields']);
-		add_action('admin_init', [$this, 'setupSections']);
-	}
-
 	public function pageSettings()
 	{
 		$tabs = [

@@ -33,16 +33,6 @@ class Core
 {
 
 	/**
-	 * The loader that's responsible for maintaining and registering all hooks that power
-	 * the plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   protected
-	 * @var      Loader $loader Maintains and registers all hooks for the plugin.
-	 */
-	protected $loader;
-
-	/**
 	 * The unique identifier of this plugin.
 	 *
 	 * @since    1.0.0
@@ -77,12 +67,33 @@ class Core
 			$this->version = '1.0.0';
 		}
 		$this->pluginName = 'Demovox';
+	}
 
+	public static function checkAccess($capability)
+	{
+		Core::checkNonce();
+		if (!current_user_can($capability)) {
+			wp_die(esc_html__('You are not allowed to access this page.', 'wp-control'));
+		}
+	}
+
+	public function run()
+	{
 		$this->loadDependencies();
 		$this->setLocale();
-		$this->defineAdminHooks();
-		$this->definePublicHooks();
-		$this->defineCronHooks();
+
+		if (is_admin()) {
+			require_once Infos::getPluginDir() . 'admin/InitAdmin.php';
+			$admin = new InitAdmin($this->pluginName, $this->version);
+			$admin->run();
+		} else {
+			require_once Infos::getPluginDir() . 'public/InitPublic.php';
+			$public = new InitPublic($this->pluginName, $this->version);
+			$public->run();
+		}
+
+		ManageCron::registerHooks();
+
 		$this->hardening();
 	}
 
@@ -105,11 +116,14 @@ class Core
 	private function loadDependencies()
 	{
 		$pluginDir = self::getPluginDir();
+
+		require_once $pluginDir . 'includes/Base.php';
+
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once $pluginDir . 'includes/Loader.php';
+		require_once $pluginDir . 'includes/helpers/Loader.php';
 
 		/**
 		 * The helper classes
@@ -141,20 +155,7 @@ class Core
 		 * core plugin.
 		 */
 		require_once $pluginDir . 'includes/cron/ManageCron.php';
-		ManageCron::getRequired();
-
-		/**
-		 * The class responsible for defining all actions that occur in the admin area.
-		 */
-		require_once $pluginDir . 'admin/Admin.php';
-
-		/**
-		 * The class responsible for defining all actions that occur in the public-facing
-		 * side of the site.
-		 */
-		require_once $pluginDir . 'public/PublicHandler.php';
-
-		$this->loader = new Loader();
+		ManageCron::loadDependencies();
 
 		require __DIR__ . '/../libs/composer/autoload.php';
 	}
@@ -172,86 +173,7 @@ class Core
 	{
 		$plugin_i18n = new i18n();
 
-		$this->loader->addAction('plugins_loaded', $plugin_i18n, 'loadPluginTextdomain');
-	}
-
-	/**
-	 * Register all of the hooks related to the admin area functionality
-	 * of the plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function defineAdminHooks()
-	{
-		$plugin_admin = new Admin($this->getPluginName(), $this->getVersion());
-
-		$this->loader->addAction('admin_enqueue_scripts', $plugin_admin, 'enqueueStyles');
-		$this->loader->addAction('admin_enqueue_scripts', $plugin_admin, 'enqueueScripts');
-	}
-
-	/**
-	 * Register all of the hooks related to the public-facing functionality
-	 * of the plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function definePublicHooks()
-	{
-		$publicHandler = new PublicHandler($this->getPluginName(), $this->getVersion());
-
-		$this->loader->addAction('wp_enqueue_scripts', $publicHandler, 'enqueueStyles');
-		$this->loader->addAction('wp_enqueue_scripts', $publicHandler, 'enqueueScripts');
-	}
-
-	private function defineCronHooks()
-	{
-		ManageCron::registerHooks($this->loader);
-	}
-
-	/**
-	 * Run the loader to execute all of the hooks with WordPress.
-	 *
-	 * @since    1.0.0
-	 */
-	public function run()
-	{
-		$this->loader->run();
-	}
-
-	/**
-	 * The name of the plugin used to uniquely identify it within the context of
-	 * WordPress and to define internationalization functionality.
-	 *
-	 * @since     1.0.0
-	 * @return    string    The name of the plugin.
-	 */
-	public function getPluginName()
-	{
-		return $this->pluginName;
-	}
-
-	/**
-	 * The reference to the class that orchestrates the hooks with the plugin.
-	 *
-	 * @since     1.0.0
-	 * @return    Loader    Orchestrates the hooks of the plugin.
-	 */
-	public function getLoader()
-	{
-		return $this->loader;
-	}
-
-	/**
-	 * Retrieve the version number of the plugin.
-	 *
-	 * @since     1.0.0
-	 * @return    string    The version number of the plugin.
-	 */
-	public function getVersion()
-	{
-		return $this->version;
+		Loader::addAction('plugins_loaded', $plugin_i18n, 'loadPluginTextdomain');
 	}
 
 	public function hardening()
@@ -267,6 +189,7 @@ class Core
 
 	/**
 	 * @param $id
+	 *
 	 * @return string
 	 */
 	public static function getWpId($id)
@@ -277,6 +200,7 @@ class Core
 
 	/**
 	 * @param string $id
+	 *
 	 * @return mixed Value set for the option. False if not set.
 	 */
 	public static function getOption($id)
@@ -288,9 +212,10 @@ class Core
 	/**
 	 * Update or set option
 	 *
-	 * @param string $id Option name. Expected to not be SQL-escaped.
-	 * @param mixed $value Option value. Must be serializable if non-scalar. Expected to not be SQL-escaped.
+	 * @param string      $id       Option name. Expected to not be SQL-escaped.
+	 * @param mixed       $value    Option value. Must be serializable if non-scalar. Expected to not be SQL-escaped.
 	 * @param string|bool $autoload Optional. Whether to load the option when WordPress starts up
+	 *
 	 * @return bool False if value was not updated and true if value was updated.
 	 */
 	public static function setOption($id, $value, $autoload = null)
@@ -301,6 +226,7 @@ class Core
 
 	/**
 	 * @param string $id
+	 *
 	 * @return bool True, if option is successfully deleted. False on failure.
 	 */
 	public static function delOption($id)
@@ -339,8 +265,8 @@ class Core
 
 	static function showError($error, $statusCode = null)
 	{
-		$isError = !(substr($statusCode, 0,1) == 2 || substr($statusCode,0,1) == 3);
-		$string = self::logMessage($statusCode . ' - ' . $error, $isError ? 'error' : 'info');
+		$isError = !(substr($statusCode, 0, 1) == 2 || substr($statusCode, 0, 1) == 3);
+		$string  = self::logMessage($statusCode . ' - ' . $error, $isError ? 'error' : 'info');
 		if (WP_DEBUG) {
 			echo $string;
 		}
@@ -384,7 +310,8 @@ class Core
 		$date   = date('Y-m-d G:i:s', time());
 		$string = $date . ' [' . $level . '] ' . $source['file'] . ':' . $source['line'] . "\n" . $message . "\n";
 
-		$fn = Infos::getPluginDir() . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'debug.demovox' . ($type ? '.' . $type : '') . '.php';
+		$fn = Infos::getPluginDir() . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'debug.demovox' . ($type ? '.' . $type : '')
+			  . '.php';
 		if (!file_exists($fn)) {
 			$string = '<?php die(\'silenzio\') ?>' . "\n" . $string;
 		}

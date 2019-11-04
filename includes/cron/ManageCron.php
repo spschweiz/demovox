@@ -27,12 +27,6 @@ class ManageCron
 	 */
 	static private $crons = ['CronMailConfirm', 'CronMailIndex', 'CronMailRemindSheet', 'CronMailRemindSignup', 'CronExportToApi',];
 
-	public function __construct($pluginName, $version)
-	{
-		$this->pluginName = $pluginName;
-		$this->version = $version;
-	}
-
 	/**
 	 * @return CronBase[]
 	 */
@@ -46,7 +40,7 @@ class ManageCron
 		return $crons;
 	}
 
-	public static function getRequired()
+	public static function loadDependencies()
 	{
 		$pluginDir = Infos::getPluginDir();
 		require_once $pluginDir . 'includes/cron/CronBase.php';
@@ -91,12 +85,12 @@ class ManageCron
 	/**
 	 * @param Loader $loader
 	 */
-	public static function registerHooks($loader)
+	public static function registerHooks()
 	{
 		$cronNames = ManageCron::getAllCrons();
 		foreach ($cronNames as $cron) {
 			$hook = $cron->getHookName();
-			$loader->addAction($hook, $cron, 'run');
+			Loader::addAction($hook, $cron, 'run');
 		}
 	}
 
