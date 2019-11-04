@@ -156,9 +156,9 @@ class PublicHandler
 	 */
 	public function countShortcode()
 	{
-		$count = DB::countSignatures();
+		$count = DbSignatures::countSignatures();
 		if ($sep = Config::getValue('count_thousands_sep')) {
-			$count = number_format(DB::countSignatures(), 0, '', $sep);
+			$count = number_format(DbSignatures::countSignatures(), 0, '', $sep);
 		}
 		return $count;
 	}
@@ -207,7 +207,7 @@ class PublicHandler
 			Core::logMessage(400 . ' - equest variable "sign" is required', 'info');
 			return null;
 		}
-		$row = DB::getRow($select, "guid = '" . $guid . "'");
+		$row = DbSignatures::getRow($select, "guid = '" . $guid . "'");
 		if (!$row) {
 			Core::logMessage(404 . ' - Signature with GUID "' . $guid . '" was not found', 'error');
 		}
@@ -220,7 +220,7 @@ class PublicHandler
 		$guid  = isset($_REQUEST['sign']) ? sanitize_key($_REQUEST['sign']) : null;
 
 		// Save data
-		$success = DB::updateStatus(
+		$success = DbSignatures::updateStatus(
 			[
 				'is_optin'  => $optIn,
 				'edit_date' => current_time('mysql'),

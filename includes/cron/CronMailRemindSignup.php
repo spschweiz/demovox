@@ -52,18 +52,16 @@ class CronMailRemindSignup extends CronBase
 		$sqlAppend = 'ORDER BY ID ASC LIMIT ' . $maxMails;
 
 		if ($this->isDedup) {
-			$rows = DB::getResults(
+			$rows = DbMailDedup::getResults(
 				['ID', 'sign_ID', 'state_remind_signup_sent'],
 				$where,
-				DB::TABLE_MAIL,
 				$sqlAppend
 			);
 		} else {
 			$where .= 'AND is_deleted = 0 AND is_outside_scope = 0';
-			$rows = DB::getResults(
+			$rows = DbSignatures::getResults(
 				$colsSign,
 				$where . ' AND is_step2_done = 1',
-				DB::TABLE_SIGN,
 				$sqlAppend
 			);
 		}
@@ -77,16 +75,16 @@ class CronMailRemindSignup extends CronBase
 
 			if ($this->isDedup) {
 				$rowMail = $row;
-				$row = DB::getRow($colsSign, 'ID = ' . $rowMail->sign_ID);
+				$row = DbSignatures::getRow($colsSign, 'ID = ' . $rowMail->sign_ID);
 				$row->state_remind_signup_sent = $rowMail->state_remind_signup_sent;
 				if ($row->is_deleted) {
-					DB::delete(['ID' => $rowMail->ID], DB::TABLE_SIGN);
+					DbSignatures::delete(['ID' => $rowMail->ID]);
 					continue;
 				}
 
 				$isSent = $this->sendMail($row);
 
-				DB::updateStatus(['state_remind_signup_sent' => $isSent], ['ID' => $rowMail->ID], DB::TABLE_MAIL);
+				DbMailDedup::updateStatus(['state_remind_signup_sent' => $isSent], ['ID' => $rowMail->ID]);
 			} else {
 				$this->sendMail($row);
 			}
@@ -111,7 +109,7 @@ class CronMailRemindSignup extends CronBase
 		$isSent = Mail::send($row->mail, $mailSubject, $mailText, $fromAddress, $fromName);
 		$stateSent = $isSent ? 1 : ($row->state_remind_signup_sent - 1);
 
-		DB::updateStatus(['state_remind_signup_sent' => $stateSent], ['ID' => $row->ID]);
+		DbSignatures::updateStatus(['state_remind_signup_sent' => $stateSent], ['ID' => $row->ID]);
 		$this->log(
 			'Mail ' . ($isSent ? '' : 'NOT ') . 'sent for signature ID "' . $row->ID
 			. '" with language "' . $row->language . '" with sender ' . $fromName . ' (' . $fromAddress . ')',

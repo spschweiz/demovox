@@ -25,7 +25,7 @@ namespace Demovox;
 class Activator
 {
 	private static $tableDefinitions = [
-		DB::TABLE_SIGN => '
+		Db::TABLE_SIGN => '
           ID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
           guid char(36) NOT NULL,
           serial char(6) NULL,
@@ -66,7 +66,7 @@ class Activator
           PRIMARY KEY (ID),
           UNIQUE KEY guid_index (guid),
           INDEX creation_date_index (creation_date)',
-		DB::TABLE_MAIL => '
+		Db::TABLE_MAILS => '
           ID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
           sign_ID bigint(20) UNSIGNED NOT NULL,
           mail varchar(424) NOT NULL,
@@ -90,8 +90,8 @@ class Activator
 	 */
 	public static function activate()
 	{
-		foreach (self::$tableDefinitions as $tableId => $sql) {
-			$update = DB::createUpdateTable($sql, $tableId);
+		foreach (self::$tableDefinitions as $tableName => $sql) {
+			$update = DbSignatures::createUpdateTable($sql, $tableName);
 		}
 
 		ManageCron::activate();

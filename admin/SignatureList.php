@@ -51,7 +51,7 @@ class SignatureList extends \WP_List_Table
 	{
 		$select = self::$columns;
 		array_unshift($select, 'ID');
-		$where = 'is_deleted = 0 AND is_step2_done = 1';
+		$where = 'is_deleted = 0 AND is_step2_done <> 0';
 		if (!empty($_REQUEST['s'])) {
 			$s = esc_sql(trim($_REQUEST['s']));
 			if (!empty($s)) {
@@ -75,7 +75,7 @@ class SignatureList extends \WP_List_Table
 		$sqlAppend .= ' OFFSET ' . ($pageNumber - 1) * $perPage;
 
 		try {
-			$result = DB::getResults($select, $where, null, $sqlAppend);
+			$result = DbSignatures::getResults($select, $where, $sqlAppend);
 		} catch (\Exception $e) {
 			$result = [];
 		}
@@ -90,7 +90,7 @@ class SignatureList extends \WP_List_Table
 	 */
 	public function delete_signature($id)
 	{
-		DB::delete(['ID' => $id]);
+		DbSignatures::delete(['ID' => $id]);
 	}
 
 	/**
@@ -100,7 +100,7 @@ class SignatureList extends \WP_List_Table
 	 */
 	public static function record_count()
 	{
-		return DB::count();
+		return DbSignatures::count();
 	}
 
 	/**
@@ -182,7 +182,7 @@ class SignatureList extends \WP_List_Table
 	 */
 	function get_columns()
 	{
-		$fields = DB::getExportFields();
+		$fields = DbSignatures::getAvailableFields();
 		$columns = [];
 		foreach (self::$columns as $val) {
 			$columns[$val] = isset($fields[$val]) ? $fields[$val] : $val;
@@ -213,7 +213,7 @@ class SignatureList extends \WP_List_Table
 			'creation_date'       => ['creation_date', true],
 			'sheet_received_date' => ['sheet_received_date', false],
 		];
-		if (DB::isEncryptionEnabled()) {
+		if (Crypt::isEncryptionEnabled()) {
 			return $sortable_columns;
 		}
 		$sortable_columns += [

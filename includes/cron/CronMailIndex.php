@@ -75,7 +75,7 @@ class CronMailIndex extends CronBase
 	{
 		$inserted = null;
 		$hashedMail = Strings::hashMail($row->mail);
-		$mailRow = DB::getRow(
+		$mailRow = DbMailDedup::getRow(
 			[
 				'ID',
 				'creation_date',
@@ -84,8 +84,7 @@ class CronMailIndex extends CronBase
 				'state_remind_sheet_sent',
 				'state_remind_signup_sent',
 			],
-			"mail = '" . $hashedMail . "'",
-			DB::TABLE_MAIL
+			"mail = '" . $hashedMail . "'"
 		);
 
 		if (!$mailRow) {
@@ -98,7 +97,7 @@ class CronMailIndex extends CronBase
 				'state_remind_sheet_sent'  => $row->state_remind_sheet_sent,
 				'state_remind_signup_sent' => $row->state_remind_signup_sent,
 			];
-			$save = DB::insert($setMailData, DB::TABLE_MAIL);
+			$save = DbMailDedup::insert($setMailData);
 			$inserted = true;
 		} else {
 			if (!$mailRow->is_step2_done) {
@@ -119,12 +118,12 @@ class CronMailIndex extends CronBase
 			if ($mailRow->state_remind_signup_sent !== 1 && $row->state_remind_signup_sent == 1) {
 				$setMailData['state_remind_signup_sent'] = 1;
 			}
-			$save = DB::updateStatus($setMailData, ['ID' => $mailRow->ID], DB::TABLE_MAIL);
+			$save = DbMailDedup::updateStatus($setMailData, ['ID' => $mailRow->ID]);
 			$inserted = false;
 		}
 
 		if ($save === false) {
-			$msg = 'Exception on save mail status with sign_ID=' . $row->ID . ' with error:' . DB::getError();
+			$msg = 'Exception on save mail status with sign_ID=' . $row->ID . ' with error:' . Db::getError();
 			Core::showError($msg, 500);
 			$this->setStatusMessage('Could not save mail from signature ID ' . $row->ID, false);
 			return null;
@@ -142,17 +141,17 @@ class CronMailIndex extends CronBase
 		$maxDate = date("Y-m-d G:i:s", strtotime('12 hour ago'));
 		$where = "is_deleted = 0 AND creation_date < '{$maxDate}' AND  is_outside_scope = 0";
 
-		$lastImport = DB::getRow(['sign_ID'], null, DB::TABLE_MAIL, 'ORDER BY sign_ID DESC');
+		$lastImport = DbMailDedup::getRow(['sign_ID'], null, 'ORDER BY sign_ID DESC');
 		if ($lastImport) {
 			$where .= ' AND ID > ' . $lastImport->sign_ID;
 		}
-		$countTotal = DB::count($where, DB::TABLE_SIGN);
+		$countTotal = DbSignatures::count($where);
 		if (!$countTotal) {
 			return null;
 		}
 
 		$sqlAppend = ($countTotal > $this->maxSignsPerCall ? ' ORDER BY ID ASC LIMIT ' . $this->maxSignsPerCall : '');
-		$rows = DB::getResults(
+		$rows = DbSignatures::getResults(
 			[
 				'ID',
 				'mail',
@@ -163,7 +162,6 @@ class CronMailIndex extends CronBase
 				'state_remind_signup_sent',
 			],
 			$where,
-			DB::TABLE_SIGN,
 			$sqlAppend
 		);
 

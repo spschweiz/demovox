@@ -60,17 +60,17 @@ class SignSteps
 			$optIn            = ($optinMode === 'optOut' || $optinMode === 'optOutChk') ? !$optIn : $optIn;
 			$data['is_optin'] = $optIn;
 		}
-		$success = DB::insert($data);
+		$success = DbSignatures::insert($data);
 		if (!$success) {
-			Core::showError('DB insert failed: ' . DB::getError(), 500);
+			Core::showError('DB insert failed: ' . Db::getError(), 500);
 		}
-		$signId     = DB::getInsertId();
-		$successUpd = DB::updateStatus(
+		$signId     = Db::getInsertId();
+		$successUpd = DbSignatures::updateStatus(
 			['serial' => Strings::getSerial($signId)],
 			['ID' => $signId]
 		);
 		if (!$successUpd) {
-			Core::logMessage('Could not save serial for ID=' . $signId . '. Reason:' . DB::getError());
+			Core::logMessage('Could not save serial for ID=' . $signId . '. Reason:' . Db::getError());
 		}
 		$this->setSessionVar('signId', $signId);
 	}
@@ -179,13 +179,13 @@ class SignSteps
 		}
 
 		// Update
-		$success = DB::update(
+		$success = DbSignatures::update(
 			$data,
 			['ID' => $signId,],
 			$isEncrypted
 		);
 		if (!$success) {
-			Core::showError('DB update failed: ' . DB::getError(), 500);
+			Core::showError('DB update failed: ' . Db::getError(), 500);
 		}
 		return $data['link_success'];
 	}
@@ -244,7 +244,7 @@ class SignSteps
 			$loadedByGuid = true;
 			if ($redirect) {
 				// Redirect to success page
-				$row = DB::getRow(['link_success',], "guid = '" . $guid . "'");
+				$row = DbSignatures::getRow(['link_success',], "guid = '" . $guid . "'");
 				if (!$row === null) {
 					Core::showError('Signature guid ' . $guid . ' not found', 404);
 				}
@@ -256,7 +256,7 @@ class SignSteps
 			$signId = $this->getSessionVar('signId');
 
 			// Verify 2nd form step is filled and get encryption mode
-			$row = DB::getRow(
+			$row = DbSignatures::getRow(
 				['is_step2_done', 'guid', 'is_encrypted', 'link_success',],
 				"ID = '" . $signId . "'"
 			);
@@ -290,7 +290,7 @@ class SignSteps
 	protected function step3inlineSuccessPage($guid)
 	{
 		// Prepare PDF data
-		$row = DB::getRow(
+		$row = DbSignatures::getRow(
 			[
 				'ID',
 				'birth_date',

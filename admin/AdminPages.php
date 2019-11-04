@@ -16,12 +16,12 @@ class AdminPages
 {
 	public function pageOverview()
 	{
-		$count = DB::countSignatures(false);
+		$count = DbSignatures::countSignatures(false);
 		$addCount = Config::getValue('add_count');
 		$userLang = Infos::getUserLanguage();
-		$countOptin = DB::count('is_optin = 1 AND is_step2_done = 1 AND is_deleted = 0');
-		$countOptout = DB::count('is_optin = 0 AND is_step2_done = 1 AND is_deleted = 0');
-		$countUnfinished = DB::count('is_step2_done = 0 AND is_deleted = 0');
+		$countOptin = DbSignatures::count('is_optin = 1 AND is_step2_done = 1 AND is_deleted = 0');
+		$countOptout = DbSignatures::count('is_optin = 0 AND is_step2_done = 1 AND is_deleted = 0');
+		$countUnfinished = DbSignatures::count('is_step2_done = 0 AND is_deleted = 0');
 		include Infos::getPluginDir() . 'admin/partials/admin-page.php';
 	}
 
@@ -40,11 +40,11 @@ class AdminPages
 	public function pageData()
 	{
 		$page = 'demovoxData';
-		$countOptin = DB::count($this->getWhere('optin'));
-		$countFinished = DB::count($this->getWhere('finished'));
-		$countOutsideScope = DB::count($this->getWhere('finishedOutsideScope'));
-		$countUnfinished = DB::count($this->getWhere('unfinished'));
-		$countDeleted = DB::count($this->getWhere('deleted'));
+		$countOptin = DbSignatures::count(DbSignatures::WHERE_OPTIN);
+		$countFinished = DbSignatures::count(DbSignatures::WHERE_FINISHED_IN_SCOPE);
+		$countOutsideScope = DbSignatures::count(DbSignatures::WHERE_FINISHED_OUT_SCOPE);
+		$countUnfinished = DbSignatures::count(DbSignatures::WHERE_UNFINISHED);
+		$countDeleted = DbSignatures::count(DbSignatures::WHERE_DELETED);
 
 		$option = 'per_page';
 		$args = [
@@ -108,12 +108,18 @@ class AdminPages
 	{
 		Admin::checkAccess('demovox_stats');
 
-		$countDategroupedOi = DB::getResults(['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
-			'is_optin = 1 AND is_step2_done = 1 AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)');
-		$countDategroupedOo = DB::getResults(['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
-			'is_optin = 0 AND is_step2_done = 1 AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)');
-		$countDategroupedC = DB::getResults(['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
-			'is_step2_done = 0 AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)');
+		$countDategroupedOi = DbSignatures::getResults(
+			['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
+			'is_optin = 1 AND is_step2_done = 1 AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)'
+		);
+		$countDategroupedOo = DbSignatures::getResults(
+			['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
+			'is_optin = 0 AND is_step2_done = 1 AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)'
+		);
+		$countDategroupedC = DbSignatures::getResults(
+			['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
+			'is_step2_done = 0 AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)'
+		);
 		$datesetsOi = $datesetsOo = $datesetsC = '';
 		foreach ($countDategroupedOi as $row) {
 			$datesetsOi .= '{t:nDate(' . $row->date . '),y:' . intval($row->count) . '},';
@@ -131,7 +137,7 @@ class AdminPages
 	{
 		Admin::checkAccess('demovox_stats');
 
-		$sourceList = DB::getResults(
+		$sourceList = DbSignatures::getResults(
 			[
 				'source',
 				'SUM(is_sheet_received) AS signatures',
@@ -336,11 +342,11 @@ class AdminPages
 		}
 		$hashedMail = Strings::hashMail($mail);
 		$where = "mail = '" . $hashedMail . "'";
-		$mail = DB::getRow(['ID'], $where, DB::TABLE_MAIL);
+		$mail = DbSignatures::getRow(['ID'], $where);
 		if ($mail === null) {
 			return true;
 		}
-		$update = DB::updateStatus(['is_sheet_received' => 1], ['ID' => $mail->ID], DB::TABLE_MAIL);
+		$update = DbSignatures::updateStatus(['is_sheet_received' => 1], ['ID' => $mail->ID]);
 		return !!$update;
 	}
 
