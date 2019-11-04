@@ -103,45 +103,6 @@ function createField(value, name, lang) {
 		"color": textColor
 	};
 }
-
-function hideOnChecked($check, $showHide) {
-	$check.change(function () {
-		showHide($showHide, !$(this).is(':checked'));
-	});
-	showHide($showHide, !$check.is(':checked'));
-}
-
-function showOnChecked($check, $showHide) {
-	$check.change(function () {
-		showHide($showHide, $(this).is(':checked'));
-	});
-	showHide($showHide, $check.is(':checked'));
-}
-
-function hideOnVal($check, $showHide, value) {
-	if ($check.is("input")) {
-		$check.keyup(function () {
-			showHide($showHide, $(this).val() !== value);
-		});
-	}
-	$check.change(function () {
-		showHide($showHide, $(this).val() !== value);
-	});
-	showHide($showHide, $check.val() !== value);
-}
-
-function showOnVal($check, $showHide, value) {
-	if ($check.is("input")) {
-		$check.keyup(function () {
-			showHide($showHide, $(this).val() === value);
-		});
-	}
-	$check.change(function () {
-		showHide($showHide, $(this).val() === value);
-	});
-	showHide($showHide, $check.val() === value);
-}
-
 function setOnVal($check, $set, checkValue, setValue) {
 	if ($check.is("input")) {
 		$check.keyup(function () {
@@ -160,8 +121,46 @@ function setOnVal($check, $set, checkValue, setValue) {
 	}
 }
 
-function showHide($els, show) {
-	if (show) {
+function showOnVal($check, $showHide, value, invert) {
+	var invert = (invert !== undefined) ? invert : false;
+	if ($check.is("input")) {
+		$check.keyup(function () {
+			showHideEl($showHide, isIn($(this).val(), value));
+		});
+	}
+	$check.change(function () {
+		showHideEl($showHide, isIn($(this).val(), value));
+	});
+	showHideEl($showHide, $check.val() === value);
+}
+
+function hideOnVal($check, $showHide, value) {
+	showOnVal($check, $showHide, value, true)
+}
+
+function showOnChecked($check, $showHide, invert) {
+	var invert = (invert !== undefined) ? invert : false;
+	$check.change(function () {
+		showHideEl($showHide, $(this).is(':checked'));
+	});
+	showHideEl($showHide, $check.is(':checked'));
+}
+
+function hideOnChecked($check, $showHide) {
+	showOnVal($check, $showHide, true);
+}
+
+function isIn(needle, haystack) {
+	if (Array.isArray(haystack)) {
+		return haystack.indexOf(needle) !== -1;
+	} else {
+		return needle === haystack;
+	}
+}
+
+function showHideEl($els, show, invert) {
+	var invert = (invert !== undefined) ? invert : false;
+	if ((show && !invert) || (!show && invert)) {
 		var $el;
 		$els.each(function () {
 			$el = $(this);
