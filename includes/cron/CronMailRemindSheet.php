@@ -62,17 +62,18 @@ class CronMailRemindSheet extends CronBase
 			$where .= 'AND is_deleted = 0 AND is_outside_scope = 0';
 			$rows  = DbMailDedup::getResults($colsSign, $where, $sqlAppend);
 		}
-		$this->log('Loaded ' . count($rows) . ' signatures to send mails (select is limited to ' . $maxMails
-			. ' per cron execution)', 'notice');
+		$this->log(
+			'Loaded ' . count($rows) . ' signatures to send mails (select is limited to ' . $maxMails . ' per cron execution)',
+			'notice'
+		);
 
-		$mail = new Mail;
-		add_action('phpmailer_init', [$mail, 'config'], 10, 1);
+		Loader::addAction('phpmailer_init', new Mail(), 'config', 10, 1);
 
 		foreach ($rows as $row) {
 
 			if ($this->isDedup) {
-				$rowMail = $row;
-				$row = DB::getRow($colsSign, 'ID = ' . $rowMail->sign_ID);
+				$rowMail                      = $row;
+				$row                          = DbMailDedup::getRow($colsSign, 'ID = ' . $rowMail->sign_ID);
 				$row->state_remind_sheet_sent = $rowMail->state_remind_sheet_sent;
 				if ($row->is_deleted) {
 					DbSignatures::delete(['ID' => $rowMail->ID]);
@@ -92,18 +93,19 @@ class CronMailRemindSheet extends CronBase
 
 	/**
 	 * @param $row
+	 *
 	 * @return int
 	 */
 	protected function sendMail($row)
 	{
-		$clientLang = $row->language;
+		$clientLang  = $row->language;
 		$fromAddress = Config::getValueByLang('mail_from_address', $clientLang);
-		$fromName = Config::getValueByLang('mail_from_name', $clientLang);
+		$fromName    = Config::getValueByLang('mail_from_name', $clientLang);
 
 		$mailSubject = Mail::getMailSubject($row, Mail::TYPE_REMIND_SHEET);
-		$mailText = Mail::getMailText($row, $mailSubject, Mail::TYPE_REMIND_SHEET);
+		$mailText    = Mail::getMailText($row, $mailSubject, Mail::TYPE_REMIND_SHEET);
 
-		$isSent = Mail::send($row->mail, $mailSubject, $mailText, $fromAddress, $fromName);
+		$isSent    = Mail::send($row->mail, $mailSubject, $mailText, $fromAddress, $fromName);
 		$stateSent = $isSent ? 1 : ($row->state_remind_sheet_sent - 1);
 
 		DbSignatures::updateStatus(['state_remind_sheet_sent' => $stateSent], ['ID' => $row->ID]);

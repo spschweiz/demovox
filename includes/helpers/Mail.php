@@ -45,7 +45,7 @@ class Mail
 		if ($method == 'wp_mail') {
 			return;
 		}
-		add_action('wp_mail_failed', [new Mail(), 'logMailerErrors'], 10, 1);
+		Loader::addAction('wp_mail_failed', new Mail(), 'logMailerErrors', 10, 1);
 
 		$mailer->isHTML();
 		$mailer->SMTPDebug = defined('WP_SMTPDEBUG') && WP_SMTPDEBUG ? 2 : 0; // write 0 if you don't want to see client/server communication in page

@@ -57,6 +57,10 @@ class CronExportToApi extends CronBase
 
 	/**
 	 * @param $row
+	 * @param $url
+	 * @param $data
+	 *
+	 * @return int
 	 */
 	protected function exportRow($row, $url, $data)
 	{

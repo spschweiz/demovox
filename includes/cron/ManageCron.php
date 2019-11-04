@@ -17,7 +17,7 @@ class ManageCron
 		$crons = [];
 		foreach (self::$crons as $cron) {
 			$className = '\\' . __NAMESPACE__ . '\\' . ucfirst($cron);
-			$crons[] = new $className;
+			$crons[]   = new $className;
 		}
 		return $crons;
 	}
@@ -53,6 +53,7 @@ class ManageCron
 
 	/**
 	 * @param $name
+	 *
 	 * @return CronBase
 	 */
 	protected static function getClass($name)
@@ -64,9 +65,6 @@ class ManageCron
 		return new $name();
 	}
 
-	/**
-	 * @param Loader $loader
-	 */
 	public static function registerHooks()
 	{
 		$cronNames = ManageCron::getAllCrons();

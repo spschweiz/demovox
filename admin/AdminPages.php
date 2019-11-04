@@ -208,7 +208,7 @@ class AdminPages extends BaseController
 		$sign = new signObject($langId, $nameFrom, 'last name', $mailFrom);
 
 		define('WP_SMTPDEBUG', true);
-		add_action('phpmailer_init', [new Mail(), 'config'], 10, 1);
+		Loader::addAction('phpmailer_init', new Mail(), 'config', 10, 1);
 
 		$mailSubject = Mail::getMailSubject($sign, $mailType);
 		$mailText = Mail::getMailText($sign, $mailSubject, $mailType);

@@ -4,8 +4,8 @@ namespace Demovox;
 
 class CronMailIndex extends CronBase
 {
-	const STATUS_INIT = 0;
-	const STATUS_RUNNING = 1;
+	const STATUS_INIT     = 0;
+	const STATUS_RUNNING  = 1;
 	const STATUS_FINISHED = 2;
 
 	protected $maxSignsPerCall = 200;
@@ -42,7 +42,7 @@ class CronMailIndex extends CronBase
 		list($countTotal, $rows) = $this->getRowsToImport();
 
 		$countProceeded = 0;
-		$countInserted = 0;
+		$countInserted  = 0;
 		if ($countTotal) {
 			$inserted = null;
 			foreach ($rows as $row) {
@@ -57,25 +57,30 @@ class CronMailIndex extends CronBase
 
 		if ($statusRun === self::STATUS_INIT && $countTotal > $countProceeded) {
 			$statusEnd = self::STATUS_INIT;
-			$this->setStatusMessage('Proceeded ' . $countProceeded . ' new mail addresses, thereof ' . $countInserted
-				. ' unique adresses imported. ' . $countTotal - $countProceeded . ' more to go');
+			$this->setStatusMessage(
+				'Proceeded ' . $countProceeded . ' new mail addresses, thereof ' . $countInserted
+				. ' unique adresses imported. ' . $countTotal - $countProceeded . ' more to go'
+			);
 		} else {
 			$statusEnd = self::STATUS_FINISHED;
-			$this->setStatusMessage('Proceeded ' . $countProceeded . ' new mail addresses, thereof ' . $countInserted
-				. ' unique adresses imported. ');
+			$this->setStatusMessage(
+				'Proceeded ' . $countProceeded . ' new mail addresses, thereof ' . $countInserted
+				. ' unique adresses imported. '
+			);
 		}
 		Core::setOption('cron_index_mail_status', $statusEnd);
 	}
 
 	/**
 	 * @param object $row signature row
+	 *
 	 * @return bool|null inserted | null for errors
 	 */
 	protected function importRow($row)
 	{
-		$inserted = null;
+		$inserted   = null;
 		$hashedMail = Strings::hashMail($row->mail);
-		$mailRow = DbMailDedup::getRow(
+		$mailRow    = DbMailDedup::getRow(
 			[
 				'ID',
 				'creation_date',
@@ -97,14 +102,14 @@ class CronMailIndex extends CronBase
 				'state_remind_sheet_sent'  => $row->state_remind_sheet_sent,
 				'state_remind_signup_sent' => $row->state_remind_signup_sent,
 			];
-			$save = DbMailDedup::insert($setMailData);
-			$inserted = true;
+			$save        = DbMailDedup::insert($setMailData);
+			$inserted    = true;
 		} else {
 			if (!$mailRow->is_step2_done) {
 				return false;
 			}
-			$setMailData = [];
-			$setMailData['sign_ID'] = $row->ID;
+			$setMailData                  = [];
+			$setMailData['sign_ID']       = $row->ID;
 			$setMailData['creation_date'] = $row->creation_date;
 			if ($row->is_step2_done) {
 				$setMailData['is_step2_done'] = 1;
@@ -118,7 +123,7 @@ class CronMailIndex extends CronBase
 			if ($mailRow->state_remind_signup_sent !== 1 && $row->state_remind_signup_sent == 1) {
 				$setMailData['state_remind_signup_sent'] = 1;
 			}
-			$save = DbMailDedup::updateStatus($setMailData, ['ID' => $mailRow->ID]);
+			$save     = DbMailDedup::updateStatus($setMailData, ['ID' => $mailRow->ID]);
 			$inserted = false;
 		}
 
@@ -139,7 +144,7 @@ class CronMailIndex extends CronBase
 	{
 		// To ensure we get the correct is_step2_done for signatures a client is still working on, wait for all php sessions to die
 		$maxDate = date("Y-m-d G:i:s", strtotime('12 hour ago'));
-		$where = "is_deleted = 0 AND creation_date < '{$maxDate}' AND  is_outside_scope = 0";
+		$where   = "is_deleted = 0 AND creation_date < '{$maxDate}' AND  is_outside_scope = 0";
 
 		$lastImport = DbMailDedup::getRow(['sign_ID'], null, 'ORDER BY sign_ID DESC');
 		if ($lastImport) {
@@ -151,7 +156,7 @@ class CronMailIndex extends CronBase
 		}
 
 		$sqlAppend = ($countTotal > $this->maxSignsPerCall ? ' ORDER BY ID ASC LIMIT ' . $this->maxSignsPerCall : '');
-		$rows = DbSignatures::getResults(
+		$rows      = DbSignatures::getResults(
 			[
 				'ID',
 				'mail',
@@ -165,8 +170,11 @@ class CronMailIndex extends CronBase
 			$sqlAppend
 		);
 
-		$this->log('Loaded ' . count($rows) . ' signatures to index their mail (there is a total of ' . $countTotal
-			. ' to import, max ' . $this->maxSignsPerCall . ' per execution)', 'notice');
+		$this->log(
+			'Loaded ' . count($rows) . ' signatures to index their mail (there is a total of ' . $countTotal
+			. ' to import, max ' . $this->maxSignsPerCall . ' per execution)',
+			'notice'
+		);
 
 		return [$countTotal, $rows];
 	}
