@@ -22,133 +22,11 @@ namespace Demovox;
  * @subpackage Demovox/public
  * @author     Fabian Horlacher / SP Schweiz
  */
-class PublicHandler
+class PublicHandler extends BaseController
 {
-
-	/**
-	 * The ID of this plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      string $pluginName The ID of this plugin.
-	 */
-	private $pluginName;
-
-	/**
-	 * The version of this plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      string $version The current version of this plugin.
-	 */
-	private $version;
-
-	/** @var $nonceId string */
-	private $nonceId = 'demovox_ajax_submit';
-
-	/**
-	 * Initialize the class and set its properties.
-	 *
-	 * @param string $pluginName The name of the plugin.
-	 * @param string $version    The version of this plugin.
-	 *
-	 * @since 1.0.0
-	 */
-	public function __construct($pluginName, $version)
-	{
-		$this->pluginName = $pluginName;
-		$this->version    = $version;
-
-		add_action('init', [$this, 'initPlugin']);
-
-		// Shortcodes
-		add_shortcode('demovox_form', [$this, 'signShortcode',]);
-		add_shortcode('demovox_count', [$this, 'countShortcode',]);
-		add_shortcode('demovox_firstname', [$this, 'firstNameShortcode',]);
-		add_shortcode('demovox_lastname', [$this, 'lastNameShortcode',]);
-		add_shortcode('demovox_optin', [$this, 'optInShortcode',]);
-
-		// Deprecated
-		add_shortcode('demovox_form_shortcode', [$this, 'signShortcode',]);
-		add_shortcode('demovox_count_shortcode', [$this, 'countShortcode',]);
-
-		// demovox_form shortcode ajax
-		add_action('wp_ajax_demovox_step2', [$this, 'signStep2',]);
-		add_action('wp_ajax_nopriv_demovox_step2', [$this, 'signStep2',]);
-		add_action('wp_ajax_demovox_step3', [$this, 'signStep3',]);
-		add_action('wp_ajax_nopriv_demovox_step3', [$this, 'signStep3',]);
-		add_action('wp_ajax_demovox_countries', [$this, 'getCountries',]);
-		add_action('wp_ajax_nopriv_demovox_countries', [$this, 'getCountries',]);
-		add_action('wp_ajax_demovox_test', [$this, 'getCountries',]);
-		add_action('wp_ajax_nopriv_demovox_test', [$this, 'getCountries',]);
-
-		// demovox_optin shortcode ajax
-		add_action('wp_ajax_demovox_optin', [$this, 'saveOptIn',]);
-		add_action('wp_ajax_nopriv_demovox_optin', [$this, 'saveOptIn',]);
-	}
-
-	public function initPlugin()
-	{
-		if (!session_id() && !headers_sent()) //checking if session already exists
-		{
-			session_start();
-		}
-	}
-
-	public function init()
+	public function requireHttps()
 	{
 		Core::enforceHttps();
-	}
-
-	/**
-	 * Register the stylesheets for the public-facing side of the site.
-	 *
-	 * @since    1.0.0
-	 */
-	public function enqueueStyles()
-	{
-		wp_enqueue_style($this->pluginName, plugin_dir_url(__FILE__) . 'css/demovox-public.min.css', [], $this->version, 'all');
-	}
-
-	/**
-	 * Register the JavaScript for the public-facing side of the site.
-	 *
-	 * @since    1.0.0
-	 */
-	public function enqueueScripts()
-	{
-		$successPage  = Config::getValue('use_page_as_success');
-		$demovoxJsArr = [
-			'language'          => Infos::getUserLanguage(),
-			'ajaxUrl'           => admin_url('admin-ajax.php'),
-			'nonce'             => Core::createNonce($this->nonceId),
-			'apiAddressEnabled' => '',
-			'successPageRedir'  => $successPage || $successPage === '0',
-		];
-		if ($apiAddressUrl = Config::getValue('api_address_url')) {
-			$demovoxJsArr['apiAddressEnabled']   = 1;
-			$demovoxJsArr['apiAddressKey']       = Config::getValue('api_address_key');
-			$demovoxJsArr['apiAddressUrl']       = $apiAddressUrl;
-			$demovoxJsArr['apiAddressCityInput'] = Config::getValue('api_address_city_input');
-			$demovoxJsArr['apiAddressGdeInput']  = Config::getValue('api_address_gde_input');
-			$demovoxJsArr['apiAddressGdeSelect'] = Config::getValue('api_address_gde_select');
-		}
-
-		wp_enqueue_script(
-			$this->pluginName,
-			plugin_dir_url(__FILE__) . 'js/demovox-public.min.js',
-			['jquery', 'jquery-ui-datepicker'],
-			$this->version,
-			false
-		);
-		wp_enqueue_script(
-			$this->pluginName . '_pdf',
-			plugin_dir_url(__FILE__) . 'js/demovox-public-pdf.min.js',
-			['jquery'],
-			$this->version,
-			false
-		);
-		wp_localize_script($this->pluginName, 'demovox', $demovoxJsArr);
 	}
 
 	/*
@@ -165,6 +43,8 @@ class PublicHandler
 
 	public function firstNameShortcode()
 	{
+		$this->requireHttps();
+
 		$row = $this->getRow(['first_name']);
 		if (!$row) {
 			return '';
@@ -174,6 +54,8 @@ class PublicHandler
 
 	public function lastNameShortcode()
 	{
+		$this->requireHttps();
+
 		$row = $this->getRow(['last_name']);
 		if (!$row) {
 			return '';
@@ -183,6 +65,8 @@ class PublicHandler
 
 	public function optInShortcode()
 	{
+		$this->requireHttps();
+
 		$row = $this->getRow(['first_name']);
 		if (!$row) {
 			return '- Record not found -';
@@ -198,10 +82,8 @@ class PublicHandler
 		return ob_get_clean();
 	}
 
-	protected function getRow($select){
-		$this->init();
-
-		ob_start();
+	protected function getRow($select)
+	{
 		$guid = isset($_REQUEST['sign']) ? sanitize_key($_REQUEST['sign']) : null;
 		if (!$guid) {
 			Core::logMessage(400 . ' - equest variable "sign" is required', 'info');
@@ -216,6 +98,8 @@ class PublicHandler
 
 	public function saveOptIn()
 	{
+		$this->requireHttps();
+
 		$optIn = isset($_REQUEST['is_optin']) && $_REQUEST['is_optin'] ? 1 : 0;
 		$guid  = isset($_REQUEST['sign']) ? sanitize_key($_REQUEST['sign']) : null;
 
@@ -228,14 +112,14 @@ class PublicHandler
 			['guid' => $guid,]
 		);
 		if (!$success) {
-			Core::showError('DB update failed: ' . DB::getError(), 500);
+			Core::showError('DB update failed: ' . Db::getError(), 500);
 		}
 		wp_die(Strings::wpMessage(__('Your settings were saved', 'demovox'), 'success'));
 	}
 
 	public function signShortcode()
 	{
-		$this->init();
+		$this->requireHttps();
 
 		if (isset($_REQUEST['sign']) && !empty($_REQUEST['sign'])) {
 			return $this->signStep(3);
@@ -246,13 +130,15 @@ class PublicHandler
 
 	public function signStep2()
 	{
-		$this->init();
+		$this->requireHttps();
+
 		$this->signStep(2);
 	}
 
 	public function signStep3()
 	{
-		$this->init();
+		$this->requireHttps();
+
 		$this->signStep(3);
 	}
 

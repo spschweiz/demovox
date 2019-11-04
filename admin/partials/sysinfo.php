@@ -1,12 +1,12 @@
 <?php
 namespace Demovox;
 /**
- * @var $this Admin
- * @var $encKey true|string
- * @var $hashKey true|string
- * @var $saltsFailed bool
+ * @var $this          AdminPages
+ * @var $encKey        true|string
+ * @var $hashKey       true|string
+ * @var $saltsFailed   bool
  * @var $phpShowErrors bool
- * @var $languages array
+ * @var $languages     array
  * @var $mailRecipient string
  */
 
@@ -114,9 +114,9 @@ namespace Demovox;
 	<?php
 	$cronNames = ManageCron::getAllCrons();
 	foreach ($cronNames as $cronName) {
-		$cron = $cronName;
-		$dateStart = $cron->getStausDateStart();
-		$dateStop = $cron->getStatusDateStop();
+		$cron        = $cronName;
+		$dateStart   = $cron->getStausDateStart();
+		$dateStop    = $cron->getStatusDateStop();
 		$lastSkipped = $cron->getStatusSkipped();
 		$lastMessage = $cron->getStatusMessage();
 		$lastSuccess = $cron->getStatusSuccess();
@@ -124,15 +124,15 @@ namespace Demovox;
 		<h4><?= $cron->getName() ?></h4>
 		<p>
 			<button class="ajaxButton"
-					data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?cron=' . $cron->getHookName(), 'demovox_run_cron') ?>">
+			        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?cron=' . $cron->getHookName(), 'demovox_run_cron') ?>">
 				Run Now
 			</button>
 			<span class="ajaxContainer"></span>
 			<br/>
 			Status: <?php if ($cron->isRunning()) { ?>currently running
 				<button class="ajaxButton"
-						data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?cron=' . $cron->getClassName(), 'demovox_cancel_cron') ?>"
-						data-confirm="Force cancel?" data-container=".ajaxCancelContainer">
+				        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?cron=' . $cron->getClassName(), 'demovox_cancel_cron') ?>"
+				        data-confirm="Force cancel?" data-container=".ajaxCancelContainer">
 					cancel execution
 				</button><span class="ajaxCancelContainer"></span>
 			<?php } else { ?>
@@ -145,8 +145,8 @@ namespace Demovox;
 				<br/>
 			<?php } elseif ($lastMessage) {
 				echo 'Last status: '
-					. ($lastSuccess ? '<span class="success">success' : '<span class="error">error') . '</span>: '
-					. $lastMessage;
+					 . ($lastSuccess ? '<span class="success">success' : '<span class="error">error') . '</span>: '
+					 . $lastMessage;
 			} ?>
 		</p>
 		<?php
@@ -173,33 +173,33 @@ namespace Demovox;
 			Test 50 iterations
 		</button>
 		<button class="ajaxButton"
-				data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=100', 'demovox_encrypt_test') ?>">
+		        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=100', 'demovox_encrypt_test') ?>">
 			Test 100 iterations
 		</button>
 		<button class="ajaxButton"
-				data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=1000', 'demovox_encrypt_test') ?>">
+		        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=1000', 'demovox_encrypt_test') ?>">
 			Test 1'000 iterations
 		</button>
 		<br/>
 		Maxlength fields:
 		<button class="ajaxButton"
-				data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=10&fullLen=1', 'demovox_encrypt_test') ?>">
+		        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=10&fullLen=1', 'demovox_encrypt_test') ?>">
 			Test 10 iterations
 		</button>
 		<button class="ajaxButton"
-				data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=50&fullLen=1', 'demovox_encrypt_test') ?>">
+		        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=50&fullLen=1', 'demovox_encrypt_test') ?>">
 			Test 50 iterations
 		</button>
 		<button class="ajaxButton"
-				data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=100&fullLen=1', 'demovox_encrypt_test') ?>">
+		        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=100&fullLen=1', 'demovox_encrypt_test') ?>">
 			Test 100 iterations
 		</button>
 		<button class="ajaxButton"
-				data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=1000&fullLen=1', 'demovox_encrypt_test') ?>">
+		        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=1000&fullLen=1', 'demovox_encrypt_test') ?>">
 			Test 1'000 iterations
 		</button>
 		<button class="ajaxButton"
-				data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=100&fullLen=1&showStrLen=1', 'demovox_encrypt_test') ?>">
+		        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=100&fullLen=1&showStrLen=1', 'demovox_encrypt_test') ?>">
 			Test 100 iterations and show string lengths
 		</button>
 		<br/>
@@ -211,15 +211,20 @@ namespace Demovox;
 	<p>
 
 		<?php
-		function createMailButton($langId, $language, $mailType = Mail::TYPE_CONFIRM){
-		?>
-		<button class="ajaxButton"
-				data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?lang=' . $langId . '&mailType=' . $mailType, 'demovox_mail_test') ?>">
-			<?= $language ?>
-			(<?= Config::getValueByLang('mail_from_address', $langId) ?: 'mail from address not set' ?>)
-		</button>
-		<?php
+		function createMailButton($langId, $language, $mailType = Mail::TYPE_CONFIRM)
+		{
+			?>
+			<button class="ajaxButton"
+			        data-ajax-url="<?= Strings::getLinkAdmin(
+						'/admin-post.php?lang=' . $langId . '&mailType=' . $mailType,
+						'demovox_mail_test'
+					) ?>">
+				<?= $language ?>
+				(<?= Config::getValueByLang('mail_from_address', $langId) ?: 'mail from address not set' ?>)
+			</button>
+			<?php
 		}
+
 		?>
 		Send test mails to <?= $mailRecipient ?>.<br/>
 		Confirmation mail:

@@ -1,13 +1,13 @@
 <?php
 namespace Demovox;
 /**
- * @var Admin $this
- * @var int $count
- * @var int $addCount
- * @var string $userLang
- * @var int $countOptin
- * @var int $countOptout
- * @var int $countUnfinished
+ * @var AdminPages $this
+ * @var int        $count
+ * @var int        $addCount
+ * @var string     $userLang
+ * @var int        $countOptin
+ * @var int        $countOptout
+ * @var int        $countUnfinished
  */
 ?>
 <div class="wrap demovox">
@@ -36,12 +36,14 @@ namespace Demovox;
 	</p>
 	<?php if (!$count) { ?>
 		<h3>
-			Don't forget to check the <a href="<?= admin_url('/admin.php?page=demovoxSysinfo') ?>">System info page</a> before publishing the plugin
+			Don't forget to check the <a href="<?= admin_url('/admin.php?page=demovoxSysinfo') ?>">System info page</a> before publishing
+			the plugin
 		</h3>
 	<?php } ?>
 	<h3>Shortcodes</h3>
 	<p>Global shortcodes: <code>[demovox_form]</code> <code>[demovox_count]</code></p>
-	<p>Opt-in page and success pages shortcodes: <code>[demovox_form]</code> <code>[demovox_optin]</code> <code>[demovox_firstname]</code> <code>[demovox_lastname]</code></p>
+	<p>Opt-in page and success pages shortcodes: <code>[demovox_form]</code> <code>[demovox_optin]</code> <code>[demovox_firstname]</code>
+		<code>[demovox_lastname]</code></p>
 	<?php if (current_user_can('demovox_stats') && $count) { ?>
 		<h3>Sign-up stats</h3>
 		<div class="row">

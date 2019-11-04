@@ -22,7 +22,7 @@ namespace Demovox;
  * @subpackage Demovox/admin
  * @author     Fabian Horlacher / SP Schweiz
  */
-class InitAdmin extends Base
+class InitAdmin extends BaseController
 {
 	/**
 	 * @var AdminPages

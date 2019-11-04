@@ -1,10 +1,10 @@
 <?php
 namespace Demovox;
 /**
- * @var Admin $this
- * @var string $datesetsOi
- * @var string $datesetsOo
- * @var string $datesetsC
+ * @var AdminPages $this
+ * @var string     $datesetsOi
+ * @var string     $datesetsOo
+ * @var string     $datesetsC
  */
 ?>
 <script>
@@ -70,7 +70,7 @@ namespace Demovox;
 		};
 
 	$(function () {
-		var  ctxDate = document.getElementById("dateChart"),
+		var ctxDate = document.getElementById("dateChart"),
 			dateChart = new Chart(ctxDate, {
 				type: 'line',
 				data: data,

@@ -12,7 +12,7 @@ namespace Demovox;
  * @subpackage Demovox/admin
  * @author     Fabian Horlacher / SP Schweiz
  */
-class AdminSettings
+class AdminSettings extends BaseController
 {
 	public function pageSettings()
 	{

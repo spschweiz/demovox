@@ -2,10 +2,10 @@
 
 namespace Demovox;
 /**
- * @var Admin $this
- * @var bool $isSent
- * @var string $mailTo
- * @var $connectionLog
+ * @var AdminPages $this
+ * @var bool       $isSent
+ * @var string     $mailTo
+ * @var            $connectionLog
  */
 ?>
 <h3><?= $isSent ? 'Mail sent to ' . $mailTo : 'Sending failed' ?></h3>

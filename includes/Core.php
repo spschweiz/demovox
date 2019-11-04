@@ -117,7 +117,7 @@ class Core
 	{
 		$pluginDir = self::getPluginDir();
 
-		require_once $pluginDir . 'includes/Base.php';
+		require_once $pluginDir . 'includes/BaseController.php';
 
 		/**
 		 * The class responsible for orchestrating the actions and filters of the

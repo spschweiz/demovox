@@ -2,20 +2,20 @@
 
 namespace Demovox;
 /**
- * @var Admin $this
- * @var int $iterations
- * @var int $timediffEncrypt
- * @var int $timediffDecrypt
- * @var bool $showStrLengths
- * @var array $lengths
- * @var array $enc the encrypted strings
+ * @var AdminPages $this
+ * @var int        $iterations
+ * @var int        $timediffEncrypt
+ * @var int        $timediffDecrypt
+ * @var bool       $showStrLengths
+ * @var array      $lengths
+ * @var array      $enc the encrypted strings
  */
 ?>
 <?= $iterations ?> iterations.<br/>
-Time to encrypt: <?= $timediffEncrypt; ?>s<br/>
-Time to decrypt: <?= $timediffDecrypt ?>s
+	Time to encrypt: <?= $timediffEncrypt; ?>s<br/>
+	Time to decrypt: <?= $timediffDecrypt ?>s
 
-<?php if ($showStrLengths) { ?>
+	<?php if ($showStrLengths) { ?>
 	<h4>Field lengths</h4>
 	<table class="table table-striped table-hover">
 		<tr>

@@ -5,24 +5,6 @@ namespace Demovox;
 class ManageCron
 {
 	/**
-	 * The ID of this plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      string $pluginName The ID of this plugin.
-	 */
-	private $pluginName;
-
-	/**
-	 * The version of this plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      string $version The current version of this plugin.
-	 */
-	private $version;
-
-	/**
 	 * @var $crons array
 	 */
 	static private $crons = ['CronMailConfirm', 'CronMailIndex', 'CronMailRemindSheet', 'CronMailRemindSignup', 'CronExportToApi',];

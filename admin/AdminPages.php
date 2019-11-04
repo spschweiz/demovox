@@ -12,7 +12,7 @@ namespace Demovox;
  * @subpackage Demovox/admin
  * @author     Fabian Horlacher / SP Schweiz
  */
-class AdminPages
+class AdminPages extends BaseController
 {
 	public function pageOverview()
 	{
@@ -106,7 +106,7 @@ class AdminPages
 
 	public function statsCharts()
 	{
-		Admin::checkAccess('demovox_stats');
+		Core::checkAccess('demovox_stats');
 
 		$countDategroupedOi = DbSignatures::getResults(
 			['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
@@ -135,7 +135,7 @@ class AdminPages
 
 	public function statsSource()
 	{
-		Admin::checkAccess('demovox_stats');
+		Core::checkAccess('demovox_stats');
 
 		$sourceList = DbSignatures::getResults(
 			[
@@ -147,14 +147,14 @@ class AdminPages
 				'SUM((is_step2_done=0 AND is_deleted = 0)) AS unfinished',
 			],
 			'',
-			DB::TABLE_SIGN,
-			'GROUP BY source ORDER BY source');
+			'GROUP BY source ORDER BY source'
+		);
 		include Infos::getPluginDir() . 'admin/partials/statsSource.php';
 	}
 
 	public function testEncrypt()
 	{
-		Admin::checkAccess('manage_options');
+		Core::checkAccess('manage_options');
 
 		if (isset($_REQUEST['fullLen']) && $_REQUEST['fullLen']) {
 			$lengths = [32, 255, 255, 10, 128, 64, 127, 10, 16, 64, 5, 4, 45, 2];
@@ -175,7 +175,7 @@ class AdminPages
 		$starttime = microtime(true);
 		foreach ($lengths as $length) {
 			for ($i = 1; $i <= $iterations; $i++) {
-				$enc[$length][$i] = DB::encrypt($orig[$length][$i]);
+				$enc[$length][$i] = Crypt::encrypt($orig[$length][$i]);
 			}
 		}
 		$endtime = microtime(true);
@@ -184,7 +184,7 @@ class AdminPages
 		$starttime = microtime(true);
 		foreach ($lengths as $length) {
 			for ($i = 1; $i <= $iterations; $i++) {
-				$dec[$length][$i] = DB::decrypt($enc[$length][$i]);
+				$dec[$length][$i] = Crypt::decrypt($enc[$length][$i]);
 			}
 		}
 		$endtime = microtime(true);
@@ -197,7 +197,7 @@ class AdminPages
 
 	public function testMail()
 	{
-		Admin::checkAccess('manage_options');
+		Core::checkAccess('manage_options');
 
 		$mailTo = $this->getWpMailAddress();
 		$langId = (isset($_REQUEST['lang']) && $_REQUEST['lang']) ? sanitize_text_field($_REQUEST['lang']) : 'de';
@@ -223,7 +223,7 @@ class AdminPages
 
 	public function runCron()
 	{
-		Admin::checkAccess('manage_options');
+		Core::checkAccess('manage_options');
 
 		$hook = sanitize_text_field($_REQUEST['cron']);
 		ManageCron::triggerCron($hook);
@@ -232,7 +232,7 @@ class AdminPages
 
 	public function cancelCron()
 	{
-		Admin::checkAccess('manage_options');
+		Core::checkAccess('manage_options');
 
 		$hook = sanitize_text_field($_REQUEST['cron']);
 		ManageCron::cancel($hook);
@@ -294,14 +294,14 @@ class AdminPages
 				continue;
 			}
 
-			$row = DB::getRow(['ID', 'mail'], "serial = '" . $serial . "'");
+			$row = DbSignatures::getRow(['ID', 'mail'], "serial = '" . $serial . "'");
 			if (!$row) {
 				$fail[] = $serial;
 				Core::logMessage('doCsvImport: Could not find serial = "' . $serial . '"');
 				continue;
 			}
 
-			$save = DB::updateStatus(
+			$save = DbSignatures::updateStatus(
 				[
 					'is_sheet_received'   => $signCount,
 					'sheet_received_date' => $deliveryDateMysql,
@@ -316,7 +316,7 @@ class AdminPages
 				$fail[] = $serial;
 				Core::logMessage(
 					'doCsvImport: Could not update ID = "' . $row->ID . '" (serial = "' . $serial . '): '
-					. DB::getError()
+					. Db::getError()
 				);
 			}
 		}
@@ -352,13 +352,13 @@ class AdminPages
 
 	public function getCsv()
 	{
-		Admin::checkAccess('export');
+		Core::checkAccess('export');
 
-		$csvMapper = DB::getExportFields();
+		$csvMapper = DbSignatures::getAvailableFields();
 		$csv = implode(',', $csvMapper) . "\n";
 		$type = isset($_REQUEST['type']) ? sanitize_text_field($_REQUEST['type']) : '';
 		$where = $this->getWhere($type);
-		$allSignatures = DB::getResults(array_keys($csvMapper), $where);
+		$allSignatures = DbSignatures::getResults(array_keys($csvMapper), $where);
 
 		foreach ($allSignatures as $signature) {
 			$csvSignature = [];
@@ -380,30 +380,5 @@ class AdminPages
 		header("Content-Transfer-Encoding: binary");
 
 		echo $csv;
-	}
-
-	protected function getWhere($type)
-	{
-		switch ($type) {
-			case 'optin':
-				$where = 'is_optin <> 0 AND is_deleted = 0';
-				break;
-			case 'finished':
-				$where = 'is_step2_done <> 0 AND is_deleted = 0 AND is_outside_scope = 0';
-				break;
-			case 'finishedOutsideScope':
-				$where = 'is_step2_done <> 0 AND is_deleted = 0 AND is_outside_scope = 1';
-				break;
-			case 'unfinished':
-				$where = 'is_step2_done = 0 AND is_deleted = 0';
-				break;
-			case 'deleted':
-				$where = 'is_deleted <> 0';
-				break;
-			default:
-				$where = '';
-				break;
-		}
-		return $where;
 	}
 }

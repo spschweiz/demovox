@@ -2,7 +2,7 @@
 
 namespace Demovox;
 
-class InitPublic extends Base
+class InitPublic extends BaseController
 {
 	/**
 	 * @var PublicHandler
