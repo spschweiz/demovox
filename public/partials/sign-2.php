@@ -22,18 +22,22 @@ namespace Demovox;
 ?>
 <form method="post" id="demovox_form_2" class="demovox" action="options.php">
 	<input name="action" type="hidden" value="demovox_step3">
-	<div class="form-group">
-		<label for="birth_date"><?= __('Birth date', 'demovox') ?></label>
-		<input name="birth_date" id="birth_date" autocomplete="bday" class="form-control" type="text"
-			   pattern="([0-2]?[0-9]|3[0-2])\.(0?[1-9]|1[0-2])\.\d{2,4}$" required="">
+	<div class="form-row">
+		<div class="form-group col">
+			<label for="birth_date"><?= __('Birth date', 'demovox') ?></label>
+			<input name="birth_date" id="birth_date" autocomplete="bday" class="form-control" type="text"
+				   pattern="([0-2]?[0-9]|3[0-2])\.(0?[1-9]|1[0-2])\.\d{2,4}$" required="">
+		</div>
 	</div>
 	<?php if ($allowSwissAbroad) { ?>
-		<div class="form-group">
-			<div class="form-check">
-				<input class="form-check-input" type="checkbox" value="1" id="swiss_abroad" name="swiss_abroad">
-				<label class="form-check-label" for="swiss_abroad">
-					<?= __('Swiss abroad', 'demovox') ?>
-				</label>
+		<div class="form-row">
+			<div class="form-group col">
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" value="1" id="swiss_abroad" name="swiss_abroad">
+					<label class="form-check-label" for="swiss_abroad">
+						<?= __('Swiss abroad', 'demovox') ?>
+					</label>
+				</div>
 			</div>
 		</div>
 	<?php } ?>
@@ -111,13 +115,15 @@ namespace Demovox;
 		</div>
 	</div>
 	<?php if ($optinMode = $this->getOptinMode(2)) { ?>
-		<div class="form-group">
-			<div class="form-check">
-				<input class="form-check-input" type="checkbox" value="1" id="is_optin" name="is_optin" <?= ($optinMode === 'optInChk'
-					|| $optinMode === 'optOutChk') ? 'checked="checked"' : '' ?>>
-				<label class="form-check-label" for="is_optin">
-					<?= $textOptin ?>
-				</label>
+		<div class="form-row">
+			<div class="form-group col">
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" value="1" id="is_optin" name="is_optin" <?= ($optinMode === 'optInChk'
+						|| $optinMode === 'optOutChk') ? 'checked="checked"' : '' ?>>
+					<label class="form-check-label" for="is_optin">
+						<?= $textOptin ?>
+					</label>
+				</div>
 			</div>
 		</div>
 	<?php } ?>

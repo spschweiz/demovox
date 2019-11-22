@@ -40,12 +40,14 @@ namespace Demovox;
 		<?php
 		if($optinMode = $this->getOptinMode(1)) {
 			?>
-			<div class="form-group">
-				<div class="form-check">
-					<input class="form-check-input" type="checkbox" value="1" id="is_optin" name="is_optin" <?= ($optinMode === 'optInChk' || $optinMode === 'optOutChk') ? 'checked="checked"' : '' ?>>
-					<label class="form-check-label" for="is_optin">
-						<?= $textOptin ?>
-					</label>
+			<div class="form-row">
+				<div class="form-group col">
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="1" id="is_optin" name="is_optin" <?= ($optinMode === 'optInChk' || $optinMode === 'optOutChk') ? 'checked="checked"' : '' ?>>
+						<label class="form-check-label" for="is_optin">
+							<?= $textOptin ?>
+						</label>
+					</div>
 				</div>
 			</div>
 			<?php
