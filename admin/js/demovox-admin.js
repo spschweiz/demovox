@@ -16,9 +16,9 @@ var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 			// Extend the wp.media object.
 			demovoxMediaUploader = wp.media.frames.file_frame = wp.media({
 				// Set the values through wp_localize_script so that they can be localised/translated.
-				title: demovoxAdmin.uploader.title,
+				title: demovoxAdminData.uploader.title,
 				button: {
-					text: demovoxAdmin.uploader.text
+					text: demovoxAdminData.uploader.text
 				}, multiple: false
 			});
 			// When a file is selected, grab the URL and set it as the fields value.
@@ -36,6 +36,7 @@ var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 				lang = $(this).data('lang'),
 				qrMode = $('#demovox_field_qr_mode').val(),
 				pdfUrl = $('#demovox_signature_sheet_' + lang).val(),
+				admin = demovoxAdminClass,
 				fields = [
 					admin.createField('BE', 'canton', lang),
 					admin.createField('Bern', 'commune', lang),
