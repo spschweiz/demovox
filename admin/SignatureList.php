@@ -75,7 +75,8 @@ class SignatureList extends \WP_List_Table
 		$sqlAppend .= ' OFFSET ' . ($pageNumber - 1) * $perPage;
 
 		try {
-			$result = DbSignatures::getResults($select, $where, $sqlAppend);
+			$dbSign = new DbSignatures();
+			$result = $dbSign->getResults($select, $where, $sqlAppend);
 		} catch (\Exception $e) {
 			$result = [];
 		}
@@ -90,7 +91,8 @@ class SignatureList extends \WP_List_Table
 	 */
 	public function delete_signature($id)
 	{
-		DbSignatures::delete(['ID' => $id]);
+		$dbSign = new DbSignatures();
+		$dbSign->delete(['ID' => $id]);
 	}
 
 	/**
@@ -100,7 +102,8 @@ class SignatureList extends \WP_List_Table
 	 */
 	public static function record_count()
 	{
-		return DbSignatures::count();
+		$dbSign = new DbSignatures();
+		return $dbSign->count();
 	}
 
 	/**
@@ -182,7 +185,8 @@ class SignatureList extends \WP_List_Table
 	 */
 	function get_columns()
 	{
-		$fields = DbSignatures::getAvailableFields();
+		$dbSign = new DbSignatures();
+		$fields = $dbSign->getAvailableFields();
 		$columns = [];
 		foreach (self::$columns as $val) {
 			$columns[$val] = isset($fields[$val]) ? $fields[$val] : $val;
