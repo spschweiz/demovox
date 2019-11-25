@@ -129,9 +129,10 @@ class Core
 		 * The helper classes
 		 */
 		// The class responsible for DB access and encryption.
-		require_once $pluginDir . 'includes/helpers/Db.php';
-		require_once $pluginDir . 'includes/helpers/DbMailDedup.php';
-		require_once $pluginDir . 'includes/helpers/DbSignatures.php';
+		require_once $pluginDir . 'includes/helpers/Crypt.php';
+		require_once $pluginDir . 'includes/db/Db.php';
+		require_once $pluginDir . 'includes/db/DbMailDedup.php';
+		require_once $pluginDir . 'includes/db/DbSignatures.php';
 		require_once $pluginDir . 'libs/php/RemoteAddress.php';
 		require_once $pluginDir . 'includes/helpers/Infos.php';
 		require_once $pluginDir . 'includes/helpers/Strings.php';

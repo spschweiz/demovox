@@ -34,9 +34,11 @@ class PublicHandler extends BaseController
 	 */
 	public function countShortcode()
 	{
-		$count = DbSignatures::countSignatures();
+		$dbSign = new DbSignatures();
 		if ($sep = Config::getValue('count_thousands_sep')) {
-			$count = number_format(DbSignatures::countSignatures(), 0, '', $sep);
+			$count = number_format($dbSign->countSignatures(), 0, '', $sep);
+		} else {
+			$count = $dbSign->countSignatures();
 		}
 		return $count;
 	}
@@ -89,7 +91,8 @@ class PublicHandler extends BaseController
 			Core::logMessage(400 . ' - equest variable "sign" is required', 'info');
 			return null;
 		}
-		$row = DbSignatures::getRow($select, "guid = '" . $guid . "'");
+		$dbSign = new DbSignatures();
+		$row    = $dbSign->getRow($select, "guid = '" . $guid . "'");
 		if (!$row) {
 			Core::logMessage(404 . ' - Signature with GUID "' . $guid . '" was not found', 'error');
 		}
@@ -98,13 +101,14 @@ class PublicHandler extends BaseController
 
 	public function saveOptIn()
 	{
+		$dbSign = new DbSignatures();
 		$this->requireHttps();
 
 		$optIn = isset($_REQUEST['is_optin']) && $_REQUEST['is_optin'] ? 1 : 0;
 		$guid  = isset($_REQUEST['sign']) ? sanitize_key($_REQUEST['sign']) : null;
 
 		// Save data
-		$success = DbSignatures::updateStatus(
+		$success = $dbSign->updateStatus(
 			[
 				'is_optin'  => $optIn,
 				'edit_date' => current_time('mysql'),

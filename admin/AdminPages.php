@@ -16,12 +16,13 @@ class AdminPages extends BaseController
 {
 	public function pageOverview()
 	{
-		$count = DbSignatures::countSignatures(false);
+		$dbSign = new DbSignatures();
+		$count = $dbSign->countSignatures(false);
 		$addCount = Config::getValue('add_count');
 		$userLang = Infos::getUserLanguage();
-		$countOptin = DbSignatures::count('is_optin = 1 AND is_step2_done = 1 AND is_deleted = 0');
-		$countOptout = DbSignatures::count('is_optin = 0 AND is_step2_done = 1 AND is_deleted = 0');
-		$countUnfinished = DbSignatures::count('is_step2_done = 0 AND is_deleted = 0');
+		$countOptin = $dbSign->count('is_optin = 1 AND is_step2_done = 1 AND is_deleted = 0');
+		$countOptout = $dbSign->count('is_optin = 0 AND is_step2_done = 1 AND is_deleted = 0');
+		$countUnfinished = $dbSign->count('is_step2_done = 0 AND is_deleted = 0');
 		include Infos::getPluginDir() . 'admin/partials/admin-page.php';
 	}
 
@@ -40,11 +41,12 @@ class AdminPages extends BaseController
 	public function pageData()
 	{
 		$page = 'demovoxData';
-		$countOptin = DbSignatures::count(DbSignatures::WHERE_OPTIN);
-		$countFinished = DbSignatures::count(DbSignatures::WHERE_FINISHED_IN_SCOPE);
-		$countOutsideScope = DbSignatures::count(DbSignatures::WHERE_FINISHED_OUT_SCOPE);
-		$countUnfinished = DbSignatures::count(DbSignatures::WHERE_UNFINISHED);
-		$countDeleted = DbSignatures::count(DbSignatures::WHERE_DELETED);
+		$dbSign = new DbSignatures();
+		$countOptin = $dbSign->count(DbSignatures::WHERE_OPTIN);
+		$countFinished = $dbSign->count($dbSign->WHERE_FINISHED_IN_SCOPE);
+		$countOutsideScope = $dbSign->count(DbSignatures::WHERE_FINISHED_OUT_SCOPE);
+		$countUnfinished = $dbSign->count(DbSignatures::WHERE_UNFINISHED);
+		$countDeleted = $dbSign->count(DbSignatures::WHERE_DELETED);
 
 		$option = 'per_page';
 		$args = [
@@ -108,15 +110,16 @@ class AdminPages extends BaseController
 	{
 		Core::checkAccess('demovox_stats');
 
-		$countDategroupedOi = DbSignatures::getResults(
+		$dbSign = new DbSignatures();
+		$countDategroupedOi = $dbSign->getResults(
 			['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
 			'is_optin = 1 AND is_step2_done = 1 AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)'
 		);
-		$countDategroupedOo = DbSignatures::getResults(
+		$countDategroupedOo = $dbSign->getResults(
 			['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
 			'is_optin = 0 AND is_step2_done = 1 AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)'
 		);
-		$countDategroupedC = DbSignatures::getResults(
+		$countDategroupedC = $dbSign->getResults(
 			['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
 			'is_step2_done = 0 AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)'
 		);
@@ -137,7 +140,8 @@ class AdminPages extends BaseController
 	{
 		Core::checkAccess('demovox_stats');
 
-		$sourceList = DbSignatures::getResults(
+		$dbSign = new DbSignatures();
+		$sourceList = $dbSign->getResults(
 			[
 				'source',
 				'SUM(is_sheet_received) AS signatures',
@@ -294,14 +298,14 @@ class AdminPages extends BaseController
 				continue;
 			}
 
-			$row = DbSignatures::getRow(['ID', 'mail'], "serial = '" . $serial . "'");
+			$row = $dbSign->getRow(['ID', 'mail'], "serial = '" . $serial . "'");
 			if (!$row) {
 				$fail[] = $serial;
 				Core::logMessage('doCsvImport: Could not find serial = "' . $serial . '"');
 				continue;
 			}
 
-			$save = DbSignatures::updateStatus(
+			$save = $dbSign->updateStatus(
 				[
 					'is_sheet_received'   => $signCount,
 					'sheet_received_date' => $deliveryDateMysql,
@@ -340,13 +344,14 @@ class AdminPages extends BaseController
 		if (!Config::getValue('mail_remind_sheet_enabled') || !Config::getValue('mail_remind_dedup')) {
 			return true;
 		}
+		$dbSign = new DbSignatures();
 		$hashedMail = Strings::hashMail($mail);
 		$where = "mail = '" . $hashedMail . "'";
-		$mail = DbSignatures::getRow(['ID'], $where);
+		$mail = $dbSign->getRow(['ID'], $where);
 		if ($mail === null) {
 			return true;
 		}
-		$update = DbSignatures::updateStatus(['is_sheet_received' => 1], ['ID' => $mail->ID]);
+		$update = $dbSign->updateStatus(['is_sheet_received' => 1], ['ID' => $mail->ID]);
 		return !!$update;
 	}
 
@@ -354,11 +359,11 @@ class AdminPages extends BaseController
 	{
 		Core::checkAccess('export');
 
-		$csvMapper = DbSignatures::getAvailableFields();
+		$dbSign = new DbSignatures();
+		$csvMapper = $dbSign->getAvailableFields();
 		$csv = implode(',', $csvMapper) . "\n";
-		$type = isset($_REQUEST['type']) ? sanitize_text_field($_REQUEST['type']) : '';
-		$where = $this->getWhere($type);
-		$allSignatures = DbSignatures::getResults(array_keys($csvMapper), $where);
+		$type = isset($_REQUEST['type']) ? intval($_REQUEST['type']) : null;
+		$allSignatures = $dbSign->getResults(array_keys($csvMapper), $type);
 
 		foreach ($allSignatures as $signature) {
 			$csvSignature = [];

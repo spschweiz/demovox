@@ -90,9 +90,7 @@ class Activator
 	 */
 	public static function activate()
 	{
-		foreach (self::$tableDefinitions as $tableName => $sql) {
-			$update = DbSignatures::createUpdateTable($sql, $tableName);
-		}
+		self::createTables();
 
 		ManageCron::activate();
 

@@ -26,6 +26,7 @@ class ManageCron
 	{
 		$pluginDir = Infos::getPluginDir();
 		require_once $pluginDir . 'includes/cron/CronBase.php';
+		require_once $pluginDir . 'includes/cron/CronMailBase.php';
 		$crons = self::$crons;
 		foreach ($crons as $cron) {
 			require_once $pluginDir . 'includes/cron/' . $cron . '.php';

@@ -91,7 +91,8 @@ class CronExportToApi extends CronBase
 		}
 		$stateExported = $error ? ($row->is_exported - 1) : 1;
 
-		DbSignatures::updateStatus(['is_exported' => $stateExported], ['ID' => $row->ID]);
+		$dbSign = new DbSignatures();
+		$dbSign->updateStatus(['is_exported' => $stateExported], ['ID' => $row->ID]);
 		return $stateExported;
 	}
 
@@ -105,8 +106,9 @@ class CronExportToApi extends CronBase
 		if (!Config::getValue('api_export_no_optin')) {
 			$where .= ' AND IS_OPTIN = 1';
 		}
-		$maxMails = intval(Config::getValue('api_export_max_per_execution'));
-		$rows     = DbSignatures::getResults($fields, $where, ' LIMIT ' . $maxMails);
+		$maxMails = intval(Config::getValue('api_export_max_per_execution')) ?: 25;
+		$dbSign   = new DbSignatures();
+		$rows     = $dbSign->getResults($fields, $where, ' LIMIT ' . $maxMails);
 		$this->log(
 			'Prepared ' . count($rows) . ' signatures to send mails (select is limited to ' . $maxMails
 			. ' per cron execution)',

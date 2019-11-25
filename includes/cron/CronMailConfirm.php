@@ -20,8 +20,9 @@ class CronMailConfirm extends CronBase
 
 	protected function sendPendingMails()
 	{
-		$maxMails = intval(Config::getValue('mail_max_per_execution'));
-		$rows     = DbSignatures::getResults(
+		$maxMails = intval(Config::getValue('mail_max_per_execution')) ?: 300;
+		$dbSign   = new DbSignatures();
+		$rows     = $dbSign->getResults(
 			['ID', 'link_optin', 'link_pdf', 'guid', 'first_name', 'last_name', 'mail', 'language', 'state_confirm_sent'],
 			' state_confirm_sent <= 0 AND state_confirm_sent > -3 AND is_step2_done = 1 AND is_deleted = 0',
 			' LIMIT ' . $maxMails
@@ -55,8 +56,8 @@ class CronMailConfirm extends CronBase
 
 		$isSent    = Mail::send($row->mail, $mailSubject, $mailText, $fromAddress, $fromName);
 		$stateSent = $isSent ? 1 : ($row->state_confirm_sent - 1);
-
-		DbSignatures::updateStatus(['state_confirm_sent' => $stateSent], ['ID' => $row->ID]);
+		$dbSign    = new DbSignatures();
+		$rows      = $dbSign->updateStatus(['state_confirm_sent' => $stateSent], ['ID' => $row->ID]);
 		$this->log(
 			'Mail ' . ($isSent ? '' : 'NOT ') . 'sent for signature ID "' . $row->ID
 			. '" with language "' . $clientLang . '" with sender ' . $fromName . ' (' . $fromAddress . ')',

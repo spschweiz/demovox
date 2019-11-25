@@ -24,7 +24,7 @@ class SignSteps
 
 	protected function saveStep1()
 	{
-		$guid      = $this->createGuid();
+		$dbSign = new DbSignatures();
 		$lang      = Infos::getUserLanguage();
 		$src       = sanitize_text_field($_REQUEST['src']);
 		$nameFirst = sanitize_text_field($_REQUEST['name_first']);
@@ -60,12 +60,12 @@ class SignSteps
 			$optIn            = ($optinMode === 'optOut' || $optinMode === 'optOutChk') ? !$optIn : $optIn;
 			$data['is_optin'] = $optIn;
 		}
-		$success = DbSignatures::insert($data);
+		$success = $dbSign->insert($data);
 		if (!$success) {
 			Core::showError('DB insert failed: ' . Db::getError(), 500);
 		}
 		$signId     = Db::getInsertId();
-		$successUpd = DbSignatures::updateStatus(
+		$successUpd = $dbSign->updateStatus(
 			['serial' => Strings::getSerial($signId)],
 			['ID' => $signId]
 		);
@@ -102,6 +102,7 @@ class SignSteps
 	 */
 	protected function saveStep2($signId, $guid, $isEncrypted)
 	{
+		$dbSign = new DbSignatures();
 		// Load and sanitize form data
 		$birthDate       = sanitize_text_field($_REQUEST['birth_date']);
 		$birthDateParsed = date_parse($birthDate);
@@ -179,7 +180,7 @@ class SignSteps
 		}
 
 		// Update
-		$success = DbSignatures::update(
+		$success = $dbSign->update(
 			$data,
 			['ID' => $signId,],
 			$isEncrypted
@@ -237,6 +238,7 @@ class SignSteps
 	 */
 	public function step3($guid)
 	{
+		$dbSign = new DbSignatures();
 		$loadedByGuid = false;
 		$redirect     = isset($_REQUEST['redirect']) && $_REQUEST['redirect'];
 		if ($guid) {
@@ -244,7 +246,7 @@ class SignSteps
 			$loadedByGuid = true;
 			if ($redirect) {
 				// Redirect to success page
-				$row = DbSignatures::getRow(['link_success',], "guid = '" . $guid . "'");
+				$row = $dbSign->getRow(['link_success',], "guid = '" . $guid . "'");
 				if (!$row === null) {
 					Core::showError('Signature guid ' . $guid . ' not found', 404);
 				}
@@ -256,7 +258,7 @@ class SignSteps
 			$signId = $this->getSessionVar('signId');
 
 			// Verify 2nd form step is filled and get encryption mode
-			$row = DbSignatures::getRow(
+			$row = $dbSign->getRow(
 				['is_step2_done', 'guid', 'is_encrypted', 'link_success',],
 				"ID = '" . $signId . "'"
 			);
@@ -289,8 +291,9 @@ class SignSteps
 	 */
 	protected function step3inlineSuccessPage($guid)
 	{
+		$dbSign = new DbSignatures();
 		// Prepare PDF data
-		$row = DbSignatures::getRow(
+		$row = $dbSign->getRow(
 			[
 				'ID',
 				'birth_date',

@@ -78,54 +78,8 @@ class CronMailIndex extends CronBase
 	 */
 	protected function importRow($row)
 	{
-		$inserted   = null;
-		$hashedMail = Strings::hashMail($row->mail);
-		$mailRow    = DbMailDedup::getRow(
-			[
-				'ID',
-				'creation_date',
-				'is_step2_done',
-				'is_sheet_received',
-				'state_remind_sheet_sent',
-				'state_remind_signup_sent',
-			],
-			"mail = '" . $hashedMail . "'"
-		);
-
-		if (!$mailRow) {
-			$setMailData = [
-				'sign_ID'                  => $row->ID,
-				'mail'                     => $hashedMail,
-				'creation_date'            => $row->creation_date,
-				'is_step2_done'            => $row->is_step2_done ? 1 : 0,
-				'is_sheet_received'        => $row->is_sheet_received ? 1 : 0,
-				'state_remind_sheet_sent'  => $row->state_remind_sheet_sent,
-				'state_remind_signup_sent' => $row->state_remind_signup_sent,
-			];
-			$save        = DbMailDedup::insert($setMailData);
-			$inserted    = true;
-		} else {
-			if (!$mailRow->is_step2_done) {
-				return false;
-			}
-			$setMailData                  = [];
-			$setMailData['sign_ID']       = $row->ID;
-			$setMailData['creation_date'] = $row->creation_date;
-			if ($row->is_step2_done) {
-				$setMailData['is_step2_done'] = 1;
-			}
-			if (!$mailRow->is_sheet_received && $row->is_sheet_received) {
-				$setMailData['is_sheet_received'] = 1;
-			}
-			if ($mailRow->state_remind_sheet_sent !== 1 && $row->state_remind_sheet_sent == 1) {
-				$setMailData['state_remind_sheet_sent'] = 1;
-			}
-			if ($mailRow->state_remind_signup_sent !== 1 && $row->state_remind_signup_sent == 1) {
-				$setMailData['state_remind_signup_sent'] = 1;
-			}
-			$save     = DbMailDedup::updateStatus($setMailData, ['ID' => $mailRow->ID]);
-			$inserted = false;
-		}
+		$dbMailDd = new DbMailDedup();
+		$save     = $dbMailDd->importRow($row);
 
 		if ($save === false) {
 			$msg = 'Exception on save mail status with sign_ID=' . $row->ID . ' with error:' . Db::getError();
@@ -140,23 +94,25 @@ class CronMailIndex extends CronBase
 	/**
 	 * @return array|null
 	 */
-	protected function getRowsToImport()
+	protected function getPending()
 	{
+		$dbMailDd = new DbMailDedup();
+		$dbSign   = new DbSignatures();
 		// To ensure we get the correct is_step2_done for signatures a client is still working on, wait for all php sessions to die
 		$maxDate = date("Y-m-d G:i:s", strtotime('12 hour ago'));
 		$where   = "is_deleted = 0 AND creation_date < '{$maxDate}' AND  is_outside_scope = 0";
 
-		$lastImport = DbMailDedup::getRow(['sign_ID'], null, 'ORDER BY sign_ID DESC');
+		$lastImport = $dbMailDd->getRow(['sign_ID'], null, 'ORDER BY sign_ID DESC');
 		if ($lastImport) {
 			$where .= ' AND ID > ' . $lastImport->sign_ID;
 		}
-		$countTotal = DbSignatures::count($where);
+		$countTotal = $dbSign->count($where);
 		if (!$countTotal) {
 			return null;
 		}
 
 		$sqlAppend = ($countTotal > $this->maxSignsPerCall ? ' ORDER BY ID ASC LIMIT ' . $this->maxSignsPerCall : '');
-		$rows      = DbSignatures::getResults(
+		$rows      = $dbSign->getResults(
 			[
 				'ID',
 				'mail',

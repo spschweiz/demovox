@@ -76,13 +76,13 @@ class CronMailRemindSheet extends CronBase
 				$row                          = DbMailDedup::getRow($colsSign, 'ID = ' . $rowMail->sign_ID);
 				$row->state_remind_sheet_sent = $rowMail->state_remind_sheet_sent;
 				if ($row->is_deleted) {
-					DbSignatures::delete(['ID' => $rowMail->ID]);
+					$dbSign->delete(['ID' => $rowMail->ID]);
 					continue;
 				}
 
 				$isSent = $this->sendMail($row);
 
-				DbMailDedup::updateStatus(['state_remind_sheet_sent' => $isSent], ['ID' => $rowMail->ID]);
+				$dbSign->updateStatus(['state_remind_sheet_sent' => $isSent], ['ID' => $rowMail->ID]);
 			} else {
 				$this->sendMail($row);
 			}
@@ -108,7 +108,8 @@ class CronMailRemindSheet extends CronBase
 		$isSent    = Mail::send($row->mail, $mailSubject, $mailText, $fromAddress, $fromName);
 		$stateSent = $isSent ? 1 : ($row->state_remind_sheet_sent - 1);
 
-		DbSignatures::updateStatus(['state_remind_sheet_sent' => $stateSent], ['ID' => $row->ID]);
+		$dbSign = new DbSignatures();
+		$dbSign->updateStatus(['state_remind_sheet_sent' => $stateSent], ['ID' => $row->ID]);
 		$this->log(
 			'Mail ' . ($isSent ? '' : 'NOT ') . 'sent for signature ID "' . $row->ID
 			. '" with language "' . $row->language . '" with sender ' . $fromName . ' (' . $fromAddress . ')',

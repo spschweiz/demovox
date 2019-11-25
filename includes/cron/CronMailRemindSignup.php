@@ -72,6 +72,8 @@ class CronMailRemindSignup extends CronBase
 
 		Loader::addAction('phpmailer_init', new Mail(), 'config', 10, 1);
 
+		$dbSign   = new DbSignatures();
+		$dbMailDd = new DbMailDedup();
 		foreach ($rows as $row) {
 
 			if ($this->isDedup) {
@@ -79,13 +81,13 @@ class CronMailRemindSignup extends CronBase
 				$row                           = DbSignatures::getRow($colsSign, 'ID = ' . $rowMail->sign_ID);
 				$row->state_remind_signup_sent = $rowMail->state_remind_signup_sent;
 				if ($row->is_deleted) {
-					DbSignatures::delete(['ID' => $rowMail->ID]);
+					$dbSign->delete(['ID' => $rowMail->ID]);
 					continue;
 				}
 
 				$isSent = $this->sendMail($row);
 
-				DbMailDedup::updateStatus(['state_remind_signup_sent' => $isSent], ['ID' => $rowMail->ID]);
+				$dbMailDd->updateStatus(['state_remind_signup_sent' => $isSent], ['ID' => $rowMail->ID]);
 			} else {
 				$this->sendMail($row);
 			}
@@ -111,7 +113,8 @@ class CronMailRemindSignup extends CronBase
 		$isSent    = Mail::send($row->mail, $mailSubject, $mailText, $fromAddress, $fromName);
 		$stateSent = $isSent ? 1 : ($row->state_remind_signup_sent - 1);
 
-		DbSignatures::updateStatus(['state_remind_signup_sent' => $stateSent], ['ID' => $row->ID]);
+		$dbSign = new DbSignatures();
+		$dbSign->updateStatus(['state_remind_signup_sent' => $stateSent], ['ID' => $row->ID]);
 		$this->log(
 			'Mail ' . ($isSent ? '' : 'NOT ') . 'sent for signature ID "' . $row->ID
 			. '" with language "' . $row->language . '" with sender ' . $fromName . ' (' . $fromAddress . ')',
