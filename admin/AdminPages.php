@@ -125,13 +125,13 @@ class AdminPages extends BaseController
 		);
 		$datesetsOi = $datesetsOo = $datesetsC = '';
 		foreach ($countDategroupedOi as $row) {
-			$datesetsOi .= '{t:nDate(' . $row->date . '),y:' . intval($row->count) . '},';
+			$datesetsOi .= '{t:demovoxAdminClass.nDate(' . $row->date . '),y:' . intval($row->count) . '},';
 		}
 		foreach ($countDategroupedOo as $row) {
-			$datesetsOo .= '{t:nDate(' . $row->date . '),y:' . intval($row->count) . '},';
+			$datesetsOo .= '{t:demovoxAdminClass.nDate(' . $row->date . '),y:' . intval($row->count) . '},';
 		}
 		foreach ($countDategroupedC as $row) {
-			$datesetsC .= '{t:nDate(' . $row->date . '),y:' . intval($row->count) . '},';
+			$datesetsC .= '{t:demovoxAdminClass.nDate(' . $row->date . '),y:' . intval($row->count) . '},';
 		}
 		include Infos::getPluginDir() . 'admin/partials/charts.php';
 	}

@@ -13,5 +13,5 @@ $this->doSettingsSections($page);
 submit_button();
 ?>
 <script>
-	hideOnVal($('#demovox_optin_mode'), $('.hideOnOptinDisabled'), 'disabled');
+	demovoxAdminClass.hideOnVal($('#demovox_optin_mode'), $('.hideOnOptinDisabled'), 'disabled');
 </script>

@@ -14,8 +14,8 @@ $this->doSettingsSections($page);
 submit_button();
 ?>
 <script>
-	hideOnVal($('#demovox_encrypt_signees'), $('.showOnEncrypt'), 'disabled');
-	showOnVal($('#demovox_mail_method'), $('.showOnMethodSmtp'), 'smtp');
-	hideOnVal($('#demovox_api_address_url'), $('.showOnApiAddress'), '');
-	hideOnVal($('#demovox_api_export_url'), $('.showOnApiExport'), '');
+	demovoxAdminClass.hideOnVal($('#demovox_encrypt_signees'), $('.showOnEncrypt'), 'disabled');
+	demovoxAdminClass.showOnVal($('#demovox_mail_method'), $('.showOnMethodSmtp'), 'smtp');
+	demovoxAdminClass.hideOnVal($('#demovox_api_address_url'), $('.showOnApiAddress'), '');
+	demovoxAdminClass.hideOnVal($('#demovox_api_export_url'), $('.showOnApiExport'), '');
 </script>
