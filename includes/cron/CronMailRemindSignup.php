@@ -2,11 +2,20 @@
 
 namespace Demovox;
 
-class CronMailRemindSignup extends CronBase
+class CronMailRemindSignup extends CronMailBase
 {
 	protected $scheduleRecurrence = 'daily';
-	/** @var bool */
-	protected $isDedup = false;
+	/** @var array */
+	protected $colsSign = [
+		'ID',
+		'link_optin',
+		'guid',
+		'first_name',
+		'last_name',
+		'mail',
+		'language',
+		'state_remind_signup_sent',
+	];
 
 	public function run()
 	{
@@ -14,15 +23,7 @@ class CronMailRemindSignup extends CronBase
 			$this->setSkipped('Reminder mails are disabled in config');
 			return;
 		}
-		if (Config::getValue('mail_remind_dedup')) {
-			$importStatus = Core::getOption('cron_index_mail_status');
-			if ($importStatus === false || $importStatus === CronMailIndex::STATUS_INIT) {
-				$this->setSkipped('Reminder mail deduplication indexing (CronMailsRemindIndex) has not finished initial index yet');
-				return;
-			}
-			$this->isDedup = true;
-		}
-		if (!$this->prepareRun()) {
+		if (!$this->prepareRunMailReminder()) {
 			return;
 		}
 		$this->setRunningStart();
@@ -32,41 +33,11 @@ class CronMailRemindSignup extends CronBase
 
 	protected function sendPendingMails()
 	{
-		$colsSign = [
-			'ID',
-			'link_optin',
-			'guid',
-			'first_name',
-			'last_name',
-			'mail',
-			'language',
-			'state_remind_signup_sent',
-		];
+		$rows = $this->getPending();
 
-		$minAge  = intval(Config::getValue('mail_remind_signup_min_age'));
-		$maxDate = date("Y-m-d", strtotime($minAge . ' day ago'));
-		$where   = "creation_date < '{$maxDate}' AND is_step2_done = 0 "
-				   . 'AND state_remind_signup_sent <= 0 AND state_remind_signup_sent > -3';
-
-		$maxMails  = intval(Config::getValue('mail_max_per_execution'));
-		$sqlAppend = 'ORDER BY ID ASC LIMIT ' . $maxMails;
-
-		if ($this->isDedup) {
-			$rows = DbMailDedup::getResults(
-				['ID', 'sign_ID', 'state_remind_signup_sent'],
-				$where,
-				$sqlAppend
-			);
-		} else {
-			$where .= 'AND is_deleted = 0 AND is_outside_scope = 0';
-			$rows  = DbSignatures::getResults(
-				$colsSign,
-				$where . ' AND is_step2_done = 1',
-				$sqlAppend
-			);
-		}
 		$this->log(
-			'Loaded ' . count($rows) . ' signatures to send mails (select is limited to ' . $maxMails . ' per cron execution)',
+			'Loaded ' . count($rows) . ' signatures to send mails (select is limited to ' . $this->limitPerExecution
+			. ' per cron execution)',
 			'notice'
 		);
 
@@ -78,7 +49,7 @@ class CronMailRemindSignup extends CronBase
 
 			if ($this->isDedup) {
 				$rowMail                       = $row;
-				$row                           = DbSignatures::getRow($colsSign, 'ID = ' . $rowMail->sign_ID);
+				$row                           = $dbSign->getRow($this->colsSign, 'ID = ' . $rowMail->sign_ID);
 				$row->state_remind_signup_sent = $rowMail->state_remind_signup_sent;
 				if ($row->is_deleted) {
 					$dbSign->delete(['ID' => $rowMail->ID]);
@@ -93,11 +64,11 @@ class CronMailRemindSignup extends CronBase
 			}
 		}
 
-		$this->setStatusMessage('Sent ' . count($rows) . ' mails');
+		$this->setStateMessage('Sent ' . count($rows) . ' mails');
 	}
 
 	/**
-	 * @param $row
+	 * @param DbSignatures $row
 	 *
 	 * @return int
 	 */
@@ -121,5 +92,33 @@ class CronMailRemindSignup extends CronBase
 			$isSent ? 'notice' : 'error'
 		);
 		return $stateSent;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getPending(): array
+	{
+
+		$minAge  = intval(Config::getValue('mail_remind_signup_min_age'));
+		$maxDate = date("Y-m-d", strtotime($minAge . ' day ago'));
+		$where   = "creation_date < '{$maxDate}' AND is_step2_done = 0 "
+				   . 'AND state_remind_signup_sent <= 0 AND state_remind_signup_sent > -3';
+
+		$sqlAppend = 'ORDER BY ID ASC LIMIT ' . $this->limitPerExecution;
+
+		if ($this->isDedup) {
+			$dbMailDd = new DbMailDedup();
+			$rows     = $dbMailDd->getResults(
+				['ID', 'sign_ID', 'state_remind_signup_sent'],
+				$where,
+				$sqlAppend
+			);
+		} else {
+			$dbSign = new DbSignatures();
+			$where  .= ' AND is_deleted = 0 AND is_outside_scope = 0';
+			$rows   = $dbSign->getResults($this->colsSign, $where, $sqlAppend);
+		}
+		return $rows;
 	}
 }

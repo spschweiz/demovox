@@ -39,7 +39,7 @@ class CronMailIndex extends CronBase
 		}
 		Core::setOption('cron_index_mail_status', $statusRun);
 
-		list($countTotal, $rows) = $this->getRowsToImport();
+		list($countTotal, $rows) = $this->getPending();
 
 		$countProceeded = 0;
 		$countInserted  = 0;
@@ -57,13 +57,13 @@ class CronMailIndex extends CronBase
 
 		if ($statusRun === self::STATUS_INIT && $countTotal > $countProceeded) {
 			$statusEnd = self::STATUS_INIT;
-			$this->setStatusMessage(
+			$this->setStateMessage(
 				'Proceeded ' . $countProceeded . ' new mail addresses, thereof ' . $countInserted
 				. ' unique adresses imported. ' . $countTotal - $countProceeded . ' more to go'
 			);
 		} else {
 			$statusEnd = self::STATUS_FINISHED;
-			$this->setStatusMessage(
+			$this->setStateMessage(
 				'Proceeded ' . $countProceeded . ' new mail addresses, thereof ' . $countInserted
 				. ' unique adresses imported. '
 			);
@@ -72,11 +72,11 @@ class CronMailIndex extends CronBase
 	}
 
 	/**
-	 * @param object $row signature row
+	 * @param DbSignatures $row signature row
 	 *
-	 * @return bool|null inserted | null for errors
+	 * @return bool inserted
 	 */
-	protected function importRow($row)
+	protected function importRow($row): bool
 	{
 		$dbMailDd = new DbMailDedup();
 		$save     = $dbMailDd->importRow($row);
@@ -84,11 +84,11 @@ class CronMailIndex extends CronBase
 		if ($save === false) {
 			$msg = 'Exception on save mail status with sign_ID=' . $row->ID . ' with error:' . Db::getError();
 			Core::showError($msg, 500);
-			$this->setStatusMessage('Could not save mail from signature ID ' . $row->ID, false);
+			$this->setStateMessage('Could not save mail from signature ID ' . $row->ID, false);
 			return null;
 		}
 
-		return $inserted;
+		return $save === 'insert';
 	}
 
 	/**

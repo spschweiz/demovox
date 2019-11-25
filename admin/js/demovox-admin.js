@@ -70,7 +70,7 @@ var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 			if (typeof confirmTxt !== 'undefined' && !confirm(confirmTxt)) {
 				return;
 			}
-			$ajaxContainer.css('cursor','progress');
+			$ajaxContainer.css('cursor', 'progress');
 			$ajaxContainer.html('Loading...');
 			$.get(ajaxUrl)
 				.done(function (data) {
@@ -80,7 +80,7 @@ var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 					$ajaxContainer.html('Error');
 				})
 				.always(function () {
-					$ajaxContainer.css('cursor','auto');
+					$ajaxContainer.css('cursor', 'auto');
 				});
 		});
 	});

@@ -18,7 +18,7 @@ namespace Demovox;
  * Plugin Name:       demovox
  * Plugin URI:        https://demovox.ch/
  * Description:       demovox is a tool to collect signatures for Swiss popular initiatives by offering the visitor a personalized signature sheet.
- * Version:           1.3.1
+ * Version:           1.3.2
  * Author:            Fabian Horlacher / SP Schweiz
  * Author URI:        https://www.spschweiz.ch/
  * GitHub Plugin URI: https://github.com/spschweiz/demovox
@@ -38,7 +38,7 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('DEMOVOX_VERSION', '1.3.1');
+define('DEMOVOX_VERSION', '1.3.2');
 
 /**
  * The code that runs during plugin activation.
@@ -74,7 +74,7 @@ register_activation_hook(__FILE__, '\Demovox\activateDemovox');
 register_deactivation_hook(__FILE__, '\Demovox\deactivateDemovox');
 register_uninstall_hook(__FILE__, '\Demovox\uninstallDemovox');
 
-/** §1
+/**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
@@ -91,7 +91,6 @@ require plugin_dir_path(__FILE__) . 'includes/Core.php';
  */
 function runDemovox()
 {
-
 	$plugin = new Core();
 	$plugin->run();
 }

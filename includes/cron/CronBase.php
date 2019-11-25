@@ -12,11 +12,15 @@ class CronBase
 	public function __construct()
 	{
 		list($namespace, $className) = explode('\\', get_class($this));
-		$cronId = strtolower(preg_replace(
-			'/(?<=[a-z])([A-Z]+)/', '_$1', $className
-		));
+		$cronId          = strtolower(
+			preg_replace(
+				'/(?<=[a-z])([A-Z]+)/',
+				'_$1',
+				$className
+			)
+		);
 		$this->namespace = $namespace;
-		$this->cronId = $cronId;
+		$this->cronId    = $cronId;
 		$this->className = $className;
 		return;
 	}
@@ -64,6 +68,7 @@ class CronBase
 
 	/**
 	 * TODO: recognize old tasks as not running
+	 *
 	 * @return mixed
 	 */
 	public function isRunning()
@@ -82,7 +87,11 @@ class CronBase
 		return $this->getOption('lastSkipped');
 	}
 
-	public function setStatusMessage($msg, $success = true)
+	/**
+	 * @param string $msg
+	 * @param bool   $success
+	 */
+	public function setStateMessage($msg, $success = true)
 	{
 		$this->setOption('statusMsg', $msg);
 		$this->setOption('statusSuccess', $success);
@@ -112,7 +121,7 @@ class CronBase
 		$this->setOption('start', time());
 		$this->setOption('lastSkipped', null);
 		$this->setOption('lastFailed', null);
-		$this->setStatusMessage(null);
+		$this->setStateMessage(null);
 	}
 
 	public function cancelRunning()
@@ -126,7 +135,7 @@ class CronBase
 	{
 		Core::logMessage('Cron ' . $this->className . ' execution skipped. Reason: ' . $reason, 'notice');
 		$this->setOption('lastSkipped', time());
-		$this->setStatusMessage($reason);
+		$this->setStateMessage($reason);
 	}
 
 	protected function setRunningStop()
@@ -136,13 +145,18 @@ class CronBase
 		$this->setOption('stop', time());
 	}
 
+	/**
+	 * @param string $msg
+	 * @param string $level
+	 */
 	protected function log($msg, $level = 'error')
 	{
 		Core::logMessage('Cron ' . $this->className . ' message: ' . $msg, $level);
 	}
 
 	/**
-	 * @param  string $id
+	 * @param string $id
+	 *
 	 * @return mixed Value set for the option.
 	 */
 	protected function getOption($id)
@@ -154,7 +168,8 @@ class CronBase
 	 * Update or set option
 	 *
 	 * @param string $id
-	 * @param mixed $value
+	 * @param mixed  $value
+	 *
 	 * @return bool success
 	 */
 	protected function setOption($id, $value)

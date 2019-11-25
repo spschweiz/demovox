@@ -60,7 +60,12 @@ Download required packages:
 ```
 npm install
 npm install grunt-cli sass -g
-composer install
+composer install --no-dev
+```
+### Required packages for test
+```
+composer install --no-dev
+bin/install-wp-tests.sh
 ```
 
 ### Generate assets
@@ -86,7 +91,12 @@ open the Advanced settings of the plugin in the WordPress backend and disable "R
 
 ### Running the tests
 
-There are no automated tests available yet, feel free to implement them and send a pull-request.
+There are just a few PHPUnit tests available yet, feel free to contribute some and send a pull-request to increase the test coverage.
+```
+grunt phpunit
+# or
+libs/composer/phpunit/phpunit/phpunit --bootstrap tests/phpunit/bootstrap.php tests/phpunit/
+```
 
 ## Changelog
 

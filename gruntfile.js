@@ -142,6 +142,16 @@ module.exports = function (grunt) {
 			public: [pubCss + '*.css', pubCss + '*.map', pubJs + '*.min.js', pubJs + '*.map',],
 			admin: [adminCss + '*.css', adminCss + '*.map', adminJs + 'demovox-admin.min.js', adminJs + 'Chart.*',],
 		},
+		phpunit: {
+			classes: {
+				dir: 'tests/php/'
+			},
+			options: {
+				bin: 'libs/composer/phpunit/phpunit/phpunit',
+				bootstrap: 'tests/phpunit/bootstrap.php',
+				colors: true
+			}
+		},
 		checkwpversion: {
 			options: {
 				//Options specifying location your plug-in's header and readme.txt
@@ -173,6 +183,8 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-sass');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-checkwpversion');
+
+	grunt.loadNpmTasks('grunt-phpunit');
 
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-copy');

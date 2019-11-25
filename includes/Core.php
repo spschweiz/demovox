@@ -79,7 +79,7 @@ class Core
 
 	public function run()
 	{
-		$this->loadDependencies();
+		self::loadDependencies();
 		$this->setLocale();
 
 		if (is_admin()) {
@@ -113,7 +113,7 @@ class Core
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function loadDependencies()
+	public static function loadDependencies()
 	{
 		$pluginDir = self::getPluginDir();
 

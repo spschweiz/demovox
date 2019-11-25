@@ -171,4 +171,11 @@ class Activator
 		}
 		return false;
 	}
+
+	public static function createTables(): void
+	{
+		foreach (self::$tableDefinitions as $tableName => $sql) {
+			$update = Db::createUpdateTable($sql, $tableName);
+		}
+	}
 }

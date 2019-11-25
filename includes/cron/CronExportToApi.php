@@ -23,10 +23,13 @@ class CronExportToApi extends CronBase
 		$this->setRunningStop();
 	}
 
+	/**
+	 * @param string $url
+	 */
 	protected function exportPendingRows($url)
 	{
 		if (substr($url, 0, 8) !== 'https://') {
-			$this->setStatusMessage(
+			$this->setStateMessage(
 				'Configuration value "Export URL" should start with "https://" but the current value "' . $url . '" doesn\'t',
 				false
 			);
@@ -36,7 +39,7 @@ class CronExportToApi extends CronBase
 		$dataJson = Config::getValue('api_export_data');
 		$data     = json_decode($dataJson);
 		if (!is_object($data)) {
-			$this->setStatusMessage('Configuration value "Export Data" is not a valid JSON ' . print_r($data) . '#' . $dataJson, false);
+			$this->setStateMessage('Configuration value "Export Data" is not a valid JSON ' . print_r($data) . '#' . $dataJson, false);
 			return;
 		}
 
@@ -52,13 +55,13 @@ class CronExportToApi extends CronBase
 		$countFailed = count($rows) - $count;
 		$msg         = 'Exported ' . $count . ' signatures'
 					   . ($countFailed ? ' and ' . $countFailed . ' failed! Please check log for details.' : '');
-		$this->setStatusMessage($msg);
+		$this->setStateMessage($msg);
 	}
 
 	/**
-	 * @param $row
-	 * @param $url
-	 * @param $data
+	 * @param DbSignatures $row
+	 * @param string $url
+	 * @param array $data
 	 *
 	 * @return int
 	 */

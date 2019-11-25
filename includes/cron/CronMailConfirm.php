@@ -2,7 +2,7 @@
 
 namespace Demovox;
 
-class CronMailConfirm extends CronBase
+class CronMailConfirm extends CronMailBase
 {
 	public function run()
 	{
@@ -39,11 +39,11 @@ class CronMailConfirm extends CronBase
 			$this->sendMail($row);
 		}
 
-		$this->setStatusMessage('Sent ' . count($rows) . ' mails');
+		$this->setStateMessage('Sent ' . count($rows) . ' mails');
 	}
 
 	/**
-	 * @param $row
+	 * @param DbSignatures $row
 	 */
 	protected function sendMail($row)
 	{
@@ -64,4 +64,5 @@ class CronMailConfirm extends CronBase
 			$isSent ? 'notice' : 'error'
 		);
 	}
+
 }

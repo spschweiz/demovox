@@ -18,10 +18,10 @@ class Db
 	/**
 	 * @var null|string
 	 */
-	protected static $tableName = null;
+	protected $tableName = null;
 	private static $fieldNameEncrypted = 'is_encrypted';
 	/**
-	 * Before adding field here, check if it is set with self::update(). If yes, $isEncrypted has to be passed
+	 * Before adding field here, check if it is set with $this->update(). If yes, $isEncrypted has to be passed
 	 *
 	 * @var array
 	 */
@@ -51,11 +51,11 @@ class Db
 	 *
 	 * @return object|null Database query results
 	 */
-	public static function getRow($select, $where = null, $sqlAppend = null)
+	public function getRow($select, $where = null, $sqlAppend = null)
 	{
 		global $wpdb;
 
-		$sql = self::prepareSelect($select);
+		$sql = $this->prepareSelect($select);
 		if ($where) {
 			$sql .= " WHERE " . $where;
 		}
@@ -63,7 +63,7 @@ class Db
 			$sql .= ' ' . $sqlAppend;
 		}
 		$row = $wpdb->get_row($sql);
-		$row = self::decryptRow($row);
+		$row = $this->decryptRow($row);
 
 		return $row;
 	}
@@ -77,10 +77,10 @@ class Db
 	 *
 	 * @return array|object|null Database query results
 	 */
-	public static function getResults($select, $where = null, $sqlAppend = null)
+	public function getResults($select, $where = null, $sqlAppend = null)
 	{
 		global $wpdb;
-		$sql = self::prepareSelect($select);
+		$sql = $this->prepareSelect($select);
 		if ($where) {
 			$sql .= ' WHERE ' . $where;
 		}
@@ -89,7 +89,7 @@ class Db
 		}
 		$results = $wpdb->get_results($sql);
 		foreach ($results as &$result) {
-			$result = self::decryptRow($result);
+			$result = $this->decryptRow($result);
 		}
 		return $results;
 	}
@@ -101,13 +101,13 @@ class Db
 	 *
 	 * @return int
 	 */
-	public static function count($where = null)
+	public function count($where = null)
 	{
 		global $wpdb;
 		if ($where !== null) {
 			$where = 'WHERE ' . $where;
 		}
-		$tableName = self::getTableName();
+		$tableName = $this->getTableName();
 		$count     = $wpdb->get_var('SELECT COUNT(ID) as count FROM `' . $tableName . '`' . $where);
 		return intval($count);
 	}
@@ -119,12 +119,12 @@ class Db
 	 *
 	 * @return int|false The number of rows updated, or false on error.
 	 */
-	public static function delete($where = null)
+	public function delete($where = null)
 	{
 		global $wpdb;
-		$tableName = self::getTableName();
+		$tableName = $this->getTableName();
 		if ($tableName === self::TABLE_SIGN) {
-			return self::updateStatus(['is_deleted' => 1], $where);
+			return $this->updateStatus(['is_deleted' => 1], $where);
 		} else {
 			return $wpdb->delete($tableName, $where);
 		}
@@ -135,19 +135,19 @@ class Db
 	 *
 	 * @return false|int
 	 */
-	public static function insert($data)
+	public function insert($data)
 	{
 		global $wpdb;
-		if (self::isTableEncAllowed()) {
+		if ($this->isTableEncAllowed()) {
 			if (Crypt::isEncryptionEnabled()) {
 				$data[self::$fieldNameEncrypted] = Crypt::getEncryptionMode();
-				$data                            = self::encryptRow($data);
+				$data                            = $this->encryptRow($data);
 			} else {
 				$data[self::$fieldNameEncrypted] = 0;
 			}
 		}
 		return $wpdb->insert(
-			self::getTableName(),
+			$this->getTableName(),
 			$data
 		);
 	}
@@ -159,30 +159,41 @@ class Db
 	 *
 	 * @return false|int
 	 */
-	public static function update($data, $where, $isEncrypted)
+	public function update($data, $where, $isEncrypted)
 	{
 		global $wpdb;
-		if ($isEncrypted && self::isTableEncAllowed()) {
-			$data = self::encryptRow($data);
+		if ($isEncrypted && $this->isTableEncAllowed()) {
+			$data = $this->encryptRow($data);
 		}
 		return $wpdb->update(
-			self::getTableName(),
+			$this->getTableName(),
 			$data,
 			$where
 		);
 	}
 
 	/**
-	 * Update status fields which don't require encryption
+	 * Update status fields (avoid encryption)
 	 *
 	 * @param array $data
 	 * @param array $where
 	 *
 	 * @return false|int
 	 */
-	public static function updateStatus($data, $where)
+	public function updateStatus($data, $where)
 	{
-		return self::update($data, $where, false);
+		return $this->update($data, $where, false);
+	}
+
+	/**
+	 * Truncate table
+	 *
+	 * @return bool success
+	 */
+	public function truncate()
+	{
+		global $wpdb;
+		return $wpdb->query('TRUNCATE TABLE ' . $this->getTableName());
 	}
 
 	/**
@@ -208,10 +219,11 @@ class Db
 	 *                                  random way Never quote field names
 	 *                                  "It is always safe to ensure that all keyword are separated by one space and between each commas
 	 *                                  there shouldn't be any spacing" https://www.hungred.com/how-to/wordpress-dbdelta-function/
+	 * @param string $tableName
 	 *
 	 * @return array
 	 */
-	static function createUpdateTable($tableDefinition, $tableName)
+	public static function createUpdateTable($tableDefinition, $tableName)
 	{
 		global $wpdb;
 		$charsetCollate = $wpdb->get_charset_collate();
@@ -241,20 +253,23 @@ class Db
 	/**
 	 * @return string
 	 */
-	public static function getTableName()
+	public function getTableName()
 	{
-		if (self::$tableName === null) {
-			throw new \Exception('Table ID not set');
+		if ($this->tableName === null) {
+			throw new \BadMethodCallException('Table ID not set');
 		}
-		return self::$tableName;
+		return $this->tableName;
 	}
 
-	protected static function isTableEncAllowed()
+	/**
+	 * @return bool
+	 */
+	protected function isTableEncAllowed()
 	{
-		if (self::$tableName === null) {
-			throw new \Exception('Table ID not set');
+		if ($this->tableName === null) {
+			throw new \BadMethodCallException('Table ID not set');
 		}
-		return self::$tableName === self::TABLE_SIGN;
+		return $this->tableName === self::TABLE_SIGN;
 	}
 
 	/**
@@ -264,9 +279,9 @@ class Db
 	 *
 	 * @return string
 	 */
-	protected static function prepareSelect($select)
+	protected function prepareSelect($select)
 	{
-		if (self::isTableEncAllowed()) {
+		if ($this->isTableEncAllowed()) {
 			$decryptRequired = false;
 			foreach ($select as $fieldName) {
 				if (in_array($fieldName, self::$encryptFields)) {
@@ -281,7 +296,7 @@ class Db
 			}
 		}
 
-		$tableName = self::getTableName();
+		$tableName = $this->getTableName();
 		$select    = implode(', ', $select);
 		$sql       = 'SELECT ' . $select . ' FROM ' . $tableName;
 
@@ -293,7 +308,7 @@ class Db
 	 *
 	 * @return array|object|null
 	 */
-	protected static function decryptRow($row)
+	protected function decryptRow($row)
 	{
 		$isEncrypted = false;
 		if (is_object($row)) {
@@ -317,7 +332,7 @@ class Db
 	 *
 	 * @return array
 	 */
-	protected static function encryptRow($row)
+	protected function encryptRow($row)
 	{
 		foreach ($row as $fieldName => &$value) {
 			if ($value && in_array($fieldName, self::$encryptFields)) {
