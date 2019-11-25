@@ -173,7 +173,7 @@ $(() => {
 		stop = (typeof stop !== 'undefined') ? stop : false;
 		$cont = (typeof $cont !== 'undefined') ? $cont : $('body');
 		$cont.css('cursor', stop ? 'auto' : 'progress');
-		console.log('ajaxIsLoading', stop ? 'auto' : 'progress');
+		trace('ajaxIsLoading', stop ? 'auto' : 'progress');
 	}
 
 	function getAdressDataSuccess(ajaxData) {
