@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^4.3.1",
-    "chart.js": "^2.9.2",
+    "chart.js": "^2.9.3",
     "file-saver": "^2.0.2",
     "grunt-po2mo": "^0.1.2",
     "grunt-pot": "^0.3.0",
@@ -19,9 +19,10 @@
     "jquery": "^3.4.1",
     "parsleyjs": "^2.9.1",
     "pdf-lib": "1.2.1",
-    "print-js": "^1.0.61",
+    "popper.js": "^1.16.0",
+    "print-js": "^1.0.63",
     "qr-image": "^3.2.0",
-    "select2": "^4.0.11"
+    "select2": "^4.0.12"
   },
   "devDependencies": {
     "css-loader": "^3.2.0",
