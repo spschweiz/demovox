@@ -114,7 +114,7 @@ class InitPublic extends BaseController
 			$this->getVersion(),
 			false
 		);
-		wp_localize_script($this->getPluginName(), 'demovox', $demovoxJsArr);
+		wp_localize_script($this->getPluginName(), 'demovoxAdminData', $demovoxJsArr);
 	}
 
 	public function startSession()

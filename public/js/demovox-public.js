@@ -83,7 +83,7 @@ $(() => {
 					break;
 				case 3:// gde
 					// search term
-					if (demovox.apiAddressGdeSelect) {
+					if (demovoxAdminData.apiAddressGdeSelect) {
 						gde_name = params.term;
 					}
 					break;
@@ -93,7 +93,7 @@ $(() => {
 			zip: zip,
 			street: street,
 			street_no: street_no,
-			api_key: demovox.apiAddressKey,
+			api_key: demovoxAdminData.apiAddressKey,
 			city: city,
 			gde_name: gde_name,
 		}
@@ -147,7 +147,7 @@ $(() => {
 		} else {
 			let reqData = getReqData(reqSource);
 			callApiRequest = $.ajax({
-				url: demovox.apiAddressUrl,
+				url: demovoxAdminData.apiAddressUrl,
 				type: 'POST',
 				data: reqData,
 				dataType: 'json',
@@ -233,10 +233,10 @@ $(() => {
 	}
 
 	function submitDemovoxForm() {
-		let formData = $el.form.serialize() + '&nonce=' + demovox.nonce;
+		let formData = $el.form.serialize() + '&nonce=' + demovoxAdminData.nonce;
 		let redirect = false, replace = true;
 		if (currentPage === 2) {
-			if (demovox.successPageRedir) {
+			if (demovoxAdminData.successPageRedir) {
 				redirect = true;
 				formData += '&redirect=true';
 			}
@@ -246,7 +246,7 @@ $(() => {
 		}
 		$.ajax({
 			method: "POST",
-			url: demovox.ajaxUrl,
+			url: demovoxAdminData.ajaxUrl,
 			data: formData,
 			beforeSend: function() {
 				ajaxIsLoading();
@@ -315,7 +315,7 @@ $(() => {
 		}
 
 		if (currentPage === 1 || currentPage === 2 || currentPage === 'opt-in') {
-			window.ParsleyValidator.setLocale(demovox.language);
+			window.ParsleyValidator.setLocale(demovoxAdminData.language);
 			$el.form.parsley()
 				.on('form:submit', function () {
 					submitDemovoxForm();
@@ -355,8 +355,8 @@ $(() => {
 							$country.find('option:eq(0)').text('Data is being loaded...');
 							$.ajax({
 								type: 'POST',
-								url: demovox.ajaxUrl,
-								data: {action: 'demovox_countries', 'nonce': demovox.nonce,},
+								url: demovoxAdminData.ajaxUrl,
+								data: {action: 'demovox_countries', 'nonce': demovoxAdminData.nonce,},
 								dataType: 'json',
 								success: function (data) {
 									const s2data = $.map(data, function (value, index) {
@@ -391,7 +391,7 @@ $(() => {
 			}
 		}
 
-		if (currentPage === 2 && demovox.apiAddressEnabled) {
+		if (currentPage === 2 && demovoxAdminData.apiAddressEnabled) {
 			$el.city = $('#city');
 			$el.gdeName = $('#gde_name');
 			$el.gdeId = $('#gde_id');
@@ -400,7 +400,7 @@ $(() => {
 			$el.city.select2({
 				tags: true,
 				ajax: {
-					url: demovox.apiAddressUrl,
+					url: demovoxAdminData.apiAddressUrl,
 					delay: 300,
 					type: 'POST',
 					dataType: 'json',
@@ -428,7 +428,7 @@ $(() => {
 					},
 					cache: true,
 				},
-				minimumResultsForSearch: demovox.apiAddressCityInput ? 0 : -1,
+				minimumResultsForSearch: demovoxAdminData.apiAddressCityInput ? 0 : -1,
 				createTag: createCity,
 			});
 
@@ -436,7 +436,7 @@ $(() => {
 				tags: true,
 				//tokenSeparators: [','],
 				ajax: {
-					url: demovox.apiAddressUrl,
+					url: demovoxAdminData.apiAddressUrl,
 					delay: 300,
 					type: 'POST',
 					// contentType: 'application/json; charset=utf-8',
@@ -469,7 +469,7 @@ $(() => {
 					},
 					cache: true,
 				},
-				minimumResultsForSearch: demovox.apiAddressGdeInput ? 0 : -1,
+				minimumResultsForSearch: demovoxAdminData.apiAddressGdeInput ? 0 : -1,
 				createTag: createGde,
 			});
 
