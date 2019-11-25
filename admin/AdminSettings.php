@@ -153,10 +153,11 @@ class AdminSettings extends BaseController
 			$page = $sections[$field['section']]['page'];
 			$id = Core::getWpId($field['uid']);
 			$fieldType = isset($field['type']) ? $field['type'] : null;
+			$args      = isset($field['default']) ? ['default' => $field['default']] : [];
 			switch ($fieldType) {
 				default:
 					add_settings_field($id, $field['label'], $callback, $page, $field['section'], $field);
-					register_setting($page, $id);
+					register_setting($page, $id, $args);
 					break;
 				case'pos_rot':
 					add_settings_field(
@@ -167,13 +168,16 @@ class AdminSettings extends BaseController
 						$field['section'],
 						$field
 					);
-					register_setting($page, $id . Config::GLUE_PART . Config::PART_POS_X);
-					register_setting($page, $id . Config::GLUE_PART . Config::PART_POS_Y);
-					register_setting($page, $id . Config::GLUE_PART . Config::PART_ROTATION);
+					$argX   = isset($field['defaultX']) ? ['default' => $field['defaultX']] : [];
+					$argY   = isset($field['defaultY']) ? ['default' => $field['defaultY']] : [];
+					$argRot = isset($field['defaultRot']) ? ['default' => $field['defaultRot']] : [];
+					register_setting($page, $id . Config::GLUE_PART . Config::PART_POS_X, $argX);
+					register_setting($page, $id . Config::GLUE_PART . Config::PART_POS_Y, $argY);
+					register_setting($page, $id . Config::GLUE_PART . Config::PART_ROTATION, $argRot);
 					break;
 				case'wpPage':
 					add_settings_field($id, $field['label'], $callback, $page, $field['section'], $field);
-					register_setting($page, $id);
+					register_setting($page, $id, $args);
 					register_setting($page, $id . Config::GLUE_PART . Config::PART_PREVIOUS_LANG);
 					break;
 			}
