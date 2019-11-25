@@ -86,11 +86,10 @@ class Core
 			require_once Infos::getPluginDir() . 'admin/InitAdmin.php';
 			$admin = new InitAdmin($this->pluginName, $this->version);
 			$admin->run();
-		} else {
-			require_once Infos::getPluginDir() . 'public/InitPublic.php';
-			$public = new InitPublic($this->pluginName, $this->version);
-			$public->run();
 		}
+		require_once Infos::getPluginDir() . 'public/InitPublic.php';
+		$public = new InitPublic($this->pluginName, $this->version);
+		$public->run();
 
 		ManageCron::registerHooks();
 
