@@ -25,7 +25,7 @@ class TestsBootstrap
 	function testLoadDependencies()
 	{
 		$pluginDir = $this->getPluginDir();
-		require_once $pluginDir . 'includes/core.php';
+		require_once $pluginDir . 'includes/Core.php';
 		Core::loadDependencies();
 
 		ManageCron::loadDependencies();
