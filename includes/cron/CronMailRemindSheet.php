@@ -49,7 +49,7 @@ class CronMailRemindSheet extends CronMailBase
 
 			if ($this->isDedup) {
 				$rowMail                      = $row;
-				$row                          = $dbMailDd->getRow($this->colsSign, 'ID = ' . $rowMail->sign_ID);
+				$row                          = $dbSign->getRow($this->colsSign, 'ID = ' . $rowMail->sign_ID);
 				$row->state_remind_sheet_sent = $rowMail->state_remind_sheet_sent;
 				if ($row->is_deleted) {
 					$dbSign->delete(['ID' => $rowMail->ID]);
@@ -58,7 +58,7 @@ class CronMailRemindSheet extends CronMailBase
 
 				$isSent = $this->sendMail($row);
 
-				$dbSign->updateStatus(['state_remind_sheet_sent' => $isSent], ['ID' => $rowMail->ID]);
+				$dbMailDd->updateStatus(['state_remind_sheet_sent' => $isSent], ['ID' => $rowMail->ID]);
 			} else {
 				$this->sendMail($row);
 			}
