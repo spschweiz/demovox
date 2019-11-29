@@ -30,7 +30,7 @@ If you want to use this Plugin for a Swiss Referendum or a Initiative consider a
 
 ## Requirements
 
-* PHP >= 7.0
+* PHP >= 7.0 (feature "Hashid" requires >= 7.1.3)
 * MySQL >= 5.6.5
 * WordPress >= 4.9
 * SSL certificate for HTTPS (unsecure connection is only allowed for development)

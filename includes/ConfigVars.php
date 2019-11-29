@@ -218,7 +218,7 @@ class ConfigVars
 			'type'         => 'select',
 			'options'      => [
 				'disabled'       => 'Disabled',
-				'hashids'        => 'Hashids (5 chars alphanumeric. GMP or BC Math required)',
+				'hashids'        => 'Hashids (5 chars alphanumeric. PHP 7.1.3 and module GMP or BC Math required)',
 				'BaseIntEncoder' => 'BaseIntEncoder (1-4 chars alphanumeric, no obfuscation, BC Math required)',
 				'PseudoCrypt'    => 'PseudoCrypt (1-5 chars alphanumeric, confusable letters incl, BC Math required)',
 				'id'             => 'ID (no obfuscation)',
