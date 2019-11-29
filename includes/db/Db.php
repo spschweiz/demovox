@@ -195,6 +195,16 @@ class Db
 		global $wpdb;
 		return $wpdb->query('TRUNCATE TABLE ' . $this->getTableName());
 	}
+	/**
+	 * Truncate table
+	 *
+	 * @return bool success
+	 */
+	public static function query($sql)
+	{
+		global $wpdb;
+		return $wpdb->query($sql);
+	}
 
 	/**
 	 * @return int

@@ -8,7 +8,7 @@ class DbMailDedup extends Db
 	/** @var int */
 	public $ID, $sign_ID;
 	/** @var string */
-	public  $mail;
+	public $mail_md5;
 	/** @var int */
 	public $is_step2_done, $is_sheet_received, $state_remind_sheet_sent, $state_remind_signup_sent;
 	/** @var string */
@@ -36,13 +36,13 @@ class DbMailDedup extends Db
 				'state_remind_sheet_sent',
 				'state_remind_signup_sent',
 			],
-			"mail = '" . $hashedMail . "'"
+			"mail_md5 = '" . $hashedMail . "'"
 		);
 
 		if (!$mailRow) {
 			$setMailData = [
 				'sign_ID'                  => $row->ID,
-				'mail'                     => $hashedMail,
+				'mail_md5'                 => $hashedMail,
 				'creation_date'            => $row->creation_date,
 				'is_step2_done'            => $row->is_step2_done ? 1 : 0,
 				'is_sheet_received'        => $row->is_sheet_received ? 1 : 0,

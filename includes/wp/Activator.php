@@ -25,7 +25,7 @@ namespace Demovox;
 class Activator
 {
 	private static $tableDefinitions = [
-		Db::TABLE_SIGN => '
+		Db::TABLE_SIGN  => '
           ID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
           guid char(36) NOT NULL,
           serial char(6) NULL,
@@ -69,7 +69,7 @@ class Activator
 		Db::TABLE_MAILS => '
           ID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
           sign_ID bigint(20) UNSIGNED NOT NULL,
-          mail varchar(424) NOT NULL,
+          mail_md5 char(32) NOT NULL,
           creation_date datetime NOT NULL,
           is_step2_done tinyint(4) DEFAULT 0 NOT NULL,
           is_sheet_received tinyint(4) DEFAULT 0 NOT NULL,
@@ -77,7 +77,7 @@ class Activator
           state_remind_signup_sent tinyint(4) DEFAULT 0 NOT NULL,
           PRIMARY KEY (ID),
           UNIQUE KEY sign_ID_index (sign_ID),
-          UNIQUE KEY mail_index (mail),
+          UNIQUE KEY mail_index (mail_md5),
           INDEX creation_date_index (creation_date)',
 	];
 
@@ -90,11 +90,57 @@ class Activator
 	 */
 	public static function activate()
 	{
+		self::upgradeTables();
+
 		self::createTables();
 
 		ManageCron::activate();
 
-		// Create pages
+		self::createPages();
+
+		self::createCapabilities();
+	}
+
+	/**
+	 * @param $post Post to check if visible
+	 *
+	 * @return bool
+	 */
+	protected static function isPostVisible($post)
+	{
+		if (!empty($post)) {
+			$post_info = get_post($post);
+			if (!$post_info) {
+				return false;
+			}
+			$status = $post_info->post_status;
+
+			return $status !== 'trash';
+		}
+		return false;
+	}
+
+	public static function createTables(): void
+	{
+		foreach (self::$tableDefinitions as $tableName => $sql) {
+			$updates = Db::createUpdateTable($sql, $tableName);
+		}
+	}
+
+	protected static function upgradeTables(): void
+	{
+		if(!Db::query("SHOW TABLES LIKE 'demovox_mails';")){
+			return;
+		}
+		if (Db::query("SHOW COLUMNS FROM `wp_demovox_mails` LIKE 'mail'")) {
+			// previous version was < 1.3.3
+			$update = "ALTER TABLE wp_demovox_mails CHANGE COLUMN mail mail_md5 CHAR(32);";
+			Db::query($update);
+		}
+	}
+
+	protected static function createPages(): void
+	{
 		$signatureSheetPageId = Core::getOption('signature_sheet_page_id');
 		if (!self::isPostVisible($signatureSheetPageId)) {
 			$content              = '<p>' . __('Almost there', 'demovox') . '</p>';
@@ -133,8 +179,10 @@ class Activator
 			$optinPageId = wp_insert_post($post_data);
 			Config::setValue('use_page_as_optin_link', $optinPageId);
 		}
+	}
 
-		// create capabilities
+	protected static function createCapabilities(): void
+	{
 		$role = get_role('super admin');
 		if ($role) {
 			$role->add_cap('demovox_overview');
@@ -151,31 +199,5 @@ class Activator
 		$role->add_cap('demovox_overview');
 		$role->add_cap('demovox_stats');
 		$role->add_cap('demovox_import');
-	}
-
-	/**
-	 * @param $post Post to check if visible
-	 *
-	 * @return bool
-	 */
-	protected static function isPostVisible($post)
-	{
-		if (!empty($post)) {
-			$post_info = get_post($post);
-			if (!$post_info) {
-				return false;
-			}
-			$status = $post_info->post_status;
-
-			return $status !== 'trash';
-		}
-		return false;
-	}
-
-	public static function createTables(): void
-	{
-		foreach (self::$tableDefinitions as $tableName => $sql) {
-			$update = Db::createUpdateTable($sql, $tableName);
-		}
 	}
 }
