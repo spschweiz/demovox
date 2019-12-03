@@ -3,30 +3,21 @@
 [![Demovox](assets/logo-demovox-small.png?raw=true "Demovox")](https://demovox.ch)
 # Demovox (dev readme)
 
-[![open issues](https://img.shields.io/github/issues/spschweiz/demovox?logo=GitHub)](https://github.com/spschweiz/demovox/issues)
+[![Build Status](https://travis-ci.org/spschweiz/demovox.svg?branch=master)](https://travis-ci.org/spschweiz/demovox)
+[![open bugs](https://img.shields.io/github/issues/spschweiz/demovox/bug?label=bugs&logo=GitHub)](https://github.com/spschweiz/demovox/issues)
 [![last commit](https://img.shields.io/github/last-commit/spschweiz/demovox?logo=GitHub)](https://github.com/spschweiz/demovox/issues)
 [![WordPress plugin downloads](https://img.shields.io/wordpress/plugin/dt/demovox?logo=WordPress)](https://wordpress.org/plugins/demovox/)
 [![WordPress plugin version](https://img.shields.io/wordpress/plugin/v/demovox?label=plugin&logo=WordPress)](https://wordpress.org/plugins/demovox/)
 [![WordPress tested version](https://img.shields.io/wordpress/plugin/tested/demovox?logo=WordPress)](https://wordpress.org/plugins/demovox/)
 
-We use Github to maintain our Code.
-
-Install the the WordPress plugin [demovox](https://wordpress.org/plugins/demovox/) from within the Plugin manager of your WordPress installation.
-
-If you want to install the plugin manually from a prebuilt Zip-File, visit [our Website](https://demovox.ch) and download it from there.
-
 ## Description
 
 demovox is a tool to collect signatures for Swiss popular initiatives by offering the visitor a personalized signature sheet.
 
-It was initially built for the popular initiative [Prämien-Entlastungs-Initiative](https://bezahlbare-praemien.ch).
+This Plugin was developed by the [Socialist Party of Switzerland](https://www.sp-ps.ch), it was initially built for the popular initiative [Prämien-Entlastungs-Initiative](https://bezahlbare-praemien.ch).
 
 ## Donations
-
-This Plugin was developed by the [Socialist Party of Switzerland](https://www.sp-ps.ch).
-
-If you want to use this Plugin for a Swiss Referendum or a Initiative consider a donation at https://demovox.ch
-
+If this plugin is of help for you, please consider a [donation](https://demovox.ch). 
 
 ## Requirements
 
@@ -36,15 +27,21 @@ If you want to use this Plugin for a Swiss Referendum or a Initiative consider a
 * SSL certificate for HTTPS (unsecure connection is only allowed for development)
 * Optional feature requires the PHP modules "GMP" or "BC Math"
 
-## Installation
+## Installation (production)
 
-1. Pull `demovox` to the Wordpress Plugin directory (/wp-content/plugins/)
+Simply install the the WordPress plugin [demovox](https://wordpress.org/plugins/demovox/) from within the Plugin manager of your WordPress installation. You can find the admin manual or the prebuilt Zip-File for manual installation on [demovox.ch](https://demovox.ch).
+
+## Dev
+
+Please send a pull request for any improvements on the plugin. 
+
+### Installation
+
+1. Pull `demovox` from within the Wordpress Plugin directory (/wp-content/plugins/)
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Configure the plugin in WordPress admin
 4. Place shortcodes [demovox_form] on a page
 5. Optionally use and [demovox_count] to get the number of collected signatures and [demovox_optin] for the opt-in form.
-
-## Dev
 
 ### Required packages
 
@@ -107,7 +104,7 @@ See README.txt
 - [@Horlacher](https://github.com/Horlacher) - Initial work
 - [@tsueri](https://github.com/tsueri) - Testing, website [demovox.ch](https://demovox.ch)
 - [@dbu](https://github.com/dbu) - Code review
-- [@sweleck](https://github.com/sweleck) - Contributions
+- [@sweleck](https://github.com/sweleck) - Contribution
 
 See also the list of [contributors](https://github.com/spschweiz/demovox/contributors) who participated in this project.
 
