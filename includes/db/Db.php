@@ -237,7 +237,7 @@ class Db
 	{
 		global $wpdb;
 		$charsetCollate = $wpdb->get_charset_collate();
-		$sql            = 'CREATE TABLE ' . $tableName . ' (' . $tableDefinition . ') ' . $charsetCollate . ';';
+		$sql            = 'CREATE TABLE ' . $wpdb->prefix . $tableName . ' (' . $tableDefinition . ') ' . $charsetCollate . ';';
 
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 		$dbResult = dbDelta($sql);
@@ -251,10 +251,10 @@ class Db
 	{
 		global $wpdb;
 
-		$tableName = self::TABLE_SIGN;
+		$tableName = $wpdb->prefix . self::TABLE_SIGN;
 		$drop      = $wpdb->query("DROP TABLE IF EXISTS `{$tableName}`");
 
-		$tableNameMail = self::TABLE_MAILS;
+		$tableNameMail = $wpdb->prefix . self::TABLE_MAILS;
 		$dropMail      = $wpdb->query("DROP TABLE IF EXISTS `{$tableNameMail}`");
 
 		return $drop && $dropMail;
@@ -265,10 +265,11 @@ class Db
 	 */
 	public function getTableName()
 	{
+		global $wpdb;
 		if ($this->tableName === null) {
 			throw new \BadMethodCallException('Table ID not set');
 		}
-		return $this->tableName;
+		return $wpdb->prefix . $this->tableName;
 	}
 
 	/**

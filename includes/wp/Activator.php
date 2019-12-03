@@ -90,9 +90,7 @@ class Activator
 	 */
 	public static function activate()
 	{
-		self::upgradeTables();
-
-		self::createTables();
+		self::activateDb();
 
 		ManageCron::activate();
 
@@ -120,7 +118,13 @@ class Activator
 		return false;
 	}
 
-	public static function createTables(): void
+	public static function activateDb(): void
+	{
+		self::upgradeTables();
+		self::createTables();
+	}
+
+	protected static function createTables(): void
 	{
 		foreach (self::$tableDefinitions as $tableName => $sql) {
 			$updates = Db::createUpdateTable($sql, $tableName);
@@ -129,12 +133,16 @@ class Activator
 
 	protected static function upgradeTables(): void
 	{
-		if(!Db::query("SHOW TABLES LIKE 'demovox_mails';")){
+		$dbSign     = new DbSignatures;
+		$dbSignName = $dbSign->getTableName();
+		if (!Db::query("SHOW TABLES LIKE '$dbSignName';")) {
 			return;
 		}
-		if (Db::query("SHOW COLUMNS FROM `wp_demovox_mails` LIKE 'mail'")) {
+		$dbMailDd = new DbMailDedup;
+		$dbMailDdName = $dbMailDd->getTableName();
+		if (Db::query("SHOW COLUMNS FROM `$dbMailDdName` LIKE 'mail'")) {
 			// previous version was < 1.3.3
-			$update = "ALTER TABLE wp_demovox_mails CHANGE COLUMN mail mail_md5 CHAR(32);";
+			$update = "ALTER TABLE $dbMailDdName CHANGE COLUMN mail mail_md5 CHAR(32);";
 			Db::query($update);
 		}
 	}

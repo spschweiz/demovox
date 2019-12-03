@@ -33,7 +33,7 @@ class TestsBootstrap
 		require_once $pluginDir . 'admin/AdminSettings.php';
 
 		require_once $pluginDir . 'includes/wp/Activator.php';
-		Activator::createTables();
+		Activator::activateDb();
 
 		require_once $pluginDir . 'tests/phpunit/TestBase.php';
 	}
