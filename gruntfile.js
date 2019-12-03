@@ -183,7 +183,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-sass');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-checkwpversion');
-
+	grunt.loadNpmTasks('grunt-composer');
 	grunt.loadNpmTasks('grunt-phpunit');
 
 	grunt.loadNpmTasks('grunt-contrib-clean');
@@ -195,11 +195,14 @@ module.exports = function (grunt) {
 
 	// define Tasks
 	grunt.registerTask('default', 'availabletasks');
+	grunt.registerTask('test', [
+		'composer:install', 'phpunit',
+	]);
 	grunt.registerTask('buildAssets', [
 		'checkDependencies', 'clean', 'webpack:prod', 'copy:adminAssets', 'uglify', 'sass', 'cssmin', 'po2mo',
 	]);
 	grunt.registerTask('build', [
-		'buildAssets', 'mkdir:build', 'copy:buildDir', 'clean:buildComposer',
+		'buildAssets', 'composer:install:no-dev', 'mkdir:build', 'copy:buildDir', 'clean:buildComposer',
 	]);
 	grunt.registerTask('buildZip', [
 		'build', 'compress', 'clean:build',

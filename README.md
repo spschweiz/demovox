@@ -59,11 +59,6 @@ npm install
 npm install grunt-cli sass -g
 composer install --no-dev
 ```
-### Required packages for test
-```
-composer install --no-dev
-bin/install-wp-tests.sh
-```
 
 ### Generate assets
 
@@ -81,19 +76,23 @@ Create a ZIP which can be uploaded to a remote WordPress installation:
 grunt buildZip
 ```
 
-### Unencrypted access
-
-As developer you might want to work on a web server without SSL configured. Enable `WP_DEBUG` in `wp-config.php`. Then
-open the Advanced settings of the plugin in the WordPress backend and disable "Redirect clients to secure HTTPS".
+### Required packages for tests
+```
+composer install
+bin/install-wp-tests.sh  <db-name> <db-user> <db-pass> [db-host]
+```
 
 ### Running the tests
 
 There are just a few PHPUnit tests available yet, feel free to contribute some and send a pull-request to increase the test coverage.
 ```
-grunt phpunit
-# or
-libs/composer/phpunit/phpunit/phpunit --bootstrap tests/phpunit/bootstrap.php tests/phpunit/
+grunt test
 ```
+
+### Unencrypted access
+
+As a developer you might want to work on a web server without SSL configured. Enable `WP_DEBUG` in `wp-config.php`. Then
+open the Advanced settings of the plugin in the WordPress backend and disable "Redirect clients to secure HTTPS".
 
 ## Changelog
 
