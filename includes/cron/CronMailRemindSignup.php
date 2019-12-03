@@ -99,7 +99,6 @@ class CronMailRemindSignup extends CronMailBase
 	 */
 	public function getPending(): array
 	{
-		$dbSign = new DbSignatures();
 		$minAge  = intval(Config::getValue('mail_remind_signup_min_age'));
 		$maxDate = date("Y-m-d", strtotime($minAge . ' day ago'));
 		$where   = "creation_date < '{$maxDate}' AND is_step2_done = 0 "
@@ -108,12 +107,14 @@ class CronMailRemindSignup extends CronMailBase
 		$sqlAppend = 'ORDER BY ID ASC LIMIT ' . $this->limitPerExecution;
 
 		if ($this->isDedup) {
-			$rows     = $dbSign->getResults(
+			$dbMailDd = new DbMailDedup();
+			$rows     = $dbMailDd->getResults(
 				['ID', 'sign_ID', 'state_remind_signup_sent'],
 				$where,
 				$sqlAppend
 			);
 		} else {
+			$dbSign = new DbSignatures();
 			$where  .= ' AND is_deleted = 0 AND is_outside_scope = 0';
 			$rows   = $dbSign->getResults($this->colsSign, $where, $sqlAppend);
 		}
