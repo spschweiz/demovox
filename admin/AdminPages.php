@@ -43,7 +43,7 @@ class AdminPages extends BaseController
 		$page = 'demovoxData';
 		$dbSign = new DbSignatures();
 		$countOptin = $dbSign->count(DbSignatures::WHERE_OPTIN);
-		$countFinished = $dbSign->count($dbSign->WHERE_FINISHED_IN_SCOPE);
+		$countFinished = $dbSign->count(DbSignatures::WHERE_FINISHED_IN_SCOPE);
 		$countOutsideScope = $dbSign->count(DbSignatures::WHERE_FINISHED_OUT_SCOPE);
 		$countUnfinished = $dbSign->count(DbSignatures::WHERE_UNFINISHED);
 		$countDeleted = $dbSign->count(DbSignatures::WHERE_DELETED);
