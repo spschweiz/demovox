@@ -89,7 +89,7 @@ namespace Demovox;
 	if ($phpShowErrors) {
 		$phpErr = true;
 		?>
-		<h4 class="error">show errors is enabled</h4>
+		<h4 class="error">PHP display_errors is enabled</h4>
 		<p>
 			PHP stack traces can display the arguments passed to methods on the call stack.<br/>
 			The value of encryption passwords and other personally sensitive data may be leaked out to an attacker.
