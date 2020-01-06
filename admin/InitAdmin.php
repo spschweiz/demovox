@@ -142,13 +142,6 @@ class InitAdmin extends BaseController
 			false
 		);
 		wp_enqueue_script(
-			$this->getPluginName() . '_chart',
-			plugin_dir_url(__FILE__) . 'js/Chart.bundle.min.js',
-			[],
-			$this->getVersion(),
-			false
-		);
-		wp_enqueue_script(
 			$this->getPluginName() . '_pdf',
 			plugin_dir_url(__FILE__) . '../public/js/demovox-public-pdf.min.js',
 			['jquery'],

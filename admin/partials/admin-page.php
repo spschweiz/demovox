@@ -71,11 +71,10 @@ namespace Demovox;
 							'rgba(255,99,132,1)'
 						],
 					}],
-					// These labels appear in the legend and in the tooltips when hovering different arcs
 				},
 				options = {},
 				ctxPie = document.getElementById("pieChart");
-			var pieChart = new Chart(ctxPie, {
+			var pieChart = new demovoxChart(ctxPie, {
 				type: 'pie',
 				data: dataPie,
 				options: options

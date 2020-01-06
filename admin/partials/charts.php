@@ -71,7 +71,7 @@ namespace Demovox;
 
 	$(function () {
 		var ctxDate = document.getElementById("dateChart"),
-			dateChart = new Chart(ctxDate, {
+			dateChart = new demovoxChart(ctxDate, {
 				type: 'line',
 				data: data,
 				options: options

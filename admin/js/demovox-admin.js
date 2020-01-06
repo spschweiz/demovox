@@ -1,4 +1,6 @@
+import demovoxChart from 'chart.js'
 var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
+
 (function ($) {
 	'use strict';
 
@@ -173,3 +175,5 @@ var demovoxAdminClass = {
 		return new Date(year, monthIndex, day);
 	}
 };
+global.demovoxChart = demovoxChart;
+global.demovoxAdminClass = demovoxAdminClass;

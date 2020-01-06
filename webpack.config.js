@@ -1,13 +1,17 @@
 const path = require('path');
 
 module.exports = {
-	entry:{
+	entry: {
+		admin: './admin/js/demovox-admin.js',
 		public: './public/js/demovox-public.js',
 		'public-pdf': './public/js/demovox-public-pdf.js'
 	},
 	output: {
-		path: path.resolve(__dirname + '/public/js'),
-		filename: 'demovox-[name].min.js'
+		path: path.resolve(__dirname),
+		filename: (chunkData) => {
+			return (chunkData.chunk.name === 'admin' ? '/admin' : '/public') + '/js/demovox-[name].min.js';
+		},
+		// filename: 'demovox-[name].min.js'
 	},
 	module: {
 		rules: [

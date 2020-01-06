@@ -14,12 +14,6 @@ module.exports = function (grunt) {
 				files: [{
 					expand: true,
 					cwd: 'node_modules/chart.js/dist',
-					src: '*.js',
-					dest: adminJs,
-					filter: 'isFile'
-				}, {
-					expand: true,
-					cwd: 'node_modules/chart.js/dist',
 					src: '*.css',
 					dest: adminCss,
 					filter: 'isFile'
@@ -81,13 +75,6 @@ module.exports = function (grunt) {
 			prod: webpackPubConfig,
 			dev: Object.assign({watch: true}, webpackPubConfig),
 		},
-		uglify: {
-			admin: {
-				files: {
-					[adminJs + 'demovox-admin.min.js']: [adminJs + 'demovox-admin.js']
-				}
-			}
-		},
 		sass: {
 			dist: {
 				options: {
@@ -140,7 +127,7 @@ module.exports = function (grunt) {
 			],
 			buildWpOrg: ['buildWpOrg/',],
 			public: [pubCss + '*.css', pubCss + '*.map', pubJs + '*.min.js', pubJs + '*.map',],
-			admin: [adminCss + '*.css', adminCss + '*.map', adminJs + 'demovox-admin.min.js', adminJs + 'Chart.*',],
+			admin: [adminCss + '*.css', adminCss + '*.map', adminJs + 'demovox-admin.min.js',],
 		},
 		phpunit: {
 			classes: {
@@ -179,9 +166,9 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-check-dependencies');
 
 	grunt.loadNpmTasks('grunt-webpack');
-	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-sass');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
+
 	grunt.loadNpmTasks('grunt-checkwpversion');
 	grunt.loadNpmTasks('grunt-composer');
 	grunt.loadNpmTasks('grunt-phpunit');
@@ -199,7 +186,7 @@ module.exports = function (grunt) {
 		'composer:install', 'phpunit',
 	]);
 	grunt.registerTask('buildAssets', [
-		'checkDependencies', 'clean', 'webpack:prod', 'copy:adminAssets', 'uglify', 'sass', 'cssmin', 'po2mo',
+		'checkDependencies', 'clean', 'webpack:prod', 'copy:adminAssets', 'sass', 'cssmin', 'po2mo',
 	]);
 	grunt.registerTask('build', [
 		'buildAssets', 'composer:install:no-dev', 'mkdir:build', 'copy:buildDir', 'clean:buildComposer',
