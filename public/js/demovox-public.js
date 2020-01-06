@@ -510,6 +510,12 @@ $(() => {
 		});
 	}
 
+	function track(name, value) {
+		if (demovoxData.analyticsMatomo) {
+			_paq.push(['demovox', 'trackEvent', name, value]);
+		}
+	}
+
 	function trace(msg1, msg2) {
 		//console.log(msg1, msg2);
 	}

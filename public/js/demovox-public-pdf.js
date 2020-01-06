@@ -29,6 +29,7 @@ $(() => {
 			if (this.status === 200) {
 				// response is unsigned 8 bit integer
 				if (typeof this.response !== 'object' || this.response.constructor !== ArrayBuffer) {
+					track('downloaded file is defective');
 					showContainer('error', '<strong>PDF invalid</strong> Please try again later or contact the site owner, who should check the JavaScript console');
 					console.error('Loaded PDF is invalid. Url: ' + pdfUrl);
 					return;
@@ -39,15 +40,18 @@ $(() => {
 					await embedPdf(title, pdfDoc);
 					showContainer('ok');
 				} catch (e) {
+					track('generation failed');
 					showContainer('error', '<strong>PDF generation failed</strong> Please try again later or contact the site owner');
 					console.error(e);
 				}
 			} else {
+				track('download failed (' + this.status + ')');
 				showContainer('error', '<strong>PDF download failed</strong> Please try again later or contact the site owner');
 				console.error('Could not load PDF. HTTP status: ' + this.status + ' Url: ' + pdfUrl);
 			}
 		};
 		xhr.onerror = async function () {
+			track('download failed (Network error)');
 			showContainer('error', '<strong>PDF download failed</strong> Please try again later or contact the site owner, who should check the JavaScript console');
 			console.error('Could not load PDF. Network error, for example server was not found or CORS error occurred. Url: ' + pdfUrl);
 		};
@@ -131,6 +135,15 @@ $(() => {
 	}
 
 	/**
+	 * @param msg string
+	 */
+	function track(value) {
+		if (demovoxData.analyticsMatomo) {
+			_paq.push(['demovox', 'trackEvent', 'pdf', value]);
+		}
+	}
+
+	/**
 	 * @param title string
 	 * @param pdfDoc {PDFDocument}
 	 * @returns {Promise<void>}
@@ -144,7 +157,9 @@ $(() => {
 			$container.find('.pdf-print').click(function () {
 				try {
 					printJS({printable: b64, type: 'pdf', base64: true,});
+					track('print');
 				} catch (e) {
+					track('print failed');
 					console.log(e, blob);
 					throw 'PDFError';
 				}
@@ -155,12 +170,14 @@ $(() => {
 			let filename = title.replace(' ', '_') + '.pdf';
 			$container.find('.pdf-download').click(function () {
 				FileSaver.saveAs(blob, filename);
+				track('save');
 			});
 		}
 
 		if ($container.find('.pdf-iframe').length) {
 			let url = window.URL.createObjectURL(blob);
 			$container.find('.pdf-iframe').prop('src', url).show();
+			track('show in iFrame');
 		}
 	}
 });

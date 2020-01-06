@@ -91,6 +91,7 @@ class InitPublic extends BaseController
 			'nonce'             => Core::createNonce($this->nonceId),
 			'apiAddressEnabled' => '',
 			'successPageRedir'  => $successPage || $successPage === '0',
+			'analyticsMatomo'   => Config::getValue('analytics_matomo'),
 		];
 		if ($apiAddressUrl = Config::getValue('api_address_url')) {
 			$demovoxJsArr['apiAddressEnabled']   = 1;

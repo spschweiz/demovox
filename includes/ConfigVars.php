@@ -86,6 +86,10 @@ class ConfigVars
 			'page'  => 'demovoxFields5',
 			'sub'   => 'Used to export signup data to a REST API of a CRM (server-side based submission, HTTPS required!).',
 		],
+		'analytics'               => [
+			'title' => 'Analytics',
+			'page'  => 'demovoxFields5',
+		],
 		'danger'               => [
 			'title' => 'Danger area',
 			'page'  => 'demovoxFields5',
@@ -446,6 +450,14 @@ class ConfigVars
 			'class'        => 'showOnApiExport',
 			'default'      => 0,
 			'supplemental' => 'Also export signatures without optin',
+		],
+		[
+			'uid'          => 'analytics_matomo',
+			'label'        => 'Matomo',
+			'section'      => 'analytics',
+			'type'         => 'checkbox',
+			'default'      => 0,
+			'supplemental' => 'Send tracking events to a Matomo script, which has to be embedded on the website',
 		],
 		[
 			'uid'          => 'drop_config_on_uninstall',
