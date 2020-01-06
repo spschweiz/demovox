@@ -63,18 +63,6 @@ class ConfigVars
 			'title' => 'Email sender',
 			'page'  => 'demovoxFields4',
 		],
-		'security'             => [
-			'title' => 'Security',
-			'page'  => 'demovoxFields5',
-		],
-		'mailConfig'           => [
-			'title' => 'Email engine / server',
-			'page'  => 'demovoxFields5',
-		],
-		'cron'                 => [
-			'title' => 'Cron',
-			'page'  => 'demovoxFields5',
-		],
 		'api_address'          => [
 			'title' => 'Address lookup API',
 			'page'  => 'demovoxFields5',
@@ -86,13 +74,25 @@ class ConfigVars
 			'page'  => 'demovoxFields5',
 			'sub'   => 'Used to export signup data to a REST API of a CRM (server-side based submission, HTTPS required!).',
 		],
+		'security'             => [
+			'title' => 'Security',
+			'page'  => 'demovoxFields6',
+		],
+		'mailConfig'           => [
+			'title' => 'Email engine / server',
+			'page'  => 'demovoxFields6',
+		],
+		'cron'                 => [
+			'title' => 'Cron',
+			'page'  => 'demovoxFields6',
+		],
 		'analytics'               => [
 			'title' => 'Analytics',
-			'page'  => 'demovoxFields5',
+			'page'  => 'demovoxFields6',
 		],
 		'danger'               => [
 			'title' => 'Danger area',
-			'page'  => 'demovoxFields5',
+			'page'  => 'demovoxFields6',
 			'sub'   => 'This is where you can enable the dangerous stuff',
 		],
 	];

@@ -22,6 +22,7 @@ class AdminSettings extends BaseController
 			'Success page',
 			'Signature sheet',
 			'Email',
+			'API',
 			'Advanced',
 		];
 		$firstTab = array_keys($tabs);
@@ -68,6 +69,12 @@ class AdminSettings extends BaseController
 	{
 		$page = 'demovoxFields5';
 		include Infos::getPluginDir() . 'admin/partials-settings/settings-5.php';
+	}
+
+	public function pageSettings6()
+	{
+		$page = 'demovoxFields6';
+		include Infos::getPluginDir() . 'admin/partials-settings/settings-6.php';
 	}
 
 	public function setupSections()

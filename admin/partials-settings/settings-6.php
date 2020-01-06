@@ -14,6 +14,6 @@ $this->doSettingsSections($page);
 submit_button();
 ?>
 <script>
-	demovoxAdminClass.hideOnVal($('#demovox_api_address_url'), $('.showOnApiAddress'), '');
-	demovoxAdminClass.hideOnVal($('#demovox_api_export_url'), $('.showOnApiExport'), '');
+	demovoxAdminClass.hideOnVal($('#demovox_encrypt_signees'), $('.showOnEncrypt'), 'disabled');
+	demovoxAdminClass.showOnVal($('#demovox_mail_method'), $('.showOnMethodSmtp'), 'smtp');
 </script>
