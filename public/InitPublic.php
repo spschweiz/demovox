@@ -8,6 +8,7 @@ class InitPublic extends BaseController
 	 * @var PublicHandler
 	 */
 	protected $publicHandler;
+
 	public function run()
 	{
 		$this->loadDependencies();
@@ -114,7 +115,7 @@ class InitPublic extends BaseController
 			$this->getVersion(),
 			false
 		);
-		wp_localize_script($this->getPluginName(), 'demovoxAdminData', $demovoxJsArr);
+		wp_localize_script($this->getPluginName(), 'demovoxData', $demovoxJsArr);
 	}
 
 	public function startSession()

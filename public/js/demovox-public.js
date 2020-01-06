@@ -83,7 +83,7 @@ $(() => {
 					break;
 				case 3:// gde
 					// search term
-					if (demovoxAdminData.apiAddressGdeSelect) {
+					if (demovoxData.apiAddressGdeSelect) {
 						gde_name = params.term;
 					}
 					break;
@@ -93,7 +93,7 @@ $(() => {
 			zip: zip,
 			street: street,
 			street_no: street_no,
-			api_key: demovoxAdminData.apiAddressKey,
+			api_key: demovoxData.apiAddressKey,
 			city: city,
 			gde_name: gde_name,
 		}
@@ -147,7 +147,7 @@ $(() => {
 		} else {
 			let reqData = getReqData(reqSource);
 			callApiRequest = $.ajax({
-				url: demovoxAdminData.apiAddressUrl,
+				url: demovoxData.apiAddressUrl,
 				type: 'POST',
 				data: reqData,
 				dataType: 'json',
@@ -233,10 +233,10 @@ $(() => {
 	}
 
 	function submitDemovoxForm() {
-		let formData = $el.form.serialize() + '&nonce=' + demovoxAdminData.nonce;
+		let formData = $el.form.serialize() + '&nonce=' + demovoxData.nonce;
 		let redirect = false, replace = true;
 		if (currentPage === 2) {
-			if (demovoxAdminData.successPageRedir) {
+			if (demovoxData.successPageRedir) {
 				redirect = true;
 				formData += '&redirect=true';
 			}
@@ -246,7 +246,7 @@ $(() => {
 		}
 		$.ajax({
 			method: "POST",
-			url: demovoxAdminData.ajaxUrl,
+			url: demovoxData.ajaxUrl,
 			data: formData,
 			beforeSend: function() {
 				ajaxIsLoading();
@@ -315,9 +315,10 @@ $(() => {
 		}
 
 		if (currentPage === 1 || currentPage === 2 || currentPage === 'opt-in') {
-			window.ParsleyValidator.setLocale(demovoxAdminData.language);
+			window.ParsleyValidator.setLocale(demovoxData.language);
 			$el.form.parsley()
 				.on('form:submit', function () {
+					track('SubmitForm', currentPage);
 					submitDemovoxForm();
 					return false;
 				});
@@ -355,8 +356,8 @@ $(() => {
 							$country.find('option:eq(0)').text('Data is being loaded...');
 							$.ajax({
 								type: 'POST',
-								url: demovoxAdminData.ajaxUrl,
-								data: {action: 'demovox_countries', 'nonce': demovoxAdminData.nonce,},
+								url: demovoxData.ajaxUrl,
+								data: {action: 'demovox_countries', 'nonce': demovoxData.nonce,},
 								dataType: 'json',
 								success: function (data) {
 									const s2data = $.map(data, function (value, index) {
@@ -391,7 +392,7 @@ $(() => {
 			}
 		}
 
-		if (currentPage === 2 && demovoxAdminData.apiAddressEnabled) {
+		if (currentPage === 2 && demovoxData.apiAddressEnabled) {
 			$el.city = $('#city');
 			$el.gdeName = $('#gde_name');
 			$el.gdeId = $('#gde_id');
@@ -400,7 +401,7 @@ $(() => {
 			$el.city.select2({
 				tags: true,
 				ajax: {
-					url: demovoxAdminData.apiAddressUrl,
+					url: demovoxData.apiAddressUrl,
 					delay: 300,
 					type: 'POST',
 					dataType: 'json',
@@ -428,7 +429,7 @@ $(() => {
 					},
 					cache: true,
 				},
-				minimumResultsForSearch: demovoxAdminData.apiAddressCityInput ? 0 : -1,
+				minimumResultsForSearch: demovoxData.apiAddressCityInput ? 0 : -1,
 				createTag: createCity,
 			});
 
@@ -436,7 +437,7 @@ $(() => {
 				tags: true,
 				//tokenSeparators: [','],
 				ajax: {
-					url: demovoxAdminData.apiAddressUrl,
+					url: demovoxData.apiAddressUrl,
 					delay: 300,
 					type: 'POST',
 					// contentType: 'application/json; charset=utf-8',
@@ -469,7 +470,7 @@ $(() => {
 					},
 					cache: true,
 				},
-				minimumResultsForSearch: demovoxAdminData.apiAddressGdeInput ? 0 : -1,
+				minimumResultsForSearch: demovoxData.apiAddressGdeInput ? 0 : -1,
 				createTag: createGde,
 			});
 
