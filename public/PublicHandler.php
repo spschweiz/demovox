@@ -160,14 +160,9 @@ class PublicHandler extends BaseController
 	protected function signStep($nr)
 	{
 		$pluginDir = Infos::getPluginDir();
-		if (Infos::isNoEc6()) {
-			ob_start();
 
-			$pdfUrl = Config::getValueByUserlang('signature_sheet');
-			include $pluginDir . 'public/partials/fallback.php';
-
-			$output = ob_get_clean();
-			return $output;
+		if ($this->isRequireFallback($nr)) {
+			return $this->showFallback($pluginDir);
 		}
 
 		require_once $pluginDir . 'public/SignSteps.php';
@@ -187,6 +182,22 @@ class PublicHandler extends BaseController
 				$sign->step3($guid);
 				break;
 		}
+		$output = ob_get_clean();
+		return $output;
+	}
+
+	protected function isRequireFallback($nr)
+	{
+		return $nr === 3 && Infos::isNoEc6();
+	}
+
+	protected function showFallback($pluginDir)
+	{
+		ob_start();
+
+		$pdfUrl = Config::getValueByUserlang('signature_sheet');
+		include $pluginDir . 'public/partials/fallback.php';
+
 		$output = ob_get_clean();
 		return $output;
 	}
