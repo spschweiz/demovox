@@ -131,7 +131,7 @@ class DbSignatures extends Db
 	{
 		switch ($type) {
 			case DbSignatures::WHERE_OPTIN:
-				$where = 'is_optin <> 0 AND is_deleted = 0';
+				$where = 'is_optin = 1 AND is_deleted = 0';
 				break;
 			case DbSignatures::WHERE_FINISHED:
 				$where = 'is_step2_done <> 0 AND is_deleted = 0';

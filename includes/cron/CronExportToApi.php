@@ -107,7 +107,7 @@ class CronExportToApi extends CronBase
 		$fields = array_merge(['ID', 'is_exported'], self::$fields);
 		$where  = 'is_exported <= 0 AND is_exported > -3 AND is_step2_done = 1 AND is_deleted = 0';
 		if (!Config::getValue('api_export_no_optin')) {
-			$where .= ' AND IS_OPTIN = 1';
+			$where .= ' AND is_optin = 1';
 		}
 		$maxMails = intval(Config::getValue('api_export_max_per_execution')) ?: 25;
 		$dbSign   = new DbSignatures();

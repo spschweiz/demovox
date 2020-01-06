@@ -22,6 +22,7 @@ class AdminPages extends BaseController
 		$userLang = Infos::getUserLanguage();
 		$countOptin = $dbSign->count('is_optin = 1 AND is_step2_done = 1 AND is_deleted = 0');
 		$countOptout = $dbSign->count('is_optin = 0 AND is_step2_done = 1 AND is_deleted = 0');
+		$countOptNULL = $dbSign->count('is_optin IS NULL AND is_step2_done = 1 AND is_deleted = 0');
 		$countUnfinished = $dbSign->count('is_step2_done = 0 AND is_deleted = 0');
 		include Infos::getPluginDir() . 'admin/partials/admin-page.php';
 	}
@@ -119,16 +120,23 @@ class AdminPages extends BaseController
 			['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
 			'is_optin = 0 AND is_step2_done = 1 AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)'
 		);
+		$countDategroupedOn = $dbSign->getResults(
+			['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
+			'is_optin IS NULL AND is_step2_done = 1 AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)'
+		);
 		$countDategroupedC = $dbSign->getResults(
 			['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
 			'is_step2_done = 0 AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)'
 		);
-		$datesetsOi = $datesetsOo = $datesetsC = '';
+		$datesetsOi = $datesetsOo = $datesetsOn = $datesetsC = '';
 		foreach ($countDategroupedOi as $row) {
 			$datesetsOi .= '{t:demovoxAdminClass.nDate(' . $row->date . '),y:' . intval($row->count) . '},';
 		}
 		foreach ($countDategroupedOo as $row) {
 			$datesetsOo .= '{t:demovoxAdminClass.nDate(' . $row->date . '),y:' . intval($row->count) . '},';
+		}
+		foreach ($countDategroupedOn as $row) {
+			$datesetsOn .= '{t:demovoxAdminClass.nDate(' . $row->date . '),y:' . intval($row->count) . '},';
 		}
 		foreach ($countDategroupedC as $row) {
 			$datesetsC .= '{t:demovoxAdminClass.nDate(' . $row->date . '),y:' . intval($row->count) . '},';

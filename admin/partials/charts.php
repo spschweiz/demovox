@@ -4,6 +4,7 @@ namespace Demovox;
  * @var AdminPages $this
  * @var string     $datesetsOi
  * @var string     $datesetsOo
+ * @var string     $datesetsOn
  * @var string     $datesetsC
  */
 ?>
@@ -31,6 +32,17 @@ namespace Demovox;
 					],
 					label: 'Opt-out',
 					data: [<?= $datesetsOo ?>],
+					spanGaps: false
+				},
+				{
+					backgroundColor: [
+						'rgba(68,78,255, 0.2)'
+					],
+					borderColor: [
+						'rgb(68,78,255, 1)'
+					],
+					label: 'No opt-in info',
+					data: [<?= $datesetsOn ?>],
 					spanGaps: false
 				},
 				{
