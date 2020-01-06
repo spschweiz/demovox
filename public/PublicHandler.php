@@ -125,6 +125,14 @@ class PublicHandler extends BaseController
 	{
 		$this->requireHttps();
 
+		if (isset($_REQUEST['action'])) {
+			if ($_REQUEST['action'] == 'demovox_step2') { // ajax failed
+				return $this->signStep(2);
+			} elseif ($_REQUEST['action'] == 'demovox_step3') {
+				return $this->signStep(3);
+			}
+		}
+
 		if (isset($_REQUEST['sign']) && !empty($_REQUEST['sign'])) {
 			return $this->signStep(3);
 		} else {

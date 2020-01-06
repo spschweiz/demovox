@@ -24,7 +24,7 @@ class SignSteps
 
 	protected function saveStep1()
 	{
-		$dbSign = new DbSignatures();
+		$dbSign    = new DbSignatures();
 		$lang      = Infos::getUserLanguage();
 		$src       = sanitize_text_field($_REQUEST['src']);
 		$nameFirst = sanitize_text_field($_REQUEST['name_first']);
@@ -81,9 +81,9 @@ class SignSteps
 
 		// Prepare view variables
 		$textOptin         = Config::getValueByUserlang('text_optin');
-		$apiAddressEnabled = !empty(Config::getValue('api_address_url'));
+		$apiAddressEnabled = !empty(Config::getValue('api_address_url')) && !Infos::isNoEc6();
 		$cantons           = i18n::$cantons;
-		$allowSwissAbroad  = Config::getValue('swiss_abroad_allow');
+		$allowSwissAbroad  = Config::getValue('swiss_abroad_allow') && !Infos::isNoEc6();
 
 		// Render view
 		include Infos::getPluginDir() . 'public/partials/sign-2.php';
@@ -128,15 +128,23 @@ class SignSteps
 		}
 		if (
 			preg_match('/^([0-2]?[0-9]|3[0-2])\.(0?[1-9]|1[0-2])\.\d{2,4}$/', $birthDate) === false
-			|| $birthDateParsed['year'] === false || $birthDateParsed['month'] === false || $birthDateParsed['day'] === false
-			|| strlen($street) < 4 || strlen($street) > 127
-			|| strlen($streetNo) < 1 || strlen($streetNo) > 5
-			|| strlen($zip) < 4 || strlen($zip) > 16
-			|| strlen($city) < 2 || strlen($city) > 64
+			|| $birthDateParsed['year'] === false
+			|| $birthDateParsed['month'] === false
+			|| $birthDateParsed['day'] === false
+			|| strlen($street) < 4
+			|| strlen($street) > 127
+			|| strlen($streetNo) < 1
+			|| strlen($streetNo) > 5
+			|| strlen($zip) < 4
+			|| strlen($zip) > 16
+			|| strlen($city) < 2
+			|| strlen($city) > 64
 			|| strlen($gdeId) > 5
 			|| strlen($gdeZip) > 4
-			|| strlen($gdeName) < 2 || strlen($gdeName) > 45
-			|| !isset($gdeCanton) || empty($gdeCanton)
+			|| strlen($gdeName) < 2
+			|| strlen($gdeName) > 45
+			|| !isset($gdeCanton)
+			|| empty($gdeCanton)
 			|| !isset(i18n::$cantons[$gdeCanton])
 		) {
 			$formValues = [
@@ -237,7 +245,7 @@ class SignSteps
 	 */
 	public function step3($guid)
 	{
-		$dbSign = new DbSignatures();
+		$dbSign       = new DbSignatures();
 		$loadedByGuid = false;
 		$redirect     = isset($_REQUEST['redirect']) && $_REQUEST['redirect'];
 		if ($guid) {
@@ -398,7 +406,7 @@ class SignSteps
 
 	private function verifyNonce()
 	{
-		if (!wp_verify_nonce($_REQUEST['nonce'], $this->nonceId)) {
+		if (!isset($_REQUEST['nonce']) || !wp_verify_nonce($_REQUEST['nonce'], $this->nonceId)) {
 			Core::showError('nonce check failed', 401);
 		}
 	}

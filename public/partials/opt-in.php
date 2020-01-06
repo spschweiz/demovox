@@ -21,6 +21,7 @@ namespace Demovox;
 <div class="wrap">
 	<form method="post" id="demovox_form_opt-in" class="demovox" action="#">
 		<input name="action" type="hidden" value="demovox_optin">
+		<input name="nonce" type="hidden" value="<?= Core::createNonce($this->nonceId) ?>">
 		<input name="sign" type="hidden" value="<?= $guid ?>">
 		<div class="form-group">
 			<div class="form-check">

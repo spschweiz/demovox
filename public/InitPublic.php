@@ -88,7 +88,6 @@ class InitPublic extends BaseController
 		$demovoxJsArr = [
 			'language'          => Infos::getUserLanguage(),
 			'ajaxUrl'           => admin_url('admin-ajax.php'),
-			'nonce'             => Core::createNonce($this->nonceId),
 			'apiAddressEnabled' => '',
 			'successPageRedir'  => $successPage || $successPage === '0',
 			'analyticsMatomo'   => Config::getValue('analytics_matomo'),

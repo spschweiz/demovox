@@ -1,6 +1,5 @@
 /**
  * @typedef {Object} demovox
- * @property {string} nonce
  * @property {string} ajaxUrl
  * @property {string} apiAddressEnabled
  * @property {string} apiAddressKey
@@ -233,7 +232,7 @@ $(() => {
 	}
 
 	function submitDemovoxForm() {
-		let formData = $el.form.serialize() + '&nonce=' + demovoxData.nonce;
+		let formData = $el.form.serialize();
 		let redirect = false, replace = true;
 		if (currentPage === 2) {
 			if (demovoxData.successPageRedir) {
@@ -357,7 +356,7 @@ $(() => {
 							$.ajax({
 								type: 'POST',
 								url: demovoxData.ajaxUrl,
-								data: {action: 'demovox_countries', 'nonce': demovoxData.nonce,},
+								data: {action: 'demovox_countries',},
 								dataType: 'json',
 								success: function (data) {
 									const s2data = $.map(data, function (value, index) {
