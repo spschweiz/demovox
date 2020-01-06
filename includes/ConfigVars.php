@@ -296,7 +296,7 @@ class ConfigVars
 				'smtp'     => 'SMTP',
 				'sendmail' => 'sendmail',
 			],
-			'default' => 'mail',
+			'default' => 'wp_mail',
 		],
 		[
 			'uid'     => 'mail_smtp_host',
