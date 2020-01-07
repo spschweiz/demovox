@@ -9,8 +9,7 @@ namespace Demovox;
  */
 ?>
 <script>
-	var
-		data = {
+	var data = {
 			datasets: [
 				{
 					backgroundColor: [

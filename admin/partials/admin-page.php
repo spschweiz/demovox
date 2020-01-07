@@ -6,6 +6,7 @@ namespace Demovox;
  * @var int        $addCount
  * @var string     $userLang
  * @var int        $countOptin
+ * @var int        $countOptNULL
  * @var int        $countOptout
  * @var int        $countUnfinished
  */
@@ -60,7 +61,7 @@ namespace Demovox;
 						'Unfinished'
 					],
 					datasets: [{
-						data: [<?= $countOptin ?>,<?= $countOptout ?>,<?= $countOptNULL ?>, <?= $countUnfinished ?>],
+						data: [<?= $countOptin ?>, <?= $countOptout ?>, <?= $countOptNULL ?>, <?= $countUnfinished ?>],
 						backgroundColor: [
 							'rgba(0, 255, 99, 0.2)',
 							'rgba(255, 206, 86, 0.2)',

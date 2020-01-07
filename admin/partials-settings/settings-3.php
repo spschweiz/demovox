@@ -3,8 +3,8 @@
 namespace Demovox;
 
 /**
- * @var $this AdminSettings
- * @var $page string
+ * @var $this      AdminSettings
+ * @var $page      string
  * @var $languages array
  */
 ?>
