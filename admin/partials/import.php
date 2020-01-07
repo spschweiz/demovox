@@ -67,5 +67,7 @@ namespace Demovox;
 	</form>
 </div>
 <script>
-	demovoxAdminClass.showOnVal($('#csvFormat'), $('.showOnFormat1'), '1');
+	(function ($) {
+		demovoxAdminClass.showOnVal($('#csvFormat'), $('.showOnFormat1'), '1');
+	})(jQuery);
 </script>
