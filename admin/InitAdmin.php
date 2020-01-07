@@ -156,7 +156,7 @@ class InitAdmin extends BaseController
 				'text'  => 'Select',
 			],
 		];
-		wp_localize_script($this->getPluginName() . '_admin', 'demovoxAdminData', $demovoxJsArr);
+		wp_localize_script($this->getPluginName() . '_admin', 'demovoxData', $demovoxJsArr);
 	}
 
 	public function setupAdminMenu()
