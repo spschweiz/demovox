@@ -515,7 +515,7 @@ $(() => {
 				console.error('Matomo script was not found on the page, please disable this option in demovox settings');
 				return;
 			}
-			_paq.push(['demovox', 'trackEvent', name, value]);
+			_paq.push(['trackEvent', 'demovox', name, value]);
 		}
 	}
 
