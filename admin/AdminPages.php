@@ -275,6 +275,7 @@ class AdminPages extends BaseController
 		if (!$deliveryDate) {
 			return Strings::wpMessage('Error: Delivery date not defined or invalid', 'error');
 		}
+		$dbSign = new DbSignatures();
 
 		// Handle csv
 		$ok = 0;
