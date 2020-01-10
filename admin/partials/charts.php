@@ -80,13 +80,13 @@ namespace Demovox;
 			}
 		};
 
-	$(function () {
+	(function ($) {
+		demovoxAdminClass.hideOnVal($('#demovox_optin_mode'), $('.hideOnOptinDisabled'), 'disabled');
 		var ctxDate = document.getElementById("dateChart"),
 			dateChart = new demovoxChart(ctxDate, {
 				type: 'line',
 				data: data,
 				options: options
 			});
-		ctxDate.canvas.parentNode.style.height = '128px';
-	});
+	})(jQuery);
 </script>
