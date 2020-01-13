@@ -329,7 +329,7 @@ class AdminPages extends BaseController
 				$fail[] = $serial;
 				Core::logMessage(
 					'doCsvImport: Could not update ID = "' . $row->ID . '" (serial = "' . $serial . '): '
-					. Db::getError()
+					. Db::getLastError()
 				);
 			}
 		}

@@ -218,10 +218,19 @@ class Db
 	/**
 	 * @return string
 	 */
-	public static function getError()
+	public static function getLastError()
 	{
 		global $wpdb;
 		return $wpdb->last_error;
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getLastQuery()
+	{
+		global $wpdb;
+		return $wpdb->last_query;
 	}
 
 	/**

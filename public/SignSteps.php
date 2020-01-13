@@ -61,7 +61,7 @@ class SignSteps
 		}
 		$success = $dbSign->insert($data);
 		if (!$success) {
-			Core::showError('DB insert failed: ' . Db::getError(), 500);
+			Core::showError('DB insert failed: ' . Db::getLastError(), 500);
 		}
 		$signId     = Db::getInsertId();
 		$successUpd = $dbSign->updateStatus(
@@ -69,7 +69,7 @@ class SignSteps
 			['ID' => $signId]
 		);
 		if (!$successUpd) {
-			Core::logMessage('Could not save serial for ID=' . $signId . '. Reason:' . Db::getError());
+			Core::logMessage('Could not save serial for ID=' . $signId . '. Reason:' . Db::getLastError());
 		}
 		$this->setSessionVar('signId', $signId);
 	}
@@ -193,7 +193,7 @@ class SignSteps
 			$isEncrypted
 		);
 		if (!$success) {
-			Core::showError('DB update failed: ' . Db::getError(), 500);
+			Core::showError('DB update failed: ' . Db::getLastError(), 500);
 		}
 		return $data['link_success'];
 	}
