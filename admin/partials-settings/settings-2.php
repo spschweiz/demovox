@@ -15,7 +15,8 @@ $this->doSettingsSections($page);
 submit_button();
 ?>
 <script>
-	(function ($) {
+	(function (jQuery) {
+		window.$ = jQuery.noConflict();
 		demovoxAdminClass.hideOnVal($('#demovox_use_page_as_success'), $('.showOnRedirect'), '');
 		demovoxAdminClass.setOnVal($('#demovox_use_page_as_success'), $('#demovox_local_initiative_mode'), '', 'disabled');
 		demovoxAdminClass.showOnVal($('#demovox_local_initiative_mode'), $('.showOnLocalInitiativeCanton'), 'canton');

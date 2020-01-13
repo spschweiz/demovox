@@ -15,7 +15,8 @@ $this->doSettingsSections($page);
 submit_button();
 ?>
 <script>
-	(function ($) {
+	(function (jQuery) {
+		window.$ = jQuery.noConflict();
 		demovoxAdminClass.showOnChecked($('#demovox_swiss_abroad_allow'), $('.showOnSwissAbroadChecked'));
 		demovoxAdminClass.hideOnVal($('#demovox_field_qr_mode'), $('.showOnQr'), 'disabled');
 	})(jQuery);

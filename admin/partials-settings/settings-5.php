@@ -14,7 +14,8 @@ $this->doSettingsSections($page);
 submit_button();
 ?>
 <script>
-	(function ($) {
+	(function (jQuery) {
+		window.$ = jQuery.noConflict();
 		demovoxAdminClass.hideOnVal($('#demovox_api_address_url'), $('.showOnApiAddress'), '');
 		demovoxAdminClass.hideOnVal($('#demovox_api_export_url'), $('.showOnApiExport'), '');
 	})(jQuery);
