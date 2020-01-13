@@ -20,7 +20,7 @@ class DbMailDedup extends Db
 	/**
 	 * @param DbSignatures $row signature row
 	 *
-	 * @return bool|null inserted | null for errors
+	 * @return string|false 'insert' | 'update' | 'skip' | false for db errors
 	 */
 	public function importRow($row)
 	{
@@ -52,7 +52,7 @@ class DbMailDedup extends Db
 			$save        = $this->insert($setMailData);
 		} else {
 			if (!$mailRow->is_step2_done) {
-				return false;
+				return 'skip';
 			}
 			$setMailData                  = [];
 			$setMailData['sign_ID']       = $row->ID;
