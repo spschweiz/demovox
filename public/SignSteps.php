@@ -394,14 +394,12 @@ class SignSteps
 
 	private function setSessionVar($name, $value)
 	{
-		$ret = $_SESSION[$name] = $value;
-		return $ret;
+		return $_SESSION['demovox_' . $name] = $value;
 	}
 
 	private function getSessionVar($name)
 	{
-		$value = isset($_SESSION[$name]) ? $_SESSION[$name] : null;
-		return $value;
+		return isset($_SESSION['demovox_' . $name]) ? $_SESSION['demovox_' . $name] : null;
 	}
 
 	private function verifyNonce()
