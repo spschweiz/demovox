@@ -18,6 +18,7 @@ class SignSteps
 	public function step1()
 	{
 		$source    = isset($_REQUEST['src']) ? sanitize_text_field($_REQUEST['src']) : '';
+		$this->setSessionVar('source', $source);
 		$textOptin = Config::getValueByUserlang('text_optin');
 		include Infos::getPluginDir() . 'public/partials/sign-1.php';
 	}
@@ -26,7 +27,7 @@ class SignSteps
 	{
 		$dbSign    = new DbSignatures();
 		$lang      = Infos::getUserLanguage();
-		$src       = sanitize_text_field($_REQUEST['src']);
+		$source    = $this->getSessionVar('source');
 		$nameFirst = sanitize_text_field($_REQUEST['name_first']);
 		$nameLast  = sanitize_text_field($_REQUEST['name_last']);
 		$mail      = sanitize_email($_REQUEST['mail']);
@@ -52,8 +53,8 @@ class SignSteps
 		if (Config::getValue('save_ip') && Config::getValue('encrypt_signees') !== 'disabled') {
 			$data['ip_address'] = Infos::getClientIp();
 		}
-		if ($src) {
-			$data['source'] = $src;
+		if ($source) {
+			$data['source'] = $source;
 		}
 		if ($optinMode = $this->getOptinMode(1)) {
 			$optIn            = ($optinMode === 'optOut' || $optinMode === 'optOutChk') ? !$optIn : $optIn;

@@ -13,7 +13,6 @@ namespace Demovox;
  */
 /**
  * @var $this SignSteps
- * @var $source string
  * @var $textOptin int
  */
 ?>
@@ -21,7 +20,6 @@ namespace Demovox;
 	<form method="post" id="demovox_form_1" class="demovox" action="">
 		<input name="action" type="hidden" value="demovox_step2">
 		<input name="nonce" type="hidden" value="<?= Core::createNonce($this->nonceId) ?>">
-		<input name="src" type="hidden" value="<?= $source ?>">
 		<div class="form-group">
 			<label for="name_first"><?= __('First Name', 'demovox') ?></label>
 			<input name="name_first" id="name_first" autocomplete="given-name" class="form-control" type="text" minlength="3" maxlength="64" required="" pattern="[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}">
