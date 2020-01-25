@@ -93,6 +93,7 @@ class Core
 
 		ManageCron::registerHooks();
 
+		$this->storeSource();
 		$this->hardening();
 	}
 
@@ -185,6 +186,17 @@ class Core
 		ini_set('display_startup_errors', 0);
 	}
 
+	/**
+	 * Check for signature source "demovox_src" param globally
+	 */
+	public function storeSource()
+	{
+		$source = isset($_REQUEST['demovox_src']) ? sanitize_text_field($_REQUEST['demovox_src']) : '';
+		if ($source) {
+			Core::setSessionVar('source', $source);
+		}
+	}
+
 	private static $optionPrefix = 'demovox_';
 
 	/**
@@ -232,6 +244,16 @@ class Core
 	public static function delOption($id)
 	{
 		return delete_option(Core::getWpId($id));
+	}
+
+	public static function setSessionVar($name, $value)
+	{
+		return $_SESSION['demovox_' . $name] = $value;
+	}
+
+	public static function getSessionVar($name)
+	{
+		return isset($_SESSION['demovox_' . $name]) ? $_SESSION['demovox_' . $name] : null;
 	}
 
 	public static function createNonce($action = -1)

@@ -29,7 +29,7 @@ Allows many people to sign up at the same time, as it avoids high server loads b
 * Swiss abroad
 * Supports API for address completion and commune identification by a given address (optional)
 * Continuous export to REST API of your CRM
-* Counts how many signatures a referrer (signature source) has provided (link the signature page with a "src" param)
+* Counts how many signatures a signature source (referrer) has provided. (Call landing page with a "demovox_src" param and the source name as value, or just the "src" param on a landing page with the demovox sign shortcode.)
 
 [](http://coderisk.com/wp/plugin/demovox/RIPS-v2m1_L2-6s)
 
@@ -96,5 +96,8 @@ We do not provide any warranty or free support, but you're welcome to create an 
 * Matomo support for ajax and PDF actions
 * Code refactoring
 * Various bug fixes
+
+= 2.1 =
+* Global signature source parameter "demovox_src", which doesn't require the demovox sign shortcode on the landing page
 
 For more details, see our commit log: https://github.com/spschweiz/demovox/commits/master

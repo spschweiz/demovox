@@ -17,8 +17,6 @@ class SignSteps
 
 	public function step1()
 	{
-		$source = isset($_REQUEST['src']) ? sanitize_text_field($_REQUEST['src']) : '';
-		$this->setSessionVar('source', $source);
 		$textOptin = Config::getValueByUserlang('text_optin');
 		include Infos::getPluginDir() . 'public/partials/sign-1.php';
 	}
@@ -27,7 +25,7 @@ class SignSteps
 	{
 		$dbSign    = new DbSignatures();
 		$lang      = Infos::getUserLanguage();
-		$source    = $this->getSessionVar('source');
+		$source    = Core::getSessionVar('source');
 		$nameFirst = sanitize_text_field($_REQUEST['name_first']);
 		$nameLast  = sanitize_text_field($_REQUEST['name_last']);
 		$mail      = sanitize_email($_REQUEST['mail']);
@@ -72,7 +70,7 @@ class SignSteps
 		if (!$successUpd) {
 			Core::logMessage('Could not save serial for ID=' . $signId . '. Reason:' . Db::getLastError());
 		}
-		$this->setSessionVar('signId', $signId);
+		Core::setSessionVar('signId', $signId);
 	}
 
 	public function step2()
@@ -265,7 +263,7 @@ class SignSteps
 			}
 		} else {
 			$this->verifyNonce();
-			$signId = $this->getSessionVar('signId');
+			$signId = Core::getSessionVar('signId');
 
 			// Verify 2nd form step is filled and get encryption mode
 			$row = $dbSign->getRow(
@@ -393,16 +391,6 @@ class SignSteps
 
 		// Render view
 		include Infos::getPluginDir() . 'public/partials/sign-3.php';
-	}
-
-	private function setSessionVar($name, $value)
-	{
-		return $_SESSION['demovox_' . $name] = $value;
-	}
-
-	private function getSessionVar($name)
-	{
-		return isset($_SESSION['demovox_' . $name]) ? $_SESSION['demovox_' . $name] : null;
 	}
 
 	private function verifyNonce()

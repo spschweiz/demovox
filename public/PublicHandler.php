@@ -125,6 +125,11 @@ class PublicHandler extends BaseController
 	{
 		$this->requireHttps();
 
+		$source = isset($_REQUEST['src']) ? sanitize_text_field($_REQUEST['src']) : '';
+		if ($source) {
+			Core::setSessionVar('source', $source);
+		}
+
 		if (isset($_REQUEST['action'])) {
 			if ($_REQUEST['action'] == 'demovox_step2') { // ajax failed
 				return $this->signStep(2);
