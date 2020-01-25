@@ -20,7 +20,7 @@ namespace Demovox;
  * @var bool $allowSwissAbroad
  */
 ?>
-<form method="post" id="demovox_form_2" class="demovox" action="">
+<form method="post" id="demovox_form_2" class="demovox" action="<?= Infos::getRequestUri() ?>">
 	<input name="action" type="hidden" value="demovox_step3">
 	<input name="nonce" type="hidden" value="<?= Core::createNonce($this->nonceId) ?>">
 	<div class="form-row">

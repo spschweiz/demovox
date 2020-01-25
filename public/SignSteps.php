@@ -17,7 +17,7 @@ class SignSteps
 
 	public function step1()
 	{
-		$source    = isset($_REQUEST['src']) ? sanitize_text_field($_REQUEST['src']) : '';
+		$source = isset($_REQUEST['src']) ? sanitize_text_field($_REQUEST['src']) : '';
 		$this->setSessionVar('source', $source);
 		$textOptin = Config::getValueByUserlang('text_optin');
 		include Infos::getPluginDir() . 'public/partials/sign-1.php';
@@ -88,7 +88,9 @@ class SignSteps
 
 		// Render view
 		include Infos::getPluginDir() . 'public/partials/sign-2.php';
-		wp_die(); // Die, as this is the response on a AJAX request TODO: recognize AJAX
+		if (isset($_REQUEST['ajax']) && $_REQUEST['ajax']) {
+			wp_die();
+		}
 	}
 
 	/**
@@ -289,8 +291,8 @@ class SignSteps
 		// Show inline success page
 		$this->step3inlineSuccessPage($guid);
 
-		if (!$loadedByGuid) {
-			wp_die(); // Die, as this is the response on a AJAX request TODO: recognize AJAX
+		if (isset($_REQUEST['ajax']) && $_REQUEST['ajax']) {
+			wp_die();
 		}
 	}
 

@@ -17,7 +17,7 @@ namespace Demovox;
  */
 ?>
 <div class="wrap">
-	<form method="post" id="demovox_form_1" class="demovox" action="">
+	<form method="post" id="demovox_form_1" class="demovox" action="<?= Infos::getRequestUri() ?>">
 		<input name="action" type="hidden" value="demovox_step2">
 		<input name="nonce" type="hidden" value="<?= Core::createNonce($this->nonceId) ?>">
 		<div class="form-group">

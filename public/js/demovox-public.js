@@ -1,13 +1,16 @@
 /**
- * @typedef {Object} demovox
- * @property {string} ajaxUrl
- * @property {string} apiAddressEnabled
- * @property {string} apiAddressKey
- * @property {string} apiAddressUrl
- * @property {string} successPageRedir
- * @property {bool} apiAddressCityInput
- * @property {bool} apiAddressGdeInput
- * @property {bool} apiAddressGdeSelect
+ * @property {Object} demovoxData
+ *
+ * @property {string} demovoxData.ajaxUrl ""|<url>
+ * @property {string} demovoxData.successPageRedir "1"|""
+ * @property {string} demovoxData.analyticsMatomo "1"|""
+ *
+ * @property {string} demovoxData.apiAddressEnabled "1"|""
+ * @property {string} demovoxData.apiAddressKey <key>|undefined
+ * @property {string} demovoxData.apiAddressUrl <url>|undefined
+ * @property {string} demovoxData.apiAddressCityInput "1"|""|undefined
+ * @property {string} demovoxData.apiAddressGdeInput "1"|""|undefined
+ * @property {string} demovoxData.apiAddressGdeSelect "1"|""|undefined
  */
 import $ from 'jquery';
 import 'select2'; // globally assign select2 fn to $ element
@@ -240,6 +243,7 @@ $(() => {
 				formData += '&redirect=true';
 			}
 		}
+		formData += '&ajax=true';
 		if (currentPage === 'opt-in') {
 			replace = true;
 		}
@@ -315,16 +319,20 @@ $(() => {
 
 		if (currentPage === 1 || currentPage === 2 || currentPage === 'opt-in') {
 			window.ParsleyValidator.setLocale(demovoxData.language);
-			$el.form.parsley()
-				.on('form:submit', function () {
-					track('SubmitForm', currentPage);
-					submitDemovoxForm();
+			if (!demovoxData.ajaxUrl) {
+				$el.form.parsley();
+			} else {
+				$el.form.parsley()
+					.on('form:submit', function () {
+						track('SubmitForm', currentPage);
+						submitDemovoxForm();
+						return false;
+					});
+				$el.form.submit(function (e) {
+					e.preventDefault();
 					return false;
 				});
-			$el.form.submit(function (e) {
-				e.preventDefault();
-				return false;
-			});
+			}
 		}
 		if (currentPage === 2) {
 			$el.zip = $('#zip');

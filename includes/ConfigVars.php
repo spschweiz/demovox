@@ -460,6 +460,14 @@ class ConfigVars
 			'supplemental' => 'Send tracking events to a Matomo script, which has to be embedded on the website',
 		],
 		[
+			'uid'          => 'form_ajax_submit',
+			'label'        => 'AJAX form submission',
+			'section'      => 'danger',
+			'type'         => 'checkbox',
+			'default'      => 1,
+			'supplemental' => 'Use AJAX for form submission by default (recommended)',
+		],
+		[
 			'uid'          => 'drop_config_on_uninstall',
 			'label'        => 'Drop Config on uninstall',
 			'section'      => 'danger',

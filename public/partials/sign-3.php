@@ -47,4 +47,8 @@ namespace Demovox;
 			window.createPdf('<?= $title ?>', '<?= $pdfUrl ?>', <?= $fields ?>, <?= $qrData ?>);
 		});
 	</script>
+	<noscript>
+		JavaScript is disabled in your browser. Personalized signature sheet unavailable, you can use this one instead:<br/>
+		<a href="<?= $pdfUrl ?>" class="btn btn-success pdf-download"><?= __('Download signature sheet', 'demovox') ?></a>
+	</noscript>
 </div>
