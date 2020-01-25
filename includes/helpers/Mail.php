@@ -54,6 +54,7 @@ class Mail
 		Core::logMessage('Mailer is configured to use method "' . $method . '"', 'notice', 'mail');
 		switch ($method) {
 			case 'mail':
+			default:
 				$mailer->IsMail();
 				break;
 			case 'sendmail':
