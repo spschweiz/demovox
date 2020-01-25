@@ -88,4 +88,13 @@ class Infos
 		$address = new \DemovoxLibs\RemoteAddress();
 		return $address->getIpAddress();
 	}
+
+	/**
+	 * Use this method for forms
+	 * @return string
+	 */
+	public static function getRequestUri()
+	{
+		return htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES, 'ISO-8859-1');
+	}
 }

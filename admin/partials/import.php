@@ -27,7 +27,7 @@ namespace Demovox;
 		You need to scan the QR code from the sheets, we recommend to use a smartphone app which can export the scanned serials as CSV.
 	</p>
 	<?= $statusMsg ?>
-	<form method="post" action="<?= $_SERVER['REQUEST_URI'] ?>">
+	<form method="post" action="<?= Infos::getRequestUri() ?>">
 		<?php wp_nonce_field($page); ?>
 		<input type="hidden" name="action" value="import">
 		<table class="form-table">

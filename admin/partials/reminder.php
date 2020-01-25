@@ -20,7 +20,7 @@ namespace Demovox;
 <div class="wrap demovox">
 	<h2>Send reminder</h2>
 	<?= $statusMsg ?>
-	<form method="post" action="<?= $_SERVER['REQUEST_URI'] ?>">
+	<form method="post" action="<?= Infos::getRequestUri() ?>">
 		<?php wp_nonce_field($page); ?>
 		<input type="hidden" name="action" value="import">
 		<table class="form-table">

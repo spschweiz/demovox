@@ -55,8 +55,6 @@ namespace Demovox;
 						$signatureList->display();
 						?>
 					</form>
-					<form method="post">
-					</form>
 				</div>
 			</div>
 		</div>
