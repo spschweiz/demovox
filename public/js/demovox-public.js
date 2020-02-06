@@ -1,7 +1,8 @@
 /**
  * @property {Object} demovoxData
  *
- * @property {string} demovoxData.ajaxUrl ""|<url>
+ * @property {string} demovoxData.ajaxUrl <url>|""
+ * @property {string} demovoxData.ajaxForm "1"|""
  * @property {string} demovoxData.successPageRedir "1"|""
  * @property {string} demovoxData.analyticsMatomo "1"|""
  *
@@ -319,7 +320,7 @@ $(() => {
 
 		if (currentPage === 1 || currentPage === 2 || currentPage === 'opt-in') {
 			window.ParsleyValidator.setLocale(demovoxData.language);
-			if (!demovoxData.ajaxUrl) {
+			if (!demovoxData.ajaxForm) {
 				$el.form.parsley();
 			} else {
 				$el.form.parsley()

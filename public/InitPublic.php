@@ -87,7 +87,8 @@ class InitPublic extends BaseController
 		$successPage  = Config::getValue('use_page_as_success');
 		$demovoxJsArr = [
 			'language'          => Infos::getUserLanguage(),
-			'ajaxUrl'           => Config::getValue('form_ajax_submit') ? admin_url('admin-ajax.php') : false,
+			'ajaxUrl'           => admin_url('admin-ajax.php'),
+			'ajaxForm'          => Config::getValue('form_ajax_submit'),
 			'successPageRedir'  => $successPage || $successPage === '0',
 			'analyticsMatomo'   => Config::getValue('analytics_matomo'),
 			'apiAddressEnabled' => false,
