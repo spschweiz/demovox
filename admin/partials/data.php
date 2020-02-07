@@ -44,18 +44,16 @@ namespace Demovox;
 <div class="wrap">
 	<h2>Signatures</h2>
 	<div id="poststuff">
-		<div id="post-body" class="metabox-holder columns-2">
-			<div id="post-body-content">
-				<div class="meta-box-sortables ui-sortable">
-					<form method="post">
-						<?php $signatureList->prepare_items(); ?>
-						<input type="hidden" name="page" value="my_list_test"/>
-						<?php
-						$signatureList->search_box('search', 'search_id');
-						$signatureList->display();
-						?>
-					</form>
-				</div>
+		<div id="post-body-content">
+			<div class="meta-box-sortables ui-sortable">
+				<form method="post">
+					<?php $signatureList->prepare_items(); ?>
+					<input type="hidden" name="page" value="my_list_test"/>
+					<?php
+					$signatureList->search_box('search', 'search_id');
+					$signatureList->display();
+					?>
+				</form>
 			</div>
 		</div>
 		<br class="clear">

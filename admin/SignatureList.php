@@ -27,13 +27,14 @@ class SignatureList extends \WP_List_Table
 		'birth_date',
 		'street',
 		'street_no',
-		'gde_zip',
+		'zip',
 		'gde_name',
+		'gde_zip',
 		'gde_canton',
 		'is_optin',
 		'is_step2_done',
-		'is_sheet_received',
 		'is_outside_scope',
+		'is_sheet_received',
 		'creation_date',
 		'sheet_received_date',
 		'serial',
@@ -157,6 +158,8 @@ class SignatureList extends \WP_List_Table
 				return $item->{$column_name} ? 'Yes' : 'No';
 			case 'is_sheet_received':
 				return $item->{$column_name} ?: 'None';
+			case 'gde_canton':
+				return strtoupper($item->{$column_name});
 			case 'serial':
 				return '<code>' . $item->{$column_name} . '</code>';
 			default:
