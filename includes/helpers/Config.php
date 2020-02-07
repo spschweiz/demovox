@@ -66,8 +66,75 @@ class Config
 	 */
 	public static function deleteAll()
 	{
-		foreach (ConfigVars::$fields as $field) {
-			Core::delOption($field);
+		$fields = ConfigVars::getFields();
+		foreach ($fields as $field) {
+			$fieldType = isset($field['type']) ? $field['type'] : null;
+			switch ($fieldType) {
+				default:
+					Core::delOption($field);
+					break;
+				case 'pos':
+					Core::delOption($field, Config::PART_POS_X);
+					Core::delOption($field, Config::PART_POS_Y);
+					break;
+				case 'pos_rot':
+					Core::delOption($field, Config::PART_POS_X);
+					Core::delOption($field, Config::PART_POS_Y);
+					Core::delOption($field, Config::PART_ROTATION);
+					break;
+			}
+		}
+	}
+
+	/**
+	 * Set default values to unset fields
+	 */
+	public static function initDefaults()
+	{
+		$fields = ConfigVars::getFields();
+		foreach ($fields as $field) {
+			$id        = $field['uid'];
+			$fieldType = isset($field['type']) ? $field['type'] : null;
+			switch ($fieldType) {
+				default:
+					if (isset($field['default'])) {
+						self::setDefaultIfUnset($id, $field['default']);
+					}
+					break;
+				case 'pos':
+					if (isset($field['defaultX'])) {
+						self::setDefaultIfUnset($id, $field['defaultX'], Config::PART_POS_X);
+					}
+					if (isset($field['defaultY'])) {
+						self::setDefaultIfUnset($id, $field['defaultY'], Config::PART_POS_Y);
+					}
+					break;
+				case 'pos_rot':
+					if (isset($field['defaultX'])) {
+						self::setDefaultIfUnset($id, $field['defaultX'], Config::PART_POS_X);
+					}
+					if (isset($field['defaultY'])) {
+						self::setDefaultIfUnset($id, $field['defaultY'], Config::PART_POS_Y);
+					}
+					if (isset($field['defaultRot'])) {
+						self::setDefaultIfUnset($id, $field['defaultRot'], Config::PART_ROTATION);
+					}
+					break;
+			}
+		}
+	}
+
+	/**
+	 * @param $id
+	 * @param $default string
+	 * @param $valPart null|string
+	 *
+	 * @return mixed
+	 */
+	protected static function setDefaultIfUnset($id, $default, $valPart = null)
+	{
+		if (self::getValue($id, $valPart) === false) {
+			self::setValue($id, $default, $valPart);
 		}
 	}
 }

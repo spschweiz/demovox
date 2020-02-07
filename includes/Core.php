@@ -240,10 +240,12 @@ class Core
 	 * @param string $id
 	 *
 	 * @return bool True, if option is successfully deleted. False on failure.
+	 * @param $valPart null|string
 	 */
-	public static function delOption($id)
+	public static function delOption($id, $valPart = null)
 	{
-		return delete_option(Core::getWpId($id));
+		$fullId = $id . ($valPart ? Config::GLUE_PART . $valPart : '');
+		return delete_option(Core::getWpId($fullId));
 	}
 
 	public static function setSessionVar($name, $value)

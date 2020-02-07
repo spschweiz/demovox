@@ -97,6 +97,8 @@ class Activator
 		self::createPages();
 
 		self::createCapabilities();
+
+		Config::initDefaults();
 	}
 
 	/**
