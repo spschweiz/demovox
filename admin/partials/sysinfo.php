@@ -116,9 +116,8 @@ namespace Demovox;
 	<h3>Cron</h3>
 	<p>cron manager plugin is recommended for detailed configuration</p>
 	<?php
-	$cronNames = ManageCron::getAllCrons();
-	foreach ($cronNames as $cronName) {
-		$cron        = $cronName;
+	$allCrons = ManageCron::getAllCrons();
+	foreach ($allCrons as $cron) {
 		$dateStart   = $cron->getStausDateStart();
 		$dateStop    = $cron->getStatusDateStop();
 		$lastSkipped = $cron->getStatusSkipped();
@@ -128,14 +127,14 @@ namespace Demovox;
 		<h4><?= $cron->getName() ?></h4>
 		<p>
 			<button class="ajaxButton"
-			        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?cron=' . $cron->getHookName(), 'demovox_run_cron') ?>">
+			        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?cron=' . $cron->getId(), 'demovox_run_cron') ?>">
 				Run Now
 			</button>
 			<span class="ajaxContainer"></span>
 			<br/>
 			Status: <?php if ($cron->isRunning()) { ?>currently running
 				<button class="ajaxButton"
-				        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?cron=' . $cron->getClassName(), 'demovox_cancel_cron') ?>"
+				        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?cron=' . $cron->getId(), 'demovox_cancel_cron') ?>"
 				        data-confirm="Force cancel?" data-container=".ajaxCancelContainer">
 					cancel execution
 				</button><span class="ajaxCancelContainer"></span>

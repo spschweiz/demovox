@@ -4,15 +4,23 @@ namespace Demovox;
 
 class CronBase
 {
+	protected $id;
 	protected $namespace;
-	protected $cronId;
+	protected $cronName;
 	protected $className;
 	protected $scheduleRecurrence = 'hourly';
 
+	/**
+	 * @var $crons array
+	 */
+	static protected $cronClassNames = [
+		0 => 'CronMailConfirm', 1 => 'CronMailIndex', 2 => 'CronMailRemindSheet', 3 => 'CronMailRemindSignup', 4 => 'CronExportToApi',
+	];
+
 	public function __construct()
 	{
-		list($namespace, $className) = explode('\\', get_class($this));
-		$cronId          = strtolower(
+		[$namespace, $className] = explode('\\', get_class($this));
+		$cronName          = strtolower(
 			preg_replace(
 				'/(?<=[a-z])([A-Z]+)/',
 				'_$1',
@@ -20,26 +28,55 @@ class CronBase
 			)
 		);
 		$this->namespace = $namespace;
-		$this->cronId    = $cronId;
+		$this->cronName  = $cronName;
 		$this->className = $className;
-		return;
 	}
 
+	/**
+	 * @return string[]
+	 */
+	public static function getCronClassNames(){
+		return self::$cronClassNames;
+	}
+
+	/**
+	 * @return false|int
+	 */
+	public function getId()
+	{
+		if ($this->id === null) {
+			$this->id = array_search($this->getClassName(), self::$cronClassNames);
+		}
+		return $this->id;
+	}
+
+	/**
+	 * @return string
+	 */
 	public function getName()
 	{
-		return $this->cronId;
+		return $this->cronName;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getClassName()
 	{
 		return $this->className;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getHookName()
 	{
-		return strtolower($this->namespace) . '_' . $this->cronId;
+		return strtolower($this->namespace) . '_' . $this->cronName;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getRecurrence()
 	{
 		return $this->scheduleRecurrence;
@@ -161,7 +198,7 @@ class CronBase
 	 */
 	protected function getOption($id)
 	{
-		return Core::getOption($this->cronId . '_' . $id);
+		return Core::getOption($this->cronName . '_' . $id);
 	}
 
 	/**
@@ -174,6 +211,6 @@ class CronBase
 	 */
 	protected function setOption($id, $value)
 	{
-		return Core::setOption($this->cronId . '_' . $id, $value);
+		return Core::setOption($this->cronName . '_' . $id, $value);
 	}
 }
