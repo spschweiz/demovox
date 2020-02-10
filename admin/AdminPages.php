@@ -372,7 +372,7 @@ class AdminPages extends BaseController
 		$csvMapper = $dbSign->getAvailableFields();
 		$csv = implode(',', $csvMapper) . "\n";
 		$type = isset($_REQUEST['type']) ? intval($_REQUEST['type']) : null;
-		$allSignatures = $dbSign->getResults(array_keys($csvMapper), $type);
+		$allSignatures = $dbSign->getResults(array_keys($csvMapper), $dbSign->getWhere($type));
 
 		foreach ($allSignatures as $signature) {
 			$csvSignature = [];

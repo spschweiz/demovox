@@ -108,23 +108,6 @@ class DbSignatures extends Db
 	}
 
 	/**
-	 * Select multiple rows from demovox table
-	 *
-	 * @param array           $select    Fields to select
-	 * @param int|string|null $where     SQL where statement
-	 * @param string|null     $sqlAppend Append SQL statements
-	 *
-	 * @return array|DbSignatures|null Database query results
-	 */
-	public function getResults($select, $where = null, $sqlAppend = null)
-	{
-		if (is_int($where)) {
-			$where = $this->getWhere($where);
-		}
-		return parent::getResults($select, $where, $sqlAppend);
-	}
-
-	/**
 	 * @param $type
 	 *
 	 * @return string
