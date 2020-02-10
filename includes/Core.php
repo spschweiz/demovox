@@ -290,10 +290,7 @@ class Core
 	static function showError($error, $statusCode = null)
 	{
 		$isError = !(substr($statusCode, 0, 1) == 2 || substr($statusCode, 0, 1) == 3);
-		$string  = self::logMessage($statusCode . ' - ' . $error, $isError ? 'error' : 'info');
-		if (WP_DEBUG) {
-			echo $string;
-		}
+		self::logMessage($statusCode . ' - ' . $error, $isError ? 'error' : 'info');
 		if ($statusCode !== null) {
 			http_response_code($statusCode);
 			switch ($statusCode) {
@@ -318,12 +315,11 @@ class Core
 			}
 			wp_die($msg, $statusCode);
 		}
-		return;
 	}
 
 	static function logMessage($message, $level = 'error', $type = null)
 	{
-		if (!WP_DEBUG) {
+		if (!WP_DEBUG_LOG && !WP_DEBUG) {
 			return;
 		}
 		$trace  = debug_backtrace();
@@ -342,7 +338,9 @@ class Core
 		$fp = fopen($fn, 'a');
 		fputs($fp, $string);
 		fclose($fp);
-		return $string;
+		if (WP_DEBUG_DISPLAY) {
+			echo $string;
+		}
 	}
 
 	public static function getPluginDir()

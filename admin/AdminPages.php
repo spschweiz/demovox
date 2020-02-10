@@ -100,7 +100,7 @@ class AdminPages extends BaseController
 				$saltsFailed = true;
 			}
 		}
-		$phpShowErrors = !!ini_get('display_errors');
+		$phpDisplayErrors = !!ini_get('display_errors');
 		$mailRecipient = $this->getWpMailAddress();
 		$languages = i18n::getLangsEnabled();
 
