@@ -39,7 +39,7 @@ class CronExportToApi extends CronBase
 		$dataJson = Config::getValue('api_export_data');
 		$data     = json_decode($dataJson);
 		if (!is_object($data)) {
-			$this->setStateMessage('Configuration value "Export Data" is not a valid JSON ' . print_r($data) . '#' . $dataJson, false);
+			$this->setStateMessage('Configuration value "Export Data" is not valid JSON', false);
 			return;
 		}
 

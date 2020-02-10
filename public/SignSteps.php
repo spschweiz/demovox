@@ -148,18 +148,7 @@ class SignSteps
 			|| empty($gdeCanton)
 			|| !isset(i18n::$cantons[$gdeCanton])
 		) {
-			$formValues = [
-				'birthDate' => $birthDate,
-				'street'    => $street,
-				'streetNo'  => $streetNo,
-				'zip'       => $zip,
-				'city'      => $city,
-				'gdeId'     => $gdeId,
-				'gdeZip'    => $gdeZip,
-				'gdeName'   => $gdeName,
-				'gdeCanton' => $gdeCanton,
-			];
-			Core::showError('Invalid form values received: ' . print_r($formValues, true), 400);
+			Core::showError('Invalid form values received.', 400);
 		}
 
 		// Prepare update
