@@ -63,7 +63,7 @@ class CronBase
 
 	public function run()
 	{
-		Core::showError('Not implemented', 500);
+		Core::errorDie('Not implemented', 500);
 	}
 
 	/**

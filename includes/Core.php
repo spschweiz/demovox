@@ -287,34 +287,32 @@ class Core
 		);
 	}
 
-	static function showError($error, $statusCode = null)
+	static function errorDie($error, $statusCode)
 	{
 		$isError = !(substr($statusCode, 0, 1) == 2 || substr($statusCode, 0, 1) == 3);
 		self::logMessage($statusCode . ' - ' . $error, $isError ? 'error' : 'info');
-		if ($statusCode !== null) {
-			http_response_code($statusCode);
-			switch ($statusCode) {
-				default:
-					$msg = 'Unknown error';
-					break;
-				case 400:
-					$msg = 'Invalid form values received';
-					break;
-				case 401:
-					$msg = 'Unauthorized';
-					break;
-				case 404:
-					$msg = 'Resource not found';
-					break;
-				case 405:
-					$msg = 'Requested resource does not support this operation';
-					break;
-				case 500:
-					$msg = 'Internal server error';
-					break;
-			}
-			wp_die($msg, $statusCode);
+		http_response_code($statusCode);
+		switch ($statusCode) {
+			default:
+				$msg = 'Unknown error';
+				break;
+			case 400:
+				$msg = 'Invalid form values received';
+				break;
+			case 401:
+				$msg = 'Unauthorized';
+				break;
+			case 404:
+				$msg = 'Resource not found';
+				break;
+			case 405:
+				$msg = 'Requested resource does not support this operation';
+				break;
+			case 500:
+				$msg = 'Internal server error';
+				break;
 		}
+		wp_die($msg, $statusCode);
 	}
 
 	static function logMessage($message, $level = 'error', $type = null)
