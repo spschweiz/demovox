@@ -4,22 +4,30 @@ namespace Demovox;
 
 class ManageCron
 {
+	static protected $allCrons;
+
 	/**
-	 * @var $crons array
+	 * @return string[]
 	 */
-	static private $crons = ['CronMailConfirm', 'CronMailIndex', 'CronMailRemindSheet', 'CronMailRemindSignup', 'CronExportToApi',];
+	public static function getCronNames()
+	{
+		return CronBase::getCronClassNames();
+	}
 
 	/**
 	 * @return CronBase[]
 	 */
 	public static function getAllCrons()
 	{
-		$crons = [];
-		foreach (self::$crons as $cron) {
-			$className = '\\' . __NAMESPACE__ . '\\' . ucfirst($cron);
-			$crons[]   = new $className;
+		if (self::$allCrons === null) {
+			$crons = [];
+			foreach (self::getCronNames() as $cron) {
+				$className = '\\' . __NAMESPACE__ . '\\' . $cron;
+				$crons[]   = new $className;
+			}
+			self::$allCrons = $crons;
 		}
-		return $crons;
+		return self::$allCrons;
 	}
 
 	public static function loadDependencies()
@@ -27,7 +35,7 @@ class ManageCron
 		$pluginDir = Infos::getPluginDir();
 		require_once $pluginDir . 'includes/cron/CronBase.php';
 		require_once $pluginDir . 'includes/cron/CronMailBase.php';
-		$crons = self::$crons;
+		$crons = self::getCronNames();
 		foreach ($crons as $cron) {
 			require_once $pluginDir . 'includes/cron/' . $cron . '.php';
 		}
@@ -40,29 +48,34 @@ class ManageCron
 		return false;
 	}
 
-	public static function triggerCron($hook)
+	public static function triggerCron($id)
 	{
+		$hook = self::getClass($id)->getHookName();
 		wp_schedule_single_event(time() - 1, $hook);
 		spawn_cron();
 	}
 
-	public static function cancel($name)
+	/**
+	 * @param int $id
+	 */
+	public static function cancel($id)
 	{
-		$sendMails = self::getClass($name);
+		$sendMails = self::getClass($id);
 		$sendMails->cancelRunning();
 	}
 
 	/**
-	 * @param $name
+	 * @param int $id
 	 *
 	 * @return CronBase
 	 */
-	protected static function getClass($name)
+	protected static function getClass($id)
 	{
-		if (!in_array($name, self::$crons)) {
-			Core::showError('Invalid cron ' . $name, 400);
+		$cronNames = self::getCronNames();
+		if (!isset($cronNames[$id])) {
+			Core::errorDie('Invalid cron ' . $id, 400);
 		}
-		$name = __NAMESPACE__ . '\\' . $name;
+		$name = __NAMESPACE__ . '\\' . $cronNames[$id];
 		return new $name();
 	}
 
@@ -98,7 +111,7 @@ class ManageCron
 
 	public static function deleteOptions()
 	{
-		$crons = self::$crons;
+		$crons = self::getCronNames();
 		foreach ($crons as $cron) {
 			Core::delOption('cron_' . $cron . '_lock');
 			Core::delOption('cron_' . $cron . '_start');

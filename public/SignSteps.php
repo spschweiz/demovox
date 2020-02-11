@@ -38,7 +38,7 @@ class SignSteps
 			|| !is_email($mail)
 			|| ($phone && preg_match('/^((\+[1-9])|(0\d[1-9]))\d+$/', $phone) === false)
 		) {
-			Core::showError('Invalid form values received', 400);
+			Core::errorDie('Invalid form values received', 400);
 		}
 
 		$data = [
@@ -60,7 +60,7 @@ class SignSteps
 		}
 		$success = $dbSign->insert($data);
 		if (!$success) {
-			Core::showError('DB insert failed: ' . Db::getLastError(), 500);
+			Core::errorDie('DB insert failed: ' . Db::getLastError(), 500);
 		}
 		$signId     = Db::getInsertId();
 		$successUpd = $dbSign->updateStatus(
@@ -124,7 +124,7 @@ class SignSteps
 			$city      = sanitize_text_field($_REQUEST['city_abroad']);
 			$countries = Strings::getCountries();
 			if (!$country || !isset($countries[$country])) {
-				Core::showError('Invalid country value received: ' . $country, 400);
+				Core::errorDie('Invalid country value received: ' . $country, 400);
 			}
 		}
 		if (
@@ -148,18 +148,7 @@ class SignSteps
 			|| empty($gdeCanton)
 			|| !isset(i18n::$cantons[$gdeCanton])
 		) {
-			$formValues = [
-				'birthDate' => $birthDate,
-				'street'    => $street,
-				'streetNo'  => $streetNo,
-				'zip'       => $zip,
-				'city'      => $city,
-				'gdeId'     => $gdeId,
-				'gdeZip'    => $gdeZip,
-				'gdeName'   => $gdeName,
-				'gdeCanton' => $gdeCanton,
-			];
-			Core::showError('Invalid form values received: ' . print_r($formValues, true), 400);
+			Core::errorDie('Invalid form values received.', 400);
 		}
 
 		// Prepare update
@@ -194,7 +183,7 @@ class SignSteps
 			$isEncrypted
 		);
 		if (!$success) {
-			Core::showError('DB update failed: ' . Db::getLastError(), 500);
+			Core::errorDie('DB update failed: ' . Db::getLastError(), 500);
 		}
 		return $data['link_success'];
 	}
@@ -256,7 +245,7 @@ class SignSteps
 				// Redirect to success page
 				$row = $dbSign->getRow(['link_success',], "guid = '" . $guid . "'");
 				if (!$row === null) {
-					Core::showError('Signature guid ' . $guid . ' not found', 404);
+					Core::errorDie('Signature guid ' . $guid . ' not found', 404);
 				}
 				echo $row->link_success;
 				wp_die();
@@ -271,7 +260,7 @@ class SignSteps
 				"ID = '" . $signId . "'"
 			);
 			if ($row === null) {
-				Core::showError('Invalid session, signature ID ' . $signId . ' not found', 500);
+				Core::errorDie('Invalid session, signature ID ' . $signId . ' not found', 500);
 			}
 			$guid = $row->guid;
 			if (!$row->is_step2_done) {
@@ -318,10 +307,10 @@ class SignSteps
 			"guid = '" . $guid . "'"
 		);
 		if (!$row) {
-			Core::showError('Signature with GUID "' . $guid . '" was not found', 404);
+			Core::errorDie('Signature with GUID "' . $guid . '" was not found', 404);
 		}
 		if (!$row->is_step2_done) {
-			Core::showError('Signature with GUID "' . $guid . '" can not be edited', 400);
+			Core::errorDie('Signature with GUID "' . $guid . '" can not be edited', 400);
 		}
 		$signId    = $row->ID;
 		$gdeCanton = $row->gde_canton;
@@ -396,7 +385,7 @@ class SignSteps
 	private function verifyNonce()
 	{
 		if (!isset($_REQUEST['nonce']) || !wp_verify_nonce($_REQUEST['nonce'], $this->nonceId)) {
-			Core::showError('nonce check failed', 401);
+			Core::errorDie('nonce check failed', 401);
 		}
 	}
 

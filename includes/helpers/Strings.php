@@ -91,7 +91,7 @@ class Strings
 			'yaml',
 		];
 		if (!in_array($format, $availableFormats)) {
-			Core::showError('getCountries: invalid format ' . $format . ' was requested', 500);
+			Core::errorDie('getCountries: invalid format ' . $format . ' was requested', 500);
 		}
 		if ($echo === null) {
 			$echo = ($format === 'json');
@@ -206,7 +206,7 @@ class Strings
 	public static function hashMail($email)
 	{
 		if (!defined('DEMOVOX_HASH_KEY')) {
-			Core::showError('Mail hashing failed: Constant DEMOVOX_HASH_KEY is not defined in wp-config.php', 500);
+			Core::errorDie('Mail hashing failed: Constant DEMOVOX_HASH_KEY is not defined in wp-config.php', 500);
 		}
 		return hash_hmac('md5', $email, DEMOVOX_HASH_KEY);
 	}

@@ -1,13 +1,13 @@
 <?php
 namespace Demovox;
 /**
- * @var $this          AdminPages
- * @var $encKey        true|string
- * @var $hashKey       true|string
- * @var $saltsFailed   bool
- * @var $phpShowErrors bool
- * @var $languages     array
- * @var $mailRecipient string
+ * @var $this             AdminPages
+ * @var $encKey           true|string
+ * @var $hashKey          true|string
+ * @var $saltsFailed      bool
+ * @var $phpDisplayErrors bool
+ * @var $languages        array
+ * @var $mailRecipient    string
  */
 
 ?>
@@ -39,10 +39,11 @@ namespace Demovox;
 		</p>
 		<?php
 	}
-	if (WP_DEBUG) {
+	if (WP_DEBUG_DISPLAY) {
 		$wpErr = true;
 		?>
-		<h4 class="error">WP_DEBUG is enabled</h4>
+		<h4 class="error">WP_DEBUG_DISPLAY is enabled, this could lead to the disclosure of sensitive information about the website and
+			server setup</h4>
 		<?php
 	}
 	if ($saltsFailed) {
@@ -86,7 +87,7 @@ namespace Demovox;
 		echo "<p>BC Math is not available</p>";
 	}
 	$phpErr = false;
-	if ($phpShowErrors) {
+	if ($phpDisplayErrors) {
 		$phpErr = true;
 		?>
 		<h4 class="error">PHP display_errors is enabled</h4>
@@ -101,6 +102,9 @@ namespace Demovox;
 		<p>
 			Success: PHP config looks fine
 		</p>
+	<?php } else { ?>
+		<h4>Config</h4>
+		<p>You can find the PHP config here: <?= php_ini_loaded_file() ?></p>
 	<?php } ?>
 	<h3>SSL</h3>
 	<p>
@@ -112,9 +116,8 @@ namespace Demovox;
 	<h3>Cron</h3>
 	<p>cron manager plugin is recommended for detailed configuration</p>
 	<?php
-	$cronNames = ManageCron::getAllCrons();
-	foreach ($cronNames as $cronName) {
-		$cron        = $cronName;
+	$allCrons = ManageCron::getAllCrons();
+	foreach ($allCrons as $cron) {
 		$dateStart   = $cron->getStausDateStart();
 		$dateStop    = $cron->getStatusDateStop();
 		$lastSkipped = $cron->getStatusSkipped();
@@ -124,14 +127,14 @@ namespace Demovox;
 		<h4><?= $cron->getName() ?></h4>
 		<p>
 			<button class="ajaxButton"
-			        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?cron=' . $cron->getHookName(), 'demovox_run_cron') ?>">
+			        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?cron=' . $cron->getId(), 'demovox_run_cron') ?>">
 				Run Now
 			</button>
 			<span class="ajaxContainer"></span>
 			<br/>
 			Status: <?php if ($cron->isRunning()) { ?>currently running
 				<button class="ajaxButton"
-				        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?cron=' . $cron->getClassName(), 'demovox_cancel_cron') ?>"
+				        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?cron=' . $cron->getId(), 'demovox_cancel_cron') ?>"
 				        data-confirm="Force cancel?" data-container=".ajaxCancelContainer">
 					cancel execution
 				</button><span class="ajaxCancelContainer"></span>

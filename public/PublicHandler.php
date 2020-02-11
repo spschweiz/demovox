@@ -116,7 +116,7 @@ class PublicHandler extends BaseController
 			['guid' => $guid,]
 		);
 		if (!$success) {
-			Core::showError('DB update failed: ' . Db::getLastError(), 500);
+			Core::errorDie('DB update failed: ' . Db::getLastError(), 500);
 		}
 		wp_die(Strings::wpMessage(__('Your settings were saved', 'demovox'), 'success'));
 	}
