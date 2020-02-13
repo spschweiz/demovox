@@ -30,6 +30,18 @@ class CronMailBase extends CronBase
 		if (!$this->prepareRun()) {
 			return false;
 		}
+		if (!$this->isReminderActive()) {
+			$this->setSkipped('Reminder expired: "Last reminder date" lies in the past');
+		}
 		return true;
+	}
+
+	protected function isReminderActive()
+	{
+		$maxDate = Config::getValue('mail_remind_max_date');
+		if (!$maxDate) {
+			return true;
+		}
+		return time() < (strtotime($maxDate) + 24 * 60 * 60);
 	}
 }
