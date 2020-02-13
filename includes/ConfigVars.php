@@ -508,7 +508,7 @@ class ConfigVars
 			'section'      => 'mailText',
 			'type'         => 'checkbox',
 			'default'      => 1,
-			'supplemental' => 'If enabled later, confirmations will also be sent for previous signees which did not receive the mail yet.<br/>You must also set the mailserver settings in the advanced settings.',
+			'supplemental' => 'This mail is sent to the signee, just after signing up. If this option is enabled after people have already signed up, confirmations will also be sent for those who did not receive any mail yet.',
 		];
 		$fields[]      = [
 			'uid'          => 'mail_remind_sheet_enabled',

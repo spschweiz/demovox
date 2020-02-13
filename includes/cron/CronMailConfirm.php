@@ -24,7 +24,7 @@ class CronMailConfirm extends CronMailBase
 		$dbSign   = new DbSignatures();
 		$rows     = $dbSign->getResults(
 			['ID', 'link_optin', 'link_pdf', 'guid', 'first_name', 'last_name', 'mail', 'language', 'state_confirm_sent'],
-			' state_confirm_sent <= 0 AND state_confirm_sent > -3 AND is_step2_done = 1 AND is_deleted = 0',
+			'is_step2_done = 1 AND is_sheet_received = 0 AND state_confirm_sent <= 0 AND state_confirm_sent > -3 AND is_deleted = 0',
 			' LIMIT ' . $maxMails
 		);
 
