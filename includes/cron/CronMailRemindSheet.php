@@ -85,7 +85,17 @@ class CronMailRemindSheet extends CronMailBase
 		$stateSent = $isSent ? 1 : ($row->state_remind_sheet_sent - 1);
 
 		$dbSign = new DbSignatures();
-		$dbSign->updateStatus(['state_remind_sheet_sent' => $stateSent], ['ID' => $row->ID]);
+		if ($isSent) {
+			$dbSign->updateStatus(
+				['state_remind_sheet_sent' => $stateSent, 'reminder_sent_date' => current_time('mysql')],
+				['ID' => $row->ID]
+			);
+		} else {
+			$dbSign->updateStatus(
+				['state_remind_sheet_sent' => $stateSent],
+				['ID' => $row->ID]
+			);
+		}
 		$this->log(
 			'Mail ' . ($isSent ? '' : 'NOT ') . 'sent for signature ID "' . $row->ID
 			. '" with language "' . $row->language . '" with sender ' . $fromName . ' (' . $fromAddress . ')',
