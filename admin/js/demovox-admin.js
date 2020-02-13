@@ -18,9 +18,9 @@ var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 			// Extend the wp.media object.
 			demovoxMediaUploader = wp.media.frames.file_frame = wp.media({
 				// Set the values through wp_localize_script so that they can be localised/translated.
-				title: demovoxAdminData.uploader.title,
+				title: demovoxData.uploader.title,
 				button: {
-					text: demovoxAdminData.uploader.text
+					text: demovoxData.uploader.text
 				}, multiple: false
 			});
 			// When a file is selected, grab the URL and set it as the fields value.
