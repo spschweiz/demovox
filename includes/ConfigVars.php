@@ -15,17 +15,25 @@ class ConfigVars
 			'page'  => 'demovoxFields0',
 			'sub'   => 'Enable languages for the demovox option translations like signature sheets, mails and opt-in text.<br/>'
 					   . ' The frontend language, like the translation of the form input titles, is affected by the WordPress option'
-					   . '<i>Site Language</i> under <i>General Settings</i>.'
-					   . ' Another way is to set the language by an internationalisation plugin to allow multiple languages for the client'
-					   . ' (currently tested with <a href="https://wpml.org/" target="_blank">WPML</a>).',
+					   . ' <b>Site Language</b> under <b>General Settings</b>.'
+					   . ' Another way is to set the language by an internationalisation plugin to allow multiple languages for the client.'
+					   . ' This is currently tested with <a href="https://wpml.org/" target="_blank">WPML</a>, with the WPML option'
+					   . ' <a href="https://wpml.org/documentation/getting-started-guide/language-setup/enabling-language-cookie-to-support-ajax-filtering/" target="_blank">'
+					   . 'Language filtering for AJAX operations</a> enabled.',
 		],
 		'optIn'                => [
 			'title' => 'Opt-in',
 			'page'  => 'demovoxFields1',
 		],
 		'optInText'            => [
-			'title' => 'Text beside the checkbox',
+			'title' => 'Checkbox label',
 			'page'  => 'demovoxFields1',
+			'sub'   => 'Text beside the checkbox, specify as exactly as possible how the data will be used. <code>&lt;a&gt;</code> tags can'
+					   . ' be used.<br/> If you use the opt-out mode, invert the description logic accordingly. '
+					   . '<br/><br/>Example: <code>Mit dem Unterzeichnen akzeptiere ich die &lt;a href="https://beispiel.ch/datenschutz-bestimmungen"&gt;Datenschutzbestimmungen&lt;/a&gt;.</code>',
+			'class'   => 'hideOnOptinDisabled',
+			'addPre'  => '<div class="hideOnOptinDisabled">',
+			'addPost' => '</div>',
 		],
 		'signatureSheet'       => [
 			'title' => 'Signature sheet',
@@ -54,14 +62,21 @@ class ConfigVars
 			'page'  => 'demovoxFields3',
 			'sub'   => 'Fields on the signature sheet',
 		],
-		'mailText'             => [
+		'mailBase'             => [
 			'title' => 'Email settings',
 			'page'  => 'demovoxFields4',
-			'sub'   => 'To send test mails or to make sure the mail crons are executed, take a look at the <i>System info</i> page',
+			'sub'   => 'You must also set the mail server settings in the advanced settings. To send test mails or to make sure the mail'
+					   . ' crons are executed, take a look at the <b>System info</b> page.',
 		],
 		'mailSender'           => [
 			'title' => 'Email sender',
 			'page'  => 'demovoxFields4',
+		],
+		'mailTasks'             => [
+			'title' => 'Email tasks',
+			'page'  => 'demovoxFields4',
+			'sub'   => 'Remember the <code>{&hellip;_link}</code> placeholders only contain the URL.'
+					   .' Therefore you might want to use <code>&lt;a&gt;</code>-tags to create a link.',
 		],
 		'api_address'          => [
 			'title' => 'Address lookup API',
@@ -72,7 +87,7 @@ class ConfigVars
 		'api_export'           => [
 			'title' => 'Export API',
 			'page'  => 'demovoxFields5',
-			'sub'   => 'Used to export signup data to a REST API of a CRM (server-side based submission, HTTPS required!).',
+			'sub'   => 'Used to export sign-up data to a REST API of a CRM (server-side based submission, HTTPS required!).',
 		],
 		'security'             => [
 			'title' => 'Security',
@@ -81,12 +96,14 @@ class ConfigVars
 		'mailConfig'           => [
 			'title' => 'Email engine / server',
 			'page'  => 'demovoxFields6',
+			'sub'   => 'To send test mails, take a look at the System info page.',
 		],
 		'cron'                 => [
 			'title' => 'Cron',
 			'page'  => 'demovoxFields6',
+			'sub'   => 'To make sure the mail crons are executed, take a look at the System info page.',
 		],
-		'analytics'               => [
+		'analytics'            => [
 			'title' => 'Analytics',
 			'page'  => 'demovoxFields6',
 		],
@@ -127,7 +144,7 @@ class ConfigVars
 			'section'      => 'signatureSheet',
 			'type'         => 'wpPage',
 			'supplemental' => 'You should include <code>[demovox_form]</code> on that page to show the signature sheet.'
-							  . ' This setting is used for the link in mails as the placeholder {link_pdf}.',
+							  . ' This setting is used for the link in mails as the placeholder <code>{link_pdf}</code>.',
 		],
 		[
 			'uid'          => 'download_pdf',
@@ -167,7 +184,7 @@ class ConfigVars
 			'optionNone'   => '[Disabled]',
 			'supplemental' => 'Redirect user to a different page if he has a swiss abroad address as you might want to add special'
 							  . ' instructions. You should include <code>[demovox_form]</code> on that page to show the signature sheet.'
-							  . ' This setting is also used for the link in mails as the placeholder {link_pdf}. '
+							  . ' This setting is also used for the link in mails as the placeholder </code>{link_pdf}</code>. '
 							  . ' Requires both "Success page redirect" and "Swiss abroad" to be enabled.',
 			'class'        => 'showOnRedirect',
 		],
@@ -227,7 +244,11 @@ class ConfigVars
 				'PseudoCrypt'    => 'PseudoCrypt (1-5 chars alphanumeric, confusable letters incl, BC Math required)',
 				'id'             => 'ID (no obfuscation)',
 			],
-			'supplemental' => 'Don\'t change algorithm on a productive system! Obfuscation helps not to confuse numbers when entering them manually. PHP modules <a href="https://secure.php.net/manual/en/book.gmp.php" target="_blank">GMP</a> and <a href="https://secure.php.net/manual/en/book.bc.php" target="_blank">BC Math</a>',
+			'supplemental' => 'Don\'t change algorithm on a productive system! The mode <b>Hashids</b> is recommended, obfuscation helps'
+							  . ' not to confuse numbers when entering them manually.'
+							  . '<br/>Information about required PHP modules:'
+							  . ' <a href="https://secure.php.net/manual/en/book.gmp.php" target="_blank">GMP</a> and'
+							  . ' <a href="https://secure.php.net/manual/en/book.bc.php" target="_blank">BC Math</a>.',
 			'default'      => 'disabled',
 		],
 		[
@@ -240,7 +261,7 @@ class ConfigVars
 				'1'        => 'Yes, php-encryption (requires at least PHP 5.6 and OpenSSL 1.0.1)',
 			],
 			'default'      => 'disabled',
-			'supplemental' => 'Recommended! Encrypt personal details, only affects new entries. DEMOVOX_ENC_KEY has to be set in wp-config.php (see <i>System info</i>). '
+			'supplemental' => 'Recommended! Encrypt personal details, only affects new entries. <code>DEMOVOX_ENC_KEY</code> and <code>DEMOVOX_HASH_KEY</code> have to be set in wp-config.php (see <b>System info</b>). '
 							  . 'Protects against DB data theft like SQL injections or direct database access by a intruder, but not on file system access. ',
 		],
 		[
@@ -258,9 +279,9 @@ class ConfigVars
 			'options' => [
 				'disabled'  => 'Disabled',
 				'optIn'     => 'Opt-in',
-				'optInChk'  => 'Opt-in, enabled by default (maybe illegal)',
-				'optOut'    => 'Opt-out (maybe illegal)',
-				'optOutChk' => 'Opt-out, enabled by default',
+				'optOutChk' => 'Opt-out',
+				'optInChk'  => 'Opt-in, enabled by default (not recommended)',
+				'optOut'    => 'Opt-out, disabled by default (not recommended)',
 			],
 			'default' => 'optIn',
 		],
@@ -281,8 +302,9 @@ class ConfigVars
 			'label'        => 'Link this page as opt-in page',
 			'section'      => 'optIn',
 			'type'         => 'wpPage',
-			'supplemental' => 'You should include the text <code>[demovox_optin]</code> on selected page to show the opt-in edit form. '
-							  . 'When you change this page, already signed up users will still use the old page.',
+			'supplemental' => 'This page can be linked in mails as opt-in edit page with theplaceholder <code>{link_optin}</code>. '
+							  . 'On this page, you should include the shortcode <code>[demovox_optin]</code> to show the opt-in edit form. '
+							  . 'When you change this setting, already signed up users will still use the old page.',
 			'class'        => 'hideOnOptinDisabled',
 		],
 		[
@@ -430,9 +452,12 @@ class ConfigVars
 			'class'        => 'showOnApiExport',
 			'default'      => '{"firstname": "{first_name}", "api_key": "X8ZoPz3G2UxApfYpAfjE"}',
 			'supplemental' => 'JSON which will be used to generate the POST data payload for to the REST API.'
-							  . '<br/>Avaiblable placeholders: {language} {ip_address} {first_name} {last_name} '
-							  . '{birth_date} {mail} {phone} {country} {street} {street_no} {zip} {city} {gde_no} '
-							  . '{gde_zip} {gde_name} {gde_canton} {is_optin} {creation_date} {source}',
+							  . '<br/>Avaiblable placeholders: <code>{language}</code>, <code>{ip_address}</code>,'
+							  . ' <code>{first_name}</code>, <code>{last_name}</code> <code>{birth_date}</code>, <code>{mail}</code>,'
+							  . ' <code>{phone}</code>, <code>{country}</code>, <code>{street}</code>, <code>{street_no}</code>,'
+							  . ' <code>{zip}</code>, <code>{city}</code>, <code>{gde_no}</code> <code>{gde_zip}</code>,'
+							  . ' <code>{gde_name}</code>, <code>{gde_canton}</code>, <code>{is_optin}</code>,'
+							  . ' <code>{creation_date}</code>, <code>{source}</code>',
 		],
 		[
 			'uid'     => 'api_export_max_per_execution',
@@ -484,6 +509,13 @@ class ConfigVars
 		],
 	];
 
+	/**
+	 * Try to avoid this due to poor performance
+	 *
+	 * @param $id
+	 *
+	 * @return mixed|null
+	 */
 	public static function getField($id)
 	{
 		$fields = ConfigVars::getFields();
@@ -496,6 +528,9 @@ class ConfigVars
 		return $field;
 	}
 
+	/**
+	 * @return array|null
+	 */
 	public static function getFields()
 	{
 		if (self::$fieldsCache !== null) {
@@ -504,24 +539,24 @@ class ConfigVars
 		$fields        = self::$fields;
 		$fields[]      = [
 			'uid'          => 'mail_confirmation_enabled',
-			'label'        => 'Mail confirmation enabled',
-			'section'      => 'mailText',
+			'label'        => 'Confirmation mail enabled',
+			'section'      => 'mailTasks',
 			'type'         => 'checkbox',
 			'default'      => 1,
 			'supplemental' => 'This mail is sent to the signee, just after signing up. If this option is enabled after people have already signed up, confirmations will also be sent for those who did not receive any mail yet.',
 		];
 		$fields[]      = [
 			'uid'          => 'mail_remind_sheet_enabled',
-			'label'        => 'Mail sheet reminder enabled',
-			'section'      => 'mailText',
+			'label'        => 'Sheet reminder mail enabled',
+			'section'      => 'mailTasks',
 			'type'         => 'checkbox',
 			'default'      => 0,
-			'supplemental' => 'Send a reminder to signees which didn\'t send their signature sheets.',
+			'supplemental' => 'Send a reminder to signees which didn\'t send their signature sheets. To use this function, you must regularly import the received signature sheets.',
 		];
 		$fields[]      = [
 			'uid'          => 'mail_remind_sheet_min_age',
-			'label'        => 'Minimum signature age',
-			'section'      => 'mailText',
+			'label'        => 'Sheet reminder - minimum signature age',
+			'section'      => 'mailTasks',
 			'type'         => 'number',
 			'default'      => 30,
 			'supplemental' => 'Minimum age of a signature before a sheet reminder is sent.',
@@ -529,16 +564,16 @@ class ConfigVars
 		];
 		$fields[]      = [
 			'uid'          => 'mail_remind_signup_enabled',
-			'label'        => 'Mail signup reminder enabled',
-			'section'      => 'mailText',
+			'label'        => 'Sign-up reminder mail enabled',
+			'section'      => 'mailTasks',
 			'type'         => 'checkbox',
 			'default'      => 0,
 			'supplemental' => 'Send a reminder to signees which didn\'t finish filling the sign-up form.',
 		];
 		$fields[]      = [
 			'uid'          => 'mail_remind_signup_min_age',
-			'label'        => 'Minimum signature age',
-			'section'      => 'mailText',
+			'label'        => 'Sign-up reminder - Minimum signature age',
+			'section'      => 'mailTasks',
 			'type'         => 'number',
 			'default'      => 5,
 			'supplemental' => 'Minimum age of a signature before a form reminder is sent.',
@@ -547,18 +582,18 @@ class ConfigVars
 		$fields[]      = [
 			'uid'          => 'mail_remind_dedup',
 			'label'        => 'Only send one reminder per mail adress',
-			'section'      => 'mailText',
+			'section'      => 'mailBase',
 			'type'         => 'checkbox',
 			'default'      => 1,
-			'supplemental' => 'Might weaken email address encryption security.',
+			'supplemental' => 'Might weaken email address encryption security. Applies for both <b>sheet reminder</b> and <b>sign-up reminder</b>.',
 		];
 		$fields[]      = [
 			'uid'          => 'mail_nl2br',
 			'label'        => 'Newline to BR',
-			'section'      => 'mailText',
+			'section'      => 'mailBase',
 			'type'         => 'checkbox',
 			'default'      => 1,
-			'supplemental' => 'Inserts HTML line breaks before all newlines in mail body. Don\'t activate this if you set the mail body in HTML.',
+			'supplemental' => 'Inserts HTML line breaks before all newlines in mail body. Don\'t activate this if you insert the mail body in HTML anyway.',
 		];
 		$glueLang      = Config::GLUE_LANG;
 		$wpMailAddress = get_bloginfo('admin_email');
@@ -594,7 +629,7 @@ class ConfigVars
 				'label'   => $language,
 				'section' => 'optInText',
 				'type'    => 'text',
-				'class'   => 'hideOnOptinDisabled' . $class,
+				'class'   => $class,
 			];
 
 			// signatureSheetFields_LANG
@@ -703,20 +738,21 @@ class ConfigVars
 				'class'   => $class,
 			];
 
-			// Mail confirmation
+			// Confirmation mail
 			$fields[] = [
 				'uid'          => 'mail_confirm_subj' . $glueLangId,
 				'label'        => 'Subject',
 				'section'      => 'mailConfirm_' . $langId,
 				'type'         => 'text',
-				'supplemental' => 'Available placeholders: {first_name}, {last_name}. This mail is sent to the signee after signing up.',
+				'supplemental' => 'Available placeholders: <code>{first_name}</code>, <code>{last_name}</code>.',
 			];
 			$fields[] = [
 				'uid'          => 'mail_confirm_body' . $glueLangId,
 				'label'        => 'Body',
 				'section'      => 'mailConfirm_' . $langId,
 				'type'         => 'textarea',
-				'supplemental' => 'Available placeholders: {first_name}, {last_name}, {mail}, {link_pdf}, {link_optin}, {subject}. ',
+				'supplemental' => 'Available placeholders: <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>,'
+								  . ' <code>{link_pdf}</code>, <code>{link_optin}</code>, <code>{subject}</code>.',
 			];
 
 			$fields[] = [
@@ -724,14 +760,14 @@ class ConfigVars
 				'label'        => 'Subject',
 				'section'      => 'mailRemindSheet_' . $langId,
 				'type'         => 'text',
-				'supplemental' => 'Available placeholders: {first_name}, {last_name}. This mail is sent to the signee after signing up.',
+				'supplemental' => 'Available placeholders: <code>{first_name}</code>, <code>{last_name}</code>. This mail is sent to the signee after signing up.',
 			];
 			$fields[] = [
 				'uid'          => 'mail_remind_sheet_body' . $glueLangId,
 				'label'        => 'Body',
 				'section'      => 'mailRemindSheet_' . $langId,
 				'type'         => 'textarea',
-				'supplemental' => 'Available placeholders: {first_name}, {last_name}, {mail}, {link_pdf}, {link_optin}, {subject}. ',
+				'supplemental' => 'Available placeholders: <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>, <code>{link_pdf}</code>, <code>{link_optin}</code>, <code>{subject}</code>.',
 			];
 
 			$fields[] = [
@@ -739,14 +775,14 @@ class ConfigVars
 				'label'        => 'Subject',
 				'section'      => 'mailRemindSignup_' . $langId,
 				'type'         => 'text',
-				'supplemental' => 'Available placeholders: {first_name}, {last_name}. This mail is sent to the signee after signing up.',
+				'supplemental' => 'Available placeholders: <code>{first_name}</code>, <code>{last_name}</code>. This mail is sent to the signee after signing up.',
 			];
 			$fields[] = [
 				'uid'          => 'mail_remind_signup_body' . $glueLangId,
 				'label'        => 'Body',
 				'section'      => 'mailRemindSignup_' . $langId,
 				'type'         => 'textarea',
-				'supplemental' => 'Available placeholders: {first_name}, {last_name}, {mail}, {link_pdf}, {link_optin}, {subject}. ',
+				'supplemental' => 'Available placeholders: <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>, <code>{link_pdf}</code>, <code>{link_optin}</code>, <code>{subject}</code>. ',
 			];
 		}
 		$cantons     = i18n::$cantons;
@@ -854,23 +890,23 @@ class ConfigVars
 							 . '<div class="demovox-pdf-loading hidden">'
 							 . __('Preparing your signature sheet, please wait...', 'demovox') . '</div>'
 							 . '<div class="demovox-pdf-ok hidden"><iframe src="about:blank" class="pdf-iframe"></iframe></div>'
-							 .'</div>'
+							 . '</div>'
 							 . ($langEnabled ? '' : '</div>'),
 			];
 			$sections['mailConfirm_' . $langId]          = [
-				'title'   => $language . '<br/>Mail confirmation',
 				'page'    => 'demovoxFields4',
+				'title'   => $language . '<br/>Confirmation mail',
 				'addPre'  => '<div class="showOnMailConfirmEnabled' . ($langEnabled ? '' : ' hidden') . '">',
 				'addPost' => '</div>',
 			];
 			$sections['mailRemindSheet_' . $langId]      = [
-				'title'   => $language . '<br/>Mail sheet reminder ',
+				'title'   => $language . '<br/>Sheet reminder mail',
 				'page'    => 'demovoxFields4',
 				'addPre'  => '<div class="showOnMailRemindSheetEnabled' . ($langEnabled ? '' : ' hidden') . '">',
 				'addPost' => '</div>',
 			];
 			$sections['mailRemindSignup_' . $langId]     = [
-				'title'   => $language . '<br/>Mail signup reminder ',
+				'title'   => $language . '<br/>Sign-up reminder mail',
 				'page'    => 'demovoxFields4',
 				'addPre'  => '<div class="showOnMailRemindSignupEnabled' . ($langEnabled ? '' : ' hidden') . '">',
 				'addPost' => '</div>',
