@@ -47,8 +47,10 @@ class DbSignatures extends Db
 		'is_sheet_received'   => 'Received signatures',
 		'is_outside_scope'    => 'Is outside scope',
 		'creation_date'       => 'Creation Date',
+		'edit_date'           => 'Edit date',
 		'sheet_received_date' => 'Sheet received Date',
 		'serial'              => 'Serial (QR code)',
+		'source'              => 'Source',
 	];
 
 	/**
