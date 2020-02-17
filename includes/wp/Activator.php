@@ -61,7 +61,8 @@ class Activator
           creation_date datetime NOT NULL DEFAULT NOW(),
           edit_date datetime NULL,
           sheet_received_date datetime NULL,
-          reminder_sent_date datetime NULL,
+          remind_signup_sent_date datetime NULL,
+          remind_sheet_sent_date datetime NULL,
           source varchar(127) NULL,
           PRIMARY KEY (ID),
           UNIQUE KEY guid_index (guid),
@@ -145,6 +146,12 @@ class Activator
 		if (Db::query("SHOW COLUMNS FROM `$dbMailDdName` LIKE 'mail'")) {
 			// previous version was < 1.3.3
 			$update = "ALTER TABLE $dbMailDdName CHANGE COLUMN mail mail_md5 CHAR(32);";
+			Db::query($update);
+		}
+		if (Db::query("SHOW COLUMNS FROM `$dbSignName` LIKE 'reminder_sent_date'")) {
+			// previous version was < 2.1.3
+			$update = "ALTER TABLE $dbSignName CHANGE COLUMN reminder_sent_date remind_sheet_sent_date datetime NULL, ";
+			$update .= "ADD COLUMN remind_signup_sent_date datetime NULL AFTER sheet_received_date;";
 			Db::query($update);
 		}
 	}
