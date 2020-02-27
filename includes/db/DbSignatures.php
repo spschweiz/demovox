@@ -14,7 +14,7 @@ class DbSignatures extends Db
 	public $is_optin, $is_step2_done, $is_sheet_received, $is_exported, $is_encrypted, $is_deleted, $state_confirm_sent,
 		$state_remind_sheet_sent, $state_remind_signup_sent, $is_outside_scope;
 	/** @var string */
-	public $creation_date, $edit_date, $sheet_received_date, $reminder_sent_date;
+	public $creation_date, $edit_date, $sheet_received_date, $remind_signup_sent_date, $remind_sheet_sent_date;
 
 	// Model
 	const WHERE_OPTIN              = 0;
@@ -47,8 +47,10 @@ class DbSignatures extends Db
 		'is_sheet_received'   => 'Received signatures',
 		'is_outside_scope'    => 'Is outside scope',
 		'creation_date'       => 'Creation Date',
+		'edit_date'           => 'Edit date',
 		'sheet_received_date' => 'Sheet received Date',
 		'serial'              => 'Serial (QR code)',
+		'source'              => 'Source',
 	];
 
 	/**

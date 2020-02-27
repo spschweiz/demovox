@@ -85,7 +85,17 @@ class CronMailRemindSignup extends CronMailBase
 		$stateSent = $isSent ? 1 : ($row->state_remind_signup_sent - 1);
 
 		$dbSign = new DbSignatures();
-		$dbSign->updateStatus(['state_remind_signup_sent' => $stateSent], ['ID' => $row->ID]);
+		if ($isSent) {
+			$dbSign->updateStatus(
+				['state_remind_signup_sent' => $stateSent, 'remind_signup_sent_date' => current_time('mysql')],
+				['ID' => $row->ID]
+			);
+		} else {
+			$dbSign->updateStatus(
+				['state_remind_signup_sent' => $stateSent],
+				['ID' => $row->ID]
+			);
+		}
 		$this->log(
 			'Mail ' . ($isSent ? '' : 'NOT ') . 'sent for signature ID "' . $row->ID
 			. '" with language "' . $row->language . '" with sender ' . $fromName . ' (' . $fromAddress . ')',
