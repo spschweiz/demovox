@@ -5,7 +5,6 @@
 
 [![Build Status](https://travis-ci.org/spschweiz/demovox.svg?branch=master)](https://travis-ci.org/spschweiz/demovox)
 [![open bugs](https://img.shields.io/github/issues/spschweiz/demovox/bug?label=bugs&logo=GitHub)](https://github.com/spschweiz/demovox/issues)
-[![last commit](https://img.shields.io/github/last-commit/spschweiz/demovox?logo=GitHub)](https://github.com/spschweiz/demovox/issues)
 [![WordPress plugin downloads](https://img.shields.io/wordpress/plugin/dt/demovox?logo=WordPress)](https://wordpress.org/plugins/demovox/)
 [![WordPress plugin version](https://img.shields.io/wordpress/plugin/v/demovox?label=plugin&logo=WordPress)](https://wordpress.org/plugins/demovox/)
 [![WordPress tested version](https://img.shields.io/wordpress/plugin/tested/demovox?logo=WordPress)](https://wordpress.org/plugins/demovox/)
