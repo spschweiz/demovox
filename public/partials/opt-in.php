@@ -23,15 +23,13 @@ namespace Demovox;
 		<input name="action" type="hidden" value="demovox_optin">
 		<input name="nonce" type="hidden" value="<?= Core::createNonce($this->nonceId) ?>">
 		<input name="sign" type="hidden" value="<?= $guid ?>">
-		<div class="form-group">
+		<div id="demovox-grp-is_optin" class="form-group">
 			<div class="form-check">
-				<input class="form-check-input" type="checkbox" value="1" id="is_optin" name="is_optin" <?= $isOptIn ? 'checked="checked"' : '' ?>>
-				<label class="form-check-label" for="is_optin">
-					<?= $textOptin ?>
-				</label>
+				<input class="form-check-input" type="checkbox" value="1" id="demovox-is_optin" name="is_optin" <?= $isOptIn ? 'checked="checked"' : '' ?>>
+				<label class="form-check-label" for="demovox-is_optin"><?= $textOptin ?></label>
 			</div>
 		</div>
-		<div class="form-group">
+		<div id="demovox-grp-submit" class="form-group">
 			<input type="submit" id="demovox-ajax-button" class="form-submit btn btn-primary" value="<?= __('Continue', 'demovox') ?>" />
 		</div>
 	</form>
