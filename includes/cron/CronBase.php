@@ -19,6 +19,11 @@ class CronBase
 
 	public function __construct()
 	{
+		if (!Core::isPluginEnabled()) {
+			// wp cannot disable crons without deleting them
+			$this->setSkipped('Skip cron execution as demovox is disabled');
+			return false;
+		}
 		[$namespace, $className] = explode('\\', get_class($this));
 		$cronName          = strtolower(
 			preg_replace(

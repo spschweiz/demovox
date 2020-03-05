@@ -345,4 +345,10 @@ class Core
 	{
 		return plugin_dir_path(dirname(__FILE__));
 	}
+
+	public static function isPluginEnabled()
+	{
+		include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+		return is_plugin_active('demovox/demovox.php');
+	}
 }
