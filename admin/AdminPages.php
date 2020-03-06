@@ -112,36 +112,68 @@ class AdminPages extends BaseController
 		Core::checkAccess('demovox_stats');
 
 		$dbSign = new DbSignatures();
-		$countDategroupedOi = $dbSign->getResults(
-			['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
-			'is_optin = 1 AND is_step2_done = 1 AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)'
-		);
-		$countDategroupedOo = $dbSign->getResults(
-			['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
-			'is_optin = 0 AND is_step2_done = 1 AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)'
-		);
-		$countDategroupedOn = $dbSign->getResults(
-			['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
-			'is_optin IS NULL AND is_step2_done = 1 AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)'
-		);
-		$countDategroupedC = $dbSign->getResults(
-			['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
-			'is_step2_done = 0 AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)'
-		);
-		$datesetsOi = $datesetsOo = $datesetsOn = $datesetsC = '';
-		foreach ($countDategroupedOi as $row) {
-			$datesetsOi .= '{t:demovoxAdminClass.nDate(' . $row->date . '),y:' . intval($row->count) . '},';
+		$sqlAppend = ' AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)';
+		$source = isset($_REQUEST['source']) ? sanitize_text_field($_REQUEST['source']) : null;
+		if ($source !== null) {
+			$sqlAppend .= ' AND source=\'' . $source . '\'';
 		}
-		foreach ($countDategroupedOo as $row) {
-			$datesetsOo .= '{t:demovoxAdminClass.nDate(' . $row->date . '),y:' . intval($row->count) . '},';
-		}
-		foreach ($countDategroupedOn as $row) {
-			$datesetsOn .= '{t:demovoxAdminClass.nDate(' . $row->date . '),y:' . intval($row->count) . '},';
-		}
-		foreach ($countDategroupedC as $row) {
-			$datesetsC .= '{t:demovoxAdminClass.nDate(' . $row->date . '),y:' . intval($row->count) . '},';
-		}
-		include Infos::getPluginDir() . 'admin/partials/charts.php';
+		$datasets = [];
+		// sheet_received_date
+		$datasets[] = [
+			'label'           => 'Received signatures',
+			'borderColor'     => 'rgba(50, 100, 150, 1)',
+			'backgroundColor' => 'rgba(50, 100, 150, 0.2)',
+			'data'            => $dbSign->getResults(
+				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'SUM(is_sheet_received) AS count'],
+				'is_sheet_received<>0' . $sqlAppend
+			),
+		];
+		$datasets[] = [
+			'label'           => 'Received sheets',
+			'borderColor'     => 'rgba(0, 50, 0, 1)',
+			'backgroundColor' => 'rgba(0, 50, 0, 0.2)',
+			'data'            => $dbSign->getResults(
+				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) AS count'],
+				'is_sheet_received<>0' . $sqlAppend
+			),
+		];
+		$datasets[] = [
+			'label'           => 'Opt-in',
+			'borderColor'     => 'rgba(0, 255, 99, 1)',
+			'backgroundColor' => 'rgba(0, 255, 99, 0.2)',
+			'data'            => $dbSign->getResults(
+				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
+				'is_optin = 1 AND is_step2_done = 1' . $sqlAppend
+			),
+		];
+		$datasets[] = [
+			'label'           => 'Opt-out',
+			'borderColor'     => 'rgba(255, 206, 86, 1)',
+			'backgroundColor' => 'rgba(255, 206, 86, 0.2)',
+			'data'            => $dbSign->getResults(
+				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
+				'is_optin = 0 AND is_step2_done = 1' . $sqlAppend
+			),
+		];
+		$datasets[] = [
+			'label'           => 'No opt-in info',
+			'borderColor'     => 'rgb(68,78,255, 1)',
+			'backgroundColor' => 'rgba(68,78,255, 0.2)',
+			'data'            => $dbSign->getResults(
+				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
+				'is_optin IS NULL AND is_step2_done = 1' . $sqlAppend
+			),
+		];
+		$datasets[] = [
+			'label'           => 'Unfinished',
+			'borderColor'     => 'rgba(255,99,132,1 )',
+			'backgroundColor' => 'rgba(255,99,132, 0.2)',
+			'data'            => $dbSign->getResults(
+				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
+				'is_step2_done = 0' . $sqlAppend
+			),
+		];
+		include Infos::getPluginDir() . 'admin/partials/statsCharts.php';
 	}
 
 	public function statsSource()
@@ -158,7 +190,7 @@ class AdminPages extends BaseController
 				'SUM((is_optin=0 AND is_step2_done<>0 AND is_deleted = 0)) AS optout',
 				'SUM((is_step2_done=0 AND is_deleted = 0)) AS unfinished',
 			],
-			'',
+			'is_deleted = 0',
 			'GROUP BY source ORDER BY source'
 		);
 		include Infos::getPluginDir() . 'admin/partials/statsSource.php';

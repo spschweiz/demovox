@@ -89,15 +89,11 @@ namespace Demovox;
 				Source stats
 			</button>
 			<button class="ajaxButton" data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php', 'demovox_charts_stats') ?>">
-				Time based chart
+				Historical chart
 			</button>
 			<br/>
 			<span class="ajaxContainer"></span>
+			<span class="ajaxContainerChart"></span>
 		</p>
-		<div class="row">
-			<div class="col-md-10">
-				<canvas id="dateChart"></canvas>
-			</div>
-		</div>
 	<?php } ?>
 </div>

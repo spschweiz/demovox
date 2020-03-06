@@ -1,4 +1,5 @@
 import demovoxChart from 'chart.js'
+
 var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 
 (function ($) {
@@ -7,7 +8,7 @@ var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 	var $input;
 	$(function () {
 		var demovoxMediaUploader;
-		$('.uploadButton').click(function (e) {
+		$('.demovox .uploadButton').click(function (e) {
 			e.preventDefault();
 			$input = $('#' + $(this).data('inputId'));
 			// If the uploader object has already been created, reopen the dialog.
@@ -33,7 +34,7 @@ var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 		});
 
 		fontSize = parseInt($('#demovox_fontsize').val());
-		$('.showPdf').click(function () {
+		$('.demovox .showPdf').click(function () {
 			var $container = $(this).closest('div'),
 				lang = $(this).data('lang'),
 				qrMode = $('#demovox_field_qr_mode').val(),
@@ -64,29 +65,45 @@ var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 					};
 			createPdf('preview', pdfUrl, fields, qrData, $container);
 		});
-		$('.ajaxButton').click(function () {
-			var cont = $(this).data('container'),
-				ajaxUrl = $(this).data('ajax-url'),
-				confirmTxt = $(this).data('confirm'),
-				$ajaxContainer = $(this).parent().find(cont ? cont : '.ajaxContainer');
-			if (typeof confirmTxt !== 'undefined' && !confirm(confirmTxt)) {
-				return;
-			}
-			$ajaxContainer.css('cursor', 'progress');
-			$ajaxContainer.html('Loading...');
-			$.get(ajaxUrl)
-				.done(function (data) {
-					$ajaxContainer.html(data);
-				})
-				.fail(function () {
-					$ajaxContainer.html('Error');
-				})
-				.always(function () {
-					$ajaxContainer.css('cursor', 'auto');
-				});
-		});
+		initDemovoxAjaxButton($('.demovox'));
 	});
 })(jQuery);
+
+function initDemovoxAjaxButton($container) {
+	console.log('initDemovoxAjaxButton', $container);
+	$container.find('.ajaxButton').click(function () {
+		var cont = $(this).data('container'),
+			ajaxUrl = $(this).data('ajax-url'),
+			confirmTxt = $(this).data('confirm'),
+			$ajaxContainer = $(this).parent().find(cont ? cont : '.ajaxContainer');
+		if(!$ajaxContainer.length){
+			if (cont) {
+				$ajaxContainer = $(cont);
+			}
+			if (!$ajaxContainer.length) {
+				console.error('initDemovoxAjaxButton: $ajaxContainer not found', $ajaxContainer);
+				return;
+			}
+		}
+		if (typeof confirmTxt !== 'undefined' && !confirm(confirmTxt)) {
+			return;
+		}
+		$ajaxContainer.css('cursor', 'progress');
+		$ajaxContainer.html('Loading...');
+		$.get(ajaxUrl)
+			.done(function (data) {
+				$ajaxContainer.html(data);
+				initDemovoxAjaxButton($ajaxContainer);
+			})
+			.fail(function () {
+				$ajaxContainer.html('Error');
+			})
+			.always(function () {
+				$ajaxContainer.css('cursor', 'auto');
+			});
+	});
+}
+
 var demovoxAdminClass = {
 	getField: function (name) {
 		return parseInt($('#demovox_field_' + name).val())
