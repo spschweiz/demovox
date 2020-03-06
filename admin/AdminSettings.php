@@ -295,7 +295,7 @@ class AdminSettings extends BaseController
 			case 'wpMedia':
 				$value = Config::getValue($uid);
 				printf(
-					'<input name="%1$s" id="%1$s" type="text" placeholder="%2$s" value="%3$s" size="35" />',
+					'<input name="%1$s" id="%1$s" type="text" placeholder="%2$s" value="%3$s" size="72" />',
 					$wpid,
 					$placeholder,
 					$value
