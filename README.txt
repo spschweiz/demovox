@@ -100,6 +100,12 @@ We do not provide any warranty or free support, but you're welcome to create an 
 = 2.1 =
 * Global signature source parameter "demovox_src", which doesn't require the demovox sign shortcode on the landing page
 * AJAX submit of forms can be disabled
-* Option to set a last reminder date
+* Option stop reminders at specified date
+
+= 2.2 =
+* Option to print signee names on the PDF
+* Sign-up form: classes for css styling
+* Skip demovox cron execution while the plugin is disabled
+* More detailed statistics
 
 For more details, see our commit log: https://github.com/spschweiz/demovox/commits/master

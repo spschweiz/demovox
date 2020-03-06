@@ -18,7 +18,7 @@ namespace Demovox;
  * Plugin Name:       demovox
  * Plugin URI:        https://demovox.ch/
  * Description:       demovox is a tool to collect signatures for Swiss popular initiatives by offering the visitor a personalized signature sheet.
- * Version:           2.1.3
+ * Version:           2.2
  * Author:            Fabian Horlacher / SP Schweiz
  * Author URI:        https://www.spschweiz.ch/
  * GitHub Plugin URI: https://github.com/spschweiz/demovox
@@ -38,7 +38,7 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('DEMOVOX_VERSION', '2.1.3');
+define('DEMOVOX_VERSION', '2.2');
 
 /**
  * The code that runs during plugin activation.
