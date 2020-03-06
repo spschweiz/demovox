@@ -233,6 +233,14 @@ class ConfigVars
 			'default'      => '11',
 		],
 		[
+			'uid'          => 'print_names_on_pdf',
+			'label'        => 'Signee names',
+			'section'      => 'signatureSheetFields',
+			'type'         => 'checkbox',
+			'supplemental' => 'Place signee names on the sheet, usually not allowed',
+			'default'      => 0,
+		],
+		[
 			'uid'          => 'field_qr_mode',
 			'label'        => 'QR mode',
 			'section'      => 'signatureSheetFields',
@@ -665,6 +673,24 @@ class ConfigVars
 				'type'     => 'pos_rot',
 				'defaultX' => 260,
 				'defaultY' => 655,
+			];
+			$fields[] = [
+				'uid'      => 'field_last_name' . $glueLangId,
+				'label'    => 'Last Name',
+				'section'  => 'signatureSheetFields_' . $langId,
+				'type'     => 'pos_rot',
+				'class'    => 'showOnPrintNamesChecked',
+				'defaultX' => 70,
+				'defaultY' => 617,
+			];
+			$fields[] = [
+				'uid'      => 'field_first_name' . $glueLangId,
+				'label'    => 'First Name',
+				'section'  => 'signatureSheetFields_' . $langId,
+				'type'     => 'pos_rot',
+				'class'    => 'showOnPrintNamesChecked',
+				'defaultX' => 130,
+				'defaultY' => 617,
 			];
 			$fields[] = [
 				'uid'      => 'field_birthdate_day' . $glueLangId,

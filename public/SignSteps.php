@@ -236,11 +236,9 @@ class SignSteps
 	public function step3($guid)
 	{
 		$dbSign       = new DbSignatures();
-		$loadedByGuid = false;
 		$redirect     = isset($_REQUEST['redirect']) && $_REQUEST['redirect'];
 		if ($guid) {
 			// User from reminder mail
-			$loadedByGuid = true;
 			if ($redirect) {
 				// Redirect to success page
 				$row = $dbSign->getRow(['link_success',], "guid = '" . $guid . "'");
@@ -293,6 +291,8 @@ class SignSteps
 		$row = $dbSign->getRow(
 			[
 				'ID',
+				'first_name',
+				'last_name',
 				'birth_date',
 				'gde_name',
 				'gde_zip',
@@ -335,17 +335,20 @@ class SignSteps
 		} else {
 			$address = $street . ' ' . $streetNo;
 		}
-		$fields = $this->formatFields(
-			[
-				'field_canton'          => strtoupper($gdeCanton),
-				'field_commune'         => $gdeName,
-				'field_zip'             => $gdeZip,
-				'field_birthdate_day'   => str_pad($birthDateDay, 2, '0', STR_PAD_LEFT),
-				'field_birthdate_month' => str_pad($birthDateMonth, 2, '0', STR_PAD_LEFT),
-				'field_birthdate_year'  => substr($birthDateYear, -2),
-				'field_street'          => $address,
-			]
-		);
+		$fields = [
+			'field_canton'          => strtoupper($gdeCanton),
+			'field_commune'         => $gdeName,
+			'field_zip'             => $gdeZip,
+			'field_birthdate_day'   => str_pad($birthDateDay, 2, '0', STR_PAD_LEFT),
+			'field_birthdate_month' => str_pad($birthDateMonth, 2, '0', STR_PAD_LEFT),
+			'field_birthdate_year'  => substr($birthDateYear, -2),
+			'field_street'          => $address,
+		];
+		if(Config::getValue('print_names_on_pdf')){
+			$fields['field_first_name'] = $row->first_name;
+			$fields['field_last_name'] = $row->last_name;
+		}
+		$fields = $this->formatFields($fields);
 
 		// PDF QR-code
 		if (($qrMode = Config::getValue('field_qr_mode')) === 'disabled') {
@@ -399,7 +402,8 @@ class SignSteps
 			$posX   = Config::getValueByUserlang($name, Config::PART_POS_X);
 			$posY   = Config::getValueByUserlang($name, Config::PART_POS_Y);
 			$rotate = Config::getValueByUserlang($name, Config::PART_ROTATION);
-			if (!$posX && $posX !== 0) {
+			if ($posX === false || $posY === false || $rotate === false) {
+				Core::logMessage('Coordinates for field "' . $name . '" are not defined, please save your Signature sheet settings.', 'warning');
 				continue;
 			}
 			if (is_array($value)) {
@@ -411,7 +415,6 @@ class SignSteps
 				$text = $value;
 			}
 			$return[] = [
-				//'name'     => $name,
 				'drawText' => (string)$text,
 				'x'        => (int)$posX,
 				'y'        => (int)$posY,
