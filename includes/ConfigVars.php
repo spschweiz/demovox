@@ -30,7 +30,7 @@ class ConfigVars
 			'page'  => 'demovoxFields1',
 			'sub'   => 'Text beside the checkbox, specify as exactly as possible how the data will be used. <code>&lt;a&gt;</code> tags can'
 					   . ' be used.<br/> If you use the opt-out mode, invert the description logic accordingly. '
-					   . '<br/><br/>Example: <code>Mit dem Unterzeichnen akzeptiere ich die &lt;a href="https://beispiel.ch/datenschutz-bestimmungen"&gt;Datenschutzbestimmungen&lt;/a&gt;.</code>',
+					   . '<br/><br/>Example: <code>Mit dem Unterzeichnen akzeptiere ich die &lt;a href="https://beispiel.ch/datenschutz-bestimmungen" target="_blank"&gt;Datenschutzbestimmungen&lt;/a&gt;.</code>',
 			'class'   => 'hideOnOptinDisabled',
 			'addPre'  => '<div class="hideOnOptinDisabled">',
 			'addPost' => '</div>',

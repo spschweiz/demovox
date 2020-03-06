@@ -336,12 +336,12 @@ $(() => {
 			}
 		}
 		if (currentPage === 2) {
-			$el.zip = $('#zip');
-			$el.street = $('#street');
-			$el.streetNo = $('#street_no');
-			$el.gdeCanton = $('#gde_canton');
-			$el.birthDate = $('#birth_date');
-			$el.swissAbroad = $('#swiss_abroad');
+			$el.zip = $('#demovox-zip');
+			$el.street = $('#demovox-street');
+			$el.streetNo = $('#demovox-street_no');
+			$el.gdeCanton = $('#demovox-de_canton');
+			$el.birthDate = $('#demovox-birth_date');
+			$el.swissAbroad = $('#demovox-swiss_abroad');
 
 			$el.birthDate.datepicker({
 				changeMonth: true,
@@ -355,7 +355,7 @@ $(() => {
 
 			if ($el.swissAbroad.length) {
 				$el.gdeCanton.select2();
-				let $country = $('#country'),
+				let $country = $('#demovox-country'),
 					countriesLoaded;
 				$el.swissAbroad.change(function () {
 					if ($(this).is(':checked')) {
@@ -401,10 +401,10 @@ $(() => {
 		}
 
 		if (currentPage === 2 && demovoxData.apiAddressEnabled) {
-			$el.city = $('#city');
-			$el.gdeName = $('#gde_name');
-			$el.gdeId = $('#gde_id');
-			$el.gdeZip = $('#gde_zip');
+			$el.city = $('#demovox-city');
+			$el.gdeName = $('#demovox-gde_name');
+			$el.gdeId = $('#demovox-gde_id');
+			$el.gdeZip = $('#demovox-gde_zip');
 
 			$el.city.select2({
 				tags: true,
