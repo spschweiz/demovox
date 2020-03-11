@@ -168,7 +168,7 @@ class SignSteps
 		];
 
 		// Append additional values to $data
-		$data = $this->saveStep2PagesUrl($guid, $country, $gdeCanton, $gdeId, $data);
+		$data = $this->getPagesUrls($guid, $country, $gdeCanton, $gdeId, $data);
 
 		if ($optinMode = $this->getOptinMode(2)) {
 			$optIn            = isset($_REQUEST['is_optin']) && $_REQUEST['is_optin'] ? 1 : 0;
@@ -197,7 +197,7 @@ class SignSteps
 	 *
 	 * @return array
 	 */
-	protected function saveStep2PagesUrl($guid, string $country, string $gdeCanton, string $gdeId, array $data)
+	protected function getPagesUrls($guid, string $country, string $gdeCanton, string $gdeId, array $data)
 	{
 		$abroadRedirect   = Config::getValue('swiss_abroad_redirect');
 		$isAbroadRedirect = $abroadRedirect && $country !== i18n::$defaultCountry;
@@ -208,19 +208,19 @@ class SignSteps
 				|| $localIniMode === 'commune' && Config::getValue('local_initiative_commune') !== $gdeId;
 		}
 		if ($isAbroadRedirect) {
-			$successPage              = Strings::getPdfUrl($guid, $abroadRedirect);
+			$successPage              = Strings::getPageUrl($guid, $abroadRedirect);
 			$data['link_success']     = $successPage;
 			$data['link_pdf']         = $successPage;
 			$data['is_outside_scope'] = ($localIniMode !== 'disabled') ? 1 : 0;
 		} elseif ($isOutsideScope) {
-			$successPage              = Strings::getPdfUrl($guid, Config::getValue('local_initiative_error_redirect'));
+			$successPage              = Strings::getPageUrl($guid, Config::getValue('local_initiative_error_redirect'));
 			$data['link_success']     = $successPage;
 			$data['link_pdf']         = $successPage;
 			$data['is_outside_scope'] = 1;
 		} else {
-			$successPage          = Strings::getPdfUrl($guid, Config::getValue('use_page_as_success'));
+			$successPage          = Strings::getPageUrl($guid, Config::getValue('use_page_as_success'));
 			$data['link_success'] = $successPage;
-			$data['link_pdf']     = Strings::getPdfUrl($guid, Config::getValue('use_page_as_mail_link'));
+			$data['link_pdf']     = Strings::getPageUrl($guid, Config::getValue('use_page_as_mail_link'));
 		}
 
 		$linkOptin          = Strings::getPdfUrl($guid, Config::getValue('use_page_as_optin_link'));
@@ -376,7 +376,7 @@ class SignSteps
 
 		// Prepare view variables
 		$title     = __('signature_sheet', 'demovox');
-		$permalink = Strings::getPdfUrl($guid);
+		$permalink = Strings::getPageUrl($guid);
 		$pdfUrl    = Config::getValueByUserlang('signature_sheet');
 		$fields    = json_encode($fields);
 		$qrData    = $qrData ? json_encode($qrData) : null;

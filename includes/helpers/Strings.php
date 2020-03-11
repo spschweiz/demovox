@@ -9,11 +9,11 @@ class Strings
 	 * Get permalink to page where to find a visitor specific demovox page
 	 *
 	 * @param string $signGuid
-	 * @param null|int $pageId
+	 * @param null|int $pageId By default: success page (probably with pdf link)
 	 * @param $baseUrl null|string
 	 * @return string
 	 */
-	public static function getPdfUrl($signGuid, $pageId = null, $baseUrl = null)
+	public static function getPageUrl($signGuid, $pageId = null, $baseUrl = null)
 	{
 		$pageId = $pageId ?: Config::getValue('use_page_as_success');
 		$url = get_permalink($pageId);
