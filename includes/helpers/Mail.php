@@ -156,8 +156,8 @@ class signObject
 		$this->first_name = $first_name;
 		$this->last_name = $last_name;
 		$this->mail = $mail;
-		$this->link_pdf = 'https://example.com/link_to_pdf';
-		$this->link_optin = 'https://example.com/link_to_optin';
+		$this->link_pdf = Strings::getPageUrl('SIGNEE_PERSONAL_CODE');;
+		$this->link_optin = Strings::getPageUrl('SIGNEE_PERSONAL_CODE', Config::getValue('use_page_as_optin_link'));
 	}
 
 	var $language,
