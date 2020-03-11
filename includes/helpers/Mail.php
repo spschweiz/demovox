@@ -120,6 +120,7 @@ class Mail
 	static function getMailText($sign, $mailSubject, $mailType)
 	{
 		$clientLang = $sign->language;
+		$linkHome = get_home_url();
 		switch($mailType){
 			case self::TYPE_REMIND_SHEET:
 				$confName = 'mail_remind_sheet_body';
@@ -141,6 +142,7 @@ class Mail
 		$text = str_replace('{mail}', $sign->mail, $text);
 		$text = str_replace('{link_pdf}', $sign->link_pdf, $text);
 		$text = str_replace('{link_optin}', $sign->link_optin, $text);
+		$text = str_replace('{link_home}', $linkHome, $text);
 		$text = str_replace('{subject}', $mailSubject, $text);
 		return $text;
 	}

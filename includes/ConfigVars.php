@@ -786,7 +786,7 @@ class ConfigVars
 				'section'      => 'mailConfirm_' . $langId,
 				'type'         => 'textarea',
 				'supplemental' => 'Available placeholders: <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>,'
-								  . ' <code>{link_pdf}</code>, <code>{link_optin}</code>, <code>{subject}</code>.',
+								  . ' <code>{link_pdf}</code> (success page), <code>{link_optin}</code> (opt-in form), <code>{link_home}</code> (WordPress Front Page), <code>{subject}</code>.',
 			];
 
 			$fields[] = [
@@ -801,7 +801,7 @@ class ConfigVars
 				'label'        => 'Body',
 				'section'      => 'mailRemindSheet_' . $langId,
 				'type'         => 'textarea',
-				'supplemental' => 'Available placeholders: <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>, <code>{link_pdf}</code>, <code>{link_optin}</code>, <code>{subject}</code>.',
+				'supplemental' => 'Available placeholders: <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>, <code>{link_pdf}</code> (success page), <code>{link_optin}</code> (opt-in form), <code>{link_home}</code> (WordPress Front Page), <code>{subject}</code>.',
 			];
 
 			$fields[] = [
@@ -816,7 +816,7 @@ class ConfigVars
 				'label'        => 'Body',
 				'section'      => 'mailRemindSignup_' . $langId,
 				'type'         => 'textarea',
-				'supplemental' => 'Available placeholders: <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>, <code>{link_pdf}</code>, <code>{link_optin}</code>, <code>{subject}</code>. ',
+				'supplemental' => 'Available placeholders: <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>, <code>{link_optin}</code> (opt-in form), <code>{link_home}</code> (WordPress Front Page), <code>{subject}</code>. ',
 			];
 		}
 		$cantons     = i18n::$cantons;
