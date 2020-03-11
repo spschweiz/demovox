@@ -99,7 +99,7 @@ We do not provide any warranty or free support, but you're welcome to create an 
 
 = 2.1 =
 * Global signature source parameter "demovox_src", which doesn't require the demovox sign shortcode on the landing page
-* AJAX submit of forms can be disabled
+* Submission of forms is optionally by AJAX
 * Option stop reminders at specified date
 
 = 2.2 =
