@@ -84,6 +84,10 @@ class DbSignatures extends Db
 	{
 		$guid         = $this->createGuid();
 		$data['guid'] = $guid;
+
+		$linkOptin          = Strings::getPageUrl($guid, Config::getValue('use_page_as_optin_link'));
+		$data['link_optin'] = $linkOptin;
+
 		if (isset($data['creation_date_hours_ago'])) {
 			$data['creation_date'] = time() - $data['creation_date_hours_ago'] * 60 * 60;
 			unset($data['creation_date_hours_ago']);

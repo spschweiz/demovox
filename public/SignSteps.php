@@ -223,8 +223,6 @@ class SignSteps
 			$data['link_pdf']     = Strings::getPageUrl($guid, Config::getValue('use_page_as_mail_link'));
 		}
 
-		$linkOptin          = Strings::getPdfUrl($guid, Config::getValue('use_page_as_optin_link'));
-		$data['link_optin'] = $linkOptin;
 		return $data;
 	}
 
