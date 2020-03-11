@@ -75,7 +75,7 @@ class ConfigVars
 		'mailTasks'             => [
 			'title' => 'Email tasks',
 			'page'  => 'demovoxFields4',
-			'sub'   => 'Remember the <code>{&hellip;_link}</code> placeholders only contain the URL.'
+			'sub'   => 'Remember the <code>{link_&hellip;}</code> placeholders only contain the URL.'
 					   .' Therefore you might want to use <code>&lt;a&gt;</code>-tags to create a link.',
 		],
 		'api_address'          => [
