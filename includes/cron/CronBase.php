@@ -11,7 +11,7 @@ class CronBase
 	protected $scheduleRecurrence = 'hourly';
 
 	/**
-	 * @var $crons array
+	 * @var $cronClassNames array
 	 */
 	static protected $cronClassNames = [
 		0 => 'CronMailConfirm', 1 => 'CronMailIndex', 2 => 'CronMailRemindSheet', 3 => 'CronMailRemindSignup', 4 => 'CronExportToApi',
@@ -19,12 +19,7 @@ class CronBase
 
 	public function __construct()
 	{
-		if (!Core::isPluginEnabled()) {
-			// wp cannot disable crons without deleting them
-			$this->setSkipped('Skip cron execution as demovox is disabled');
-			return false;
-		}
-		[$namespace, $className] = explode('\\', get_class($this));
+		list($namespace, $className) = explode('\\', get_class($this));
 		$cronName          = strtolower(
 			preg_replace(
 				'/(?<=[a-z])([A-Z]+)/',
@@ -136,6 +131,11 @@ class CronBase
 	 */
 	protected function prepareRun()
 	{
+		if (!Core::isPluginEnabled()) {
+			// wp cannot disable crons without deleting them
+			$this->setSkipped('Skip cron execution as demovox is disabled');
+			return false;
+		}
 		if (Infos::isHighLoad()) {
 			$this->setSkipped('server load: ' . Infos::getLoad() . '%');
 			return false;
