@@ -623,9 +623,8 @@ class ConfigVars
 			'uid'          => 'mail_remind_max_date',
 			'label'        => 'Last reminder date',
 			'section'      => 'mailBase',
-			'type'         => 'date',
-			'default'      => date('d.m.Y'),
-			'supplemental' => 'Stop sending reminders after this date (format: DD.MM.YYYY). Applies to both <b>sheet reminder</b> and <b>sign-up reminder</b>.',
+			'type'         => 'text',
+			'supplemental' => 'Stop sending reminders after this date (format: DD.MM.YYYY, example: "' . date('d.m.Y') . '"). Applies to both <b>sheet reminder</b> and <b>sign-up reminder</b>.',
 		];
 		$fields[]      = [
 			'uid'          => 'mail_remind_dedup',
