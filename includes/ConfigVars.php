@@ -629,11 +629,11 @@ class ConfigVars
 		];
 		$fields[]      = [
 			'uid'          => 'mail_remind_dedup',
-			'label'        => 'Only send one reminder per mail adress',
+			'label'        => 'Mail deduplication',
 			'section'      => 'mailBase',
 			'type'         => 'checkbox',
 			'default'      => 1,
-			'supplemental' => 'Might weaken email address encryption security. Applies to both <b>sheet reminder</b> and <b>sign-up reminder</b>.',
+			'supplemental' => 'Only send one reminder per mail address. Might weaken email address encryption security. Applies to both <b>sheet reminder</b> and <b>sign-up reminder</b>.',
 		];
 		$fields[]      = [
 			'uid'          => 'mail_nl2br',

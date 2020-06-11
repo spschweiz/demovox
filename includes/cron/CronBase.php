@@ -66,6 +66,50 @@ class CronBase
 	/**
 	 * @return string
 	 */
+	public function getDescription()
+	{
+		$id = $this->getId();
+		$mail_remind_dedup = Config::getValue('mail_remind_dedup') ? 'enabled' : 'disabled';
+		switch ($id) {
+			case 0: // CronMailConfirm
+				$mail_confirmation_enabled = Config::getValue('mail_confirmation_enabled') ? 'enabled' : 'disabled';
+				return 'Send sign-up confirmation mails after a client has filled both forms. ' .
+					'Requires the setting <i>Confirmation mail</i> (' . $mail_confirmation_enabled . ') to be enabled.';
+				break;
+			case 1: // CronMailIndex
+				return 'Indexing cron to avoid duplicate reminders for the same mails address (table <i>wp_demovox_mails</i>). ' .
+					'If enabled, this indexer must be executed before reminder cron. ' .
+					'Requires the setting <i>Mail deduplication</i> (' . $mail_remind_dedup . ') to be enabled.';
+				break;
+			case 2: // CronMailRemindSheet
+				$mail_remind_sheet_min_age = intval(Config::getValue('mail_remind_sheet_min_age'));
+				$mail_remind_sheet_enabled = Config::getValue('mail_remind_sheet_enabled') ? 'enabled' : 'disabled';
+				return 'Send a reminder to signees which didn\'t send their signature sheets ' .
+					'after (<strong>' . $mail_remind_sheet_min_age . '</strong>) days. ' .
+					'<i>Mail deduplication</i> (' . $mail_remind_dedup . ') can be applied. ' .
+					'Requires the setting <i>Sheet reminder mail</i> (' . $mail_remind_sheet_enabled . ') to be enabled.';
+				break;
+			case 3: // CronMailRemindSignup
+				$mail_remind_signup_min_age = intval(Config::getValue('mail_remind_signup_min_age'));
+				$mail_remind_signup_enabled = Config::getValue('mail_remind_signup_enabled') ? 'enabled' : 'disabled';
+				return 'Send a reminder to signees which didn\'t finish filling the sign-up form ' .
+					'after (<strong>' . $mail_remind_signup_min_age . '</strong>) days. ' .
+					'<i>Mail deduplication</i> (' . $mail_remind_dedup . ') can be applied. ' .
+					'Requires the setting <i>Sheet reminder mail</i> (' . $mail_remind_signup_enabled . ') to be enabled.';
+				break;
+			case 4: // CronExportToApi
+				$api_export_url = Config::getValue('api_export_url');
+				$api_export_url = $api_export_url ? 'enabled and set to "' . $api_export_url . '"' : 'disabled';
+				return 'Export sign-up data to a REST API. ' .
+					'Requires the setting <i>API URL</i> (' . $api_export_url . ').';
+				break;
+		}
+		return null;
+	}
+
+	/**
+	 * @return string
+	 */
 	public function getClassName()
 	{
 		return $this->className;

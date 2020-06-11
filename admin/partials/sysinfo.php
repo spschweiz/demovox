@@ -42,8 +42,9 @@ namespace Demovox;
 	if (WP_DEBUG_DISPLAY) {
 		$wpErr = true;
 		?>
-		<h4 class="error">WP_DEBUG_DISPLAY is enabled, this could lead to the disclosure of sensitive information about the website and
-			server setup</h4>
+		<h4 class="error"><a href="https://codex.wordpress.org/WP_DEBUG" target="_blank">WP_DEBUG_DISPLAY</a>
+			is enabled, this could lead to the disclosure of sensitive information about the website and server setup
+		</h4>
 		<?php
 	}
 	if ($saltsFailed) {
@@ -60,7 +61,7 @@ namespace Demovox;
 	if (defined('DISABLE_WP_CRON') && DISABLE_WP_CRON) {
 		$wpErr = true;
 		?>
-		<h4 class="error">DISABLE_WP_CRON is enabled, cronjobs like sending mails will not be executed</h4>
+		<h4 class="error">DISABLE_WP_CRON is enabled, cronjobs like sending mails will <i>not</i> be executed</h4>
 		<?php
 	}
 	if (!$wpErr) {
@@ -68,44 +69,39 @@ namespace Demovox;
 		<p>
 			Success: WP config looks fine
 		</p>
-	<?php } else { ?>
-		<h4>Config</h4>
-		<p>You can find the Wordpress config here: <?= dirname(ABSPATH) ?>/wp-config.php</p>
 	<?php } ?>
+	<p>You can find the Wordpress config here: <?= dirname(ABSPATH) ?>/wp-config.php</p>
 	<h3>PHP</h3>
 	<?php
-
 	if (extension_loaded('gmp')) {
-		echo "<p>GMP is installed</p>";
+		echo '<p>GMP is installed and enabled</p>';
 	} else {
-		echo "<p>GMP is not available</p>";
+		echo '<p>GMP is <i>not</i> available</p>';
 	}
 
 	if (extension_loaded('bcmath')) {
-		echo "<p>BC Math is installed</p>";
+		echo '<p>BC Math is installed and enabled</p>';
 	} else {
-		echo "<p>BC Math is not available</p>";
-	}
+		echo '<p>BC Math is <i>not</i> available</p>';
+	} ?>
+	<?php
 	$phpErr = false;
 	if ($phpDisplayErrors) {
 		$phpErr = true;
 		?>
-		<h4 class="error">PHP display_errors is enabled</h4>
+		<h4 class="error">PHP <a href="https://www.php.net/manual/en/errorfunc.configuration.php" target="_blank">display_errors</a>
+			is enabled</h4>
 		<p>
-			PHP stack traces can display the arguments passed to methods on the call stack.<br/>
+			PHP display_errors stack traces can display the arguments passed to methods on the call stack.<br/>
 			The value of encryption passwords and other personally sensitive data may be leaked out to an attacker.
 		</p>
 		<?php
 	}
 	if (!$phpErr) {
 		?>
-		<p>
-			Success: PHP config looks fine
-		</p>
-	<?php } else { ?>
-		<h4>Config</h4>
-		<p>You can find the PHP config here: <?= php_ini_loaded_file() ?></p>
+		<p class="success"> Success: PHP config looks fine.</p>
 	<?php } ?>
+	<p>You can find the PHP config here: <?= php_ini_loaded_file() ?></p>
 	<h3>SSL</h3>
 	<p>
 		Notice: The plugin form is not available through unencrypted HTTP, please make sure the clients are forwarded to HTTPS.<br/>
@@ -114,7 +110,7 @@ namespace Demovox;
 		   target="_blank">ssllabs.com</a>.
 	</p>
 	<h3>Cron</h3>
-	<p>cron manager plugin is recommended for detailed configuration</p>
+	<p>A cron manager plugin is recommended for detailed wordpress cron configuration</p>
 	<?php
 	$allCrons = ManageCron::getAllCrons();
 	foreach ($allCrons as $cron) {
@@ -125,10 +121,13 @@ namespace Demovox;
 		$lastSuccess = $cron->getStatusSuccess();
 		?>
 		<h4><?= $cron->getName() ?></h4>
+		<?php if ($description = $cron->getDescription()) { ?>
+			<p><?= $description ?></p>
+		<?php } ?>
 		<p>
 			<button class="ajaxButton"
 			        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?cron=' . $cron->getId(), 'demovox_run_cron') ?>">
-				Run Now
+				Run now
 			</button>
 			<span class="ajaxContainer"></span>
 			<br/>
@@ -156,11 +155,11 @@ namespace Demovox;
 
 	}
 	?>
-	<h4>CPU Load infos (not supported by Windows)</h4>
+	<h4>CPU Load infos (not supported by Windows servers)</h4>
 	Current load: <?= Infos::getLoad() ?>% / Absolute load: <?= Infos::getLoad(false) ?>%<br/>
 	Is high load (&gt; <?= intval(Config::getValue('cron_max_load')) ?>%): <?=
 	Infos::isHighLoad()
-		? '<span class="error">Yes</span> (would NOT execute CRON)'
+		? '<span class="error">Yes</span> (would <i>NOT</i> execute CRON)'
 		: '<span class="success">No</span> (would execute CRON)' ?><br/>
 	Recognized Cores: <?= Infos::countCores() ?> / Configured cores: <?= intval(Config::getValue('cron_cores')) ?>
 	(this value is used to
