@@ -99,12 +99,8 @@ See README.txt
 
 ## Authors
 
-- [@Horlacher](https://github.com/Horlacher) - Initial work
-- [@tsueri](https://github.com/tsueri) - Testing, website [demovox.ch](https://demovox.ch)
-- [@dbu](https://github.com/dbu) - Code review
-- [@sweleck](https://github.com/sweleck) - Contribution
-
 See also the list of [contributors](https://github.com/spschweiz/demovox/contributors) who participated in this project.
+Thanks to [@dbu](https://github.com/dbu) for code review.
 
 ## License
 

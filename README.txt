@@ -3,7 +3,7 @@ Contributors: spschweiz, horlacher
 Donate link: https://demovox.ch/#spenden
 Tags: initiative, referendum, switzerland, collect, signature, signatures
 Requires at least: 4.9
-Tested up to: 5.3
+Tested up to: 5.4
 Stable tag: 1.0
 Requires PHP: 7.0.0
 License: GPLv3
@@ -107,5 +107,14 @@ We do not provide any warranty or free support, but you're welcome to create an 
 * Sign-up form: classes for css styling
 * Skip demovox cron execution while the plugin is disabled
 * More detailed statistics
+
+= 2.3 =
+* Option to require signee to confirm his email address (by entering it twice)
+* Option to allow signee to set a title
+* Improved cron description
+* Sysinfo: improved descriptions & send realistic urls for test mails
+* Improved config descriptions
+* New mail placeholder {link_home} (WordPress Front Page)
+* Allow {link_optin} in signup reminder mails
 
 For more details, see our commit log: https://github.com/spschweiz/demovox/commits/master
