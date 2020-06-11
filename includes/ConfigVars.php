@@ -21,12 +21,16 @@ class ConfigVars
 					   . ' <a href="https://wpml.org/documentation/getting-started-guide/language-setup/enabling-language-cookie-to-support-ajax-filtering/" target="_blank">'
 					   . 'Language filtering for AJAX operations</a> enabled.',
 		],
+		'form'                => [
+			'title' => 'Form options',
+			'page'  => 'demovoxFields1',
+		],
 		'optIn'                => [
 			'title' => 'Opt-in',
 			'page'  => 'demovoxFields1',
 		],
 		'optInText'            => [
-			'title' => 'Checkbox label',
+			'title' => 'Opt-in checkbox label',
 			'page'  => 'demovoxFields1',
 			'sub'   => 'Text beside the checkbox, specify as exactly as possible how the data will be used. <code>&lt;a&gt;</code> tags can'
 					   . ' be used.<br/> If you use the opt-out mode, invert the description logic accordingly. '
@@ -184,7 +188,7 @@ class ConfigVars
 			'optionNone'   => '[Disabled]',
 			'supplemental' => 'Redirect user to a different page if he has a swiss abroad address as you might want to add special'
 							  . ' instructions. You should include <code>[demovox_form]</code> on that page to show the signature sheet.'
-							  . ' This setting is also used for the link in mails as the placeholder </code>{link_pdf}</code>. '
+							  . ' This setting is also used for the link in mails as the placeholder <code>{link_pdf}</code>. '
 							  . ' Requires both "Success page redirect" and "Swiss abroad" to be enabled.',
 			'class'        => 'showOnRedirect',
 		],
@@ -421,12 +425,14 @@ class ConfigVars
 			'class'   => 'showOnApiAddress',
 		],
 		[
-			'uid'     => 'api_address_city_input',
-			'label'   => 'Allow custom city name',
-			'section' => 'api_address',
-			'type'    => 'checkbox',
-			'default' => 1,
-			'class'   => 'showOnApiAddress',
+			'uid'          => 'api_address_city_input',
+			'label'        => 'Allow custom city name',
+			'section'      => 'api_address',
+			'type'         => 'checkbox',
+			'default'      => 1,
+			'class'        => 'showOnApiAddress',
+			'supplemental' => 'Also allow client to use the manually entered city name. Otherwise only allow to use '
+				. 'one of the suggested options.',
 		],
 		[
 			'uid'     => 'api_address_gde_input',

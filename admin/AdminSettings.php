@@ -18,7 +18,7 @@ class AdminSettings extends BaseController
 	{
 		$tabs = [
 			'General',
-			'Opt-in',
+			'Sign-up form',
 			'Success page',
 			'Signature sheet',
 			'Email',
