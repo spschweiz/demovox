@@ -67,130 +67,130 @@ var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 		});
 		initDemovoxAjaxButton($('.demovox'));
 	});
-})(jQuery);
 
-function initDemovoxAjaxButton($container) {
-	console.log('initDemovoxAjaxButton', $container);
-	$container.find('.ajaxButton').click(function () {
-		var cont = $(this).data('container'),
-			ajaxUrl = $(this).data('ajax-url'),
-			confirmTxt = $(this).data('confirm'),
-			$ajaxContainer = $(this).parent().find(cont ? cont : '.ajaxContainer');
-		if(!$ajaxContainer.length){
-			if (cont) {
-				$ajaxContainer = $(cont);
+	function initDemovoxAjaxButton($container) {
+		$container.find('.ajaxButton').click(function () {
+			var cont = $(this).data('container'),
+				ajaxUrl = $(this).data('ajax-url'),
+				confirmTxt = $(this).data('confirm'),
+				$ajaxContainer = $(this).parent().find(cont ? cont : '.ajaxContainer');
+			if(!$ajaxContainer.length){
+				if (cont) {
+					$ajaxContainer = $(cont);
+				}
+				if (!$ajaxContainer.length) {
+					console.error('initDemovoxAjaxButton: $ajaxContainer not found', $ajaxContainer);
+					return;
+				}
 			}
-			if (!$ajaxContainer.length) {
-				console.error('initDemovoxAjaxButton: $ajaxContainer not found', $ajaxContainer);
+			if (typeof confirmTxt !== 'undefined' && !confirm(confirmTxt)) {
 				return;
 			}
-		}
-		if (typeof confirmTxt !== 'undefined' && !confirm(confirmTxt)) {
-			return;
-		}
-		$ajaxContainer.css('cursor', 'progress');
-		$ajaxContainer.html('Loading...');
-		$.get(ajaxUrl)
-			.done(function (data) {
-				$ajaxContainer.html(data);
-				initDemovoxAjaxButton($ajaxContainer);
-			})
-			.fail(function () {
-				$ajaxContainer.html('Error');
-			})
-			.always(function () {
-				$ajaxContainer.css('cursor', 'auto');
-			});
-	});
-}
+			$ajaxContainer.css('cursor', 'progress');
+			$ajaxContainer.html('Loading...');
+			$.get(ajaxUrl)
+				.done(function (data) {
+					$ajaxContainer.html(data);
+					initDemovoxAjaxButton($ajaxContainer);
+				})
+				.fail(function () {
+					$ajaxContainer.html('Error');
+				})
+				.always(function () {
+					$ajaxContainer.css('cursor', 'auto');
+				});
+		});
+	}
 
-var demovoxAdminClass = {
-	getField: function (name) {
-		return parseInt($('#demovox_field_' + name).val())
-	},
-	createField: function (value, name, lang) {
-		var x = this.getField(name + '_' + lang + '_x'),
-			y = this.getField(name + '_' + lang + '_y'),
-			rotate = this.getField(name + '_' + lang + '_rot');
-		return {
-			"drawText": value,
-			"x": x,
-			"y": y,
-			"rotate": rotate,
-			"size": fontSize,
-			"font": fontFamily,
-			"color": textColor
-		};
-	},
-	setOnVal: function ($check, $set, checkValue, setValue) {
-		if ($check.is("input")) {
-			$check.keyup(function () {
+	var demovoxAdminClass = {
+		getField: function (name) {
+			return parseInt($('#demovox_field_' + name).val())
+		},
+		createField: function (value, name, lang) {
+			var x = this.getField(name + '_' + lang + '_x'),
+				y = this.getField(name + '_' + lang + '_y'),
+				rotate = this.getField(name + '_' + lang + '_rot');
+			return {
+				"drawText": value,
+				"x": x,
+				"y": y,
+				"rotate": rotate,
+				"size": fontSize,
+				"font": fontFamily,
+				"color": textColor
+			};
+		},
+		setOnVal: function ($check, $set, checkValue, setValue) {
+			if ($check.is("input")) {
+				$check.keyup(function () {
+					if ($(this).val() === checkValue) {
+						$set.val(setValue).change();
+					}
+				});
+			}
+			$check.change(function () {
 				if ($(this).val() === checkValue) {
 					$set.val(setValue).change();
 				}
 			});
-		}
-		$check.change(function () {
-			if ($(this).val() === checkValue) {
+			if ($check.val() === checkValue) {
 				$set.val(setValue).change();
 			}
-		});
-		if ($check.val() === checkValue) {
-			$set.val(setValue).change();
-		}
-	},
-	showOnVal: function ($check, $showHide, value, invert) {
-		var self = this;
-		var invert = (invert !== undefined) ? invert : false;
-		if ($check.is("input")) {
-			$check.keyup(function () {
+		},
+		showOnVal: function ($check, $showHide, value, invert) {
+			var self = this;
+			var invert = (invert !== undefined) ? invert : false;
+			if ($check.is("input")) {
+				$check.keyup(function () {
+					self.showHideEl($showHide, self.isIn($(this).val(), value), invert);
+				});
+			}
+			$check.change(function () {
 				self.showHideEl($showHide, self.isIn($(this).val(), value), invert);
 			});
-		}
-		$check.change(function () {
-			self.showHideEl($showHide, self.isIn($(this).val(), value), invert);
-		});
-		self.showHideEl($showHide, $check.val() === value, invert);
-	},
-	hideOnVal: function ($check, $showHide, value) {
-		this.showOnVal($check, $showHide, value, true);
-	},
-	showOnChecked: function ($check, $showHide, invert) {
-		var self = this;
-		var invert = (invert !== undefined) ? invert : false;
-		$check.change(function () {
-			self.showHideEl($showHide, $(this).is(':checked'), invert);
-		});
-		self.showHideEl($showHide, $check.is(':checked'), invert);
-	},
-	hideOnChecked: function ($check, $showHide) {
-		this.showOnVal($check, $showHide, true);
-	},
-	isIn: function (needle, haystack) {
-		if (Array.isArray(haystack)) {
-			return haystack.indexOf(needle) !== -1;
-		} else {
-			return needle === haystack;
-		}
-	},
-	showHideEl: function ($els, show, invert) {
-		var invert = (invert !== undefined) ? invert : false;
-		if ((show && !invert) || (!show && invert)) {
-			var $el;
-			$els.each(function () {
-				$el = $(this);
-				if (!$el.hasClass('hidden')) {
-					$el.show();
-				}
+			self.showHideEl($showHide, $check.val() === value, invert);
+		},
+		hideOnVal: function ($check, $showHide, value) {
+			this.showOnVal($check, $showHide, value, true);
+		},
+		showOnChecked: function ($check, $showHide, invert) {
+			var self = this;
+			var invert = (invert !== undefined) ? invert : false;
+			$check.change(function () {
+				self.showHideEl($showHide, $(this).is(':checked'), invert);
 			});
-		} else {
-			$els.hide();
+			self.showHideEl($showHide, $check.is(':checked'), invert);
+		},
+		hideOnChecked: function ($check, $showHide) {
+			this.showOnVal($check, $showHide, true);
+		},
+		isIn: function (needle, haystack) {
+			if (Array.isArray(haystack)) {
+				return haystack.indexOf(needle) !== -1;
+			} else {
+				return needle === haystack;
+			}
+		},
+		showHideEl: function ($els, show, invert) {
+			var invert = (invert !== undefined) ? invert : false;
+			if ((show && !invert) || (!show && invert)) {
+				var $el;
+				$els.each(function () {
+					$el = $(this);
+					if (!$el.hasClass('hidden')) {
+						$el.show();
+					}
+				});
+			} else {
+				$els.hide();
+			}
+		},
+		nDate: function (year, month, day) {
+			var monthIndex = month - 1;
+			return new Date(year, monthIndex, day);
 		}
-	},
-	nDate: function (year, month, day) {
-		var monthIndex = month - 1;
-		return new Date(year, monthIndex, day);
-	}
-};
+	};
+	global.demovoxAdminClass = demovoxAdminClass;
+})(jQuery);
+
 global.demovoxChart = demovoxChart;
-global.demovoxAdminClass = demovoxAdminClass;
