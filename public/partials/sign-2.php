@@ -29,6 +29,7 @@ namespace Demovox;
 		<div id="demovox-grp-title" class="form-group">
 			<label for="demovox-title"><?= __('Title', 'demovox') ?></label>
 			<select name="title" id="demovox-title" class="form-control" required="" data-parsley-errors-container="#title-errors">
+				<option><?= __('Please select...', 'demovox') ?></option>
 				<option value="Mister"><?= __('Mister', 'demovox') ?></option>
 				<option value="Miss"><?= __('Miss', 'demovox') ?></option>
 				<option value="-">- <?= __('No title', 'demovox') ?> -</option>

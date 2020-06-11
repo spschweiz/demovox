@@ -54,6 +54,10 @@ msgstr "Signora"
 msgid "No title"
 msgstr "Non uno"
 
+#: sign-2.php:32
+msgid "Please select..."
+msgstr "Seleziona ..."
+
 #: sign-2.php:25
 msgid "Birth date"
 msgstr "Compleanno"

@@ -43,12 +43,16 @@ msgid "Title"
 msgstr "Anrede"
 
 #: sign-2.php:32
+msgid "Please select..."
+msgstr "Bitte wählen..."
+
+#: sign-2.php:32
 msgid "Mister"
 msgstr "Herr"
 
 #: sign-2.php:33
 msgid "Miss"
-msgstr "Miss"
+msgstr "Frau"
 
 #: sign-2.php:34
 msgid "No title"

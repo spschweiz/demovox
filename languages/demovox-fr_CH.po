@@ -40,6 +40,10 @@ msgid "Title"
 msgstr "Titre"
 
 #: sign-2.php:32
+msgid "Please select..."
+msgstr "Veuillez sélectionner..."
+
+#: sign-2.php:32
 msgid "Mister"
 msgstr "Monsieur"
 
