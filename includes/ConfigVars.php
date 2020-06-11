@@ -303,6 +303,13 @@ class ConfigVars
 			'supplemental' => 'Ask visitor for a title',
 		],
 		[
+			'uid'          => 'email_confirm',
+			'label'        => 'Email confirm',
+			'section'      => 'form',
+			'type'         => 'checkbox',
+			'supplemental' => 'Email address has to be entered twice',
+		],
+		[
 			'uid'     => 'optin_mode',
 			'label'   => 'Opt-in mode',
 			'section' => 'optIn',

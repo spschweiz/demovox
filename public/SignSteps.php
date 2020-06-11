@@ -18,6 +18,8 @@ class SignSteps
 	public function step1()
 	{
 		$textOptin = Config::getValueByUserlang('text_optin');
+		$emailConfirmEnabled = !empty(Config::getValue('email_confirm'));
+		$optinMode = $this->getOptinMode(1);
 		include Infos::getPluginDir() . 'public/partials/sign-1.php';
 	}
 

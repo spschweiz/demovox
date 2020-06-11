@@ -26,6 +26,10 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
+#: sign-1.php:39
+msgid "Confirm"
+msgstr ""
+
 #: sign-1.php:34
 msgid "Phone number"
 msgstr ""

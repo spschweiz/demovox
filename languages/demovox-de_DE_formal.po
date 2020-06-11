@@ -26,6 +26,10 @@ msgstr "Nachname"
 msgid "Email"
 msgstr "E-Mail"
 
+#: sign-1.php:39
+msgid "Confirm"
+msgstr "Bestätigen"
+
 #: sign-1.php:34
 msgid "Phone number"
 msgstr "Telefonnummer"
