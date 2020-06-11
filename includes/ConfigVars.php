@@ -7,6 +7,10 @@ class ConfigVars
 	static private $fieldsCache = null;
 	static public $sections = [
 		'base'                 => [
+			'title' => 'Base settings',
+			'page'  => 'demovoxFields0',
+		],
+		'signature_count'                 => [
 			'title' => 'Signature counter',
 			'page'  => 'demovoxFields0',
 		],
@@ -119,9 +123,17 @@ class ConfigVars
 	];
 	static public $fields = [
 		[
+			'uid'          => 'accept_server_is_protected',
+			'label'        => 'I confirm to protect the server file access, WordPress and its database',
+			'section'      => 'base',
+			'type'         => 'checkbox',
+			'supplemental' => 'Check this box if you protect the access to your server and its data, as signee information consists of <a href="https://www.admin.ch/opc/en/classified-compilation/19920153/index.html#a3" target="_blank">sensitive personal data</a> and you are responsible for protecting it. For example by blocking any FTP access (it\'s unencrypted!), protecting WordPress accounts with good passwords and <a href="https://en.wikipedia.org/wiki/Multi-factor_authentication" target="_blank">MFA</a>, installing only installing trustworthy plugins and taking care of security updates. demovox has a recommended option to encrypt signee data (see "Advanced" tab) and you can find some help to avoid WordPress misconfiguration under "System info".',
+			'default'      => 0,
+		],
+		[
 			'uid'          => 'add_count',
 			'label'        => 'Add to signature count',
-			'section'      => 'base',
+			'section'      => 'signature_count',
 			'type'         => 'number',
 			'default'      => '0',
 			'supplemental' => 'Add to public count to include manually collected signs',
@@ -129,7 +141,7 @@ class ConfigVars
 		[
 			'uid'     => 'count_thousands_sep',
 			'label'   => 'Thousands separator on signature count',
-			'section' => 'base',
+			'section' => 'signature_count',
 			'type'    => 'text',
 			'default' => "'",
 		],
