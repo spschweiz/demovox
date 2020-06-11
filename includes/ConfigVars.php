@@ -296,6 +296,13 @@ class ConfigVars
 			'class'   => 'showOnEncrypt',
 		],
 		[
+			'uid'          => 'form_title',
+			'label'        => 'Title',
+			'section'      => 'form',
+			'type'         => 'checkbox',
+			'supplemental' => 'Ask visitor for a title',
+		],
+		[
 			'uid'     => 'optin_mode',
 			'label'   => 'Opt-in mode',
 			'section' => 'optIn',
@@ -478,7 +485,7 @@ class ConfigVars
 			'class'        => 'showOnApiExport',
 			'default'      => '{"firstname": "{first_name}", "api_key": "X8ZoPz3G2UxApfYpAfjE"}',
 			'supplemental' => 'JSON which will be used to generate the POST data payload for to the REST API.'
-							  . '<br/>Avaiblable placeholders: <code>{language}</code>, <code>{ip_address}</code>,'
+							  . '<br/>Avaiblable placeholders: <code>{language}</code>, <code>{ip_address}</code>, <code>{title}</code>,'
 							  . ' <code>{first_name}</code>, <code>{last_name}</code> <code>{birth_date}</code>, <code>{mail}</code>,'
 							  . ' <code>{phone}</code>, <code>{country}</code>, <code>{street}</code>, <code>{street_no}</code>,'
 							  . ' <code>{zip}</code>, <code>{city}</code>, <code>{gde_no}</code> <code>{gde_zip}</code>,'
@@ -796,14 +803,14 @@ class ConfigVars
 				'label'        => 'Subject',
 				'section'      => 'mailConfirm_' . $langId,
 				'type'         => 'text',
-				'supplemental' => 'Available placeholders: <code>{first_name}</code>, <code>{last_name}</code>.',
+				'supplemental' => 'Available placeholders: <code>{title}</code>, <code>{first_name}</code>, <code>{last_name}</code>.',
 			];
 			$fields[] = [
 				'uid'          => 'mail_confirm_body' . $glueLangId,
 				'label'        => 'Body',
 				'section'      => 'mailConfirm_' . $langId,
 				'type'         => 'textarea',
-				'supplemental' => 'Available placeholders: <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>,'
+				'supplemental' => 'Available placeholders: <code>{title}</code>, <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>,'
 								  . ' <code>{link_pdf}</code> (success page), <code>{link_optin}</code> (opt-in form), <code>{link_home}</code> (WordPress Front Page), <code>{subject}</code>.',
 			];
 
@@ -812,14 +819,14 @@ class ConfigVars
 				'label'        => 'Subject',
 				'section'      => 'mailRemindSheet_' . $langId,
 				'type'         => 'text',
-				'supplemental' => 'Available placeholders: <code>{first_name}</code>, <code>{last_name}</code>. This mail is sent to the signee after signing up.',
+				'supplemental' => 'Available placeholders: <code>{title}</code>, <code>{first_name}</code>, <code>{last_name}</code>. This mail is sent to the signee after signing up.',
 			];
 			$fields[] = [
 				'uid'          => 'mail_remind_sheet_body' . $glueLangId,
 				'label'        => 'Body',
 				'section'      => 'mailRemindSheet_' . $langId,
 				'type'         => 'textarea',
-				'supplemental' => 'Available placeholders: <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>, <code>{link_pdf}</code> (success page), <code>{link_optin}</code> (opt-in form), <code>{link_home}</code> (WordPress Front Page), <code>{subject}</code>.',
+				'supplemental' => 'Available placeholders: <code>{title}</code>, <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>, <code>{link_pdf}</code> (success page), <code>{link_optin}</code> (opt-in form), <code>{link_home}</code> (WordPress Front Page), <code>{subject}</code>.',
 			];
 
 			$fields[] = [
@@ -827,14 +834,14 @@ class ConfigVars
 				'label'        => 'Subject',
 				'section'      => 'mailRemindSignup_' . $langId,
 				'type'         => 'text',
-				'supplemental' => 'Available placeholders: <code>{first_name}</code>, <code>{last_name}</code>. This mail is sent to the signee after signing up.',
+				'supplemental' => 'Available placeholders: <code>{title}</code>, <code>{first_name}</code>, <code>{last_name}</code>. This mail is sent to the signee after signing up.',
 			];
 			$fields[] = [
 				'uid'          => 'mail_remind_signup_body' . $glueLangId,
 				'label'        => 'Body',
 				'section'      => 'mailRemindSignup_' . $langId,
 				'type'         => 'textarea',
-				'supplemental' => 'Available placeholders: <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>, <code>{link_optin}</code> (opt-in form), <code>{link_home}</code> (WordPress Front Page), <code>{subject}</code>. ',
+				'supplemental' => 'Available placeholders: <code>{title}</code>, <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>, <code>{link_optin}</code> (opt-in form), <code>{link_home}</code> (WordPress Front Page), <code>{subject}</code>. ',
 			];
 		}
 		$cantons     = i18n::$cantons;

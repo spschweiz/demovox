@@ -106,6 +106,7 @@ class Mail
 				break;
 		}
 		$subject = Config::getValueByLang($confName, $sign->language);
+		$subject = str_replace('{title}', $sign->title ? __($sign->title, 'demovox') : '', $subject);
 		$subject = str_replace('{first_name}', $sign->first_name, $subject);
 		$subject = str_replace('{last_name}', $sign->last_name, $subject);
 		return $subject;
@@ -137,6 +138,7 @@ class Mail
 		if (Config::getValue('mail_nl2br')) {
 			$text = Strings::nl2br($text);
 		}
+		$text = str_replace('{title}', $sign->title ? __($sign->title, 'demovox') : '', $text);
 		$text = str_replace('{first_name}', $sign->first_name, $text);
 		$text = str_replace('{last_name}', $sign->last_name, $text);
 		$text = str_replace('{mail}', $sign->mail, $text);
@@ -161,6 +163,7 @@ class signObject
 	}
 
 	var $language,
+		$title,
 		$first_name,
 		$last_name,
 		$mail,

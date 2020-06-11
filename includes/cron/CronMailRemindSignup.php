@@ -10,6 +10,7 @@ class CronMailRemindSignup extends CronMailBase
 		'ID',
 		'link_optin',
 		'guid',
+		'title',
 		'first_name',
 		'last_name',
 		'mail',

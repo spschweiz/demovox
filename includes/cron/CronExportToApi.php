@@ -5,7 +5,7 @@ namespace Demovox;
 class CronExportToApi extends CronBase
 {
 	static protected $fields = [
-		'language', 'ip_address', 'first_name', 'last_name', 'birth_date', 'mail', 'phone', 'country', 'street', 'street_no',
+		'language', 'ip_address', 'title', 'first_name', 'last_name', 'birth_date', 'mail', 'phone', 'country', 'street', 'street_no',
 		'zip', 'city', 'gde_no', 'gde_zip', 'gde_name', 'gde_canton', 'is_optin', 'creation_date', 'source',
 	];
 

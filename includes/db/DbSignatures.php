@@ -8,7 +8,7 @@ class DbSignatures extends Db
 	/** @var int */
 	public $ID;
 	/** @var string */
-	public $guid, $serial, $language, $ip_address, $first_name, $last_name, $birth_date, $mail, $phone, $country, $street, $street_no,
+	public $guid, $serial, $language, $ip_address, $title, $first_name, $last_name, $birth_date, $mail, $phone, $country, $street, $street_no,
 		$zip, $city, $gde_no, $gde_zip, $gde_name, $gde_canton, $link_pdf, $link_optin, $link_success, $source;
 	/** @var int */
 	public $is_optin, $is_step2_done, $is_sheet_received, $is_exported, $is_encrypted, $is_deleted, $state_confirm_sent,
@@ -28,6 +28,7 @@ class DbSignatures extends Db
 	protected static $availableFields = [
 		'ID'                  => 'id',
 		'language'            => 'Language',
+		'title'               => 'Title',
 		'first_name'          => 'First Name',
 		'last_name'           => 'Last Name',
 		'birth_date'          => 'Birth Date',

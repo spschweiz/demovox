@@ -12,17 +12,30 @@ namespace Demovox;
  * @subpackage Demovox/public/partials
  */
 /**
- * @var SignSteps $this
- * @var string    $textOptin
- * @var array     $countries
- * @var bool      $apiAddressEnabled
- * @var array     $cantons
- * @var bool      $allowSwissAbroad
+ * @var $this              SignSteps
+ * @var $textOptin         string
+ * @var $titleEnabled      bool
+ * @var $countries         array
+ * @var $allowSwissAbroad  bool
+ * @var $apiAddressEnabled bool
+ * @var $cantons           array
+ * @var $optinMode         string|null
  */
 ?>
 <form method="post" id="demovox_form_2" class="demovox" action="<?= Infos::getRequestUri() ?>">
 	<input name="action" type="hidden" value="demovox_step3">
 	<input name="nonce" type="hidden" value="<?= Core::createNonce($this->nonceId) ?>">
+	<?php if ($titleEnabled) { ?>
+		<div id="demovox-grp-title" class="form-group">
+			<label for="demovox-title"><?= __('Title', 'demovox') ?></label>
+			<select name="title" id="demovox-title" class="form-control" required="" data-parsley-errors-container="#title-errors">
+				<option value="Mister"><?= __('Mister', 'demovox') ?></option>
+				<option value="Miss"><?= __('Miss', 'demovox') ?></option>
+				<option value="-">- <?= __('No title', 'demovox') ?> -</option>
+			</select>
+			<div id="demovox-title-errors"></div>
+		</div>
+	<?php } ?>
 	<div id="demovox-grp-birth_date" class="form-group">
 		<label for="demovox-birth_date"><?= __('Birth date', 'demovox') ?></label>
 		<input name="birth_date" id="demovox-birth_date" autocomplete="bday" class="form-control" type="text"
@@ -108,7 +121,7 @@ namespace Demovox;
 			<div id="demovox-gde_canton-errors"></div>
 		</div>
 	</div>
-	<?php if ($optinMode = $this->getOptinMode(2)) { ?>
+	<?php if ($optinMode) { ?>
 		<div id="demovox-grp-is_optin" class="form-group">
 			<div class="form-check">
 				<input class="form-check-input" type="checkbox" value="1" id="demovox-is_optin" name="is_optin"

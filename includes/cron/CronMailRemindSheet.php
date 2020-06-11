@@ -11,6 +11,7 @@ class CronMailRemindSheet extends CronMailBase
 		'link_optin',
 		'link_pdf',
 		'guid',
+		'title',
 		'first_name',
 		'last_name',
 		'mail',

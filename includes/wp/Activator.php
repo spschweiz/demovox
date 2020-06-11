@@ -31,6 +31,7 @@ class Activator
           serial char(6) NULL,
           language char(2) NOT NULL,
           ip_address char(232) NULL,
+          title varchar(10) NULL,
           first_name varchar(678) NOT NULL,
           last_name varchar(678) NOT NULL,
           birth_date varchar(188) NULL,
@@ -152,6 +153,11 @@ class Activator
 			// previous version was < 2.1.3
 			$update = "ALTER TABLE $dbSignName CHANGE COLUMN reminder_sent_date remind_sheet_sent_date datetime NULL, ";
 			$update .= "ADD COLUMN remind_signup_sent_date datetime NULL AFTER sheet_received_date;";
+			Db::query($update);
+		}
+		if (!Db::query("SHOW COLUMNS FROM `$dbSignName` LIKE 'title'")) {
+			// previous version was < 2.3
+			$update = "ALTER TABLE $dbSignName ADD COLUMN title VARCHAR(10) NULL BEFORE first_name;";
 			Db::query($update);
 		}
 	}

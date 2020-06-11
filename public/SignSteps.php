@@ -80,9 +80,11 @@ class SignSteps
 
 		// Prepare view variables
 		$textOptin         = Config::getValueByUserlang('text_optin');
+		$titleEnabled      = !empty(Config::getValue('form_title'));
 		$apiAddressEnabled = !empty(Config::getValue('api_address_url')) && !Infos::isNoEc6();
 		$cantons           = i18n::$cantons;
 		$allowSwissAbroad  = Config::getValue('swiss_abroad_allow') && !Infos::isNoEc6();
+		$optinMode         = $this->getOptinMode(2);
 
 		// Render view
 		include Infos::getPluginDir() . 'public/partials/sign-2.php';
@@ -166,6 +168,12 @@ class SignSteps
 			'gde_canton'    => $gdeCanton,
 			'is_step2_done' => 1,
 		];
+		if (isset($_REQUEST['title'])) {
+			$validTitles = ['Mister', 'Miss'];
+			if (in_array($_REQUEST['title'], $validTitles)) {
+				$data['title'] = sanitize_text_field($_REQUEST['title']);
+			}
+		}
 
 		// Append additional values to $data
 		$data = $this->getPagesUrls($guid, $country, $gdeCanton, $gdeId, $data);

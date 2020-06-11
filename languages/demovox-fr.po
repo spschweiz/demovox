@@ -31,6 +31,22 @@ msgstr "Numéro de téléphone"
 msgid "Continue"
 msgstr "Continuer"
 
+#: sign-2.php:30
+msgid "Title"
+msgstr "Titre"
+
+#: sign-2.php:32
+msgid "Mister"
+msgstr "Monsieur"
+
+#: sign-2.php:33
+msgid "Miss"
+msgstr "Madame"
+
+#: sign-2.php:34
+msgid "No title"
+msgstr "Pas de titre"
+
 #: sign-2.php:25
 msgid "Birth date"
 msgstr "Date de naissance"

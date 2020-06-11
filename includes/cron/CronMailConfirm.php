@@ -23,7 +23,7 @@ class CronMailConfirm extends CronMailBase
 		$maxMails = intval(Config::getValue('mail_max_per_execution')) ?: 300;
 		$dbSign   = new DbSignatures();
 		$rows     = $dbSign->getResults(
-			['ID', 'link_optin', 'link_pdf', 'guid', 'first_name', 'last_name', 'mail', 'language', 'state_confirm_sent'],
+			['ID', 'link_optin', 'link_pdf', 'guid', 'title', 'first_name', 'last_name', 'mail', 'language', 'state_confirm_sent'],
 			'is_step2_done = 1 AND is_sheet_received = 0 AND state_confirm_sent <= 0 AND state_confirm_sent > -3 AND is_deleted = 0',
 			' LIMIT ' . $maxMails
 		);

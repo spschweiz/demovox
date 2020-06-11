@@ -34,6 +34,22 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
+#: sign-2.php:30
+msgid "Title"
+msgstr ""
+
+#: sign-2.php:32
+msgid "Mister"
+msgstr ""
+
+#: sign-2.php:33
+msgid "Miss"
+msgstr ""
+
+#: sign-2.php:34
+msgid "No title"
+msgstr ""
+
 #: sign-2.php:25
 msgid "Birth date"
 msgstr ""
