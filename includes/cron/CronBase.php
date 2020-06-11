@@ -202,7 +202,7 @@ class CronBase
 
 	protected function setRunningStart()
 	{
-		Core::logMessage('Cron ' . $this->className . ' started');
+		Core::logMessage('Cron ' . $this->className . ' started', 'notice');
 		$this->setOption('lock', true);
 		$this->setOption('start', time());
 		$this->setOption('lastSkipped', null);

@@ -86,7 +86,6 @@ class CronMailIndex extends CronBase
 				   . '. Last error: "' . Db::getLastError() . '". Last query:' . Db::getLastQuery();
 			Core::errorDie($msg, 500);
 			$this->setStateMessage('Could not save mail from signature ID ' . $row->ID, false);
-			return null;
 		}
 
 		return $save === 'insert';
