@@ -116,5 +116,6 @@ We do not provide any warranty or free support, but you're welcome to create an 
 * Improved config descriptions
 * New mail placeholder {link_home} (WordPress Front Page)
 * Allow {link_optin} in signup reminder mails
+* New email placeholder {guid} as workaround for translation plugins which don't create translated URLs
 
 For more details, see our commit log: https://github.com/spschweiz/demovox/commits/master
