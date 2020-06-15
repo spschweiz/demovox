@@ -19,11 +19,12 @@ class ConfigVars
 			'page'  => 'demovoxFields0',
 			'sub'   => 'Enable languages for the demovox option translations like signature sheets, mails and opt-in text.<br/>'
 					   . ' The frontend language, like the translation of the form input titles, is affected by the WordPress option'
-					   . ' <b>Site Language</b> under <b>General Settings</b>.'
+					   . ' <b>Site Language</b> under <b>General Settings</b>.<br/>'
 					   . ' Another way is to set the language by an internationalisation plugin to allow multiple languages for the client.'
 					   . ' This is currently tested with <a href="https://wpml.org/" target="_blank">WPML</a>, with the WPML option'
 					   . ' <a href="https://wpml.org/documentation/getting-started-guide/language-setup/enabling-language-cookie-to-support-ajax-filtering/" target="_blank">'
-					   . 'Language filtering for AJAX operations</a> enabled.',
+					   . 'Language filtering for AJAX operations</a> enabled. <a href="https://polylang.pro/">Polylang</a> doesn\'t'
+					   .' translate the generated URLs and therefore you must define them manually in the reminder templates.',
 		],
 		'form'                => [
 			'title' => 'Form options',
@@ -83,8 +84,10 @@ class ConfigVars
 		'mailTasks'             => [
 			'title' => 'Email tasks',
 			'page'  => 'demovoxFields4',
-			'sub'   => 'Remember the <code>{link_&hellip;}</code> placeholders only contain the URL.'
-					   .' Therefore you might want to use <code>&lt;a&gt;</code>-tags to create a link.',
+			'sub'   => 'Remember the <code>{link_&hellip;}</code> placeholders only contain the URL. '
+					   . 'Therefore you might want to use <code>&lt;a&gt;</code>-tags to create a link. <br/>'
+					   . 'Some translation plugins like Polylang do not translate those URLs correctly. '
+					   . 'As a orkaround, you can define them manually and use the <code>{guid}</code> placeholder to create the <code>sign</code>-parameter.',
 		],
 		'api_address'          => [
 			'title' => 'Address lookup API',
@@ -817,7 +820,7 @@ class ConfigVars
 				'section'      => 'mailConfirm_' . $langId,
 				'type'         => 'textarea',
 				'supplemental' => 'Available placeholders: <code>{title}</code>, <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>,'
-								  . ' <code>{link_pdf}</code> (success page), <code>{link_optin}</code> (opt-in form), <code>{link_home}</code> (WordPress Front Page), <code>{subject}</code>.',
+								  . ' <code>{link_pdf}</code> (success page), <code>{link_optin}</code> (opt-in form), <code>{link_home}</code> (WordPress Front Page), <code>{subject}</code>, <code>{guid}</code>.',
 			];
 
 			$fields[] = [
@@ -832,7 +835,7 @@ class ConfigVars
 				'label'        => 'Body',
 				'section'      => 'mailRemindSheet_' . $langId,
 				'type'         => 'textarea',
-				'supplemental' => 'Available placeholders: <code>{title}</code>, <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>, <code>{link_pdf}</code> (success page), <code>{link_optin}</code> (opt-in form), <code>{link_home}</code> (WordPress Front Page), <code>{subject}</code>.',
+				'supplemental' => 'Available placeholders: <code>{title}</code>, <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>, <code>{link_pdf}</code> (success page), <code>{link_optin}</code> (opt-in form), <code>{link_home}</code> (WordPress Front Page), <code>{subject}</code>, <code>{guid}</code>.',
 			];
 
 			$fields[] = [
@@ -847,7 +850,7 @@ class ConfigVars
 				'label'        => 'Body',
 				'section'      => 'mailRemindSignup_' . $langId,
 				'type'         => 'textarea',
-				'supplemental' => 'Available placeholders: <code>{title}</code>, <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>, <code>{link_optin}</code> (opt-in form), <code>{link_home}</code> (WordPress Front Page), <code>{subject}</code>. ',
+				'supplemental' => 'Available placeholders: <code>{title}</code>, <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>, <code>{link_optin}</code> (opt-in form), <code>{link_home}</code> (WordPress Front Page), <code>{subject}</code>, <code>{guid}</code>. ',
 			];
 		}
 		$cantons     = i18n::$cantons;

@@ -146,6 +146,7 @@ class Mail
 		$text = str_replace('{link_optin}', $sign->link_optin, $text);
 		$text = str_replace('{link_home}', $linkHome, $text);
 		$text = str_replace('{subject}', $mailSubject, $text);
+		$text = str_replace('{guid}', $sign->guid, $text);
 		return $text;
 	}
 }
