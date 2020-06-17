@@ -309,10 +309,12 @@ class AdminPages extends BaseController
 		}
 		$dbSign = new DbSignatures();
 
+		$dbMailDd = new DbMailDedup();
+		$hasDedup = !!$dbMailDd->count();
+
 		// Handle csv
-		$ok = 0;
-		$fail = [];
-		$totalSignCount = 0;
+		$ok = $okSign = 0;
+		$receivedAgain = $fail = [];
 		$return = '';
 		foreach ($csvArr as $line) {
 			$serial = sanitize_text_field($line[0]);
@@ -335,11 +337,12 @@ class AdminPages extends BaseController
 					return Strings::wpMessage('Error: Format is required', 'error');
 			}
 			if (!$signCount) {
+				Core::logMessage('doCsvImport: missing signature count for serial = "' . $serial);
 				$fail[] = $serial;
 				continue;
 			}
 
-			$row = $dbSign->getRow(['ID', 'mail'], "serial = '" . $serial . "'");
+			$row = $dbSign->getRow(['ID', 'is_sheet_received', 'mail'], "serial = '" . $serial . "'");
 			if (!$row) {
 				$fail[] = $serial;
 				Core::logMessage('doCsvImport: Could not find serial = "' . $serial . '"');
@@ -353,25 +356,48 @@ class AdminPages extends BaseController
 				],
 				['ID' => $row->ID]
 			);
-			$saveMail = $this->mailSetSheetReceived($row->mail);
-			if ($save && $saveMail) {
-				$ok++;
-				$totalSignCount += $signCount;
-			} else {
+			if ($save === false) {
 				$fail[] = $serial;
 				Core::logMessage(
-					'doCsvImport: Could not update ID = "' . $row->ID . '" (serial = "' . $serial . '): '
+					'doCsvImport: Could not update signature ID = "' . $row->ID . '" (serial = "' . $serial . '): '
 					. Db::getLastError()
 				);
+				continue;
 			}
+
+			if ($hasDedup) {
+				$saveDedup = $this->dedupSetSheetReceived($row->mail);
+				if (!$saveDedup) {
+					$fail[] = $serial;
+					Core::logMessage(
+						'doCsvImport: Could not update mail dedup ID = "' . $row->ID . '" mail = "' . $row->mail
+						. '" (serial = "' . $serial . '): ' . Db::getLastError()
+					);
+					continue;
+				}
+			}
+
+			if ($row->is_sheet_received && $row->is_sheet_received != $signCount) {
+				$receivedAgain[] = $serial . ' (' . $row->is_sheet_received . ')';
+			}
+			$ok++;
+			$okSign += $signCount;
 		}
 
 		// Return
 		if ($ok) {
-			$return .= Strings::wpMessage('Imported ' . $ok . ' sheets (' . $totalSignCount . ' signatures)', 'success');
+			$return .= Strings::wpMessage('Imported ' . $ok . ' sheets (total of ' . $okSign . ' signatures)', 'success');
+		}
+		if ($count = count($receivedAgain)) {
+			$return .= Strings::wpMessage(
+				$count . ' sheets were already marked as received before with another number of signatures.'
+				. ' Affected serials with their old number of signatures:<br/>'
+				. implode(', ', $receivedAgain),
+				'warning '
+			);
 		}
 		if ($count = count($fail)) {
-			$return .= Strings::wpMessage($count . ' failed sheet(s): ' . implode(', ', $fail), 'error');
+			$return .= Strings::wpMessage($count . ' failed sheet(s):<br/>' . implode(', ', $fail), 'error');
 		}
 		return $return;
 	}
@@ -380,20 +406,12 @@ class AdminPages extends BaseController
 	 * @param $mail
 	 * @return bool success
 	 */
-	protected function mailSetSheetReceived($mail)
+	protected function dedupSetSheetReceived($mail)
 	{
-		if (!Config::getValue('mail_remind_sheet_enabled') || !Config::getValue('mail_remind_dedup')) {
-			return true;
-		}
-		$dbSign = new DbSignatures();
 		$hashedMail = Strings::hashMail($mail);
-		$where = "mail = '" . $hashedMail . "'";
-		$mail = $dbSign->getRow(['ID'], $where);
-		if ($mail === null) {
-			return true;
-		}
-		$update = $dbSign->updateStatus(['is_sheet_received' => 1], ['ID' => $mail->ID]);
-		return !!$update;
+		$dbMailDd = new DbMailDedup();
+		$update = $dbMailDd->updateStatus(['is_sheet_received' => 1], ['mail_md5' => $hashedMail]);
+		return $update !== false;
 	}
 
 	public function getCsv()
