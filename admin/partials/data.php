@@ -56,6 +56,7 @@ namespace Demovox;
 				</form>
 			</div>
 		</div>
+		Please note that encrypted entries will only be searched for by their serial.
 		<br class="clear">
 	</div>
 </div>

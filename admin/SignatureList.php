@@ -48,24 +48,10 @@ class SignatureList extends \WP_List_Table
 	 *
 	 * @return mixed
 	 */
-	public function get_signatures($perPage = 25, $pageNumber = 1)
+	public function get_signatures($where, $perPage = 25, $pageNumber = 1)
 	{
 		$select = self::$columns;
 		array_unshift($select, 'ID');
-		$where = 'is_deleted = 0 AND is_step2_done <> 0';
-		if (!empty($_REQUEST['s'])) {
-			$s = esc_sql(trim($_REQUEST['s']));
-			if (!empty($s)) {
-				$where .= ' AND (';
-				foreach (self::$columns as $col) {
-					if (in_array($col, $this->get_hidden_columns())) {
-						continue;
-					}
-					$where .= $col . ' LIKE \'%' . $s . '%\' OR ';
-				}
-				$where = substr($where, 0, -4) . ')';
-			}
-		}
 		$sqlAppend = '';
 		if (!empty($_REQUEST['orderby'])) {
 			$sqlAppend .= ' ORDER BY ' . esc_sql($_REQUEST['orderby']);
@@ -99,12 +85,14 @@ class SignatureList extends \WP_List_Table
 	/**
 	 * Returns the count of records in the database.
 	 *
-	 * @return null|string
+	 * @param $where
+	 * @return int
 	 */
-	public static function record_count()
+	public function record_count($where)
 	{
+		$where = $this->getWhere();
 		$dbSign = new DbSignatures();
-		return $dbSign->count();
+		return $dbSign->count($where);
 	}
 
 	/**
@@ -259,15 +247,16 @@ class SignatureList extends \WP_List_Table
 		];
 		$this->process_bulk_action();
 
+		$where = $this->getWhere();
 		$per_page = $this->get_items_per_page('records_per_page', 25);
 		$current_page = $this->get_pagenum();
-		$total_items = $this->record_count();
+		$total_items = $this->record_count($where);
 		$this->set_pagination_args(
 			[
 				'total_items' => $total_items,
 				'per_page'    => $per_page,
 			]);
-		$this->items = $this->get_signatures($per_page, $current_page);
+		$this->items = $this->get_signatures($where, $per_page, $current_page);
 	}
 
 	public function process_bulk_action()
@@ -297,5 +286,31 @@ class SignatureList extends \WP_List_Table
 			//wp_redirect(esc_url(add_query_arg()));
 			exit;
 		}
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function getWhere(): string
+	{
+		$where = 'is_deleted = 0 AND is_step2_done <> 0';
+		if (!empty($_REQUEST['s'])) {
+			$s = esc_sql(trim($_REQUEST['s']));
+			if (!empty($s)) {
+				$whereLike = '';
+				foreach (self::$columns as $col) {
+					if (in_array($col, $this->get_hidden_columns())) {
+						continue;
+					}
+					$whereLike .= $col . ' LIKE \'%' . $s . '%\' OR ';
+				}
+				$whereLike = substr($where, 0, -4);
+				$where .= ' AND (';
+				$where .= ' (is_encrypted = 0 AND (' . $whereLike . '))';
+				$where .= ' OR (is_encrypted = 1 AND serial = \'' . $s . '\')';
+				$where .= ' )';
+			}
+		}
+		return $where;
 	}
 }
