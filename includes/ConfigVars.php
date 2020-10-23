@@ -484,7 +484,7 @@ class ConfigVars
 			'label'        => 'API URL',
 			'section'      => 'api_export',
 			'type'         => 'text',
-			'default'      => 'https://',
+			'default'      => '',
 			'supplemental' => 'URL of a HTTPS REST API to send the signatures to. Ex: "https://server.ch/api/rest/"',
 		],
 		[
