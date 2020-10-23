@@ -59,7 +59,7 @@ class CronMailIndex extends CronBase
 			$statusEnd = self::STATUS_INIT;
 			$this->setStateMessage(
 				'Proceeded ' . $countProceeded . ' new mail addresses, thereof ' . $countInserted
-				. ' unique adresses imported. ' . $countTotal - $countProceeded . ' more to go'
+				. ' unique adresses imported. ' . ($countTotal - $countProceeded) . ' more to go'
 			);
 		} else {
 			$statusEnd = self::STATUS_FINISHED;
