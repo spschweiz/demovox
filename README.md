@@ -90,7 +90,7 @@ grunt test
 
 ### Unencrypted access
 
-As a developer you might want to work on a web server without SSL configured. Enable `WP_DEBUG` in `wp-config.php`. Then
+As a developer you might want to work on a web server without SSL configured. Enable `WP_DEBUG` in `wp-config.php` and you probably want to disable `WP_DEBUG_DISPLAY`. Then
 open the Advanced settings of the plugin in the WordPress backend and disable "Redirect clients to secure HTTPS".
 
 ## Changelog
