@@ -39,7 +39,7 @@ class Mail
 		return 'text/html';
 	}
 
-	static function config(\PHPMailer\PHPMailer\PHPMailer $mailer)
+	static function config($mailer)
 	{
 		$method = Config::getValue('mail_method');
 		if ($method == 'wp_mail') {
@@ -77,7 +77,8 @@ class Mail
 
 	static function validateAddress($address)
 	{
-		return \PHPMailer\PHPMailer\PHPMailer::validateAddress($address);
+		$mailer = class_exists('PHPMailer\PHPMailer\PHPMailer') ? \PHPMailer : \PHPMailer\PHPMailer\PHPMailer;
+		return $mailer::validateAddress($address);
 	}
 
 	static function logMailerErrors(\WP_Error $wp_error)
