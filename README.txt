@@ -3,7 +3,7 @@ Contributors: spschweiz, horlacher
 Donate link: https://demovox.ch/#spenden
 Tags: initiative, referendum, switzerland, collect, signature, signatures
 Requires at least: 4.9
-Tested up to: 5.4
+Tested up to: 5.5
 Stable tag: 1.0
 Requires PHP: 7.0.0
 License: GPLv3
@@ -117,5 +117,8 @@ We do not provide any warranty or free support, but you're welcome to create an 
 * New mail placeholder {link_home} (WordPress Front Page)
 * Allow {link_optin} in signup reminder mails
 * New email placeholder {guid} as workaround for translation plugins which don't create translated URLs
+
+= 2.4 =
+* Support Wordpress 5.5 with PHPMailer 6
 
 For more details, see our commit log: https://github.com/spschweiz/demovox/commits/master
