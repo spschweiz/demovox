@@ -1,0 +1,51 @@
+version: '3.8'
+services:
+  buildserver:
+    container_name: demovox-npm-build
+    hostname: demovox-npm-build
+    build:
+      context: .
+      dockerfile: ./buildserver.Dockerfile
+    command: bash -c "npm install && composer install --no-dev && tail -f /dev/null"
+    volumes:
+      - '../:/var/demovox'
+
+  wordpress:
+    container_name: demovox-wordpress
+    hostname: demovox-wordpress
+    depends_on:
+      - db
+      - mailhog
+    build:
+      context: .
+      dockerfile: ./wordpress.Dockerfile
+    ports:
+      - '80:80'
+    environment:
+      WORDPRESS_DB_HOST: demovox-db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DEBUG: 1
+      WORDPRESS_CONFIG_EXTRA: |
+             define('WP_DEBUG_DISPLAY', false );
+    volumes:
+      - '../:/var/www/html/wp-content/plugins/demovox'
+      - './php.ini:/usr/local/etc/php/conf.d/custom.ini'
+  db:
+    container_name: demovox-db
+    image: 'mysql:5.7'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: wordpress
+    ports:
+      - '3306:3306'
+
+  mailhog:
+    image: mailhog/mailhog
+    hostname: demovox-mailhog
+    container_name: demovox-mailhog
+    ports:
+      - '8025:8025'

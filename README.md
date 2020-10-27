@@ -15,59 +15,80 @@ demovox is a tool to collect signatures for Swiss popular initiatives by offerin
 
 This Plugin was developed by the [Socialist Party of Switzerland](https://www.sp-ps.ch), it was initially built for the popular initiative [Prämien-Entlastungs-Initiative](https://bezahlbare-praemien.ch).
 
-## Donations
-If this plugin is of help for you, please consider a [donation](https://demovox.ch). 
-
 ## Requirements
 
 * PHP >= 7.0 (feature "Hashid" requires >= 7.1.3)
 * MySQL >= 5.6.5
 * WordPress >= 4.9
-* SSL certificate for HTTPS (unsecure connection is only allowed for development)
+* SSL certificate for HTTPS (non-https is only allowed for development)
 * Optional feature requires the PHP modules "GMP" or "BC Math"
 
-## Installation (production)
+## Productive installation 
 
 Simply install the the WordPress plugin [demovox](https://wordpress.org/plugins/demovox/) from within the Plugin manager of your WordPress installation. You can find the admin manual or the prebuilt Zip-File for manual installation on [demovox.ch](https://demovox.ch).
 
-## Dev
+If this plugin is of help for you, please consider a [donation](https://demovox.ch) and write a review on the [demovox WordPress plugin page](https://wordpress.org/plugins/demovox/).
 
-Please send a pull request for any improvements on the plugin. 
+## Development
+
+Please send us a pull request for any improvements on the plugin. 
 
 ### Installation
 
 1. Pull `demovox` from within the Wordpress Plugin directory (/wp-content/plugins/)
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Configure the plugin in WordPress admin
+2. Use the webserver `wordpress` container from `docker/docker-compose.yaml` (for development purposes), which includes a [WordPress webserver](http://localhost:80/) and [mailhog](http://localhost:8025/) for mail testing.
+   Or use your own webserver (see below).
+3. Activate the plugin through the 'Plugins' menu in [local WordPress](http://localhost:80/)
 4. Place shortcodes [demovox_form] on a page
-5. Optionally use and [demovox_count] to get the number of collected signatures and [demovox_optin] for the opt-in form.
+5. Optionally use and [demovox_count] to show the number of collected signatures and [demovox_optin] for opt-in edit form
+6. Configure the plugin in WordPress admin.
+Allow non-https access in the advanced settings of the plugin and disable "Redirect clients to secure HTTPS".
 
-### Required packages
+#### Own webserver
 
-Please install the following build dependencies:
-* [Python](https://www.python.org/)
-* [Ruby](https://www.ruby-lang.org/)
-* [node.js](https://nodejs.org/) (tested with v8.10.0)
-* [composer](https://getcomposer.org/)
-* [gettext](https://packages.ubuntu.com/bionic/gettext)
+You can use your own webserver with WordPress and map the demovox directory to `[WordPressDir]/wp-content/plugins/demovox`.
 
-Download required packages:
+As a developer you might want to work on a web server without SSL. Enable `WP_DEBUG` in `wp-config.php` and you probably want to disable `WP_DEBUG_DISPLAY`. Then
+open the Advanced settings of the plugin in the WordPress backend and disable "Redirect clients to secure HTTPS".
 
+### Building assets
+
+#### Docker container
+
+Start `buildserver` from `docker/docker-compose.yaml`. The plugin is monted in `/var/demovox/`
+
+#### Manual installation (instead of docker container)
+
+If you don't want to use the docker container, install the following build dependencies:
+[Python](https://www.python.org/), [Ruby](https://www.ruby-lang.org/),
+[node.js](https://nodejs.org/) (tested with v8.10.0), [composer](https://getcomposer.org/),
+[gettext](https://packages.ubuntu.com/bionic/gettext).
+Install required NPM packages with `npm install grunt-cli sass -g`
+ 
+#### Install required project packages
+
+Go to demovox directory (e.g. `cd /var/demovox/`)
 ```
 npm install
-npm install grunt-cli sass -g
 composer install --no-dev
 ```
 
-### Generate assets
+Install required packages for tests:
+```
+composer install
+bin/install-wp-tests.sh  <db-name> <db-user> <db-pass> [db-host]
+```
+
+#### Grunt Commands
+
+##### Generate assets
 
 Generate minified JS and CSS files and compile .mo translation files:
-
 ```
 grunt buildAssets
 ```
 
-### Build zip
+##### Build zip
 
 Create a ZIP which can be uploaded to a remote WordPress installation:
 
@@ -75,27 +96,16 @@ Create a ZIP which can be uploaded to a remote WordPress installation:
 grunt buildZip
 ```
 
-### Required packages for tests
-```
-composer install
-bin/install-wp-tests.sh  <db-name> <db-user> <db-pass> [db-host]
-```
-
-### Running the tests
+##### Running the tests
 
 There are just a few PHPUnit tests available yet, feel free to contribute some and send a pull-request to increase the test coverage.
 ```
 grunt test
 ```
 
-### Unencrypted access
-
-As a developer you might want to work on a web server without SSL configured. Enable `WP_DEBUG` in `wp-config.php` and you probably want to disable `WP_DEBUG_DISPLAY`. Then
-open the Advanced settings of the plugin in the WordPress backend and disable "Redirect clients to secure HTTPS".
-
 ## Changelog
 
-See README.txt
+See README.txt and [commit log](https://github.com/spschweiz/demovox/commits/master).
 
 ## Authors
 
