@@ -257,6 +257,8 @@ class AdminPages extends BaseController
 		$mailSubject = Mail::getMailSubject($sign, $mailType);
 		$mailText = Mail::getMailText($sign, $mailSubject, $mailType);
 
+		Loader::addAction('wp_mail_failed', new Mail(), 'echoMailerErrors', 20, 1);
+
 		ob_start();
 		$isSent = Mail::send($mailTo, $mailSubject, $mailText, $mailFrom, $nameFrom);
 		$connectionLog = ob_get_contents();

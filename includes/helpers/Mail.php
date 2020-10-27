@@ -87,6 +87,12 @@ class Mail
 		Core::logMessage($string, 'error', 'mail');
 	}
 
+	static function echoMailerErrors( \WP_Error $wp_error ){
+		echo "Mailer Error: " . $wp_error->get_error_message();
+		exit;
+		self::logMailerErrors( $wp_error);
+	}
+
 	/**
 	 * @param signObject $sign
 	 * @param int $mailType
