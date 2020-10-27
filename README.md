@@ -13,7 +13,7 @@
 
 demovox is a tool to collect signatures for Swiss popular initiatives by offering the visitor a personalized signature sheet.
 
-This Plugin was developed by the [Socialist Party of Switzerland](https://www.sp-ps.ch), it was initially built for the popular initiative [Prämien-Entlastungs-Initiative](https://bezahlbare-praemien.ch).
+This Plugin was developed by the [Socialist Party of Switzerland](https://www.sp-ps.ch), it was initially built for the popular initiative [Prämien-Entlastungs-Initiative](https://bezahlbare-praemien.ch) in 2019. It has been used for numerous others since, like [umverkehR](https://www.umverkehr.ch/) (2020) and [AHVx13](https://www.ahvx13.ch/) (2020) by [SGB](https://www.sgb.ch), to name a few.   
 
 ## Requirements
 
@@ -35,7 +35,7 @@ Please send us a pull request for any improvements on the plugin.
 
 ### Installation
 
-1. Pull `demovox` from within the Wordpress Plugin directory (/wp-content/plugins/)
+1. Pull `demovox` from git
 2. Use the webserver `wordpress` container from `docker/docker-compose.yaml` (for development purposes), which includes a [WordPress webserver](http://localhost:80/) and [mailhog](http://localhost:8025/) for mail testing.
    Or use your own webserver (see below).
 3. Activate the plugin through the 'Plugins' menu in [local WordPress](http://localhost:80/)
@@ -46,9 +46,9 @@ Allow non-https access in the advanced settings of the plugin and disable "Redir
 
 #### Own webserver
 
-You can use your own webserver with WordPress and map the demovox directory to `[WordPressDir]/wp-content/plugins/demovox`.
+You can use your own webserver (see requirements above) and map the demovox directory to `[WordPressDir]/wp-content/plugins/demovox`.
 
-As a developer you might want to work on a web server without SSL. Enable `WP_DEBUG` in `wp-config.php` and you probably want to disable `WP_DEBUG_DISPLAY`. Then
+While developing, you might want to work on a web server without SSL. Enable `WP_DEBUG` in `wp-config.php` and you probably want to disable `WP_DEBUG_DISPLAY`. Then
 open the Advanced settings of the plugin in the WordPress backend and disable "Redirect clients to secure HTTPS".
 
 ### Building assets
