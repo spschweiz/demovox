@@ -36,7 +36,7 @@ Please send us a pull request for any improvements on the plugin.
 ### Installation
 
 1. Pull `demovox` from git
-2. Use the webserver `wordpress` container from `docker/docker-compose.yaml` (for development purposes), which includes a [WordPress webserver](http://localhost:80/) and [mailhog](http://localhost:8025/) for mail testing.
+2. Use the webserver `wordpress` container from `docker-compose.yaml` (for development purposes), which includes a [WordPress webserver](http://localhost:80/) and [mailhog](http://localhost:8025/) for mail testing.
    Or use your own webserver (see below).
 3. Activate the plugin through the 'Plugins' menu in [local WordPress](http://localhost:80/)
 4. Place shortcodes [demovox_form] on a page
