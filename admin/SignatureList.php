@@ -43,6 +43,7 @@ class SignatureList extends \WP_List_Table
 	/**
 	 * Retrieve signatures data from the database
 	 *
+	 * @param string|null $where
 	 * @param int $perPage
 	 * @param int $pageNumber
 	 *
@@ -304,7 +305,7 @@ class SignatureList extends \WP_List_Table
 					}
 					$whereLike .= $col . ' LIKE \'%' . $s . '%\' OR ';
 				}
-				$whereLike = substr($where, 0, -4);
+				$whereLike = substr($whereLike, 0, -4);
 				$where .= ' AND (';
 				$where .= ' (is_encrypted = 0 AND (' . $whereLike . '))';
 				$where .= ' OR (is_encrypted = 1 AND serial = \'' . $s . '\')';
