@@ -11,7 +11,7 @@
 
 ## Description
 
-demovox is a tool to collect signatures for Swiss popular initiatives by offering the visitor a personalized signature sheet.
+WordPress plugin [demovox](https://wordpress.org/plugins/demovox/) is a tool to collect signatures for Swiss popular initiatives by offering the visitor a personalized signature sheet.
 
 This Plugin was developed by the [Socialist Party of Switzerland](https://www.sp-ps.ch), it was initially built for the popular initiative [Prämien-Entlastungs-Initiative](https://bezahlbare-praemien.ch) in 2019. It has been used for numerous others since, like [umverkehR](https://www.umverkehr.ch/) (2020) and [AHVx13](https://www.ahvx13.ch/) (2020) by [SGB](https://www.sgb.ch), to name a few.   
 
@@ -25,7 +25,7 @@ This Plugin was developed by the [Socialist Party of Switzerland](https://www.sp
 
 ## Productive installation 
 
-Simply install the the WordPress plugin [demovox](https://wordpress.org/plugins/demovox/) from within the Plugin manager of your WordPress installation. You can find the admin manual or the prebuilt Zip-File for manual installation on [demovox.ch](https://demovox.ch).
+Simply install the WordPress plugin [demovox](https://wordpress.org/plugins/demovox/) from within the Plugin manager of your WordPress installation. You can find the admin manual or the prebuilt Zip-File for manual installation on [demovox.ch](https://demovox.ch).
 
 If this plugin is of help for you, please consider a [donation](https://demovox.ch) and write a review on the [demovox WordPress plugin page](https://wordpress.org/plugins/demovox/).
 
@@ -36,7 +36,7 @@ Please send us a pull request for any improvements on the plugin.
 ### Installation
 
 1. Pull `demovox` from git
-2. Use the webserver `wordpress` container from `docker/docker-compose.yaml` (for development purposes), which includes a [WordPress webserver](http://localhost:80/) and [mailhog](http://localhost:8025/) for mail testing.
+2. Use the webserver `wordpress` container from `docker-compose.yaml` (for development purposes), which includes a [WordPress webserver](http://localhost:80/) and [mailhog](http://localhost:8025/) for mail testing.
    Or use your own webserver (see below).
 3. Activate the plugin through the 'Plugins' menu in [local WordPress](http://localhost:80/)
 4. Place shortcodes [demovox_form] on a page

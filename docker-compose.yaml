@@ -5,10 +5,10 @@ services:
     hostname: demovox-npm-build
     build:
       context: .
-      dockerfile: ./buildserver.Dockerfile
+      dockerfile: ./docker/buildserver.Dockerfile
     command: bash -c "npm install && composer install --no-dev && tail -f /dev/null"
     volumes:
-      - '../:/var/demovox'
+      - './:/var/demovox'
 
   wordpress:
     container_name: demovox-wordpress
@@ -18,7 +18,7 @@ services:
       - mailhog
     build:
       context: .
-      dockerfile: ./wordpress.Dockerfile
+      dockerfile: ./docker/wordpress.Dockerfile
     ports:
       - '80:80'
     environment:
@@ -30,8 +30,8 @@ services:
       WORDPRESS_CONFIG_EXTRA: |
              define('WP_DEBUG_DISPLAY', false );
     volumes:
-      - '../:/var/www/html/wp-content/plugins/demovox'
-      - './php.ini:/usr/local/etc/php/conf.d/custom.ini'
+      - './:/var/www/html/wp-content/plugins/demovox'
+      - './docker/php.ini:/usr/local/etc/php/conf.d/custom.ini'
   db:
     container_name: demovox-db
     image: 'mysql:5.7'

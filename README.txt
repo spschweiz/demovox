@@ -31,8 +31,6 @@ Allows many people to sign up at the same time, as it avoids high server loads b
 * Continuous export to REST API of your CRM
 * Counts how many signatures a signature source (referrer) has provided. (Call landing page with a "demovox_src" param and the source name as value, or just the "src" param on a landing page with a [demovox_form] shortcode.)
 
-[](http://coderisk.com/wp/plugin/demovox/RIPS-v2m1_L2-6s)
-
 == Screenshots ==
 1. Example of a demovox installation on the popular initiative [Prämien-Entlastungs-Initiative](https://bezahlbare-praemien.ch/), for which the plugin was initially built for
 2. demovox installation on the [Initiative pour les glaciers](https://glaciers.pssuisse.ch/) (or [Gletscher-Initiative](https://gletscher.spschweiz.ch/) in german)
