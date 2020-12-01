@@ -32,7 +32,7 @@ namespace Demovox;
 			<input name="name_last" id="demovox-name_last" autocomplete="family-name" class="form-control" type="text" minlength="3" maxlength="64"
 			       required="" pattern="[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}">
 		</div>
-		<div id="demovox-grp-mail-cont" class="form-row">
+		<div id="demovox-grp-mail-cont" class="form-group">
 			<div id="demovox-grp-mail" class="form-group<?= $emailConfirmEnabled ? ' col-md-6' : '' ?>">
 				<label for="demovox-mail"><?= __('Email', 'demovox') ?></label>
 				<input name="mail" id="demovox-mail" autocomplete="email" class="form-control" type="email" maxlength="128" required="">
