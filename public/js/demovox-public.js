@@ -339,7 +339,7 @@ $(() => {
 			$el.zip = $('#demovox-zip');
 			$el.street = $('#demovox-street');
 			$el.streetNo = $('#demovox-street_no');
-			$el.gdeCanton = $('#demovox-de_canton');
+			$el.gdeCanton = $('#demovox-gde_canton');
 			$el.birthDate = $('#demovox-birth_date');
 			$el.swissAbroad = $('#demovox-swiss_abroad');
 
