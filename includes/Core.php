@@ -337,6 +337,9 @@ class Core
 		fputs($fp, $string);
 		fclose($fp);
 		if (WP_DEBUG_DISPLAY) {
+			if (self::isPluginPage() && $level !== 'error') {
+				return;
+			}
 			echo $string;
 		}
 	}
@@ -344,6 +347,12 @@ class Core
 	public static function getPluginDir()
 	{
 		return plugin_dir_path(dirname(__FILE__));
+	}
+
+	public static function isPluginPage()
+	{
+		global $pagenow;
+		return $pagenow === 'plugins.php' && is_admin();
 	}
 
 	public static function isPluginEnabled()
