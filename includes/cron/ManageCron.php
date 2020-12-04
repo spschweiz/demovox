@@ -23,7 +23,7 @@ class ManageCron
 			$crons = [];
 			foreach (self::getCronNames() as $cron) {
 				$className = '\\' . __NAMESPACE__ . '\\' . $cron;
-				$crons[]   = new $className;
+				$crons[]   = new $className();
 			}
 			self::$allCrons = $crons;
 		}
@@ -50,8 +50,9 @@ class ManageCron
 
 	public static function triggerCron($id)
 	{
-		$hook = self::getClass($id)->getHookName();
-		wp_schedule_single_event(time() - 1, $hook);
+		$hook = self::getClass($id);
+		$name = $hook->getHookName();
+		wp_schedule_single_event(time() - 1, $name);
 		spawn_cron();
 	}
 

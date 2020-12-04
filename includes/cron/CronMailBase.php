@@ -21,8 +21,6 @@ class CronMailBase extends CronBase
 			}
 			$this->isDedup = true;
 		}
-
-		return parent::__construct();
 	}
 
 	protected function prepareRunMailReminder(): bool

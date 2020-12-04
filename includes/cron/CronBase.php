@@ -17,10 +17,10 @@ class CronBase
 		0 => 'CronMailConfirm', 1 => 'CronMailIndex', 2 => 'CronMailRemindSheet', 3 => 'CronMailRemindSignup', 4 => 'CronExportToApi',
 	];
 
-	public function __construct()
+	protected function defineCronMeta()
 	{
-		list($namespace, $className) = explode('\\', get_class($this));
-		$cronName          = strtolower(
+		[$namespace, $className] = explode('\\', get_class($this));
+		$cronName = strtolower(
 			preg_replace(
 				'/(?<=[a-z])([A-Z]+)/',
 				'_$1',
@@ -28,7 +28,7 @@ class CronBase
 			)
 		);
 		$this->namespace = $namespace;
-		$this->cronName  = $cronName;
+		$this->cronName = $cronName;
 		$this->className = $className;
 	}
 
@@ -55,7 +55,21 @@ class CronBase
 	 */
 	public function getName()
 	{
+		if(!$this->cronName){
+			$this->defineCronMeta();
+		}
 		return $this->cronName;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getNamespace()
+	{
+		if(!$this->namespace){
+			$this->defineCronMeta();
+		}
+		return $this->namespace;
 	}
 
 	/**
@@ -107,6 +121,9 @@ class CronBase
 	 */
 	public function getClassName()
 	{
+		if(!$this->className){
+			$this->defineCronMeta();
+		}
 		return $this->className;
 	}
 
@@ -115,7 +132,7 @@ class CronBase
 	 */
 	public function getHookName()
 	{
-		return strtolower($this->namespace) . '_' . $this->cronName;
+		return strtolower($this->getNamespace()) . '_' . $this->getName();
 	}
 
 	/**
@@ -202,7 +219,7 @@ class CronBase
 
 	protected function setRunningStart()
 	{
-		Core::logMessage('Cron ' . $this->className . ' started', 'notice');
+		Core::logMessage('Cron ' . $this->getClassName() . ' started', 'notice');
 		$this->setOption('lock', true);
 		$this->setOption('start', time());
 		$this->setOption('lastSkipped', null);
@@ -212,21 +229,21 @@ class CronBase
 
 	public function cancelRunning()
 	{
-		Core::logMessage('Cron ' . $this->className . ' cancelled by user "' . Infos::getUserName() . '"', 'notice');
+		Core::logMessage('Cron ' . $this->getClassName() . ' cancelled by user "' . Infos::getUserName() . '"', 'notice');
 		$this->setOption('lock', false);
 		$this->setOption('stop', time());
 	}
 
 	protected function setSkipped($reason)
 	{
-		Core::logMessage('Cron ' . $this->className . ' execution skipped. Reason: ' . $reason, 'notice');
+		Core::logMessage('Cron ' . $this->getClassName() . ' execution skipped. Reason: ' . $reason, 'notice');
 		$this->setOption('lastSkipped', time());
 		$this->setStateMessage($reason);
 	}
 
 	protected function setRunningStop()
 	{
-		Core::logMessage('Cron ' . $this->className . ' ended', 'notice');
+		Core::logMessage('Cron ' . $this->getClassName() . ' ended', 'notice');
 		$this->setOption('lock', false);
 		$this->setOption('stop', time());
 	}
@@ -237,7 +254,7 @@ class CronBase
 	 */
 	protected function log($msg, $level = 'error')
 	{
-		Core::logMessage('Cron ' . $this->className . ' message: ' . $msg, $level);
+		Core::logMessage('Cron ' . $this->getClassName() . ' message: ' . $msg, $level);
 	}
 
 	/**
@@ -247,7 +264,7 @@ class CronBase
 	 */
 	protected function getOption($id)
 	{
-		return Core::getOption($this->cronName . '_' . $id);
+		return Core::getOption($this->getName() . '_' . $id);
 	}
 
 	/**
@@ -260,6 +277,6 @@ class CronBase
 	 */
 	protected function setOption($id, $value)
 	{
-		return Core::setOption($this->cronName . '_' . $id, $value);
+		return Core::setOption($this->getName() . '_' . $id, $value);
 	}
 }
