@@ -101,7 +101,7 @@ module.exports = function (grunt) {
 		compress: {
 			main: {
 				options: {
-					archive: '../demovox.zip'
+					archive: './demovox.zip'
 					/*
 					archive: function () {
 						// The global value git.tag is set by another task
