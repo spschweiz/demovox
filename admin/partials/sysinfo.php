@@ -161,9 +161,8 @@ namespace Demovox;
 	Infos::isHighLoad()
 		? '<span class="error">Yes</span> (would <i>NOT</i> execute CRON)'
 		: '<span class="success">No</span> (would execute CRON)' ?><br/>
-	Recognized Cores: <?= Infos::countCores() ?> / Configured cores: <?= intval(Config::getValue('cron_cores')) ?>
-	(this value is used to
-	calculate current load from absolute load)
+	Cores setting: <?= intval(Config::getValue('cron_cores')) ?> (Recommended cores setting: <?= Infos::countCores() ?>)<br/>
+	Current load is calculated by dividing absolute load by the amount of cores
 	<h2>Encryption performance</h2>
 	<h4>php-encryption</h4>
 	<p>
