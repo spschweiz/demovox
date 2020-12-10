@@ -38,10 +38,11 @@ Please send us a pull request for any improvements on the plugin.
 1. Pull `demovox` from git
 2. Use the webserver `wordpress` container from `docker-compose.yaml` (for development purposes), which includes a [WordPress webserver](http://localhost:80/) and [mailhog](http://localhost:8025/) for mail testing.
    Or use your own webserver (see below).
-3. Activate the plugin through the 'Plugins' menu in [local WordPress](http://localhost:80/)
-4. Place shortcodes [demovox_form] on a page
-5. Optionally use and [demovox_count] to show the number of collected signatures and [demovox_optin] for opt-in edit form
-6. Configure the plugin in WordPress admin.
+3. Install required project packages and generate assets with grunt (see below)
+4. Activate the plugin through the 'Plugins' menu in [local WordPress](http://localhost:80/)
+5. Place shortcodes [demovox_form] on a page or use the automatically generated page
+6. Optionally use and [demovox_count] to show the number of collected signatures and [demovox_optin] for opt-in edit form
+7. Configure the plugin in WordPress admin.
 Allow non-https access in the advanced settings of the plugin and disable "Redirect clients to secure HTTPS".
 
 #### Own webserver
@@ -61,7 +62,7 @@ Start `buildserver` from `docker/docker-compose.yaml`. The plugin is monted in `
 
 If you don't want to use the docker container, install the following build dependencies:
 [Python](https://www.python.org/), [Ruby](https://www.ruby-lang.org/),
-[node.js](https://nodejs.org/) (tested with v8.10.0), [composer](https://getcomposer.org/),
+[node.js](https://nodejs.org/) (use v8.10.0 as po2mo fails with higher versions), [composer](https://getcomposer.org/),
 [gettext](https://packages.ubuntu.com/bionic/gettext).
 Install required NPM packages with `npm install grunt-cli sass -g`
  
@@ -81,19 +82,18 @@ bin/install-wp-tests.sh  <db-name> <db-user> <db-pass> [db-host]
 
 #### Grunt Commands
 
-##### Generate assets
+##### Generate assets for development
 
 Generate minified JS and CSS files and compile .mo translation files:
 ```
 grunt buildAssets
 ```
 
-##### Build zip
+##### Build for wordpress.org repo
 
-Create a ZIP which can be uploaded to a remote WordPress installation:
-
+Build plugin snapshot in `demovox/buildWpOrg` which can be uploaded to the WordPress.org repository:
 ```
-grunt buildZip
+grunt buildWpOrg
 ```
 
 ##### Running the tests
@@ -101,6 +101,18 @@ grunt buildZip
 There are just a few PHPUnit tests available yet, feel free to contribute some and send a pull-request to increase the test coverage.
 ```
 grunt test
+```
+
+##### Other commands
+
+Build plugin snapshot as ZIP in `demovox/demovox.zip`, which can be uploaded to a remote WordPress installation:
+```
+grunt buildZip
+```
+
+Show all other available commands:
+```
+grunt buildZip
 ```
 
 ## Changelog
