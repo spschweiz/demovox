@@ -21,19 +21,25 @@ Security is of great concern to us. The organization that runs the plugin is alw
 Allows many people to sign up at the same time, as it avoids high server loads by generating the signature sheet PDFs on the browser instead.
 = Packed with features =
 * Opt-in check box
-* Track signature sheets
-* Reminder for unfinished sign ups or missing signature sheets
-* Local initiatives (communal and cantonal)
-* Four national languages plus english are supported for any frontend text or mail content
-* Signature sheets with turned parts by 90°, 180° and 270° (for example letter sheets)
+* Track signature sheet reception with QR codes and shortcodes
+* Reminder mails for unfinished sign ups or missing signature sheets
+* Local initiatives (communal or cantonal)
 * Swiss abroad
-* Supports API for address completion and commune identification by a given address (optional)
-* Continuous export to REST API of your CRM
+* Four national languages plus english are supported for any frontend text or mail content
+* Signature sheets with turned parts by 90°, 180° and 270° (for example folded letter sheets)
+* Supports API for address completion and commune identification by a given address
+* Continuous export to a REST API of your CRM
+* Integrated queue system for mail submission
+* Optimized server performance by generating PDFs on the client and option to delay crons (mail submission, export and indexing) during high server load times
 * Counts how many signatures a signature source (referrer) has provided. (Call landing page with a "demovox_src" param and the source name as value, or just the "src" param on a landing page with a [demovox_form] shortcode.)
 
 == Screenshots ==
 1. Example of a demovox installation on the popular initiative [Prämien-Entlastungs-Initiative](https://bezahlbare-praemien.ch/), for which the plugin was initially built for
 2. demovox installation on the [Initiative pour les glaciers](https://glaciers.pssuisse.ch/) (or [Gletscher-Initiative](https://gletscher.spschweiz.ch/) in german)
+3. Cantonal [Elternzeit Initiative](https://elternzeit-initiative.ch/) in Zürich (by [SP Kanton Zürich](https://spkantonzh.ch/))
+4. Communal [Hafeninitiative](https://www.hafeninitiative.ch/) in Basel (by [JUSO BS](https://bs.juso.ch/)
+5. Referendum [Nein zu den Kapfjet-Milliarden](https://www.kampfjets-nein.ch/) (by [GSoA](https://www.gsoa.ch/))
+6. [Initiative für eine 13. AHV-Rente](https://www.ahvx13.ch/) (by [SGB - USS](https://www.sgb.ch/))
 
 == Frequently Asked Questions ==
 = Do you provide support to run this plugin? =
