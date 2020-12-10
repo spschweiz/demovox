@@ -199,6 +199,10 @@ class AdminPages extends BaseController
 	public function testEncrypt()
 	{
 		Core::checkAccess('manage_options');
+		if (!defined('DEMOVOX_ENC_KEY') || !defined('DEMOVOX_HASH_KEY')) {
+			echo '<span class="error">Error</span>: Wordpress configs DEMOVOX_ENC_KEY and DEMOVOX_HASH_KEY are required for encryption. Please set them with a random value prior to testing (see examples in System info)';
+			return;
+		}
 
 		if (isset($_REQUEST['fullLen']) && $_REQUEST['fullLen']) {
 			$lengths = [32, 255, 255, 10, 128, 64, 127, 10, 16, 64, 5, 4, 45, 2];
