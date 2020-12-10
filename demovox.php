@@ -20,7 +20,7 @@ namespace Demovox;
  * Description:       demovox is a tool to collect signatures for Swiss popular initiatives by offering the visitor a personalized signature sheet.
  * Version:           2.4.3
  * Author:            Fabian Horlacher / SP Schweiz
- * Author URI:        https://www.spschweiz.ch/
+ * Author URI:        https://www.sp-ps.ch/
  * GitHub Plugin URI: https://github.com/spschweiz/demovox
  * License:           GPLv3
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.en.html
