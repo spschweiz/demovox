@@ -10,7 +10,7 @@ namespace Demovox;
  *
  * @package    Demovox
  * @subpackage Demovox/admin
- * @author     Fabian Horlacher / SP Schweiz
+ * @author     SP Schweiz
  */
 class AdminSettings extends BaseController
 {

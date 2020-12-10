@@ -21,7 +21,7 @@ namespace Demovox;
  *
  * @package    Demovox
  * @subpackage Demovox/includes
- * @author     Fabian Horlacher / SP Schweiz
+ * @author     SP Schweiz
  */
 class Loader
 {

@@ -20,7 +20,7 @@ namespace Demovox;
  *
  * @package    Demovox
  * @subpackage Demovox/admin
- * @author     Fabian Horlacher / SP Schweiz
+ * @author     SP Schweiz
  */
 class InitAdmin extends BaseController
 {

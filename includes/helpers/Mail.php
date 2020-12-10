@@ -8,7 +8,7 @@ namespace Demovox;
  * @since      1.0.0
  * @package    Demovox
  * @subpackage Demovox/includes/helpers
- * @author     Fabian Horlacher / SP Schweiz
+ * @author     SP Schweiz
  */
 class Mail
 {

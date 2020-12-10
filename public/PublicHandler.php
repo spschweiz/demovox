@@ -20,7 +20,7 @@ namespace Demovox;
  *
  * @package    Demovox
  * @subpackage Demovox/public
- * @author     Fabian Horlacher / SP Schweiz
+ * @author     SP Schweiz
  */
 class PublicHandler extends BaseController
 {
