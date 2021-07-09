@@ -61,7 +61,7 @@ namespace Demovox;
 			}
 		};
 
-	demovoxAdminClass.hideOnVal($('#demovox_optin_mode'), $('.hideOnOptinDisabled'), 'disabled');
+	demovoxAdminClass.hideOnVal(jQuery('#demovox_optin_mode'), jQuery('.hideOnOptinDisabled'), 'disabled');
 	var ctxDate = document.getElementById("dateChart"),
 		dateChart = new demovoxChart(ctxDate, {
 			type: 'line',
