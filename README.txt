@@ -125,4 +125,9 @@ We do not provide any warranty or free support, but you're welcome to create an 
 = 2.4 =
 * Support Wordpress 5.5 with PHPMailer 6
 
+= 2.5 =
+* Fix italian translation (birthdate)
+* Fix Charts in backend
+* Remove duplicate entries in settings
+
 For more details, see our commit log: https://github.com/spschweiz/demovox/commits/master
