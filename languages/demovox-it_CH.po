@@ -60,7 +60,7 @@ msgstr "Non uno"
 
 #: sign-2.php:25
 msgid "Birth date"
-msgstr "Compleanno"
+msgstr "Data di nascita"
 
 #: sign-2.php:36
 msgid "Swiss abroad"
