@@ -1,18 +1,19 @@
 # Copyright (C) 2019 demovox
 # This file is distributed under the same license as the demovox package.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: demovox 0.0.1\n"
 "Report-Msgid-Bugs-To: https://github.com/spschweiz/demovox\n"
 "POT-Creation-Date: 2019-02-21 11:16+0100\n"
-"PO-Revision-Date: 2019-02-21 11:16+0100\n"
+"PO-Revision-Date: 2021-07-23 12:14+0200\n"
 "Language-Team: SP Schweiz <info@spschweiz.ch>\n"
 "Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Last-Translator: \n"
+"X-Generator: Poedit 3.0\n"
 
 #: sign-1.php:22
 msgid "First Name"
@@ -120,4 +121,4 @@ msgstr "formulario_raccolta_firme"
 
 #: PublicHandler.php.php:198
 msgid "Your settings were saved"
-msgstr "Le tue impostazioni sono state registrate."
+msgstr "Le tue impostazioni sono state registrate"
