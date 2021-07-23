@@ -3,7 +3,7 @@ Contributors: spschweiz, horlacher
 Donate link: https://demovox.ch/#spenden
 Tags: initiative, referendum, switzerland, collect, signature, signatures
 Requires at least: 4.9
-Tested up to: 5.5
+Tested up to: 5.8
 Stable tag: 1.0
 Requires PHP: 7.0.0
 License: GPLv3
