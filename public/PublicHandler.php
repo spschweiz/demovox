@@ -65,6 +65,61 @@ class PublicHandler extends BaseController
 		return $row->last_name;
 	}
 
+	public function streetShortcode()
+	{
+		$this->requireHttps();
+
+		$row = $this->getRow(['street']);
+		if (!$row) {
+			return '';
+		}
+		return $row->street;
+	}
+
+	public function street_noShortcode()
+	{
+		$this->requireHttps();
+
+		$row = $this->getRow(['street_no']);
+		if (!$row) {
+			return '';
+		}
+		return $row->street_no;
+	}
+
+	public function zipShortcode()
+	{
+		$this->requireHttps();
+
+		$row = $this->getRow(['zip']);
+		if (!$row) {
+			return '';
+		}
+		return $row->zip;
+	}
+
+	public function cityShortcode()
+	{
+		$this->requireHttps();
+
+		$row = $this->getRow(['city']);
+		if (!$row) {
+			return '';
+		}
+		return $row->city;
+	}
+
+	public function mailShortcode()
+	{
+		$this->requireHttps();
+
+		$row = $this->getRow(['mail']);
+		if (!$row) {
+			return '';
+		}
+		return $row->mail;
+	}
+
 	public function optInShortcode()
 	{
 		$this->requireHttps();

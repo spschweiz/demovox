@@ -130,4 +130,7 @@ We do not provide any warranty or free support, but you're welcome to create an 
 * Fix Charts in backend
 * Remove duplicate entries in settings
 
+= 2.6 =
+* Add Shortcodes for Street, Street No, Zip, City and Mail
+
 For more details, see our commit log: https://github.com/spschweiz/demovox/commits/master

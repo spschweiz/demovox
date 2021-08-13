@@ -43,7 +43,7 @@ namespace Demovox;
 	<?php } ?>
 	<h3>Shortcodes</h3>
 	<p>Global shortcodes: <code>[demovox_form]</code> <code>[demovox_count]</code></p>
-	<p>Opt-in page and success pages shortcodes: <code>[demovox_form]</code> <code>[demovox_optin]</code> <code>[demovox_firstname]</code>
+	<p>Opt-in page and success pages shortcodes: <code>[demovox_form]</code> <code>[demovox_optin]</code> <code>[demovox_firstname]</code><code>[demovox_street]</code><code>[demovox_street_no]</code><code>[demovox_zip]</code><code>[demovox_city]</code><code>[demovox_mail]</code>
 		<code>[demovox_lastname]</code></p>
 	<?php if (current_user_can('demovox_stats') && $count) { ?>
 		<h3>Sign-up stats</h3>

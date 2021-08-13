@@ -60,6 +60,11 @@ class InitPublic extends BaseController
 		Loader::addShortcode('demovox_count', $this->publicHandler, 'countShortcode');
 		Loader::addShortcode('demovox_firstname', $this->publicHandler, 'firstNameShortcode');
 		Loader::addShortcode('demovox_lastname', $this->publicHandler, 'lastNameShortcode');
+		Loader::addShortcode('demovox_street', $this->publicHandler, 'streetShortcode');
+		Loader::addShortcode('demovox_street_no', $this->publicHandler, 'street_noShortcode');
+		Loader::addShortcode('demovox_zip', $this->publicHandler, 'zipShortcode');
+		Loader::addShortcode('demovox_city', $this->publicHandler, 'cityShortcode');
+		Loader::addShortcode('demovox_mail', $this->publicHandler, 'mailShortcode');
 		Loader::addShortcode('demovox_optin', $this->publicHandler, 'optInShortcode');
 
 		// Deprecated shortcodes
