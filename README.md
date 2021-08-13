@@ -112,7 +112,7 @@ grunt buildZip
 
 Show all other available commands:
 ```
-grunt buildZip
+grunt availabletasks
 ```
 
 ## Changelog
