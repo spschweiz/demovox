@@ -96,3 +96,4 @@ typings/
 /build/
 /buildWpOrg/
 /demovox.zip
+.DS_Store
