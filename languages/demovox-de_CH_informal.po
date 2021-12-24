@@ -64,7 +64,7 @@ msgstr "Geburtsdatum"
 
 #: sign-2.php:36
 msgid "Swiss abroad"
-msgstr "Auslandschweizer*in"
+msgstr "Auslandschweizer:in"
 
 #: sign-2.php:29
 msgid "Country"
