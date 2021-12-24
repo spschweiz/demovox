@@ -133,4 +133,7 @@ We do not provide any warranty or free support, but you're welcome to create an 
 = 2.6 =
 * Add Shortcodes for Street, Street No, Zip, City and Mail
 
+= 2.6.1 =
+* Remove gender-* and replace with ":"
+
 For more details, see our commit log: https://github.com/spschweiz/demovox/commits/master
