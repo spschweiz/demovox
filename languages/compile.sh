@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-for file in `find . -name "*.pot"` ; do msgfmt -o ${file/.pot/.mo} $file ; done
+for file in `find . -name "*.po"` ; do msgfmt -o ${file/.po/.mo} $file ; done
