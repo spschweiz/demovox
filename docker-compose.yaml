@@ -32,9 +32,10 @@ services:
     volumes:
       - './:/var/www/html/wp-content/plugins/demovox'
       - './docker/php.ini:/usr/local/etc/php/conf.d/custom.ini'
+
   db:
     container_name: demovox-db
-    image: 'mysql:5.7'
+    image: 'mariadb:10.3'
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: wordpress
