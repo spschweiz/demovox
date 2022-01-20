@@ -84,6 +84,9 @@ typings/
 # JetBrains IDE
 /.idea/
 
+# Mac/OSX
+.DS_Store
+
 # generated assets
 /.sass-cache/
 *.map
@@ -93,7 +96,7 @@ typings/
 /admin/js/Chart.bundle.js
 /languages/*.mo
 
+# builds
 /build/
 /buildWpOrg/
 /demovox.zip
-.DS_Store
