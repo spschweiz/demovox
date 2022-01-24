@@ -139,7 +139,7 @@ $(() => {
 	 */
 	function track(value) {
 		if (demovoxData.analyticsMatomo) {
-			if(_paq === undefined){
+			if(typeof _paq === 'undefined') {
 				console.error('Matomo script was not found on the page, please disable this option in demovox settings');
 				return;
 			}
