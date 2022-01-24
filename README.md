@@ -77,7 +77,8 @@ composer install --no-dev
 Install required packages for tests:
 ```
 composer install
-bin/install-wp-tests.sh  <db-name> <db-user> <db-pass> [db-host]
+chmod +x bin/install-wp-tests.sh
+bin/install-wp-tests.sh wordpress_test root root demovox-db
 ```
 
 #### Grunt Commands

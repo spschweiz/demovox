@@ -6,9 +6,13 @@ services:
     build:
       context: .
       dockerfile: ./docker/buildserver.Dockerfile
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
     command: bash -c "npm install && composer install --no-dev && tail -f /dev/null"
     volumes:
       - './:/var/demovox'
+      - './docker/php.ini:/etc/php/7.4/cli/conf.d/custom.ini'
+      - './docker/xdebug3.ini:/etc/php/7.4/cli/conf.d/xdebug3.ini'
 
   wordpress:
     container_name: demovox-wordpress
