@@ -27,6 +27,7 @@ class Activator
 	private static $tableDefinitions = [
 		Db::TABLE_SIGN  => '
           ID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+          instance int NOT NULL,
           guid char(36) NOT NULL,
           serial char(6) NULL,
           language char(2) NOT NULL,
@@ -158,6 +159,12 @@ class Activator
 		if (!Db::query("SHOW COLUMNS FROM `$dbSignName` LIKE 'title'")) {
 			// previous version was < 2.3
 			$update = "ALTER TABLE $dbSignName ADD COLUMN title VARCHAR(10) NULL BEFORE first_name;";
+			Db::query($update);
+		}
+		if (!Db::query("SHOW COLUMNS FROM `$dbSignName` LIKE 'instance'")) {
+			// previous version was < 3
+			$update = "ALTER TABLE $dbSignName ADD COLUMN instance int NOT NULL DEFAULT '0' AFTER ID;";
+			$update .= "ALTER TABLE $dbSignName ALTER COLUMN instance DROP DEFAULT;";
 			Db::query($update);
 		}
 	}
