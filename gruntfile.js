@@ -131,7 +131,7 @@ module.exports = function (grunt) {
 		},
 		phpunit: {
 			classes: {
-				dir: 'tests/php/'
+				dir: 'tests/phpunit/'
 			},
 			options: {
 				bin: 'libs/composer/phpunit/phpunit/phpunit',
