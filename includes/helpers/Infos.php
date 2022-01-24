@@ -4,7 +4,12 @@ namespace Demovox;
 
 class Infos
 {
-
+	/**
+	 * Get server load (only works on Linux servers)
+	 *
+	 * @param $relative
+	 * @return float|int
+	 */
 	public static function getLoad($relative = true)
 	{
 		if (!function_exists('sys_getloadavg')) {
@@ -36,16 +41,28 @@ class Infos
 		return $lang;
 	}
 
+	/**
+	 * Filesystem directory path to plugin
+	 * @return string
+	 */
 	public static function getPluginDir()
 	{
 		return Core::getPluginDir();
 	}
 
+	/**
+	 * Wordpress username
+	 * @return string
+	 */
 	public static function getUserName()
 	{
 		return wp_get_current_user()->user_login;
 	}
 
+	/**
+	 * Check if client has no ECMAScript 6 compatibility by user agent (imprecise)
+	 * @return bool
+	 */
 	public static function isNoEc6()
 	{
 		if (isset($_SERVER['HTTP_USER_AGENT'])
@@ -58,6 +75,10 @@ class Infos
 		}
 	}
 
+	/**
+	 * Count server cores (only works on Linux servers)
+	 * @return int|string
+	 */
 	public static function countCores()
 	{
 		try {
@@ -68,11 +89,20 @@ class Infos
 		}
 	}
 
+	/**
+	 * SSL protocol enabled?
+	 * @return bool
+	 */
 	public static function isHttps()
 	{
 		return !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== "off";
 	}
 
+	/**
+	 * Check if server load is high (only works on Linux servers)
+	 * @param $maxLoad
+	 * @return bool
+	 */
 	public static function isHighLoad($maxLoad = null)
 	{
 		if ($maxLoad === null) {
@@ -83,6 +113,10 @@ class Infos
 		return $isHigh;
 	}
 
+	/**
+	 * Get client IP (imprecise)
+	 * @return string
+	 */
 	public static function getClientIp()
 	{
 		$address = new \DemovoxLibs\RemoteAddress();
