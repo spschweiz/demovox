@@ -20,6 +20,17 @@ if (!$tabExists) {
 	exit;
 }
 ?>
+<script>
+    function placeMce(selector) {
+        tinyMCE.init({
+            selector: selector,
+            menubar: 'edit view insert format table',
+            plugins: 'link lists charmap hr fullscreen media directionality paste textcolor colorpicker image media code preview table',
+            toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | forecolor backcolor removeformat | charmap image link | fullscreen code preview table',
+            image_advtab: true,
+        });
+    }
+</script>
 <div class="wrap demovox">
 	<form method="post" id="mainform" action="options.php" enctype="multipart/form-data">
 		<?php wp_nonce_field($page); ?>

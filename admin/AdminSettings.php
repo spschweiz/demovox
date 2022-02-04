@@ -151,6 +151,14 @@ class AdminSettings extends BaseController
 		}
 	}
 
+    public function loadTinymce() {
+        $js_src = includes_url('js/tinymce/') . 'tinymce.min.js';
+        $css_src = includes_url('css/') . 'editor.css';
+        echo '<script src="' . $js_src . '" type="text/javascript"></script>';
+        wp_register_style('tinymce_css', $css_src);
+        wp_enqueue_style('tinymce_css');
+    }
+
 	public function setupFields()
 	{
 		$sections = ConfigVars::getSections();

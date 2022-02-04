@@ -12,6 +12,11 @@ submit_button();
 settings_fields($page);
 $this->doSettingsSections($page);
 submit_button();
+wp_enqueue_script('tinymce-plugin-code', plugin_dir_url(__FILE__) . '../js/tinymce-4.9.11/code/plugin.js');
+wp_enqueue_script('tinymce-plugin-preview', plugin_dir_url(__FILE__) . '../js/tinymce-4.9.11/preview/plugin.js');
+wp_enqueue_script('tinymce-plugin-table', plugin_dir_url(__FILE__) . '../js/tinymce-4.9.11/table/plugin.js');
+
+$this->loadTinymce();
 ?>
 <script>
 	(function (jQuery) {
@@ -20,4 +25,15 @@ submit_button();
 		demovoxAdminClass.showOnChecked($('#demovox_mail_remind_sheet_enabled'), $('.showOnMailRemindSheetEnabled'));
 		demovoxAdminClass.showOnChecked($('#demovox_mail_remind_signup_enabled'), $('.showOnMailRemindSignupEnabled'));
 	})(jQuery);
+</script>
+<script>
+    jQuery(document).ready(function(){
+        <?php
+        foreach (i18n::getLangsEnabled() as $langId => $lang):
+        ?>
+        placeMce('#demovox_mail_confirm_body_<?= $langId ?>');
+        <?php
+        endforeach;
+        ?>
+    });
 </script>
