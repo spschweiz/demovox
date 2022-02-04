@@ -2,16 +2,16 @@
 
 namespace Demovox;
 
-class TestBase extends \WP_UnitTestCase
+abstract class TestBase extends \WP_UnitTestCase
 {
 	/** @var DbSignatures */
-	protected static $dbSign;
-	/** @var DbMailDedup */
-	protected static $dbMailDd;
+	protected static DbSignatures $dbSign;
+	/** @var DbMails */
+	protected static DbMails $dbMails;
 
-	protected static $langs = ['de', 'fr', 'it', 'en'];
-	protected static $mailsDomain = ['hotmail.com', 'bluewin.ch', 'gmx.ch', 'web.de', 'romandie.com', 'yahoo.com', 'gmail.com'];
-	protected static $signaturesMeta = [
+	protected static array $langs = ['de', 'fr', 'it', 'en'];
+	protected static array $mailsDomain = ['hotmail.com', 'bluewin.ch', 'gmx.ch', 'web.de', 'romandie.com', 'yahoo.com', 'gmail.com'];
+	protected static array $signaturesMeta = [
 		// 1h
 		[
 			'first_name'              => 'Maria',
@@ -226,8 +226,8 @@ class TestBase extends \WP_UnitTestCase
 	{
 		parent::__construct();
 
-		self::$dbMailDd = new DbMailDedup;
-		self::$dbSign   = new DbSignatures;
+		self::$dbMails = new DbMails;
+		self::$dbSign  = new DbSignatures;
 	}
 
 	public static function tearDownAfterClass(): void
@@ -238,30 +238,34 @@ class TestBase extends \WP_UnitTestCase
 
 	protected static function truncateTables(): void
 	{
-		self::$dbMailDd->truncate();
+		self::$dbMails->truncate();
 		self::$dbSign->truncate();
 	}
 
 	/**
-	 * Create all mail deduplication entries, based on DbSignatures
+	 * Create all mail deduplication entries, based on DbSignatures.
+	 * This
 	 */
-	protected static function createDbMailDd(): void
+	protected static function createDbMails(): void
 	{
 		Core::setOption('cron_index_mail_status', CronMailIndex::STATUS_RUNNING);
 		$rows = self::$dbSign->getResults(
 			[
 				'ID',
+				'instance',
 				'mail',
 				'creation_date',
 				'is_step2_done',
 				'is_sheet_received',
 				'state_remind_sheet_sent',
 				'state_remind_signup_sent',
-			]
+			],
+			'is_deleted = 0 AND is_outside_scope = 0'
 		);
 		foreach ($rows as $row) {
-			$dbMailDd = new DbMailDedup();
-			$save     = $dbMailDd->importRow($row);
+			$dbMailDd = new DbMails();
+			$sign     = new DtoSignatures($row);
+			$dbMailDd->importRow($sign);
 		}
 		Core::setOption('cron_index_mail_status', CronMailIndex::STATUS_FINISHED);
 	}
@@ -286,8 +290,12 @@ class TestBase extends \WP_UnitTestCase
 	protected static function createDbSign(): void
 	{
 		foreach (self::$signaturesMeta as $meta) {
-			$sign = self::genSign($meta);
-			self::$dbSign->insert($sign);
+			$signData = self::genSign($meta);
+			$sign = new DtoSignatures($signData);
+			$inserts = self::$dbSign->insert($sign);
+			if (!$inserts) {
+				error_log('No signatures were inserted');
+			}
 		}
 	}
 }

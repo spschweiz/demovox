@@ -24,66 +24,6 @@ namespace Demovox;
  */
 class Activator
 {
-	private static $tableDefinitions = [
-		Db::TABLE_SIGN  => '
-          ID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-          instance int NOT NULL,
-          guid char(36) NOT NULL,
-          serial char(6) NULL,
-          language char(2) NOT NULL,
-          ip_address char(232) NULL,
-          title varchar(10) NULL,
-          first_name varchar(678) NOT NULL,
-          last_name varchar(678) NOT NULL,
-          birth_date varchar(188) NULL,
-          mail varchar(424) NOT NULL,
-          phone varchar(296) NULL,
-          country char(2) NULL,
-          street varchar(422) NULL,
-          street_no varchar(188) NULL,
-          zip varchar(200) NULL,
-          city varchar(296) NULL,
-          gde_no varchar(178) NULL,
-          gde_zip varchar(176) NULL,
-          gde_name varchar(258) NULL,
-          gde_canton varchar(172) NULL,
-          is_optin tinyint(4) NULL,
-          is_step2_done tinyint(4) DEFAULT 0 NOT NULL,
-          is_outside_scope tinyint(4) DEFAULT 0 NOT NULL,
-          is_sheet_received tinyint(4) DEFAULT 0 NOT NULL,
-          is_exported tinyint(4) DEFAULT 0 NOT NULL,
-          is_encrypted tinyint(4) DEFAULT 0 NOT NULL,
-          is_deleted tinyint(4) DEFAULT 0 NOT NULL,
-          state_confirm_sent tinyint(4) DEFAULT 0 NOT NULL,
-          state_remind_sheet_sent tinyint(4) DEFAULT 0 NOT NULL,
-          state_remind_signup_sent tinyint(4) DEFAULT 0 NOT NULL,
-          link_success varchar(255) NULL,
-          link_pdf varchar(255) NULL,
-          link_optin varchar(255) NULL,
-          creation_date datetime NOT NULL DEFAULT NOW(),
-          edit_date datetime NULL,
-          sheet_received_date datetime NULL,
-          remind_signup_sent_date datetime NULL,
-          remind_sheet_sent_date datetime NULL,
-          source varchar(127) NULL,
-          PRIMARY KEY (ID),
-          UNIQUE KEY guid_index (guid),
-          INDEX creation_date_index (creation_date)',
-		Db::TABLE_MAILS => '
-          ID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-          sign_ID bigint(20) UNSIGNED NOT NULL,
-          mail_md5 char(32) NOT NULL,
-          creation_date datetime NOT NULL,
-          is_step2_done tinyint(4) DEFAULT 0 NOT NULL,
-          is_sheet_received tinyint(4) DEFAULT 0 NOT NULL,
-          state_remind_sheet_sent tinyint(4) DEFAULT 0 NOT NULL,
-          state_remind_signup_sent tinyint(4) DEFAULT 0 NOT NULL,
-          PRIMARY KEY (ID),
-          UNIQUE KEY sign_ID_index (sign_ID),
-          UNIQUE KEY mail_index (mail_md5),
-          INDEX creation_date_index (creation_date)',
-	];
-
 	/**
 	 * Short Description. (use period)
 	 *
@@ -131,8 +71,10 @@ class Activator
 
 	protected static function createTables(): void
 	{
-		foreach (self::$tableDefinitions as $tableName => $sql) {
-			$updates = Db::createUpdateTable($sql, $tableName);
+		$dbs = ModelInfo::getDbServices();
+		foreach ($dbs as $db) {
+			$sql = $db->getTableDefinition();
+			$updates = $db->createUpdateTable($sql);
 		}
 	}
 
@@ -143,8 +85,8 @@ class Activator
 		if (!Db::query("SHOW TABLES LIKE '$dbSignName';")) {
 			return;
 		}
-		$dbMailDd = new DbMailDedup;
-		$dbMailDdName = $dbMailDd->getTableName();
+		$dbMail = new DbMails;
+		$dbMailDdName = $dbMail->getTableName();
 		if (Db::query("SHOW COLUMNS FROM `$dbMailDdName` LIKE 'mail'")) {
 			// previous version was < 1.3.3
 			$update = "ALTER TABLE $dbMailDdName CHANGE COLUMN mail mail_md5 CHAR(32);";
@@ -163,8 +105,13 @@ class Activator
 		}
 		if (!Db::query("SHOW COLUMNS FROM `$dbSignName` LIKE 'instance'")) {
 			// previous version was < 3
-			$update = "ALTER TABLE $dbSignName ADD COLUMN instance int NOT NULL DEFAULT '0' AFTER ID;";
+			$update = "ALTER TABLE $dbSignName ADD COLUMN instance int UNSIGNED NOT NULL DEFAULT '0' AFTER ID;";
 			$update .= "ALTER TABLE $dbSignName ALTER COLUMN instance DROP DEFAULT;";
+			Db::query($update);
+			$update = "ALTER TABLE $dbMailDdName ADD COLUMN instance int UNSIGNED NOT NULL DEFAULT '0' AFTER sign_ID;";
+			$update .= "ALTER TABLE $dbMailDdName ALTER COLUMN instance DROP DEFAULT;";
+			Db::query($update);
+			$update = "ALTER TABLE $dbMailDdName DROP INDEX mail_index, ADD UNIQUE KEY mail_index (instance, mail_md5);";
 			Db::query($update);
 		}
 	}

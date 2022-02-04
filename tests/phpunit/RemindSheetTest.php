@@ -17,7 +17,7 @@ class RemindSheetTest extends TestBase
 		Config::setValue('mail_remind_sheet_min_age', 30);
 		parent::setUpBeforeClass();
 		self::createDbSign();
-		self::createDbMailDd();
+		self::createDbMails();
 	}
 
 	function test_pending_dedup()
@@ -25,7 +25,7 @@ class RemindSheetTest extends TestBase
 		Config::setValue('mail_remind_dedup', 1);
 		$reminder = new CronMailRemindSheet();
 		$pending  = $reminder->getPending();
-		$this->assertCount(3, $pending); // fails when dedup happened
+		$this->assertCount(5, $pending); // fails when dedup happened
 	}
 
 	function test_pending_nodedup()
@@ -33,6 +33,6 @@ class RemindSheetTest extends TestBase
 		Config::setValue('mail_remind_dedup', 0);
 		$reminder = new CronMailRemindSheet();
 		$pending  = $reminder->getPending();
-		$this->assertCount(4, $pending);
+		$this->assertCount(7, $pending);
 	}
 }

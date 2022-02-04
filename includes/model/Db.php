@@ -3,7 +3,7 @@
 namespace Demovox;
 
 /**
- * The DB plugin class.
+ * The DB service class.
  * Handles DB access (by default table 'demovox_signatures') and en-/decryption
  *
  * @since      1.0.0
@@ -11,36 +11,26 @@ namespace Demovox;
  * @subpackage Demovox/includes/helpers
  * @author     SP Schweiz
  */
-class Db
+abstract class Db
 {
-	const TABLE_SIGN  = 'demovox_signatures';
-	const TABLE_MAILS = 'demovox_mails';
+
 	/**
-	 * @var null|string
+	 * @var string
 	 */
-	protected $tableName = null;
-	private static $fieldNameEncrypted = 'is_encrypted';
+	protected string $tableName;
+	/**
+	 * @var string
+	 */
+	protected string $tableDefinition;
+	protected static string $fieldNameEncrypted = 'is_encrypted';
+
+
 	/**
 	 * Before adding field here, check if it is set with $this->update(). If yes, $isEncrypted has to be passed
 	 *
-	 * @var array
+	 * @var array|null
 	 */
-	private static $encryptFields = [
-		'first_name',
-		'last_name',
-		'birth_date',
-		'mail',
-		'phone',
-		'street',
-		'street_no',
-		'zip',
-		'city',
-		'gde_no',
-		'gde_zip',
-		'gde_name',
-		'gde_canton',
-		'ip_address',
-	];
+	protected ?array $encryptFields;
 
 	/**
 	 * Select one row from demovox table
@@ -51,7 +41,7 @@ class Db
 	 *
 	 * @return object|null Database query results
 	 */
-	public function getRow($select, $where = null, $sqlAppend = null)
+	public function getRow(array $select, ?string $where = null, ?string $sqlAppend = null)
 	{
 		global $wpdb;
 
@@ -62,10 +52,17 @@ class Db
 		if ($sqlAppend) {
 			$sql .= ' ' . $sqlAppend;
 		}
-		$row = $wpdb->get_row($sql);
+		$row = $wpdb->get_row($sql, ARRAY_A);
+		if($row === null){
+			return null;
+		}
 		$row = $this->decryptRow($row);
+		return new DtoSignatures($row);
+	}
 
-		return $row;
+	public function getTableDefinition(): string
+	{
+		return $this->tableDefinition;
 	}
 
 	/**
@@ -77,7 +74,7 @@ class Db
 	 *
 	 * @return array|object|null Database query results
 	 */
-	public function getResults($select, $where = null, $sqlAppend = null)
+	public function getResults(array $select, ?string $where = null, ?string $sqlAppend = null)
 	{
 		global $wpdb;
 		$sql = $this->prepareSelect($select);
@@ -87,7 +84,7 @@ class Db
 		if ($sqlAppend) {
 			$sql .= ' ' . $sqlAppend;
 		}
-		$results = $wpdb->get_results($sql);
+		$results = $wpdb->get_results($sql, ARRAY_A);
 		foreach ($results as &$result) {
 			$result = $this->decryptRow($result);
 		}
@@ -97,17 +94,17 @@ class Db
 	/**
 	 * Count results for a where statement
 	 *
-	 * @param null|string $where
+	 * @param string|null $where
 	 *
 	 * @return int
 	 */
-	public function count($where = null)
+	public function count(?string $where = null): int
 	{
 		global $wpdb;
 		if ($where !== null) {
 			$where = 'WHERE ' . $where;
 		}
-		$tableName = $this->getTableName();
+		$tableName = $this->getWpTableName();
 		$count     = $wpdb->get_var('SELECT COUNT(ID) as count FROM `' . $tableName . '`' . $where);
 		return intval($count);
 	}
@@ -115,29 +112,32 @@ class Db
 	/**
 	 * Delete entries for a where statement
 	 *
+	 * @param Dto        $dto
 	 * @param null|array $where
 	 *
 	 * @return int|false The number of rows updated, or false on error.
 	 */
-	public function delete($where = null)
+	public function delete(Dto $dto, ?array $where = null)
 	{
 		global $wpdb;
-		$tableName = $this->getTableName();
-		if ($tableName === self::TABLE_SIGN) {
+		if ($dto instanceof DtoSignatures) {
 			return $this->updateStatus(['is_deleted' => 1], $where);
 		} else {
-			return $wpdb->delete($tableName, $where);
+			$wpTableName = $this->getWpTableName();
+			return $wpdb->delete($wpTableName, $where);
 		}
 	}
 
 	/**
-	 * @param          $data
+	 * TODO: replace $data with $dto content
+	 * @param Dto   $dto
 	 *
 	 * @return false|int
 	 */
-	public function insert($data)
+	public function insert(Dto $dto)
 	{
 		global $wpdb;
+		$data = $dto->getDataArr();
 		if ($this->isTableEncAllowed()) {
 			if (Crypt::isEncryptionEnabled()) {
 				$data[self::$fieldNameEncrypted] = Crypt::getEncryptionMode();
@@ -147,26 +147,29 @@ class Db
 			}
 		}
 		return $wpdb->insert(
-			$this->getTableName(),
+			$this->getWpTableName(),
 			$data
 		);
 	}
 
 	/**
-	 * @param array     $data
+	 * @param Dto|array $data
 	 * @param array     $where
-	 * @param false|int $isEncrypted
+	 * @param int|null  $isEncrypted
 	 *
 	 * @return false|int
 	 */
-	public function update($data, $where, $isEncrypted)
+	public function update($data, array $where, ?int $isEncrypted)
 	{
 		global $wpdb;
+		if(!is_array($data)) {
+			$data = $data->getDataArr();
+		}
 		if ($isEncrypted && $this->isTableEncAllowed()) {
 			$data = $this->encryptRow($data);
 		}
 		return $wpdb->update(
-			$this->getTableName(),
+			$this->getWpTableName(),
 			$data,
 			$where
 		);
@@ -175,12 +178,11 @@ class Db
 	/**
 	 * Update status fields (avoid encryption)
 	 *
-	 * @param array $data
-	 * @param array $where
-	 *
+	 * @param Dto|array $data
+	 * @param array     $where
 	 * @return false|int
 	 */
-	public function updateStatus($data, $where)
+	public function updateStatus($data, array $where)
 	{
 		return $this->update($data, $where, false);
 	}
@@ -190,17 +192,20 @@ class Db
 	 *
 	 * @return bool success
 	 */
-	public function truncate()
+	public function truncate(): bool
 	{
 		global $wpdb;
-		return $wpdb->query('TRUNCATE TABLE ' . $this->getTableName());
+		$res = $wpdb->query('TRUNCATE TABLE ' . $this->getWpTableName());
+		return $res !== false;
 	}
+
 	/**
 	 * Truncate table
 	 *
-	 * @return bool success
+	 * @param string $sql
+	 * @return int|bool success | Number of rows affected
 	 */
-	public static function query($sql)
+	public static function query(string $sql)
 	{
 		global $wpdb;
 		return $wpdb->query($sql);
@@ -209,7 +214,7 @@ class Db
 	/**
 	 * @return int
 	 */
-	public static function getInsertId()
+	public static function getInsertId() : int
 	{
 		global $wpdb;
 		return $wpdb->insert_id;
@@ -218,7 +223,7 @@ class Db
 	/**
 	 * @return string
 	 */
-	public static function getLastError()
+	public static function getLastError() : string
 	{
 		global $wpdb;
 		return $wpdb->last_error;
@@ -227,7 +232,7 @@ class Db
 	/**
 	 * @return string
 	 */
-	public static function getLastQuery()
+	public static function getLastQuery() : string
 	{
 		global $wpdb;
 		return $wpdb->last_query;
@@ -238,58 +243,55 @@ class Db
 	 *                                  random way Never quote field names
 	 *                                  "It is always safe to ensure that all keyword are separated by one space and between each commas
 	 *                                  there shouldn't be any spacing" https://www.hungred.com/how-to/wordpress-dbdelta-function/
-	 * @param string $tableName
 	 *
 	 * @return array
 	 */
-	public static function createUpdateTable($tableDefinition, $tableName)
+	public function createUpdateTable(string $tableDefinition): array
 	{
 		global $wpdb;
+
 		$charsetCollate = $wpdb->get_charset_collate();
-		$sql            = 'CREATE TABLE ' . $wpdb->prefix . $tableName . ' (' . $tableDefinition . ') ' . $charsetCollate . ';';
+		$wpTableName = $this->getWpTableName();
+		$sql = 'CREATE TABLE IF NOT EXISTS ' . $wpTableName . ' (' . $tableDefinition . ') ' . $charsetCollate . ';';
 
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-		$dbResult = dbDelta($sql);
-		return $dbResult;
-	}
-
-	/**
-	 * @return bool|false|int
-	 */
-	public static function dropAllDemovoxTables()
-	{
-		global $wpdb;
-
-		$tableName = $wpdb->prefix . self::TABLE_SIGN;
-		$drop      = $wpdb->query("DROP TABLE IF EXISTS `{$tableName}`");
-
-		$tableNameMail = $wpdb->prefix . self::TABLE_MAILS;
-		$dropMail      = $wpdb->query("DROP TABLE IF EXISTS `{$tableNameMail}`");
-
-		return $drop && $dropMail;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getTableName()
-	{
-		global $wpdb;
-		if ($this->tableName === null) {
-			throw new \BadMethodCallException('Table ID not set');
-		}
-		return $wpdb->prefix . $this->tableName;
+		return dbDelta($sql);
 	}
 
 	/**
 	 * @return bool
 	 */
-	protected function isTableEncAllowed()
+	public function dropTable(): bool
 	{
-		if ($this->tableName === null) {
-			throw new \BadMethodCallException('Table ID not set');
-		}
-		return $this->tableName === self::TABLE_SIGN;
+		global $wpdb;
+
+		$wpTableName = $this->getWpTableName();
+		return $wpdb->query("DROP TABLE IF EXISTS `$wpTableName`");
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTableName(): string
+	{
+		return $this->tableName;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getWpTableName(): string
+	{
+		global $wpdb;
+		return $wpdb->prefix . $this->getTableName();
+	}
+
+	/**
+	 * @return bool
+	 */
+	protected function isTableEncAllowed(): bool
+	{
+		return $this instanceof DbSignatures;
 	}
 
 	/**
@@ -299,12 +301,12 @@ class Db
 	 *
 	 * @return string
 	 */
-	protected function prepareSelect($select)
+	protected function prepareSelect(array $select): string
 	{
 		if ($this->isTableEncAllowed()) {
 			$decryptRequired = false;
 			foreach ($select as $fieldName) {
-				if (in_array($fieldName, self::$encryptFields)) {
+				if (in_array($fieldName, $this->encryptFields)) {
 					$decryptRequired = true;
 					break;
 				}
@@ -316,11 +318,9 @@ class Db
 			}
 		}
 
-		$tableName = $this->getTableName();
+		$tableName = $this->getWpTableName();
 		$select    = implode(', ', $select);
-		$sql       = 'SELECT ' . $select . ' FROM ' . $tableName;
-
-		return $sql;
+		return 'SELECT ' . $select . ' FROM ' . $tableName;
 	}
 
 	/**
@@ -338,7 +338,7 @@ class Db
 		}
 		if ($isEncrypted) {
 			foreach ($row as $fieldName => &$value) {
-				if ($value && in_array($fieldName, self::$encryptFields)) {
+				if ($value && in_array($fieldName, $this->encryptFields)) {
 					$value = Crypt::decrypt($value);
 				}
 			}
@@ -352,10 +352,10 @@ class Db
 	 *
 	 * @return array
 	 */
-	protected function encryptRow($row)
+	protected function encryptRow(array $row): array
 	{
 		foreach ($row as $fieldName => &$value) {
-			if ($value && in_array($fieldName, self::$encryptFields)) {
+			if ($value && in_array($fieldName, $this->encryptFields)) {
 				$value = Crypt::encrypt($value);
 			}
 		}

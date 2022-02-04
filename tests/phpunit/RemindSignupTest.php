@@ -17,7 +17,7 @@ class RemindSignupTest extends TestBase
 		Config::setValue('mail_remind_signup_min_age', 5);
 		parent::setUpBeforeClass();
 		self::createDbSign();
-		self::createDbMailDd();
+		self::createDbMails();
 	}
 
 	function test_pending_dedup()
@@ -26,7 +26,7 @@ class RemindSignupTest extends TestBase
 		$this->assertEquals('1', Config::getValue('mail_remind_dedup'));
 		$reminder = new CronMailRemindSignup();
 		$pending  = $reminder->getPending();
-		$this->assertCount(4, $pending);
+		$this->assertCount(5, $pending);
 	}
 
 	function test_pending_nodedup()
@@ -35,6 +35,6 @@ class RemindSignupTest extends TestBase
 		$this->assertEquals('0', Config::getValue('mail_remind_dedup'));
 		$reminder = new CronMailRemindSignup();
 		$pending  = $reminder->getPending();
-		$this->assertCount(5, $pending);
+		$this->assertCount(7, $pending);
 	}
 }

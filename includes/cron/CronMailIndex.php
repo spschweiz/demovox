@@ -8,7 +8,7 @@ class CronMailIndex extends CronBase
 	const STATUS_RUNNING  = 1;
 	const STATUS_FINISHED = 2;
 
-	protected $maxSignsPerCall = 200;
+	protected int $maxSignsPerCall = 200;
 
 	public function run()
 	{
@@ -78,7 +78,7 @@ class CronMailIndex extends CronBase
 	 */
 	protected function importRow($row): bool
 	{
-		$dbMailDd = new DbMailDedup();
+		$dbMailDd = new DbMails();
 		$save     = $dbMailDd->importRow($row);
 
 		if ($save === false) {
@@ -96,7 +96,7 @@ class CronMailIndex extends CronBase
 	 */
 	protected function getPending()
 	{
-		$dbMailDd = new DbMailDedup();
+		$dbMailDd = new DbMails();
 		$dbSign   = new DbSignatures();
 		// To ensure we get the correct is_step2_done for signatures a client is still working on, wait for all php sessions to die
 		$maxDate = date("Y-m-d G:i:s", strtotime('12 hour ago'));

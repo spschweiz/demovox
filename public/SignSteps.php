@@ -60,7 +60,8 @@ class SignSteps
 			$optIn            = ($optinMode === 'optOut' || $optinMode === 'optOutChk') ? !$optIn : $optIn;
 			$data['is_optin'] = $optIn;
 		}
-		$success = $dbSign->insert($data);
+		$dtoSign = new DtoSignatures($data);
+		$success = $dbSign->insert($dtoSign);
 		if (!$success) {
 			Core::errorDie('DB insert failed: ' . Db::getLastError(), 500);
 		}
@@ -186,9 +187,11 @@ class SignSteps
 			$data['is_optin'] = $optIn;
 		}
 
+		$dto = new DtoSignatures($data);
+
 		// Update
 		$success = $dbSign->update(
-			$data,
+			$dto,
 			['ID' => $signId,],
 			$isEncrypted
 		);

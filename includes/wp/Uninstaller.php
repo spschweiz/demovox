@@ -37,7 +37,11 @@ class Uninstaller
 	public static function uninstall()
 	{
 		if (Config::getValue('drop_tables_on_uninstall')) {
-			Db::dropAllDemovoxTables();
+			$success = true;
+			$dbs = ModelInfo::getDbServices();
+			foreach ($dbs as $db) {
+				$success = $success && $db->dropTable();
+			}
 		}
 
 		if (Config::getValue('drop_config_on_uninstall')) {

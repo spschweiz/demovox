@@ -45,7 +45,7 @@ class CronMailRemindSignup extends CronMailBase
 		Loader::addAction('phpmailer_init', new Mail(), 'config', 10, 1);
 
 		$dbSign   = new DbSignatures();
-		$dbMailDd = new DbMailDedup();
+		$dbMailDd = new DbMails();
 		foreach ($rows as $row) {
 
 			if ($this->isDedup) {
@@ -118,7 +118,7 @@ class CronMailRemindSignup extends CronMailBase
 		$sqlAppend = 'ORDER BY ID ASC LIMIT ' . $this->limitPerExecution;
 
 		if ($this->isDedup) {
-			$dbMailDd = new DbMailDedup();
+			$dbMailDd = new DbMails();
 			$rows     = $dbMailDd->getResults(
 				['ID', 'sign_ID', 'state_remind_signup_sent'],
 				$where,

@@ -315,7 +315,7 @@ class AdminPages extends BaseController
 		}
 		$dbSign = new DbSignatures();
 
-		$dbMailDd = new DbMailDedup();
+		$dbMailDd = new DbMails();
 		$hasDedup = !!$dbMailDd->count();
 
 		// Handle csv
@@ -415,7 +415,7 @@ class AdminPages extends BaseController
 	protected function dedupSetSheetReceived($mail)
 	{
 		$hashedMail = Strings::hashMail($mail);
-		$dbMailDd = new DbMailDedup();
+		$dbMailDd = new DbMails();
 		$update = $dbMailDd->updateStatus(['is_sheet_received' => 1], ['mail_md5' => $hashedMail]);
 		return $update !== false;
 	}
