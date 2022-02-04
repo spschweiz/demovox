@@ -13,7 +13,7 @@ namespace Demovox;
  */
 
 /**
- * The public-facing functionality of the plugin.
+ * The public-facing functionality of the plugin: ajax actions and some of the shortcodes
  *
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the public-facing stylesheet and JavaScript.
@@ -24,136 +24,59 @@ namespace Demovox;
  */
 class PublicHandler extends BaseController
 {
-	public function requireHttps()
-	{
-		Core::enforceHttps();
-	}
-
-	/*
-	 * Shortcode methods
+	/**
+	 * Attributes of the called shortcode
+	 * @var null|array
 	 */
-	public function countShortcode()
+	protected ?array $shortcodeAttriutes;
+
+	protected function getDefaultInstance(){
+		return 0;
+	}
+
+	/**
+	 * The [demovox_form] shortcode.
+	 *
+	 * Accepts a instance id and will display the sign-up form or the signature sheet.
+	 *
+	 * @param array|string $atts    Shortcode attributes. Default empty.
+	 * @param string|null  $content Shortcode content. Default null.
+	 * @param string       $tag     Shortcode tag (name). Default empty.
+	 * @return string Shortcode output.
+	 */
+	public function signShortcode($atts = [], string $content = null, string $tag = ''): string
 	{
-		$dbSign = new DbSignatures();
-		if ($sep = Config::getValue('count_thousands_sep')) {
-			$count = number_format($dbSign->countSignatures(), 0, '', $sep);
+		$this->requireHttps();
+		$this->shortcodeAttriutes = $this->getShortcodeAttriutes($atts, $tag);
+		if (!isset($this->shortcodeAttributes['instance']) || !is_numeric($this->shortcodeAttributes['instance'])) {
+			$this->shortcodeAttributes['instance'] = $this->getDefaultInstance();
+		}
+
+		$source = isset($_REQUEST['src']) ? sanitize_text_field($_REQUEST['src']) : '';
+		if ($source) {
+			Core::setSessionVar('source', $source);
+		}
+
+		if (isset($_REQUEST['action'])) {
+			if ($_REQUEST['action'] == 'demovox_step2') { // ajax failed
+				return $this->signStep(2);
+			} elseif ($_REQUEST['action'] == 'demovox_step3') {
+				return $this->signStep(3);
+			}
+		}
+
+		if (isset($_REQUEST['sign']) && !empty($_REQUEST['sign'])) {
+			return $this->signStep(3);
 		} else {
-			$count = $dbSign->countSignatures();
+			return $this->signStep(1);
 		}
-		return $count;
 	}
 
-	public function firstNameShortcode()
-	{
-		$this->requireHttps();
-
-		$row = $this->getRow(['first_name']);
-		if (!$row) {
-			return '';
-		}
-		return $row->first_name;
-	}
-
-	public function lastNameShortcode()
-	{
-		$this->requireHttps();
-
-		$row = $this->getRow(['last_name']);
-		if (!$row) {
-			return '';
-		}
-		return $row->last_name;
-	}
-
-	public function streetShortcode()
-	{
-		$this->requireHttps();
-
-		$row = $this->getRow(['street']);
-		if (!$row) {
-			return '';
-		}
-		return $row->street;
-	}
-
-	public function street_noShortcode()
-	{
-		$this->requireHttps();
-
-		$row = $this->getRow(['street_no']);
-		if (!$row) {
-			return '';
-		}
-		return $row->street_no;
-	}
-
-	public function zipShortcode()
-	{
-		$this->requireHttps();
-
-		$row = $this->getRow(['zip']);
-		if (!$row) {
-			return '';
-		}
-		return $row->zip;
-	}
-
-	public function cityShortcode()
-	{
-		$this->requireHttps();
-
-		$row = $this->getRow(['city']);
-		if (!$row) {
-			return '';
-		}
-		return $row->city;
-	}
-
-	public function mailShortcode()
-	{
-		$this->requireHttps();
-
-		$row = $this->getRow(['mail']);
-		if (!$row) {
-			return '';
-		}
-		return $row->mail;
-	}
-
-	public function optInShortcode()
-	{
-		$this->requireHttps();
-
-		$row = $this->getRow(['first_name']);
-		if (!$row) {
-			return '- Record not found -';
-		}
-
-		$signId    = $row->ID;
-		$isOptIn   = $row->is_optin;
-		$textOptin = Config::getValueByUserlang('text_optin');
-
-		// Render view
-		include Infos::getPluginDir() . 'public/partials/opt-in.php';
-
-		return ob_get_clean();
-	}
-
-	protected function getRow($select)
-	{
-		$guid = isset($_REQUEST['sign']) ? sanitize_key($_REQUEST['sign']) : null;
-		if (!$guid) {
-			Core::logMessage(400 . ' - equest variable "sign" is required', 'info');
-			return null;
-		}
-		$dbSign = new DbSignatures();
-		$row    = $dbSign->getRow($select, "guid = '" . $guid . "'");
-		if (!$row) {
-			Core::logMessage(404 . ' - Signature with GUID "' . $guid . '" was not found', 'error');
-		}
-		return $row;
-	}
-
+	/**
+	 * Public ajax action "demovox_optin"
+	 *
+	 * @return void
+	 */
 	public function saveOptIn()
 	{
 		$dbSign = new DbSignatures();
@@ -176,30 +99,11 @@ class PublicHandler extends BaseController
 		wp_die(Strings::wpMessage(__('Your settings were saved', 'demovox'), 'success'));
 	}
 
-	public function signShortcode()
-	{
-		$this->requireHttps();
-
-		$source = isset($_REQUEST['src']) ? sanitize_text_field($_REQUEST['src']) : '';
-		if ($source) {
-			Core::setSessionVar('source', $source);
-		}
-
-		if (isset($_REQUEST['action'])) {
-			if ($_REQUEST['action'] == 'demovox_step2') { // ajax failed
-				return $this->signStep(2);
-			} elseif ($_REQUEST['action'] == 'demovox_step3') {
-				return $this->signStep(3);
-			}
-		}
-
-		if (isset($_REQUEST['sign']) && !empty($_REQUEST['sign'])) {
-			return $this->signStep(3);
-		} else {
-			return $this->signStep(1);
-		}
-	}
-
+	/**
+	 * Public ajax action "demovox_step2"
+	 *
+	 * @return void
+	 */
 	public function signStep2()
 	{
 		$this->requireHttps();
@@ -207,6 +111,11 @@ class PublicHandler extends BaseController
 		$this->signStep(2);
 	}
 
+	/**
+	 * Public ajax action "demovox_step3"
+	 *
+	 * @return void
+	 */
 	public function signStep3()
 	{
 		$this->requireHttps();
@@ -214,6 +123,11 @@ class PublicHandler extends BaseController
 		$this->signStep(3);
 	}
 
+	/**
+	 * Public ajax action "demovox_countries"
+	 *
+	 * @return void
+	 */
 	public function getCountries()
 	{
 		header("Pragma: public");
@@ -225,6 +139,11 @@ class PublicHandler extends BaseController
 		// https://wordpress.stackexchange.com/questions/97502/admin-ajax-is-returning-0
 	}
 
+	/**
+	 * Return content of signing steps
+	 * @param $nr
+	 * @return false|string
+	 */
 	protected function signStep($nr)
 	{
 		$pluginDir = Infos::getPluginDir();
@@ -234,7 +153,7 @@ class PublicHandler extends BaseController
 		}
 
 		require_once $pluginDir . 'public/SignSteps.php';
-		$sign = new SignSteps($this->nonceId);
+		$sign = new SignSteps($this->nonceId, $this->shortcodeAttriutes);
 
 		ob_start();
 		switch ($nr) {
@@ -259,6 +178,11 @@ class PublicHandler extends BaseController
 		return $nr === 3 && Infos::isNoEc6();
 	}
 
+	/**
+	 * Show fallback page for browsers with incompatible JS version
+	 * @param $pluginDir
+	 * @return false|string
+	 */
 	protected function showFallback($pluginDir)
 	{
 		ob_start();

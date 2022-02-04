@@ -5,21 +5,34 @@ Namespace Demovox;
 class SignSteps
 {
 	/** @var $nonceId string */
-	private $nonceId = null;
+	private $nonceId;
+
+	/**
+	 * Attributes of the called shortcode
+	 * @var null|array
+	 */
+	protected ?array $shortcodeAttriutes;
 
 	/** @var $textColor string RGB */
 	private $textColor = [0, 0, 0];
 
-	public function __construct($nonceId)
+	public function __construct($nonceId, $shortcodeAttributes)
 	{
 		$this->nonceId = $nonceId;
+		$this->shortcodeAttributes = $shortcodeAttributes;
 	}
 
+	/**
+	 * Ask signee for basic personal information
+	 * @return void
+	 */
 	public function step1()
 	{
+		$instance = intval($this->shortcodeAttributes['instance']);
 		$textOptin = Config::getValueByUserlang('text_optin');
 		$emailConfirmEnabled = !empty(Config::getValue('email_confirm'));
 		$optinMode = $this->getOptinMode(1);
+
 		include Infos::getPluginDir() . 'public/partials/sign-1.php';
 	}
 
@@ -28,6 +41,7 @@ class SignSteps
 		$dbSign    = new DbSignatures();
 		$lang      = Infos::getUserLanguage();
 		$source    = Core::getSessionVar('source');
+		$instance  = isset($_REQUEST['instance']) && intval($_REQUEST['instance']) ? intval($_REQUEST['instance']) : 0;
 		$nameFirst = sanitize_text_field($_REQUEST['name_first']);
 		$nameLast  = sanitize_text_field($_REQUEST['name_last']);
 		$mail      = sanitize_email($_REQUEST['mail']);
@@ -44,6 +58,7 @@ class SignSteps
 		}
 
 		$data = [
+			'instance'   => $instance,
 			'language'   => $lang,
 			'first_name' => $nameFirst,
 			'last_name'  => $nameLast,
@@ -73,9 +88,13 @@ class SignSteps
 		if (!$successUpd) {
 			Core::logMessage('Could not save serial for ID=' . $signId . '. Reason:' . Db::getLastError());
 		}
-		Core::setSessionVar('signId', $signId);
+		Core::setSessionVar('signId-' . $this->shortcodeAttriutes['instance'], $signId);
 	}
 
+	/**
+	 * Ask signee for additional personal information
+	 * @return void
+	 */
 	public function step2()
 	{
 		$this->verifyNonce();
@@ -261,7 +280,7 @@ class SignSteps
 			}
 		} else {
 			$this->verifyNonce();
-			$signId = Core::getSessionVar('signId');
+			$signId = Core::getSessionVar('signId-' . $this->shortcodeAttriutes['instance']);
 
 			// Verify 2nd form step is filled and get encryption mode
 			$row = $dbSign->getRow(

@@ -54,4 +54,30 @@ class BaseController
 		$this->version    = $version;
 	}
 
+	public function requireHttps()
+	{
+		Core::enforceHttps();
+	}
+
+	/**
+	 * Get attributes of a shortcode and use defaults
+	 * @param array|null  $atts
+	 * @param string|null $tag
+	 * @param null|array  $default
+	 * @return array
+	 */
+	protected function getShortcodeAttriutes($atts, ?string $tag = null, ?array $default = null): array
+	{
+		// normalize attribute keys, lowercase
+		$atts = array_change_key_case((array)$atts, CASE_LOWER);
+
+		// override default attributes with user attributes
+		if ($default) {
+			$atts = shortcode_atts(
+				$default, $atts, $tag
+			);
+		}
+
+		return $atts;
+	}
 }

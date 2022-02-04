@@ -8,11 +8,16 @@ class InitPublic extends BaseController
 	 * @var PublicHandler
 	 */
 	protected $publicHandler;
+	/**
+	 * @var ShortcodeDetailsHandler
+	 */
+	protected $shortcodeDetailsHandler;
 
 	public function run()
 	{
 		$this->loadDependencies();
 		$this->publicHandler = new PublicHandler($this->getPluginName(), $this->getVersion());
+		$this->shortcodeDetailsHandler = new ShortcodeDetailsHandler($this->getPluginName(), $this->getVersion());
 
 		$this->defineActions();
 		$this->defineShortcodes();
@@ -27,6 +32,7 @@ class InitPublic extends BaseController
 		 * side of the site.
 		 */
 		require_once $pluginDir . 'public/PublicHandler.php';
+		require_once $pluginDir . 'public/ShortcodeDetailsHandler.php';
 	}
 
 	/**
@@ -47,7 +53,6 @@ class InitPublic extends BaseController
 		Loader::addAjaxPublic('demovox_step2', $this->publicHandler, 'signStep2');
 		Loader::addAjaxPublic('demovox_step3', $this->publicHandler, 'signStep3');
 		Loader::addAjaxPublic('demovox_countries', $this->publicHandler, 'getCountries');
-		Loader::addAjaxPublic('demovox_test', $this->publicHandler, 'getCountries');
 
 		// demovox_optin shortcode ajax
 		Loader::addAjaxPublic('demovox_optin', $this->publicHandler, 'saveOptIn');
@@ -57,19 +62,19 @@ class InitPublic extends BaseController
 	{
 		// Shortcodes
 		Loader::addShortcode('demovox_form', $this->publicHandler, 'signShortcode');
-		Loader::addShortcode('demovox_count', $this->publicHandler, 'countShortcode');
-		Loader::addShortcode('demovox_firstname', $this->publicHandler, 'firstNameShortcode');
-		Loader::addShortcode('demovox_lastname', $this->publicHandler, 'lastNameShortcode');
-		Loader::addShortcode('demovox_street', $this->publicHandler, 'streetShortcode');
-		Loader::addShortcode('demovox_street_no', $this->publicHandler, 'street_noShortcode');
-		Loader::addShortcode('demovox_zip', $this->publicHandler, 'zipShortcode');
-		Loader::addShortcode('demovox_city', $this->publicHandler, 'cityShortcode');
-		Loader::addShortcode('demovox_mail', $this->publicHandler, 'mailShortcode');
-		Loader::addShortcode('demovox_optin', $this->publicHandler, 'optInShortcode');
+		Loader::addShortcode('demovox_count', $this->shortcodeDetailsHandler, 'countShortcode');
+		Loader::addShortcode('demovox_firstname', $this->shortcodeDetailsHandler, 'firstNameShortcode');
+		Loader::addShortcode('demovox_lastname', $this->shortcodeDetailsHandler, 'lastNameShortcode');
+		Loader::addShortcode('demovox_street', $this->shortcodeDetailsHandler, 'streetShortcode');
+		Loader::addShortcode('demovox_street_no', $this->shortcodeDetailsHandler, 'street_noShortcode');
+		Loader::addShortcode('demovox_zip', $this->shortcodeDetailsHandler, 'zipShortcode');
+		Loader::addShortcode('demovox_city', $this->shortcodeDetailsHandler, 'cityShortcode');
+		Loader::addShortcode('demovox_mail', $this->shortcodeDetailsHandler, 'mailShortcode');
+		Loader::addShortcode('demovox_optin', $this->shortcodeDetailsHandler, 'optInShortcode');
 
 		// Deprecated shortcodes
 		Loader::addShortcode('demovox_form_shortcode', $this->publicHandler, 'signShortcode');
-		Loader::addShortcode('demovox_count_shortcode', $this->publicHandler, 'countShortcode');
+		Loader::addShortcode('demovox_count_shortcode', $this->shortcodeDetailsHandler, 'countShortcode');
 	}
 
 	/**
