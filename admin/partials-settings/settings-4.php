@@ -16,6 +16,9 @@ wp_enqueue_script('tinymce-plugin-code', plugin_dir_url(__FILE__) . '../js/tinym
 wp_enqueue_script('tinymce-plugin-preview', plugin_dir_url(__FILE__) . '../js/tinymce-4.9.11/preview/plugin.js');
 wp_enqueue_script('tinymce-plugin-table', plugin_dir_url(__FILE__) . '../js/tinymce-4.9.11/table/plugin.js');
 
+wp_enqueue_script('jquery-ui-datepicker');
+wp_enqueue_style('jquery-ui', plugin_dir_url(__FILE__) . '../css/jquery-ui.min.css', [], $this->getVersion());
+
 $this->loadTinymce();
 ?>
 <script>
@@ -28,6 +31,7 @@ $this->loadTinymce();
 </script>
 <script>
     jQuery(document).ready(function(){
+        jQuery('#demovox_mail_remind_max_date').datepicker({dateFormat: 'dd.mm.yy'});
         <?php
         foreach (i18n::getLangsEnabled() as $langId => $lang):
         ?>
