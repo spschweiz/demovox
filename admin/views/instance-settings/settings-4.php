@@ -22,6 +22,7 @@ $this->loadTinymce();
 		demovoxAdminClass.showOnChecked($('#demovox_mail_confirmation_enabled'), $('.showOnMailConfirmEnabled'));
 		demovoxAdminClass.showOnChecked($('#demovox_mail_remind_sheet_enabled'), $('.showOnMailRemindSheetEnabled'));
 		demovoxAdminClass.showOnChecked($('#demovox_mail_remind_signup_enabled'), $('.showOnMailRemindSignupEnabled'));
+		demovoxAdminClass.showOnVal($('#demovox_mail_method'), $('.showOnMethodSmtp'), 'smtp');
 	})(jQuery);
 </script>
 <script>
