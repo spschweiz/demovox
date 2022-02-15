@@ -12,9 +12,8 @@ submit_button();
 settings_fields($page);
 $this->doSettingsSections($page);
 submit_button();
-wp_enqueue_script('jquery-ui-datepicker');
-wp_enqueue_style('jquery-ui', plugin_dir_url(__FILE__) . '../css/jquery-ui.min.css', [], $this->getVersion());
 
+$this->loadDatepicker();
 $this->loadTinymce();
 ?>
 <script>
