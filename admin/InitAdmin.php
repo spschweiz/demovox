@@ -152,7 +152,6 @@ class InitAdmin extends BaseController
 	public function setupAdminMenu()
 	{
 		// Add the menu item and page
-		$page_title = 'Overview';
 		$slug       = 'demovox';
 		$icon       = 'dashicons-edit';
 		$position   = 30;
@@ -162,9 +161,12 @@ class InitAdmin extends BaseController
 		$capabilityImport   = 'demovox_import';
 		$capabilitySettings = 'manage_options';
 
-		$menuTitle = 'Overview';
+		$menuTitle = 'demovox';
 		$callback  = [$this->adminGeneral, 'pageOverview'];
-		add_menu_page($page_title, $menuTitle, $capabilityOverview, $slug, $callback, $icon, $position);
+		add_menu_page($menuTitle, $menuTitle, $capabilityOverview, $slug, $callback, $icon, $position);
+
+		$menuTitle = 'Overview';
+		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySettings, $slug, $callback);
 
 		$menuTitle = 'System info';
 		$callback  = [$this->adminGeneral, 'pageSysinfo'];
