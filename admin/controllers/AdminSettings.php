@@ -113,8 +113,8 @@ class AdminSettings extends BaseController
 		$fields = ConfigVars::getFields();
 		$callback = [$this, 'fieldCallback',];
 		foreach ($fields as $field) {
-			$page = $sections[$field['section']]['page'];
-			$id = Core::getWpId($field['uid']);
+			$page      = $sections[$field['section']]['page'];
+			$id        = Core::getWpId($field['uid']);
 			$fieldType = isset($field['type']) ? $field['type'] : null;
 			$args      = isset($field['default']) ? ['default' => $field['default']] : [];
 			switch ($fieldType) {
