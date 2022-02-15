@@ -3,7 +3,7 @@
 namespace Demovox;
 
 /**
- * @var $this AdminSettings
+ * @var $this AdminInstanceSettings
  * @var $page string
  */
 ?>

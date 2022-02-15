@@ -14,69 +14,6 @@ namespace Demovox;
  */
 class AdminSettings extends BaseController
 {
-	public function pageSettings()
-	{
-		$tabs = [
-			'General',
-			'Sign-up form',
-			'Success page',
-			'Signature sheet',
-			'Email',
-			'API',
-			'Advanced',
-		];
-		$firstTab = array_keys($tabs);
-		$currentTab = !empty($_GET['tab']) && array_key_exists($_GET['tab'], $tabs) ? sanitize_title($_GET['tab']) : $firstTab[0];
-		$page = 'demovoxSettings';
-		$languages = i18n::getLangs();
-		include Infos::getPluginDir() . 'admin/partials-settings/settings-tabs.php';
-	}
-
-	public function pageSettings0()
-	{
-		$page = 'demovoxFields0';
-		$languages = i18n::getLangs();
-		include Infos::getPluginDir() . 'admin/partials-settings/settings-0.php';
-	}
-
-	public function pageSettings1()
-	{
-		$page = 'demovoxFields1';
-		$languages = i18n::getLangs();
-		include Infos::getPluginDir() . 'admin/partials-settings/settings-1.php';
-	}
-
-	public function pageSettings2()
-	{
-		$page = 'demovoxFields2';
-		$languages = i18n::getLangs();
-		include Infos::getPluginDir() . 'admin/partials-settings/settings-2.php';
-	}
-
-	public function pageSettings3()
-	{
-		$page = 'demovoxFields3';
-		include Infos::getPluginDir() . 'admin/partials-settings/settings-3.php';
-	}
-
-	public function pageSettings4()
-	{
-		$page = 'demovoxFields4';
-		include Infos::getPluginDir() . 'admin/partials-settings/settings-4.php';
-	}
-
-	public function pageSettings5()
-	{
-		$page = 'demovoxFields5';
-		include Infos::getPluginDir() . 'admin/partials-settings/settings-5.php';
-	}
-
-	public function pageSettings6()
-	{
-		$page = 'demovoxFields6';
-		include Infos::getPluginDir() . 'admin/partials-settings/settings-6.php';
-	}
-
 	public function setupSections()
 	{
 		$areas = ConfigVars::getSections();

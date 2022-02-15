@@ -2,9 +2,9 @@
 
 namespace Demovox;
 /**
- * @var AdminPages $this
- * @var bool       $isSent
- * @var string     $mailTo
+ * @var AdminGeneral $this
+ * @var bool         $isSent
+ * @var string       $mailTo
  * @var            $connectionLog
  */
 ?>

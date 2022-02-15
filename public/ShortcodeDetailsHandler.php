@@ -133,7 +133,7 @@ class ShortcodeDetailsHandler extends BaseController
 		$textOptin = Config::getValueByUserlang('text_optin');
 
 		// Render view
-		include Infos::getPluginDir() . 'public/partials/opt-in.php';
+		include Infos::getPluginDir() . 'public/views/opt-in.php';
 
 		return ob_get_clean();
 	}

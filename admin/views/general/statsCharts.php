@@ -1,9 +1,9 @@
 <?php
 namespace Demovox;
 /**
- * @var AdminPages $this
- * @var string|null $source
- * @var array $datasets
+ * @var AdminGeneral $this
+ * @var string|null  $source
+ * @var array        $datasets
  */
 ?>
 

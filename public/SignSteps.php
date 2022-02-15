@@ -33,7 +33,7 @@ class SignSteps
 		$emailConfirmEnabled = !empty(Config::getValue('email_confirm'));
 		$optinMode = $this->getOptinMode(1);
 
-		include Infos::getPluginDir() . 'public/partials/sign-1.php';
+		include Infos::getPluginDir() . 'public/views/sign-1.php';
 	}
 
 	protected function saveStep1()
@@ -109,7 +109,7 @@ class SignSteps
 		$optinMode         = $this->getOptinMode(2);
 
 		// Render view
-		include Infos::getPluginDir() . 'public/partials/sign-2.php';
+		include Infos::getPluginDir() . 'public/views/sign-2.php';
 		if (isset($_REQUEST['ajax']) && $_REQUEST['ajax']) {
 			wp_die();
 		}
@@ -412,7 +412,7 @@ class SignSteps
 		$qrData    = $qrData ? json_encode($qrData) : null;
 
 		// Render view
-		include Infos::getPluginDir() . 'public/partials/sign-3.php';
+		include Infos::getPluginDir() . 'public/views/sign-3.php';
 	}
 
 	private function verifyNonce()

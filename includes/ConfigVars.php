@@ -89,6 +89,11 @@ class ConfigVars
 					   . 'Some translation plugins like Polylang do not translate those URLs correctly. '
 					   . 'As a orkaround, you can define them manually and use the <code>{guid}</code> placeholder to create the <code>sign</code>-parameter.',
 		],
+		'mailServer'           => [
+			'title' => 'Email engine / server',
+			'page'  => 'demovoxFields4',
+			'sub'   => 'To send test mails, take a look at the System info page.',
+		],
 		'api_address'          => [
 			'title' => 'Address lookup API',
 			'page'  => 'demovoxFields5',
@@ -102,37 +107,24 @@ class ConfigVars
 		],
 		'security'             => [
 			'title' => 'Security',
-			'page'  => 'demovoxFields6',
-		],
-		'mailConfig'           => [
-			'title' => 'Email engine / server',
-			'page'  => 'demovoxFields6',
-			'sub'   => 'To send test mails, take a look at the System info page.',
+			'page'  => 'demovoxFieldsGlobal',
 		],
 		'cron'                 => [
 			'title' => 'Cron',
-			'page'  => 'demovoxFields6',
+			'page'  => 'demovoxFieldsGlobal',
 			'sub'   => 'To make sure the mail crons are executed, take a look at the System info page.',
 		],
 		'analytics'            => [
 			'title' => 'Analytics',
-			'page'  => 'demovoxFields6',
+			'page'  => 'demovoxFieldsGlobal',
 		],
 		'danger'               => [
 			'title' => 'Danger area',
-			'page'  => 'demovoxFields6',
+			'page'  => 'demovoxFieldsGlobal',
 			'sub'   => 'This is where you can enable the dangerous stuff',
 		],
 	];
 	static public $fields = [
-		[
-			'uid'          => 'accept_server_is_protected',
-			'label'        => 'I confirm to protect the server file access, WordPress and its database',
-			'section'      => 'base',
-			'type'         => 'checkbox',
-			'supplemental' => 'Check this box if you protect the access to your server and its data, as signee information consists of <a href="https://www.admin.ch/opc/en/classified-compilation/19920153/index.html#a3" target="_blank">sensitive personal data</a> and you are responsible for protecting it. For example by blocking any FTP access (it\'s unencrypted!), protecting WordPress accounts with good passwords and <a href="https://en.wikipedia.org/wiki/Multi-factor_authentication" target="_blank">MFA</a>, installing only installing trustworthy plugins and taking care of security updates. demovox has a recommended option to encrypt signee data (see "Advanced" tab) and you can find some help to avoid WordPress misconfiguration under "System info".',
-			'default'      => 0,
-		],
 		[
 			'uid'          => 'add_count',
 			'label'        => 'Add to signature count',
@@ -553,7 +545,7 @@ class ConfigVars
 	];
 
 	/**
-	 * Try to avoid this due to poor performance
+	 * @deprecated Avoid this due to poor performance
 	 *
 	 * @param $id
 	 *

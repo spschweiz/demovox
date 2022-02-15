@@ -1,7 +1,7 @@
 <?php
 namespace Demovox;
 /**
- * @var $this             AdminPages
+ * @var $this             AdminGeneral
  * @var $encKey           true|string
  * @var $hashKey          true|string
  * @var $saltsFailed      bool

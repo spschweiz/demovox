@@ -1,8 +1,8 @@
 <?php
 namespace Demovox;
 /**
- * @var AdminPages $this
- * @var array $sourceList
+ * @var AdminGeneral $this
+ * @var array        $sourceList
  */
 ?>
 <table class="table table-striped table-hover">

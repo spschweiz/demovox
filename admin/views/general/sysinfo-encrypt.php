@@ -2,13 +2,13 @@
 
 namespace Demovox;
 /**
- * @var AdminPages $this
- * @var int        $iterations
- * @var int        $timediffEncrypt
- * @var int        $timediffDecrypt
- * @var bool       $showStrLengths
- * @var array      $lengths
- * @var array      $enc the encrypted strings
+ * @var AdminGeneral $this
+ * @var int          $iterations
+ * @var int          $timediffEncrypt
+ * @var int          $timediffDecrypt
+ * @var bool         $showStrLengths
+ * @var array        $lengths
+ * @var array        $enc the encrypted strings
  */
 ?>
 <?= $iterations ?> iterations.<br/>

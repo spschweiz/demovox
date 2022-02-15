@@ -25,19 +25,29 @@ namespace Demovox;
 class InitAdmin extends BaseController
 {
 	/**
-	 * @var AdminPages
+	 * @var AdminGeneral
 	 */
-	protected $adminPages;
+	protected $adminGeneral;
 	/**
-	 * @var AdminSettings
+	 * @var AdminGeneralSettings
 	 */
-	protected $adminSettings;
+	protected $adminGeneralSettings;
+	/**
+	 * @var AdminInstance
+	 */
+	protected $adminInstance;
+	/**
+	 * @var AdminInstanceSettings
+	 */
+	protected $adminInstanceSettings;
 
 	public function run()
 	{
 		$this->loadDependencies();
-		$this->adminPages    = new AdminPages($this->getPluginName(), $this->getVersion());
-		$this->adminSettings = new AdminSettings($this->getPluginName(), $this->getVersion());
+		$this->adminGeneral          = new AdminGeneral($this->getPluginName(), $this->getVersion());
+		$this->adminGeneralSettings  = new AdminGeneralSettings($this->getPluginName(), $this->getVersion());
+		$this->adminInstance         = new AdminInstance($this->getPluginName(), $this->getVersion());
+		$this->adminInstanceSettings = new AdminInstanceSettings($this->getPluginName(), $this->getVersion());
 
 		$this->defineHooks();
 		$this->setupAdminSettingsActions();
@@ -50,8 +60,12 @@ class InitAdmin extends BaseController
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once $pluginDir . 'admin/AdminPages.php';
-		require_once $pluginDir . 'admin/AdminSettings.php';
+		require_once $pluginDir . 'admin/controllers/AdminInstance.php';
+		require_once $pluginDir . 'admin/controllers/AdminInstanceSettings.php';
+		require_once $pluginDir . 'admin/controllers/AdminGeneral.php';
+		require_once $pluginDir . 'admin/controllers/AdminGeneralSettings.php';
+
+		require_once $pluginDir . 'admin/controllers/AdminSettings.php';
 	}
 
 	/**
@@ -71,8 +85,8 @@ class InitAdmin extends BaseController
 	protected function setupAdminSettingsActions()
 	{
 		// Hook into the admin menu
-		Loader::addAction('admin_init', $this->adminSettings, 'setupFields');
-		Loader::addAction('admin_init', $this->adminSettings, 'setupSections');
+		Loader::addAction('admin_init', $this->adminInstanceSettings, 'setupFields');
+		Loader::addAction('admin_init', $this->adminInstanceSettings, 'setupSections');
 	}
 
 	protected function setupAdminAjaxActions()
@@ -80,17 +94,17 @@ class InitAdmin extends BaseController
 		$prefix = 'admin_post_demovox_';
 
 		// export
-		Loader::addAction($prefix . 'get_csv', $this->adminPages, 'getCsv');
+		Loader::addAction($prefix . 'get_csv', $this->adminGeneral, 'getCsv');
 
 		// manage_options
-		Loader::addAction($prefix . 'run_cron', $this->adminPages, 'runCron');
-		Loader::addAction($prefix . 'cancel_cron', $this->adminPages, 'cancelCron');
-		Loader::addAction($prefix . 'encrypt_test', $this->adminPages, 'testEncrypt');
-		Loader::addAction($prefix . 'mail_test', $this->adminPages, 'testMail');
+		Loader::addAction($prefix . 'run_cron', $this->adminGeneral, 'runCron');
+		Loader::addAction($prefix . 'cancel_cron', $this->adminGeneral, 'cancelCron');
+		Loader::addAction($prefix . 'encrypt_test', $this->adminGeneral, 'testEncrypt');
+		Loader::addAction($prefix . 'mail_test', $this->adminGeneral, 'testMail');
 
 		// demovox_stats
-		Loader::addAction($prefix . 'charts_stats', $this->adminPages, 'statsCharts');
-		Loader::addAction($prefix . 'source_stats', $this->adminPages, 'statsSource');
+		Loader::addAction($prefix . 'charts_stats', $this->adminGeneral, 'statsCharts');
+		Loader::addAction($prefix . 'source_stats', $this->adminGeneral, 'statsSource');
 	}
 
 	/**
@@ -148,24 +162,34 @@ class InitAdmin extends BaseController
 		$capabilityImport   = 'demovox_import';
 		$capabilitySettings = 'manage_options';
 
-		$menuTitle = 'demovox';
-		$callback  = [$this->adminPages, 'pageOverview'];
+		$menuTitle = 'Overview';
+		$callback  = [$this->adminGeneral, 'pageOverview'];
 		add_menu_page($page_title, $menuTitle, $capabilityOverview, $slug, $callback, $icon, $position);
 
+		$menuTitle = 'System info';
+		$callback  = [$this->adminGeneral, 'pageSysinfo'];
+		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySettings, $slug . 'Sysinfo', $callback);
+
+		$menuTitle = 'General Settings';
+		$callback  = [$this->adminGeneralSettings, 'pageGeneralSettings'];
+		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySettings, $slug . 'GeneralSettings', $callback);
+
+		add_submenu_page(
+			$slug, '',
+			'<span style="display:block; margin:1px 0 1px -5px; padding:0; height:1px; background:#CCC;"></span>',
+			"create_users", "#",
+		);
+
 		$menuTitle = 'Signatures Data';
-		$callback  = [$this->adminPages, 'pageData'];
+		$callback  = [$this->adminInstance, 'pageData'];
 		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityExport, $slug . 'Data', $callback);
 
 		$menuTitle = 'Import';
-		$callback  = [$this->adminPages, 'pageImport'];
+		$callback  = [$this->adminInstance, 'pageImport'];
 		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityImport, $slug . 'Import', $callback);
 
 		$menuTitle = 'Settings';
-		$callback  = [$this->adminSettings, 'pageSettings'];
+		$callback  = [$this->adminInstanceSettings, 'pageSettings'];
 		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySettings, $slug . 'Settings', $callback);
-
-		$menuTitle = 'System info';
-		$callback  = [$this->adminPages, 'pageSysinfo'];
-		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySettings, $slug . 'Sysinfo', $callback);
 	}
 }
