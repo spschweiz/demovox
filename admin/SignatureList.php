@@ -177,8 +177,8 @@ class SignatureList extends \WP_List_Table
 	 */
 	function get_columns()
 	{
-		$dbSign = new DbSignatures();
-		$fields = $dbSign->getAvailableFields();
+		$dtoSign = new DtoSignatures();
+		$fields = $dtoSign->getAvailableFields();
 		$columns = [];
 		foreach (self::$columns as $val) {
 			$columns[$val] = isset($fields[$val]) ? $fields[$val] : $val;
