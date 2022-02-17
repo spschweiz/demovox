@@ -26,13 +26,13 @@ namespace Demovox;
 		<input name="nonce" type="hidden" value="<?= Core::createNonce($this->nonceId) ?>">
 		<div id="demovox-grp-name_first" class="form-group">
 			<label for="demovox-name_first"><?= __('First Name', 'demovox') ?></label>
-			<input name="name_first" id="demovox-name_first" autocomplete="given-name" class="form-control" type="text" minlength="3" maxlength="64"
-			       required="" pattern="[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}">
+			<input name="name_first" id="demovox-name_first" autocomplete="given-name" class="form-control" type="text" minlength="1" maxlength="64"
+			       required="" pattern="[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{1,}">
 		</div>
 		<div id="demovox-grp-name_last" class="form-group">
 			<label for="demovox-name_last"><?= __('Last Name', 'demovox') ?></label>
-			<input name="name_last" id="demovox-name_last" autocomplete="family-name" class="form-control" type="text" minlength="3" maxlength="64"
-			       required="" pattern="[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}">
+			<input name="name_last" id="demovox-name_last" autocomplete="family-name" class="form-control" type="text" minlength="1" maxlength="64"
+			       required="" pattern="[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{1,}">
 		</div>
 		<div id="demovox-grp-mail-cont" class="form-group">
 			<div id="demovox-grp-mail" class="form-group<?= $emailConfirmEnabled ? ' col-md-6' : '' ?>">

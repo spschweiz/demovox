@@ -48,8 +48,8 @@ class SignSteps
 		$phone     = sanitize_text_field(str_replace(' ', '', $_REQUEST['phone']));
 		$optIn     = isset($_REQUEST['is_optin']) && $_REQUEST['is_optin'] ? 1 : 0;
 
-		if (strlen($nameFirst) < 3 || strlen($nameFirst) > 255
-			|| strlen($nameLast) < 3
+		if (strlen($nameFirst) < 1 || strlen($nameFirst) > 255
+			|| strlen($nameLast) < 1
 			|| strlen($nameLast) > 255
 			|| !is_email($mail)
 			|| ($phone && preg_match('/^((\+[1-9])|(0\d[1-9]))\d+$/', $phone) === false)
