@@ -106,10 +106,12 @@ class Activator
 		if (!Db::query("SHOW COLUMNS FROM `$dbSignName` LIKE 'instance'")) {
 			// previous version was < 3
 			$update = "ALTER TABLE $dbSignName ADD COLUMN instance int UNSIGNED NOT NULL DEFAULT '0' AFTER ID;";
-			$update .= "ALTER TABLE $dbSignName ALTER COLUMN instance DROP DEFAULT;";
+			self::update($update);
+			$update = "ALTER TABLE $dbSignName ALTER COLUMN instance DROP DEFAULT;";
 			self::update($update);
 			$update = "ALTER TABLE $dbMailDdName ADD COLUMN instance int UNSIGNED NOT NULL DEFAULT '0' AFTER sign_ID;";
-			$update .= "ALTER TABLE $dbMailDdName ALTER COLUMN instance DROP DEFAULT;";
+			self::update($update);
+			$update = "ALTER TABLE $dbMailDdName ALTER COLUMN instance DROP DEFAULT;";
 			self::update($update);
 			$update = "ALTER TABLE $dbMailDdName DROP INDEX mail_index, ADD UNIQUE KEY mail_index (instance, mail_md5);";
 			self::update($update);
