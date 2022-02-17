@@ -81,39 +81,55 @@ class Activator
 	protected static function upgradeTables(): void
 	{
 		$dbSign     = new DbSignatures;
-		$dbSignName = $dbSign->getTableName();
+		$dbSignName = $dbSign->getWpTableName();
 		if (!Db::query("SHOW TABLES LIKE '$dbSignName';")) {
 			return;
 		}
 		$dbMail = new DbMails;
-		$dbMailDdName = $dbMail->getTableName();
+		$dbMailDdName = $dbMail->getWpTableName();
 		if (Db::query("SHOW COLUMNS FROM `$dbMailDdName` LIKE 'mail'")) {
 			// previous version was < 1.3.3
 			$update = "ALTER TABLE $dbMailDdName CHANGE COLUMN mail mail_md5 CHAR(32);";
-			Db::query($update);
+			self::update($update);
 		}
 		if (Db::query("SHOW COLUMNS FROM `$dbSignName` LIKE 'reminder_sent_date'")) {
 			// previous version was < 2.1.3
 			$update = "ALTER TABLE $dbSignName CHANGE COLUMN reminder_sent_date remind_sheet_sent_date datetime NULL, ";
 			$update .= "ADD COLUMN remind_signup_sent_date datetime NULL AFTER sheet_received_date;";
-			Db::query($update);
+			self::update($update);
 		}
 		if (!Db::query("SHOW COLUMNS FROM `$dbSignName` LIKE 'title'")) {
 			// previous version was < 2.3
 			$update = "ALTER TABLE $dbSignName ADD COLUMN title VARCHAR(10) NULL BEFORE first_name;";
-			Db::query($update);
+			self::update($update);
 		}
 		if (!Db::query("SHOW COLUMNS FROM `$dbSignName` LIKE 'instance'")) {
 			// previous version was < 3
 			$update = "ALTER TABLE $dbSignName ADD COLUMN instance int UNSIGNED NOT NULL DEFAULT '0' AFTER ID;";
 			$update .= "ALTER TABLE $dbSignName ALTER COLUMN instance DROP DEFAULT;";
-			Db::query($update);
+			self::update($update);
 			$update = "ALTER TABLE $dbMailDdName ADD COLUMN instance int UNSIGNED NOT NULL DEFAULT '0' AFTER sign_ID;";
 			$update .= "ALTER TABLE $dbMailDdName ALTER COLUMN instance DROP DEFAULT;";
-			Db::query($update);
+			self::update($update);
 			$update = "ALTER TABLE $dbMailDdName DROP INDEX mail_index, ADD UNIQUE KEY mail_index (instance, mail_md5);";
-			Db::query($update);
+			self::update($update);
 		}
+	}
+
+	/**
+	 * Run SQL query
+	 *
+	 * @param string $sql
+	 * @return int|bool success | Number of rows affected
+	 */
+	protected static function update(string $sql)
+	{
+		$res = Db::query($sql);
+		if(!$res){
+			$error = Db::getLastError();
+			throw new \RuntimeException('Sql query failed:<br><code>' . $error . '</code><br>', 500);
+		}
+		return $res;
 	}
 
 	protected static function createPages(): void

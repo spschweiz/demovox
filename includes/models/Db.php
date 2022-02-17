@@ -200,7 +200,7 @@ abstract class Db
 	}
 
 	/**
-	 * Truncate table
+	 * Run SQL query
 	 *
 	 * @param string $sql
 	 * @return int|bool success | Number of rows affected
@@ -272,7 +272,7 @@ abstract class Db
 	/**
 	 * @return string
 	 */
-	public function getTableName(): string
+	protected function getTableName(): string
 	{
 		return $this->tableName;
 	}
