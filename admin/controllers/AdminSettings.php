@@ -105,6 +105,18 @@ class AdminSettings extends BaseController
         echo '<script src="' . $js_src . '" type="text/javascript"></script>';
         wp_register_style('tinymce_css', $css_src);
         wp_enqueue_style('tinymce_css');
+
+		echo "<script>
+    function placeMce(selector) {
+        tinyMCE.init({
+            selector: selector,
+            menubar: 'edit view insert format table',
+            plugins: 'link lists charmap hr fullscreen media directionality paste textcolor colorpicker image media code preview table',
+            toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | forecolor backcolor removeformat | charmap image link | fullscreen code preview table',
+            image_advtab: true,
+        });
+    }
+</script>";
     }
 
 	public function setupFields()

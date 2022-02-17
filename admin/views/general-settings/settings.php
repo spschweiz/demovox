@@ -7,12 +7,16 @@ namespace Demovox;
  * @var $page string
  */
 ?>
-<?php
-submit_button();
-settings_fields($page);
-$this->doSettingsSections($page);
-submit_button();
-?>
+<div class="wrap demovox">
+	<form method="post" id="mainform" action="options.php" enctype="multipart/form-data">
+		<?php
+		submit_button();
+		settings_fields($page);
+		$this->doSettingsSections($page);
+		submit_button();
+		?>
+	</form>
+</div>
 <script>
 	(function (jQuery) {
 		window.$ = jQuery.noConflict();
