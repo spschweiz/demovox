@@ -11,7 +11,7 @@ class DbMails extends Db
 	protected string $tableDefinition = '
           ID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
           sign_ID bigint(20) UNSIGNED NOT NULL,
-          instance int UNSIGNED NOT NULL,
+          collection int UNSIGNED NOT NULL,
           mail_md5 char(32) NOT NULL,
           creation_date datetime NOT NULL,
           is_step2_done tinyint(4) DEFAULT 0 NOT NULL,
@@ -20,7 +20,7 @@ class DbMails extends Db
           state_remind_signup_sent tinyint(4) DEFAULT 0 NOT NULL,
           PRIMARY KEY (ID),
           UNIQUE KEY sign_ID_index (sign_ID),
-          UNIQUE KEY mail_index (instance, mail_md5),
+          UNIQUE KEY mail_index (collection, mail_md5),
           INDEX creation_date_index (creation_date)';
 	/**
 	 * @param DtoSignatures $sign signature row
@@ -40,12 +40,12 @@ class DbMails extends Db
 				'state_remind_sheet_sent',
 				'state_remind_signup_sent',
 			],
-			"mail_md5 = '" . $hashedMail . "' AND instance = '" . $sign->instance . "'"
+			"mail_md5 = '" . $hashedMail . "' AND collection = '" . $sign->collection . "'"
 		);
 
 		if (!$mailRow) {
 			$mail = new DtoMails;
-			$mail->instance = $sign->instance;
+			$mail->collection = $sign->collection;
 			$mail->sign_ID = $sign->ID;
 			$mail->mail_md5 = $hashedMail;
 			$mail->creation_date = $sign->creation_date;

@@ -14,7 +14,7 @@ require_once Infos::getPluginDir() . 'admin/SignatureList.php';
  * @subpackage Demovox/admin
  * @author     SP Schweiz
  */
-class AdminInstanceSettings extends AdminSettings
+class AdminCollectionSettings extends AdminSettings
 {
 	public function pageSettings()
 	{
@@ -30,45 +30,45 @@ class AdminInstanceSettings extends AdminSettings
 		$currentTab = !empty($_GET['tab']) && array_key_exists($_GET['tab'], $tabs) ? sanitize_title($_GET['tab']) : $firstTab[0];
 		$page = 'demovoxSettings';
 		$languages = i18n::getLangs();
-		include Infos::getPluginDir() . 'admin/views/instance-settings/settings-tabs.php';
+		include Infos::getPluginDir() . 'admin/views/collection-settings/settings-tabs.php';
 	}
 
 	public function pageSettings0()
 	{
 		$page = 'demovoxFields0';
 		$languages = i18n::getLangs();
-		include Infos::getPluginDir() . 'admin/views/instance-settings/settings-0.php';
+		include Infos::getPluginDir() . 'admin/views/collection-settings/settings-0.php';
 	}
 
 	public function pageSettings1()
 	{
 		$page = 'demovoxFields1';
 		$languages = i18n::getLangs();
-		include Infos::getPluginDir() . 'admin/views/instance-settings/settings-1.php';
+		include Infos::getPluginDir() . 'admin/views/collection-settings/settings-1.php';
 	}
 
 	public function pageSettings2()
 	{
 		$page = 'demovoxFields2';
 		$languages = i18n::getLangs();
-		include Infos::getPluginDir() . 'admin/views/instance-settings/settings-2.php';
+		include Infos::getPluginDir() . 'admin/views/collection-settings/settings-2.php';
 	}
 
 	public function pageSettings3()
 	{
 		$page = 'demovoxFields3';
-		include Infos::getPluginDir() . 'admin/views/instance-settings/settings-3.php';
+		include Infos::getPluginDir() . 'admin/views/collection-settings/settings-3.php';
 	}
 
 	public function pageSettings4()
 	{
 		$page = 'demovoxFields4';
-		include Infos::getPluginDir() . 'admin/views/instance-settings/settings-4.php';
+		include Infos::getPluginDir() . 'admin/views/collection-settings/settings-4.php';
 	}
 
 	public function pageSettings5()
 	{
 		$page = 'demovoxFields5';
-		include Infos::getPluginDir() . 'admin/views/instance-settings/settings-5.php';
+		include Infos::getPluginDir() . 'admin/views/collection-settings/settings-5.php';
 	}
 }

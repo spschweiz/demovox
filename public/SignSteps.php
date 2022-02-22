@@ -17,10 +17,10 @@ class SignSteps
 
 	/**
 	 * Ask signee for basic personal information
-	 * @param int $instance
+	 * @param int $collection
 	 * @return void
 	 */
-	public function step1(int $instance)
+	public function step1(int $collection)
 	{
 		$textOptin = Config::getValueByUserlang('text_optin');
 		$emailConfirmEnabled = !empty(Config::getValue('email_confirm'));
@@ -30,10 +30,10 @@ class SignSteps
 	}
 
 	/**
-	 * @param int $instance
+	 * @param int $collection
 	 * @return string guid
 	 */
-	protected function saveStep1($instance) : string
+	protected function saveStep1($collection) : string
 	{
 		$dbSign    = new DbSignatures();
 		$lang      = Infos::getUserLanguage();
@@ -54,7 +54,7 @@ class SignSteps
 		}
 
 		$data = [
-			'instance'   => $instance,
+			'collection'   => $collection,
 			'language'   => $lang,
 			'first_name' => $nameFirst,
 			'last_name'  => $nameLast,
@@ -82,13 +82,13 @@ class SignSteps
 
 	/**
 	 * Ask signee for additional personal information
-	 * @param int $instance
+	 * @param int $collection
 	 * @return void
 	 */
-	public function step2(int $instance)
+	public function step2(int $collection)
 	{
 		$this->verifyNonce();
-		$guid = $this->saveStep1($instance);
+		$guid = $this->saveStep1($collection);
 
 		// Prepare view variables
 		$textOptin         = Config::getValueByUserlang('text_optin');

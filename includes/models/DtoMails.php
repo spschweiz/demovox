@@ -5,7 +5,7 @@ namespace Demovox;
 class DtoMails extends Dto
 {
 	/** @var int */
-	public int $ID, $sign_ID, $instance;
+	public int $ID, $sign_ID, $collection;
 	/** @var string */
 	public string $mail_md5;
 	/** @var int */

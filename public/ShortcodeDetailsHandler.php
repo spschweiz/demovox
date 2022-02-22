@@ -32,7 +32,7 @@ class ShortcodeDetailsHandler extends BaseController
 	 */
 	public function countShortcode(array $atts = [])
 	{
-		$instance = $this->getShortcodeInstance($atts);
+		$collection = $this->getShortcodeCollectionId($atts);
 		$dbSign = new DbSignatures();
 		if ($sep = Config::getValue('count_thousands_sep')) {
 			$count = number_format($dbSign->countSignatures(), 0, '', $sep);
@@ -154,16 +154,18 @@ class ShortcodeDetailsHandler extends BaseController
 	}
 
 	/**
+	 * Get collection id out of shortcode params
+	 *
 	 * @param $atts
-	 * @return int $instance
+	 * @return int $collection
 	 */
-	protected function getShortcodeInstance($atts): int
+	protected function getShortcodeCollectionId($atts): int
 	{
 		$shortcodeAttributes = $this->getShortcodeAttriutes($atts);
-		$instance = $shortcodeAttributes['instance'];
-		if (!isset($shortcodeAttributes['instance']) || !is_numeric($shortcodeAttributes['instance'])) {
-			$instance = $this->getDefaultInstance();
+		$collection = $shortcodeAttributes['collection'];
+		if (!isset($shortcodeAttributes['collection']) || !is_numeric($shortcodeAttributes['collection'])) {
+			$collection = $this->getDefaultCollection();
 		}
-		return $instance;
+		return $collection;
 	}
 }

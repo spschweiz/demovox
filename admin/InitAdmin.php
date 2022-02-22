@@ -33,21 +33,21 @@ class InitAdmin extends BaseController
 	 */
 	protected $adminGeneralSettings;
 	/**
-	 * @var AdminInstance
+	 * @var AdminCollection
 	 */
-	protected $adminInstance;
+	protected $adminCollection;
 	/**
-	 * @var AdminInstanceSettings
+	 * @var AdminCollectionSettings
 	 */
-	protected $adminInstanceSettings;
+	protected $adminCollectionSettings;
 
 	public function run()
 	{
 		$this->loadDependencies();
-		$this->adminGeneral          = new AdminGeneral($this->getPluginName(), $this->getVersion());
-		$this->adminGeneralSettings  = new AdminGeneralSettings($this->getPluginName(), $this->getVersion());
-		$this->adminInstance         = new AdminInstance($this->getPluginName(), $this->getVersion());
-		$this->adminInstanceSettings = new AdminInstanceSettings($this->getPluginName(), $this->getVersion());
+		$this->adminGeneral            = new AdminGeneral($this->getPluginName(), $this->getVersion());
+		$this->adminGeneralSettings    = new AdminGeneralSettings($this->getPluginName(), $this->getVersion());
+		$this->adminCollection         = new AdminCollection($this->getPluginName(), $this->getVersion());
+		$this->adminCollectionSettings = new AdminCollectionSettings($this->getPluginName(), $this->getVersion());
 
 		$this->defineHooks();
 		$this->setupAdminSettingsActions();
@@ -60,8 +60,8 @@ class InitAdmin extends BaseController
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once $pluginDir . 'admin/controllers/AdminInstance.php';
-		require_once $pluginDir . 'admin/controllers/AdminInstanceSettings.php';
+		require_once $pluginDir . 'admin/controllers/AdminCollection.php';
+		require_once $pluginDir . 'admin/controllers/AdminCollectionSettings.php';
 		require_once $pluginDir . 'admin/controllers/AdminGeneral.php';
 		require_once $pluginDir . 'admin/controllers/AdminGeneralSettings.php';
 
@@ -85,8 +85,8 @@ class InitAdmin extends BaseController
 	protected function setupAdminSettingsActions()
 	{
 		// Hook into the admin menu
-		Loader::addAction('admin_init', $this->adminInstanceSettings, 'setupFields');
-		Loader::addAction('admin_init', $this->adminInstanceSettings, 'setupSections');
+		Loader::addAction('admin_init', $this->adminCollectionSettings, 'setupFields');
+		Loader::addAction('admin_init', $this->adminCollectionSettings, 'setupSections');
 	}
 
 	protected function setupAdminAjaxActions()
@@ -94,7 +94,7 @@ class InitAdmin extends BaseController
 		$prefix = 'admin_post_demovox_';
 
 		// export
-		Loader::addAction($prefix . 'get_csv', $this->adminGeneral, 'getCsv');
+		Loader::addAction($prefix . 'get_csv', $this->adminCollection, 'getCsv');
 
 		// manage_options
 		Loader::addAction($prefix . 'run_cron', $this->adminGeneral, 'runCron');
@@ -183,15 +183,15 @@ class InitAdmin extends BaseController
 		);
 
 		$menuTitle = 'Signatures Data';
-		$callback  = [$this->adminInstance, 'pageData'];
+		$callback  = [$this->adminCollection, 'pageData'];
 		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityExport, $slug . 'Data', $callback);
 
 		$menuTitle = 'Import';
-		$callback  = [$this->adminInstance, 'pageImport'];
+		$callback  = [$this->adminCollection, 'pageImport'];
 		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityImport, $slug . 'Import', $callback);
 
 		$menuTitle = 'Settings';
-		$callback  = [$this->adminInstanceSettings, 'pageSettings'];
+		$callback  = [$this->adminCollectionSettings, 'pageSettings'];
 		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySettings, $slug . 'Settings', $callback);
 	}
 }

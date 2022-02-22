@@ -12,7 +12,7 @@ namespace Demovox;
  * @subpackage Demovox/admin
  * @author     SP Schweiz
  */
-class AdminInstance extends BaseController
+class AdminCollection extends BaseController
 {
 	public function pageImport()
 	{
@@ -23,7 +23,7 @@ class AdminInstance extends BaseController
 		}
 		$csvFormat = Core::getOption('importCsvFormat');
 		$delimiter = Core::getOption('importCsvDelimiter') ?: ';';
-		include Infos::getPluginDir() . 'admin/views/instance/import.php';
+		include Infos::getPluginDir() . 'admin/views/collection/import.php';
 	}
 
 	public function pageData()
@@ -47,7 +47,7 @@ class AdminInstance extends BaseController
 		require_once Infos::getPluginDir() . 'admin/SignatureList.php';
 		$signatureList = new SignatureList();
 
-		include Infos::getPluginDir() . 'admin/views/instance/data.php';
+		include Infos::getPluginDir() . 'admin/views/collection/data.php';
 	}
 
 	protected function doCsvImport()

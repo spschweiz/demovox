@@ -30,14 +30,14 @@ class PublicHandler extends BaseController
 	 */
 	protected ?array $shortcodeAttributes;
 
-	protected function getDefaultInstance(){
+	protected function getDefaultCollection(){
 		return 0;
 	}
 
 	/**
 	 * The [demovox_form] shortcode.
 	 *
-	 * Accepts a instance id and will display the sign-up form or the signature sheet.
+	 * Accepts a collection id and will display the sign-up form or the signature sheet.
 	 *
 	 * @param array|string $atts    Shortcode attributes. Default empty.
 	 * @param string|null  $content Shortcode content. Default null.
@@ -48,8 +48,8 @@ class PublicHandler extends BaseController
 	{
 		$this->requireHttps();
 		$this->shortcodeAttributes = $this->getShortcodeAttriutes($atts, $tag);
-		if (!isset($this->shortcodeAttributes['instance']) || !is_numeric($this->shortcodeAttributes['instance'])) {
-			$this->shortcodeAttributes['instance'] = $this->getDefaultInstance();
+		if (!isset($this->shortcodeAttributes['collection']) || !is_numeric($this->shortcodeAttributes['collection'])) {
+			$this->shortcodeAttributes['collection'] = $this->getDefaultCollection();
 		}
 
 		$source = isset($_REQUEST['src']) ? sanitize_text_field($_REQUEST['src']) : '';
@@ -159,12 +159,12 @@ class PublicHandler extends BaseController
 		switch ($nr) {
 			case 1:
 			default:
-				$instance = $this->shortcodeAttributes['instance'];
-				$sign->step1($instance);
+				$collection = $this->shortcodeAttributes['collection'];
+				$sign->step1($collection);
 				break;
 			case 2:
-				$instance = $this->getInstanceFromRequest();
-				$sign->step2($instance);
+				$collection = $this->getCollectionFromRequest();
+				$sign->step2($collection);
 				break;
 			case 3:
 				$guid = sanitize_key($_REQUEST['sign']);
@@ -199,10 +199,10 @@ class PublicHandler extends BaseController
 	/**
 	 * @return int
 	 */
-	protected function getInstanceFromRequest(): int
+	protected function getCollectionFromRequest(): int
 	{
-		return isset($_REQUEST['instance']) && intval($_REQUEST['instance'])
-			? intval($_REQUEST['instance'])
-			: $this->getDefaultInstance();
+		return isset($_REQUEST['collection']) && intval($_REQUEST['collection'])
+			? intval($_REQUEST['collection'])
+			: $this->getDefaultCollection();
 	}
 }

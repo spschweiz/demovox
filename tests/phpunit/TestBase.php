@@ -252,7 +252,7 @@ abstract class TestBase extends \WP_UnitTestCase
 		$rows = self::$dbSign->getResults(
 			[
 				'ID',
-				'instance',
+				'collection',
 				'mail',
 				'creation_date',
 				'is_step2_done',

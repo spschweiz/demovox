@@ -103,17 +103,17 @@ class Activator
 			$update = "ALTER TABLE $dbSignName ADD COLUMN title VARCHAR(10) NULL BEFORE first_name;";
 			self::update($update);
 		}
-		if (!Db::query("SHOW COLUMNS FROM `$dbSignName` LIKE 'instance'")) {
+		if (!Db::query("SHOW COLUMNS FROM `$dbSignName` LIKE 'collection'")) {
 			// previous version was < 3
-			$update = "ALTER TABLE $dbSignName ADD COLUMN instance int UNSIGNED NOT NULL DEFAULT '0' AFTER ID;";
+			$update = "ALTER TABLE $dbSignName ADD COLUMN collection int UNSIGNED NOT NULL DEFAULT '0' AFTER ID;";
 			self::update($update);
-			$update = "ALTER TABLE $dbSignName ALTER COLUMN instance DROP DEFAULT;";
+			$update = "ALTER TABLE $dbSignName ALTER COLUMN collection DROP DEFAULT;";
 			self::update($update);
-			$update = "ALTER TABLE $dbMailDdName ADD COLUMN instance int UNSIGNED NOT NULL DEFAULT '0' AFTER sign_ID;";
+			$update = "ALTER TABLE $dbMailDdName ADD COLUMN collection int UNSIGNED NOT NULL DEFAULT '0' AFTER sign_ID;";
 			self::update($update);
-			$update = "ALTER TABLE $dbMailDdName ALTER COLUMN instance DROP DEFAULT;";
+			$update = "ALTER TABLE $dbMailDdName ALTER COLUMN collection DROP DEFAULT;";
 			self::update($update);
-			$update = "ALTER TABLE $dbMailDdName DROP INDEX mail_index, ADD UNIQUE KEY mail_index (instance, mail_md5);";
+			$update = "ALTER TABLE $dbMailDdName DROP INDEX mail_index, ADD UNIQUE KEY mail_index (collection, mail_md5);";
 			self::update($update);
 		}
 	}
