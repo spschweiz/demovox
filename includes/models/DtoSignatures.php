@@ -46,4 +46,57 @@ class DtoSignatures extends Dto
 		'serial'              => 'Serial (QR code)',
 		'source'              => 'Source',
 	];
+
+	/**
+	 * Init new entry values before insert
+	 * @return bool
+	 */
+	public function prepareInsert(): bool
+	{
+		if (!parent::prepareInsert()) {
+			return false;
+		}
+		$guid = $this->getGuid();
+
+		$linkOptin = Strings::getPageUrl($guid, Config::getValue('use_page_as_optin_link'));
+		$this->link_optin = $linkOptin;
+
+		if (isset($this->creation_date_hours_ago)) {
+			$this->creation_date = time() - $this->creation_date_hours_ago * 60 * 60;
+			$this->creation_date_hours_ago = null;
+		}
+		if (isset($this->creation_date) && is_int($this->creation_date)) {
+			$this->creation_date = date("Y-m-d H:i:s", $this->creation_date);
+		}
+		return true;
+	}
+
+	/**
+	 * @return void
+	 */
+	protected function initGuid(): void
+	{
+		if (isset($this->guid) || !$this->isNewRecord) {
+			return;
+		}
+
+		$this->guid = Strings::createGuid();
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getGuid()
+	{
+		if (isset($this->guid)) {
+			return $this->guid;
+		}
+
+		if (!$this->isNewRecord) {
+			return null;
+		}
+
+		$this->initGuid();
+		return $this->guid;
+	}
 }

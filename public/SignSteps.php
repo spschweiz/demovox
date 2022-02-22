@@ -7,28 +7,21 @@ class SignSteps
 	/** @var $nonceId string */
 	private $nonceId;
 
-	/**
-	 * Attributes of the called shortcode
-	 * @var null|array
-	 */
-	protected ?array $shortcodeAttriutes;
-
 	/** @var $textColor string RGB */
 	private $textColor = [0, 0, 0];
 
-	public function __construct($nonceId, $shortcodeAttributes)
+	public function __construct(string $nonceId)
 	{
 		$this->nonceId = $nonceId;
-		$this->shortcodeAttributes = $shortcodeAttributes;
 	}
 
 	/**
 	 * Ask signee for basic personal information
+	 * @param int $instance
 	 * @return void
 	 */
-	public function step1()
+	public function step1(int $instance)
 	{
-		$instance = intval($this->shortcodeAttributes['instance']);
 		$textOptin = Config::getValueByUserlang('text_optin');
 		$emailConfirmEnabled = !empty(Config::getValue('email_confirm'));
 		$optinMode = $this->getOptinMode(1);
@@ -36,12 +29,15 @@ class SignSteps
 		include Infos::getPluginDir() . 'public/views/sign-1.php';
 	}
 
-	protected function saveStep1()
+	/**
+	 * @param int $instance
+	 * @return string guid
+	 */
+	protected function saveStep1($instance) : string
 	{
 		$dbSign    = new DbSignatures();
 		$lang      = Infos::getUserLanguage();
 		$source    = Core::getSessionVar('source');
-		$instance  = isset($_REQUEST['instance']) && intval($_REQUEST['instance']) ? intval($_REQUEST['instance']) : 0;
 		$nameFirst = sanitize_text_field($_REQUEST['name_first']);
 		$nameLast  = sanitize_text_field($_REQUEST['name_last']);
 		$mail      = sanitize_email($_REQUEST['mail']);
@@ -76,29 +72,23 @@ class SignSteps
 			$data['is_optin'] = $optIn;
 		}
 		$dtoSign = new DtoSignatures($data);
+		$guid    = $dtoSign->getGuid();
 		$success = $dbSign->insert($dtoSign);
 		if (!$success) {
-			Core::errorDie('DB insert failed: ' . Db::getLastError(), 500);
+			Core::errorDie('DB insert failed', 500);
 		}
-		$signId     = Db::getInsertId();
-		$successUpd = $dbSign->updateStatus(
-			['serial' => Strings::getSerial($signId)],
-			['ID' => $signId]
-		);
-		if (!$successUpd) {
-			Core::logMessage('Could not save serial for ID=' . $signId . '. Reason:' . Db::getLastError());
-		}
-		Core::setSessionVar('signId-' . $this->shortcodeAttriutes['instance'], $signId);
+		return $guid;
 	}
 
 	/**
 	 * Ask signee for additional personal information
+	 * @param int $instance
 	 * @return void
 	 */
-	public function step2()
+	public function step2(int $instance)
 	{
 		$this->verifyNonce();
-		$this->saveStep1();
+		$guid = $this->saveStep1($instance);
 
 		// Prepare view variables
 		$textOptin         = Config::getValueByUserlang('text_optin');
@@ -110,21 +100,18 @@ class SignSteps
 
 		// Render view
 		include Infos::getPluginDir() . 'public/views/sign-2.php';
-		if (isset($_REQUEST['ajax']) && $_REQUEST['ajax']) {
-			wp_die();
-		}
+		$this->dieOnAjax();
 	}
 
 	/**
 	 * Update signature with form data
 	 *
-	 * @param int $signId
-	 * @param int $isEncrypted
-	 * @param     $guid
+	 * @param string $guid
+	 * @param int    $isEncrypted
 	 *
 	 * @return string
 	 */
-	protected function saveStep2($signId, $guid, $isEncrypted)
+	protected function saveStep2($guid, $isEncrypted)
 	{
 		$dbSign = new DbSignatures();
 		// Load and sanitize form data
@@ -206,12 +193,10 @@ class SignSteps
 			$data['is_optin'] = $optIn;
 		}
 
-		$dto = new DtoSignatures($data);
-
 		// Update
 		$success = $dbSign->update(
-			$dto,
-			['ID' => $signId,],
+			$data,
+			['guid' => $guid,],
 			$isEncrypted
 		);
 		if (!$success) {
@@ -261,60 +246,45 @@ class SignSteps
 	/**
 	 * Show signature sheet partial or return redirect URL
 	 *
-	 * @param $guid
+	 * @param string $guid
 	 */
-	public function step3($guid)
+	public function step3(string $guid)
 	{
 		$dbSign       = new DbSignatures();
 		$redirect     = isset($_REQUEST['redirect']) && $_REQUEST['redirect'];
-		if ($guid) {
-			// User from reminder mail
-			if ($redirect) {
-				// Redirect to success page
-				$row = $dbSign->getRow(['link_success',], "guid = '" . $guid . "'");
-				if (!$row === null) {
-					Core::errorDie('Signature guid ' . $guid . ' not found', 404);
-				}
-				echo $row->link_success;
-				wp_die();
-			}
-		} else {
-			$this->verifyNonce();
-			$signId = Core::getSessionVar('signId-' . $this->shortcodeAttriutes['instance']);
 
-			// Verify 2nd form step is filled and get encryption mode
-			$row = $dbSign->getRow(
-				['is_step2_done', 'guid', 'is_encrypted', 'link_success',],
-				"ID = '" . $signId . "'"
-			);
-			if ($row === null) {
-				Core::errorDie('Invalid session, signature ID ' . $signId . ' not found', 500);
+		// Check if 2nd form step is filled and get encryption mode and success link
+		$row = $dbSign->getRow(
+			['is_step2_done', 'is_encrypted', 'link_success',],
+			"guid = '" . $guid . "'"
+		);
+		if ($row === null) {
+			Core::errorDie('Signature not found with guid="' . $guid . '"', 404);
+		}
+		if (!$row->is_step2_done) {
+			$this->verifyNonce();
+			$successPage = $this->saveStep2($guid, $row->is_encrypted);
+		} else {
+			if($_REQUEST['birth_date'] || isset($_REQUEST['street'])) {
+				Core::logMessage('User tried to save step2 a second time', 'warning');
 			}
-			$guid = $row->guid;
-			if (!$row->is_step2_done) {
-				$successPage = $this->saveStep2($signId, $guid, $row->is_encrypted);
-			} else {
-				$successPage = $row->link_success;
-			}
-			if ($redirect) {
-				// Redirect to success page
-				echo $successPage;
-				wp_die();
-			}
+			$successPage = $row->link_success;
+		}
+		if ($redirect) {
+			// Redirect to success page
+			echo $successPage;
+			wp_die();
 		}
 
 		// Show inline success page
-		$this->step3inlineSuccessPage($guid);
-
-		if (isset($_REQUEST['ajax']) && $_REQUEST['ajax']) {
-			wp_die();
-		}
+		$this->step3successPage($guid);
+		$this->dieOnAjax();
 	}
 
 	/**
 	 * @param      $guid
 	 */
-	protected function step3inlineSuccessPage($guid)
+	protected function step3successPage($guid)
 	{
 		$dbSign = new DbSignatures();
 		// Prepare PDF data
@@ -340,7 +310,7 @@ class SignSteps
 			Core::errorDie('Signature with GUID "' . $guid . '" was not found', 404);
 		}
 		if (!$row->is_step2_done) {
-			Core::errorDie('Signature with GUID "' . $guid . '" can not be edited', 400);
+			Core::errorDie('Signature with GUID "' . $guid . '" needs step2 to be finished', 400);
 		}
 		$signId    = $row->ID;
 		$gdeCanton = $row->gde_canton;
@@ -461,6 +431,17 @@ class SignSteps
 		$optinMode     = Config::getValue('optin_mode');
 		$optinPosition = Config::getValue('optin_position');
 		return ($optinMode !== 'disabled' && $optinPosition == $page) ? $optinMode : null;
+	}
+
+	/**
+	 * End page output on ajax requests
+	 * @return void
+	 */
+	protected function dieOnAjax(): void
+	{
+		if (isset($_REQUEST['ajax']) && $_REQUEST['ajax']) {
+			wp_die();
+		}
 	}
 
 }

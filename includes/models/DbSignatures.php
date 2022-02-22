@@ -98,29 +98,6 @@ class DbSignatures extends Db
 	}
 
 	/**
-	 * @param DtoSignatures $dto
-	 *
-	 * @return false|int
-	 */
-	public function insert(Dto $dto)
-	{
-		$guid      = Strings::createGuid();
-		$dto->guid = $guid;
-
-		$linkOptin       = Strings::getPageUrl($guid, Config::getValue('use_page_as_optin_link'));
-		$dto->link_optin = $linkOptin;
-
-		if (isset($dto->creation_date_hours_ago)) {
-			$dto->creation_date = time() - $dto->creation_date_hours_ago * 60 * 60;
-			$dto->creation_date_hours_ago = null;
-		}
-		if (isset($dto->creation_date) && is_int($dto->creation_date)) {
-			$dto->creation_date = date("Y-m-d H:i:s", $dto->creation_date);
-		}
-		return parent::insert($dto);
-	}
-
-	/**
 	 * Count results for a where statement
 	 *
 	 * @param string|int|null $where
@@ -166,5 +143,44 @@ class DbSignatures extends Db
 				break;
 		}
 		return $where;
+	}
+
+	/**
+	 * @param DtoSignatures   $dto
+	 *
+	 * @return false|int
+	 */
+	public function insert(Dto $dto)
+	{
+		$success = parent::insert($dto);
+
+		if(!$success) {
+			return false;
+		}
+
+		$signId = Db::getInsertId();
+		$successUpd = $this->updateStatus(
+			['serial' => Strings::getSerial($signId)],
+			['ID' => $signId]
+		);
+		if (!$successUpd) {
+			Core::logMessage('Could not save serial for ID=' . $signId . '. Reason:' . Db::getLastError());
+			return false;
+		}
+		return $success;
+	}
+
+	/**
+	 * @param array       $select    Fields to select
+	 * @param string|null $where     SQL where statement
+	 * @param string|null $sqlAppend Append SQL statements
+	 *
+	 * @return DtoSignatures|null Database query results
+	 */
+	public function getRow(array $select, ?string $where = null, ?string $sqlAppend = null)
+	{
+		$row = $this->getRowArr($select, $where, $sqlAppend);
+
+		return new DtoSignatures($row, false);
 	}
 }

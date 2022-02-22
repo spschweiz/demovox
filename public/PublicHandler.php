@@ -28,7 +28,7 @@ class PublicHandler extends BaseController
 	 * Attributes of the called shortcode
 	 * @var null|array
 	 */
-	protected ?array $shortcodeAttriutes;
+	protected ?array $shortcodeAttributes;
 
 	protected function getDefaultInstance(){
 		return 0;
@@ -47,7 +47,7 @@ class PublicHandler extends BaseController
 	public function signShortcode($atts = [], string $content = null, string $tag = ''): string
 	{
 		$this->requireHttps();
-		$this->shortcodeAttriutes = $this->getShortcodeAttriutes($atts, $tag);
+		$this->shortcodeAttributes = $this->getShortcodeAttriutes($atts, $tag);
 		if (!isset($this->shortcodeAttributes['instance']) || !is_numeric($this->shortcodeAttributes['instance'])) {
 			$this->shortcodeAttributes['instance'] = $this->getDefaultInstance();
 		}
@@ -141,10 +141,10 @@ class PublicHandler extends BaseController
 
 	/**
 	 * Return content of signing steps
-	 * @param $nr
+	 * @param int $nr
 	 * @return false|string
 	 */
-	protected function signStep($nr)
+	protected function signStep(int $nr)
 	{
 		$pluginDir = Infos::getPluginDir();
 
@@ -153,19 +153,21 @@ class PublicHandler extends BaseController
 		}
 
 		require_once $pluginDir . 'public/SignSteps.php';
-		$sign = new SignSteps($this->nonceId, $this->shortcodeAttriutes);
+		$sign = new SignSteps($this->nonceId);
 
 		ob_start();
 		switch ($nr) {
 			case 1:
 			default:
-				$sign->step1();
+				$instance = $this->shortcodeAttributes['instance'];
+				$sign->step1($instance);
 				break;
 			case 2:
-				$sign->step2();
+				$instance = $this->getInstanceFromRequest();
+				$sign->step2($instance);
 				break;
 			case 3:
-				$guid = isset($_REQUEST['sign']) ? sanitize_key($_REQUEST['sign']) : null;
+				$guid = sanitize_key($_REQUEST['sign']);
 				$sign->step3($guid);
 				break;
 		}
@@ -192,5 +194,15 @@ class PublicHandler extends BaseController
 
 		$output = ob_get_clean();
 		return $output;
+	}
+
+	/**
+	 * @return int
+	 */
+	protected function getInstanceFromRequest(): int
+	{
+		return isset($_REQUEST['instance']) && intval($_REQUEST['instance'])
+			? intval($_REQUEST['instance'])
+			: $this->getDefaultInstance();
 	}
 }

@@ -39,9 +39,9 @@ abstract class Db
 	 * @param string|null $where     SQL where statement
 	 * @param string|null $sqlAppend Append SQL statements
 	 *
-	 * @return object|null Database query results
+	 * @return array|null Database query results
 	 */
-	public function getRow(array $select, ?string $where = null, ?string $sqlAppend = null)
+	protected function getRowArr(array $select, ?string $where = null, ?string $sqlAppend = null)
 	{
 		global $wpdb;
 
@@ -56,8 +56,19 @@ abstract class Db
 		if($row === null){
 			return null;
 		}
-		$row = $this->decryptRow($row);
-		return new DtoSignatures($row);
+		return $this->decryptRow($row);
+	}
+
+	/**
+	 * @param array       $select    Fields to select
+	 * @param string|null $where     SQL where statement
+	 * @param string|null $sqlAppend Append SQL statements
+	 *
+	 * @return Dto|null Database query results
+	 */
+	public function getRow(array $select, ?string $where = null, ?string $sqlAppend = null)
+	{
+		Core::errorDie('getRow needs to be implemented in model', 500);
 	}
 
 	public function getTableDefinition(): string
@@ -129,7 +140,6 @@ abstract class Db
 	}
 
 	/**
-	 * TODO: replace $data with $dto content
 	 * @param Dto   $dto
 	 *
 	 * @return false|int
@@ -137,6 +147,9 @@ abstract class Db
 	public function insert(Dto $dto)
 	{
 		global $wpdb;
+		if (method_exists($dto, 'prepareInsert')) {
+			$dto->prepareInsert();
+		}
 		$data = $dto->getDataArr();
 		if ($this->isTableEncAllowed()) {
 			if (Crypt::isEncryptionEnabled()) {

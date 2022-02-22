@@ -80,4 +80,18 @@ class DbMails extends Db
 
 		return $save ? ($updated ? 'update' : 'insert') : false;
 	}
+
+	/**
+	 * @param array       $select    Fields to select
+	 * @param string|null $where     SQL where statement
+	 * @param string|null $sqlAppend Append SQL statements
+	 *
+	 * @return DtoMails|null Database query results
+	 */
+	public function getRow(array $select, ?string $where = null, ?string $sqlAppend = null)
+	{
+		$row = $this->getRowArr($select, $where, $sqlAppend);
+
+		return new DtoMails($row, false);
+	}
 }

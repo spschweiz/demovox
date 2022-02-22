@@ -307,7 +307,7 @@ class Core
 				$msg = 'Unauthorized';
 				break;
 			case 404:
-				$msg = 'Resource not found';
+				$msg = 'Requested entry not found';
 				break;
 			case 405:
 				$msg = 'Requested resource does not support this operation';

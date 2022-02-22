@@ -9,12 +9,17 @@ abstract class Dto
 {
 	/** @var array */
 	protected array $availableFields;
+	/** @var bool */
+	protected bool $isNewRecord = true;
 
 	/**
 	 * @param array $parameters
+	 * @param bool  $isNewRecord
 	 */
-	public function __construct(array $parameters = [])
+	public function __construct(array $parameters = [], $isNewRecord = true)
 	{
+		$this->isNewRecord = $isNewRecord;
+
 		$class = new ReflectionClass(static::class);
 
 		foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $reflectionProperty) {
@@ -32,6 +37,14 @@ abstract class Dto
 	public function getAvailableFields(): array
 	{
 		return $this->availableFields;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function prepareInsert(): bool
+	{
+		return true;
 	}
 
 	/**

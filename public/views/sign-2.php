@@ -13,6 +13,7 @@ namespace Demovox;
  */
 /**
  * @var $this              SignSteps
+ * @var $guid              string
  * @var $textOptin         string
  * @var $titleEnabled      bool
  * @var $countries         array
@@ -24,6 +25,7 @@ namespace Demovox;
 ?>
 <form method="post" id="demovox_form_2" class="demovox" action="<?= Infos::getRequestUri() ?>">
 	<input name="action" type="hidden" value="demovox_step3">
+	<input name="sign" type="hidden" value="<?= $guid ?>"">
 	<input name="nonce" type="hidden" value="<?= Core::createNonce($this->nonceId) ?>">
 	<?php if ($titleEnabled) { ?>
 		<div id="demovox-grp-title" class="form-group">
