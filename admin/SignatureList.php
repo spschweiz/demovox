@@ -47,7 +47,7 @@ class SignatureList extends \WP_List_Table
 	 * @param int $perPage
 	 * @param int $pageNumber
 	 *
-	 * @return mixed
+	 * @return DtoSignatures[]
 	 */
 	public function get_signatures($where, $perPage = 25, $pageNumber = 1)
 	{
@@ -129,10 +129,10 @@ class SignatureList extends \WP_List_Table
 	/**
 	 * Render a column when no column specific method exists.
 	 *
-	 * @param array $item
+	 * @param DtoSignatures $item
 	 * @param string $column_name
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	public function column_default($item, $column_name)
 	{
@@ -175,7 +175,7 @@ class SignatureList extends \WP_List_Table
 	 *
 	 * @return array
 	 */
-	function get_columns()
+	function get_columns(): array
 	{
 		$dtoSign = new DtoSignatures();
 		$fields = $dtoSign->getAvailableFields();

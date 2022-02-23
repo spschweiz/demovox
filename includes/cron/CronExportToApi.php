@@ -100,9 +100,9 @@ class CronExportToApi extends CronBase
 	}
 
 	/**
-	 * @return array|object|null
+	 * @return DtoSignatures[]
 	 */
-	protected function getRows()
+	protected function getRows(): array
 	{
 		$fields = array_merge(['ID', 'is_exported'], self::$fields);
 		$where  = 'is_exported <= 0 AND is_exported > -3 AND is_step2_done = 1 AND is_deleted = 0';

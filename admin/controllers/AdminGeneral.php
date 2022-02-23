@@ -87,7 +87,7 @@ class AdminGeneral extends BaseController
 			'label'           => 'Received signatures',
 			'borderColor'     => 'rgba(50, 100, 150, 1)',
 			'backgroundColor' => 'rgba(50, 100, 150, 0.2)',
-			'data'            => $dbSign->getResults(
+			'data'            => $dbSign->getResultsRaw(
 				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'SUM(is_sheet_received) AS count'],
 				'is_sheet_received<>0' . $sqlAppend
 			),
@@ -96,7 +96,7 @@ class AdminGeneral extends BaseController
 			'label'           => 'Received sheets',
 			'borderColor'     => 'rgba(0, 50, 0, 1)',
 			'backgroundColor' => 'rgba(0, 50, 0, 0.2)',
-			'data'            => $dbSign->getResults(
+			'data'            => $dbSign->getResultsRaw(
 				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) AS count'],
 				'is_sheet_received<>0' . $sqlAppend
 			),
@@ -105,7 +105,7 @@ class AdminGeneral extends BaseController
 			'label'           => 'Opt-in',
 			'borderColor'     => 'rgba(0, 255, 99, 1)',
 			'backgroundColor' => 'rgba(0, 255, 99, 0.2)',
-			'data'            => $dbSign->getResults(
+			'data'            => $dbSign->getResultsRaw(
 				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
 				'is_optin = 1 AND is_step2_done = 1' . $sqlAppend
 			),
@@ -114,7 +114,7 @@ class AdminGeneral extends BaseController
 			'label'           => 'Opt-out',
 			'borderColor'     => 'rgba(255, 206, 86, 1)',
 			'backgroundColor' => 'rgba(255, 206, 86, 0.2)',
-			'data'            => $dbSign->getResults(
+			'data'            => $dbSign->getResultsRaw(
 				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
 				'is_optin = 0 AND is_step2_done = 1' . $sqlAppend
 			),
@@ -123,7 +123,7 @@ class AdminGeneral extends BaseController
 			'label'           => 'No opt-in info',
 			'borderColor'     => 'rgb(68,78,255, 1)',
 			'backgroundColor' => 'rgba(68,78,255, 0.2)',
-			'data'            => $dbSign->getResults(
+			'data'            => $dbSign->getResultsRaw(
 				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
 				'is_optin IS NULL AND is_step2_done = 1' . $sqlAppend
 			),
@@ -132,7 +132,7 @@ class AdminGeneral extends BaseController
 			'label'           => 'Unfinished',
 			'borderColor'     => 'rgba(255,99,132,1 )',
 			'backgroundColor' => 'rgba(255,99,132, 0.2)',
-			'data'            => $dbSign->getResults(
+			'data'            => $dbSign->getResultsRaw(
 				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
 				'is_step2_done = 0' . $sqlAppend
 			),
@@ -145,7 +145,7 @@ class AdminGeneral extends BaseController
 		Core::checkAccess('demovox_stats');
 
 		$dbSign = new DbSignatures();
-		$sourceList = $dbSign->getResults(
+		$sourceList = $dbSign->getResultsRaw(
 			[
 				'source',
 				'SUM(is_sheet_received) AS signatures',

@@ -13,12 +13,18 @@ class DtoMails extends Dto
 	/** @var string */
 	public string $creation_date;
 
-	public function __construct(array $parameters = [], $isNewRecord = true)
+	/**
+	 * Init new entry values before insert
+	 * @return bool
+	 */
+	public function prepareInsert(): bool
 	{
-		if (isset($parameters['mail'])) {
-			$hashedMail = Strings::hashMail($parameters['mail']);
-			$parameters['mail_md5'] = $hashedMail;
+		if (!parent::prepareInsert()) {
+			return false;
 		}
-		parent::__construct($parameters, $isNewRecord);
+		if (isset($this->mail)) {
+			$hashedMail = Strings::hashMail($this->mail);
+			$this->mail_md5 = $hashedMail;
+		}
 	}
 }

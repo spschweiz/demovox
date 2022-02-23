@@ -88,10 +88,28 @@ class DbMails extends Db
 	 *
 	 * @return DtoMails|null Database query results
 	 */
-	public function getRow(array $select, ?string $where = null, ?string $sqlAppend = null)
+	public function getRow(array $select, ?string $where = null, ?string $sqlAppend = null) : ?DtoMails
 	{
-		$row = $this->getRowArr($select, $where, $sqlAppend);
+		$row = parent::getRow($select, $where, $sqlAppend);
+		if ($row === null) {
+			return null;
+		}
 
 		return new DtoMails($row, false);
+	}
+	/**
+	 * @param array       $select    Fields to select
+	 * @param string|null $where     SQL where statement
+	 * @param string|null $sqlAppend Append SQL statements
+	 *
+	 * @return DtoMails[] Database query results
+	 */
+	public function getResults(array $select, ?string $where = null, ?string $sqlAppend = null): array
+	{
+		$results = parent::getResultsRaw($select, $where, $sqlAppend);
+		foreach ($results as &$row) {
+			$row = new DtoMails($row, false);
+		}
+		return $results;
 	}
 }

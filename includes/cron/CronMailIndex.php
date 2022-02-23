@@ -92,9 +92,9 @@ class CronMailIndex extends CronBase
 	}
 
 	/**
-	 * @return array|null
+	 * @return array[int, DtoSignatures[]]|null
 	 */
-	protected function getPending()
+	protected function getPending(): ?array
 	{
 		$dbMailDd = new DbMails();
 		$dbSign   = new DbSignatures();

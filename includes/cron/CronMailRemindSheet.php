@@ -106,7 +106,7 @@ class CronMailRemindSheet extends CronMailBase
 	}
 
 	/**
-	 * @return array
+	 * @return DtoMails[]|DtoSignatures[]
 	 */
 	public function getPending(): array
 	{

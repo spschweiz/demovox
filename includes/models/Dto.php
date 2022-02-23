@@ -13,21 +13,34 @@ abstract class Dto
 	protected bool $isNewRecord = true;
 
 	/**
-	 * @param array $parameters
-	 * @param bool  $isNewRecord
+	 * @param \stdClass|array|null $parameters
+	 * @param bool                 $isNewRecord
 	 */
-	public function __construct(array $parameters = [], $isNewRecord = true)
+	public function __construct($parameters = null, bool $isNewRecord = true)
 	{
 		$this->isNewRecord = $isNewRecord;
 
+		if($parameters === null){
+			return;
+		}
 		$class = new ReflectionClass(static::class);
 
-		foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $reflectionProperty) {
-			$property = $reflectionProperty->getName();
-			if (!isset($parameters[$property])) {
-				continue;
+		if (is_array($parameters)) {
+			foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $reflectionProperty) {
+				$property = $reflectionProperty->getName();
+				if (!isset($parameters[$property])) {
+					continue;
+				}
+				$this->{$property} = $parameters[$property];
 			}
-			$this->{$property} = $parameters[$property];
+		} else {
+			foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $reflectionProperty) {
+				$property = $reflectionProperty->getName();
+				if (!isset($parameters->{$property})) {
+					continue;
+				}
+				$this->{$property} = $parameters->{$property};
+			}
 		}
 	}
 

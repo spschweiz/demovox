@@ -39,9 +39,9 @@ abstract class Db
 	 * @param string|null $where     SQL where statement
 	 * @param string|null $sqlAppend Append SQL statements
 	 *
-	 * @return array|null Database query results
+	 * @return \stdClass|null Database query results
 	 */
-	protected function getRowArr(array $select, ?string $where = null, ?string $sqlAppend = null)
+	public function getRow(array $select, ?string $where = null, ?string $sqlAppend = null) : ?Dto
 	{
 		global $wpdb;
 
@@ -52,29 +52,19 @@ abstract class Db
 		if ($sqlAppend) {
 			$sql .= ' ' . $sqlAppend;
 		}
-		$row = $wpdb->get_row($sql, ARRAY_A);
-		if($row === null){
+		$row = $wpdb->get_row($sql);
+		if ($row === null) {
 			return null;
 		}
 		return $this->decryptRow($row);
-	}
-
-	/**
-	 * @param array       $select    Fields to select
-	 * @param string|null $where     SQL where statement
-	 * @param string|null $sqlAppend Append SQL statements
-	 *
-	 * @return Dto|null Database query results
-	 */
-	public function getRow(array $select, ?string $where = null, ?string $sqlAppend = null)
-	{
-		Core::errorDie('getRow needs to be implemented in model', 500);
 	}
 
 	public function getTableDefinition(): string
 	{
 		return $this->tableDefinition;
 	}
+
+	abstract public function getResults(array $select, ?string $where = null, ?string $sqlAppend = null): array;
 
 	/**
 	 * Select multiple rows from demovox table
@@ -83,9 +73,9 @@ abstract class Db
 	 * @param string|null $where     SQL where statement
 	 * @param string|null $sqlAppend Append SQL statements
 	 *
-	 * @return array|object|null Database query results
+	 * @return \stdClass[] Database query results
 	 */
-	public function getResults(array $select, ?string $where = null, ?string $sqlAppend = null)
+	public function getResultsRaw(array $select, ?string $where = null, ?string $sqlAppend = null): array
 	{
 		global $wpdb;
 		$sql = $this->prepareSelect($select);
@@ -95,9 +85,12 @@ abstract class Db
 		if ($sqlAppend) {
 			$sql .= ' ' . $sqlAppend;
 		}
-		$results = $wpdb->get_results($sql, ARRAY_A);
-		foreach ($results as &$result) {
-			$result = $this->decryptRow($result);
+		$results = $wpdb->get_results($sql);
+		if(!$results){
+			return [];
+		}
+		foreach ($results as &$row) {
+			$row = $this->decryptRow($row);
 		}
 		return $results;
 	}
