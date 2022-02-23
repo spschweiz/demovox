@@ -283,9 +283,6 @@ class SignatureList extends \WP_List_Table
 			foreach ($delete_ids as $id) {
 				self::delete_signature($id);
 			}
-
-			//wp_redirect(esc_url(add_query_arg()));
-			exit;
 		}
 	}
 

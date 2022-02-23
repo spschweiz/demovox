@@ -116,15 +116,14 @@ abstract class Db
 	/**
 	 * Delete entries for a where statement
 	 *
-	 * @param Dto        $dto
-	 * @param null|array $where
+	 * @param array $where
 	 *
 	 * @return int|false The number of rows updated, or false on error.
 	 */
-	public function delete(Dto $dto, ?array $where = null)
+	public function delete(array $where = null)
 	{
 		global $wpdb;
-		if ($dto instanceof DtoSignatures) {
+		if ($this instanceof DbSignatures) {
 			return $this->updateStatus(['is_deleted' => 1], $where);
 		} else {
 			$wpTableName = $this->getWpTableName();
