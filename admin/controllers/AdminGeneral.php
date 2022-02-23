@@ -217,7 +217,13 @@ class AdminGeneral extends BaseController
 		$mailFrom = Config::getValueByLang('mail_from_address', $langId);
 		$nameFrom = Config::getValueByLang('mail_from_name', $langId);
 
-		$sign = new signObject($langId, $nameFrom, 'last name', $mailFrom);
+		$sign = new DtoSignatures();
+		$sign->language = $langId;
+		$sign->first_name = $nameFrom;
+		$sign->last_name = 'last name';
+		$sign->mail = $mailFrom;
+		$sign->link_pdf = Strings::getPageUrl('SIGNEE_PERSONAL_CODE');
+		$sign->link_optin = Strings::getPageUrl('SIGNEE_PERSONAL_CODE', Config::getValue('use_page_as_optin_link'));
 
 		define('WP_SMTPDEBUG', true);
 		Loader::addAction('phpmailer_init', new Mail(), 'config', 10, 1);

@@ -43,7 +43,7 @@ class CronMailConfirm extends CronMailBase
 	}
 
 	/**
-	 * @param DbSignatures $row
+	 * @param DtoSignatures $row
 	 */
 	protected function sendMail($row)
 	{

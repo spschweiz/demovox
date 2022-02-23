@@ -94,7 +94,7 @@ class Mail
 	}
 
 	/**
-	 * @param signObject $sign
+	 * @param DtoSignatures $sign
 	 * @param int $mailType
 	 * @return string
 	 */
@@ -120,7 +120,7 @@ class Mail
 	}
 
 	/**
-	 * @param signObject $sign
+	 * @param DtoSignatures $sign
 	 * @param string $mailSubject
 	 * @param int $mailType
 	 * @return string
@@ -156,25 +156,4 @@ class Mail
 		$text = str_replace('{guid}', $sign->guid, $text);
 		return $text;
 	}
-}
-
-class signObject
-{
-	public function __construct($language, $first_name, $last_name, $mail)
-	{
-		$this->language = $language;
-		$this->first_name = $first_name;
-		$this->last_name = $last_name;
-		$this->mail = $mail;
-		$this->link_pdf = Strings::getPageUrl('SIGNEE_PERSONAL_CODE');;
-		$this->link_optin = Strings::getPageUrl('SIGNEE_PERSONAL_CODE', Config::getValue('use_page_as_optin_link'));
-	}
-
-	var $language,
-		$title,
-		$first_name,
-		$last_name,
-		$mail,
-		$link_pdf,
-		$link_optin;
 }
