@@ -4,7 +4,7 @@ namespace Demovox;
 
 class ModelInfo
 {
-	public const AVAILABLE_TABLES = ['Signatures', 'Mails'];
+	public const AVAILABLE_TABLES = ['Signatures', 'Mails', 'Collections'];
 
 	/**
 	 * @return Dto[]

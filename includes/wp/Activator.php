@@ -87,6 +87,8 @@ class Activator
 		}
 		$dbMail = new DbMails;
 		$dbMailDdName = $dbMail->getWpTableName();
+		$dbCollection = new DbCollections;
+		$dbCollectionName = $dbCollection->getWpTableName();
 		if (Db::query("SHOW COLUMNS FROM `$dbMailDdName` LIKE 'mail'")) {
 			// previous version was < 1.3.3
 			$update = "ALTER TABLE $dbMailDdName CHANGE COLUMN mail mail_md5 CHAR(32);";
@@ -103,17 +105,26 @@ class Activator
 			$update = "ALTER TABLE $dbSignName ADD COLUMN title VARCHAR(10) NULL BEFORE first_name;";
 			self::update($update);
 		}
-		if (!Db::query("SHOW COLUMNS FROM `$dbSignName` LIKE 'collection'")) {
+		if (!Db::query("SHOW COLUMNS FROM `$dbSignName` LIKE 'collection_ID'")) {
 			// previous version was < 3
-			$update = "ALTER TABLE $dbSignName ADD COLUMN collection int UNSIGNED NOT NULL DEFAULT '0' AFTER ID;";
+			// add "collection_ID" columns and migrate existing entries with value '0'
+			$update = "ALTER TABLE $dbSignName ADD COLUMN collection_ID int UNSIGNED NOT NULL DEFAULT '0' AFTER ID;";
 			self::update($update);
-			$update = "ALTER TABLE $dbSignName ALTER COLUMN collection DROP DEFAULT;";
+			$update = "ALTER TABLE $dbSignName ALTER COLUMN collection_ID DROP DEFAULT;";
 			self::update($update);
-			$update = "ALTER TABLE $dbMailDdName ADD COLUMN collection int UNSIGNED NOT NULL DEFAULT '0' AFTER sign_ID;";
+			$update = "ALTER TABLE $dbMailDdName ADD COLUMN collection_ID int UNSIGNED NOT NULL DEFAULT '0' AFTER sign_ID;";
 			self::update($update);
-			$update = "ALTER TABLE $dbMailDdName ALTER COLUMN collection DROP DEFAULT;";
+			$update = "ALTER TABLE $dbMailDdName ALTER COLUMN collection_ID DROP DEFAULT;";
 			self::update($update);
-			$update = "ALTER TABLE $dbMailDdName DROP INDEX mail_index, ADD UNIQUE KEY mail_index (collection, mail_md5);";
+
+			// create collections table
+			$sql = $dbCollection->getTableDefinition();
+			$dbCollection->createUpdateTable($sql);
+
+			// foreign keys & index
+			$update = "ALTER TABLE $dbSignName ADD FOREIGN KEY (collection_ID) REFERENCES $dbCollectionName (ID);";
+			$update .= "ALTER TABLE $dbMailDdName ADD FOREIGN KEY (collection_ID) REFERENCES $dbCollectionName (ID);";
+			$update .= "ALTER TABLE $dbMailDdName DROP INDEX mail_index, ADD UNIQUE KEY mail_index (collection_ID, mail_md5);";
 			self::update($update);
 		}
 	}

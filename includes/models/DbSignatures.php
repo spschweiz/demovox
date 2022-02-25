@@ -18,7 +18,7 @@ class DbSignatures extends Db
 
 	protected string $tableDefinition = '
           ID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-          collection int UNSIGNED NOT NULL,
+          collection_ID int UNSIGNED NOT NULL,
           guid char(36) NOT NULL,
           serial char(6) NULL,
           language char(2) NOT NULL,

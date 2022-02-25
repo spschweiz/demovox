@@ -54,12 +54,12 @@ class SignSteps
 		}
 
 		$data = [
-			'collection'   => $collection,
-			'language'   => $lang,
-			'first_name' => $nameFirst,
-			'last_name'  => $nameLast,
-			'mail'       => $mail,
-			'phone'      => $phone,
+			'collection_ID' => $collection,
+			'language'      => $lang,
+			'first_name'    => $nameFirst,
+			'last_name'     => $nameLast,
+			'mail'          => $mail,
+			'phone'         => $phone,
 		];
 		if (Config::getValue('save_ip') && Config::getValue('encrypt_signees') !== 'disabled') {
 			$data['ip_address'] = Infos::getClientIp();
