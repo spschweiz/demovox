@@ -2,7 +2,7 @@
 
 namespace Demovox;
 require_once Infos::getPluginDir() . 'admin/controllers/AdminSettings.php';
-require_once Infos::getPluginDir() . 'admin/SignatureList.php';
+require_once Infos::getPluginDir() . 'admin/helpers/SignatureList.php';
 
 /**
  * The admin-specific functionality of the plugin.

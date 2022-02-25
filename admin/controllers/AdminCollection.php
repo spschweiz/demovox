@@ -44,7 +44,7 @@ class AdminCollection extends BaseController
 		];
 		add_screen_option($option, $args);
 
-		require_once Infos::getPluginDir() . 'admin/SignatureList.php';
+		require_once Infos::getPluginDir() . 'admin/helpers/SignatureList.php';
 		$signatureList = new SignatureList();
 
 		include Infos::getPluginDir() . 'admin/views/collection/data.php';

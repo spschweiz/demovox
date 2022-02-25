@@ -1,11 +1,10 @@
 <?php
 
 namespace Demovox;
-if (!class_exists('WP_List_Table')) {
-	require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
-}
 
-class SignatureList extends \WP_List_Table
+require_once Infos::getPluginDir() . 'admin/helpers/ListTable.php';
+
+class SignatureList extends ListTable
 {
 	/**
 	 * SignatureList constructor.
@@ -20,7 +19,7 @@ class SignatureList extends \WP_List_Table
 	}
 
 	/** @var array */
-	static $columns = [
+	protected $columns = [
 		'ID',
 		'first_name',
 		'last_name',
@@ -32,7 +31,6 @@ class SignatureList extends \WP_List_Table
 		'gde_zip',
 		'gde_canton',
 		'is_optin',
-		'is_step2_done',
 		'is_outside_scope',
 		'is_sheet_received',
 		'creation_date',
@@ -40,60 +38,32 @@ class SignatureList extends \WP_List_Table
 		'serial',
 	];
 
+	protected function get_db_model(): DbSignatures
+	{
+		return new DbSignatures();
+	}
+
 	/**
-	 * Retrieve signatures data from the database
-	 *
 	 * @param string|null $where
 	 * @param int $perPage
 	 * @param int $pageNumber
 	 *
 	 * @return DtoSignatures[]
 	 */
-	public function get_signatures($where, $perPage = 25, $pageNumber = 1)
+	public function get_results($where, $perPage = 25, $pageNumber = 1) : array
 	{
-		$select = self::$columns;
-		array_unshift($select, 'ID');
-		$sqlAppend = '';
-		if (!empty($_REQUEST['orderby'])) {
-			$sqlAppend .= ' ORDER BY ' . esc_sql($_REQUEST['orderby']);
-			$sqlAppend .= !empty($_REQUEST['order']) ? ' ' . esc_sql($_REQUEST['order']) : ' ASC';
-		}
-
-		$sqlAppend .= ' LIMIT ' . $perPage;
-		$sqlAppend .= ' OFFSET ' . ($pageNumber - 1) * $perPage;
-
-		try {
-			$dbSign = new DbSignatures();
-			$result = $dbSign->getResults($select, $where, $sqlAppend);
-		} catch (\Exception $e) {
-			$result = [];
-		}
-
-		return $result;
+		return parent::get_results($where, $perPage, $pageNumber);
 	}
 
 	/**
-	 * Delete a signature record.
+	 * Delete a record
 	 *
-	 * @param int $id signature ID
+	 * @param int $id record ID
 	 */
-	public function delete_signature($id)
+	public function delete_signature(int $id)
 	{
-		$dbSign = new DbSignatures();
+		$dbSign = $this->get_db_model();
 		$dbSign->delete(['ID' => $id]);
-	}
-
-	/**
-	 * Returns the count of records in the database.
-	 *
-	 * @param $where
-	 * @return int
-	 */
-	public function record_count($where)
-	{
-		$where = $this->getWhere();
-		$dbSign = new DbSignatures();
-		return $dbSign->count($where);
 	}
 
 	/**
@@ -111,12 +81,12 @@ class SignatureList extends \WP_List_Table
 	 *
 	 * @return string
 	 */
-	function column_name($item)
+	function column_name($item) : string
 	{
+		$title = parent::column_name($item);
+
 		// create a nonce
 		$delete_nonce = wp_create_nonce('sp_delete_signature');
-
-		$title = '<strong>' . $item['name'] . '</strong>';
 
 		$actions = [
 			'delete' => sprintf('<a href="?page=%s&action=%s&signature=%s&_wpnonce=%s">Delete</a>',
@@ -134,7 +104,7 @@ class SignatureList extends \WP_List_Table
 	 *
 	 * @return string
 	 */
-	public function column_default($item, $column_name)
+	public function column_default($item, $column_name): string
 	{
 		if (!isset($item->{$column_name})) {
 			return '';
@@ -163,43 +133,20 @@ class SignatureList extends \WP_List_Table
 	 *
 	 * @return string
 	 */
-	function column_cb($item)
+	function column_cb($item): string
 	{
 		return sprintf(
 			'<input type="checkbox" name="bulk-delete[]" value="%s" />', $item->ID
 		);
 	}
 
-	/**
-	 *  Associative array of columns
-	 *
-	 * @return array
-	 */
-	function get_columns(): array
-	{
-		$dtoSign = new DtoSignatures();
-		$fields = $dtoSign->getAvailableFields();
-		$columns = [];
-		foreach (self::$columns as $val) {
-			$columns[$val] = isset($fields[$val]) ? $fields[$val] : $val;
-		}
-		$columns = ['cb' => '<input type="checkbox" />',] + $columns;
-
-		return $columns;
-	}
-
-	public function get_hidden_columns()
-	{
-		// Setup Hidden columns and return them
-		return ['ID'];
-	}
 
 	/**
 	 * Columns to make sortable.
 	 *
 	 * @return array
 	 */
-	public function get_sortable_columns()
+	public function get_sortable_columns() : array
 	{
 		$sortable_columns = [
 			'is_optin'            => ['is_optin', false],
@@ -228,39 +175,12 @@ class SignatureList extends \WP_List_Table
 	 *
 	 * @return array
 	 */
-	public function get_bulk_actions()
+	public function get_bulk_actions(): array
 	{
-		$actions = ['bulk-delete' => 'Delete',];
-
-		return $actions;
+		return ['bulk-delete' => 'Delete',];
 	}
 
-	/**
-	 * Prepare the items for the table to process
-	 * @return Void
-	 */
-	public function prepare_items()
-	{
-		$this->_column_headers = [
-			$this->get_columns(),
-			$this->get_hidden_columns(),
-			$this->get_sortable_columns(),
-		];
-		$this->process_bulk_action();
-
-		$where = $this->getWhere();
-		$per_page = $this->get_items_per_page('records_per_page', 25);
-		$current_page = $this->get_pagenum();
-		$total_items = $this->record_count($where);
-		$this->set_pagination_args(
-			[
-				'total_items' => $total_items,
-				'per_page'    => $per_page,
-			]);
-		$this->items = $this->get_signatures($where, $per_page, $current_page);
-	}
-
-	public function process_bulk_action()
+	public function process_bulk_action(): void
 	{
 		// delete action
 		if ('delete' === $this->current_action()) {
@@ -268,7 +188,7 @@ class SignatureList extends \WP_List_Table
 			if (!wp_verify_nonce($nonce, 'sp_delete_signature')) {
 				Core::errorDie('nonce check failed', 401);
 			}
-			self::delete_signature(absint($_GET['signature']));
+			$this->delete_signature(absint($_GET['signature']));
 			wp_redirect(esc_url(add_query_arg()));
 			exit;
 		}
@@ -281,7 +201,7 @@ class SignatureList extends \WP_List_Table
 
 			// loop over the array of record IDs and delete them
 			foreach ($delete_ids as $id) {
-				self::delete_signature($id);
+				$this->delete_signature($id);
 			}
 		}
 	}
@@ -296,7 +216,7 @@ class SignatureList extends \WP_List_Table
 			$s = esc_sql(trim($_REQUEST['s']));
 			if (!empty($s)) {
 				$whereLike = '';
-				foreach (self::$columns as $col) {
+				foreach ($this->columns as $col) {
 					if (in_array($col, $this->get_hidden_columns())) {
 						continue;
 					}
