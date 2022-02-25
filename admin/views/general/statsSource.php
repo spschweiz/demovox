@@ -1,8 +1,8 @@
 <?php
 namespace Demovox;
 /**
- * @var AdminGeneral    $this
- * @var DtoSignatures[] $sourceList
+ * @var AdminGeneral $this
+ * @var array        $sourceList
  */
 ?>
 <table class="table table-striped table-hover">

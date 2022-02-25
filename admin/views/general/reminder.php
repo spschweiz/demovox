@@ -12,9 +12,9 @@ namespace Demovox;
  * @subpackage Demovox/public/partials
  */
 /**
- * @var $this SignSteps
- * @var $page string
- * @var $statusMsg string
+ * @var SignSteps $this
+ * @var string    $page
+ * @var string    $statusMsg
  */
 ?>
 <div class="wrap demovox">

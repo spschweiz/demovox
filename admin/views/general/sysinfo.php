@@ -1,13 +1,13 @@
 <?php
 namespace Demovox;
 /**
- * @var $this             AdminGeneral
- * @var $encKey           true|string
- * @var $hashKey          true|string
- * @var $saltsFailed      bool
- * @var $phpDisplayErrors bool
- * @var $languages        array
- * @var $mailRecipient    string
+ * @var AdminGeneral $this
+ * @var true|string  $encKey
+ * @var true|string  $hashKey
+ * @var bool         $saltsFailed
+ * @var bool         $phpDisplayErrors
+ * @var array        $languages
+ * @var string       $mailRecipient
  */
 
 ?>

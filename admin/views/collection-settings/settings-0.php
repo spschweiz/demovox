@@ -3,9 +3,9 @@
 namespace Demovox;
 
 /**
- * @var $this AdminCollectionSettings
- * @var $page string
- * @var $languages array
+ * @var AdminCollectionSettings $this
+ * @var string                  $page
+ * @var array                   $languages
  */
 ?>
 <?php

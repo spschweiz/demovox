@@ -12,11 +12,11 @@ namespace Demovox;
  * @subpackage Demovox/public/partials
  */
 /**
- * @var $this      SignSteps
- * @var $csvFormat string
- * @var $delimiter string
- * @var $page      string
- * @var $statusMsg string
+ * @var  AdminCollection $this
+ * @var  string          $csvFormat
+ * @var  string          $delimiter
+ * @var  string          $page
+ * @var  string          $statusMsg
  */
 
 ?>

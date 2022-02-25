@@ -3,10 +3,10 @@
 namespace Demovox;
 
 /**
- * @var $this AdminCollectionSettings
- * @var $page string
- * @var $tabs array
- * @var $currentTab array
+ * @var AdminCollectionSettings $this
+ * @var string                  $page
+ * @var array                   $tabs
+ * @var string                  $currentTab
  */
 if (!defined('ABSPATH')) {
 	exit;

@@ -3,8 +3,8 @@
 namespace Demovox;
 
 /**
- * @var $this AdminCollectionSettings
- * @var $page string
+ * @var AdminCollectionSettings $this
+ * @var string                  $page
  */
 ?>
 <?php

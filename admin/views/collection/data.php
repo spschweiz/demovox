@@ -13,12 +13,13 @@ namespace Demovox;
  */
 
 /**
- * @var $countOptin        int
- * @var $countFinished     int
- * @var $countOutsideScope int
- * @var $countUnfinished   int
- * @var $countDeleted      int
- * @var $signatureList     SignatureList
+ * @var AdminCollection $this
+ * @var int             $countOptin
+ * @var int             $countFinished
+ * @var int             $countOutsideScope
+ * @var int             $countUnfinished
+ * @var int             $countDeleted
+ * @var SignatureList   $signatureList
  */
 ?>
 <div class="wrap demovox">
