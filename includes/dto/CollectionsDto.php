@@ -2,7 +2,10 @@
 
 namespace Demovox;
 
-class DtoCollections extends Dto
+/**
+ * Dto for @DbCollections
+ */
+class CollectionsDto extends Dto
 {
 	public int $ID, $collection_ID;
 	public ?string $name;

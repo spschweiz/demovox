@@ -217,7 +217,7 @@ class AdminGeneral extends BaseController
 		$mailFrom = Config::getValueByLang('mail_from_address', $langId);
 		$nameFrom = Config::getValueByLang('mail_from_name', $langId);
 
-		$sign = new DtoSignatures();
+		$sign = new SignaturesDto();
 		$sign->language = $langId;
 		$sign->first_name = $nameFrom;
 		$sign->last_name = 'last name';

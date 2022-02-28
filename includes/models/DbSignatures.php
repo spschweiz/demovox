@@ -146,7 +146,7 @@ class DbSignatures extends Db
 	}
 
 	/**
-	 * @param DtoSignatures   $dto
+	 * @param SignaturesDto $dto
 	 *
 	 * @return false|int
 	 */
@@ -175,16 +175,16 @@ class DbSignatures extends Db
 	 * @param string|null $where     SQL where statement
 	 * @param string|null $sqlAppend Append SQL statements
 	 *
-	 * @return DtoSignatures|null Database query results
+	 * @return SignaturesDto|null Database query results
 	 */
-	public function getRow(array $select, ?string $where = null, ?string $sqlAppend = null) : ?DtoSignatures
+	public function getRow(array $select, ?string $where = null, ?string $sqlAppend = null) : ?SignaturesDto
 	{
 		$row = parent::getRow($select, $where, $sqlAppend);
 		if ($row === null) {
 			return null;
 		}
 
-		return new DtoSignatures($row, false);
+		return new SignaturesDto($row, false);
 	}
 
 	/**
@@ -192,13 +192,13 @@ class DbSignatures extends Db
 	 * @param string|null $where     SQL where statement
 	 * @param string|null $sqlAppend Append SQL statements
 	 *
-	 * @return DtoSignatures[] Database query results
+	 * @return SignaturesDto[] Database query results
 	 */
 	public function getResults(array $select, ?string $where = null, ?string $sqlAppend = null): array
 	{
 		$results = parent::getResultsRaw($select, $where, $sqlAppend);
 		foreach ($results as &$row) {
-			$row = new DtoSignatures($row, false);
+			$row = new SignaturesDto($row, false);
 		}
 		return $results;
 	}

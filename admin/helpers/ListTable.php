@@ -44,7 +44,7 @@ abstract class ListTable extends \WP_List_Table
 	 */
 	public function get_columns(): array
 	{
-		$dtoSign = new DtoSignatures();
+		$dtoSign = new SignaturesDto();
 		$fields = $dtoSign->getAvailableFields();
 		$columns = [];
 		foreach ($this->columns as $val) {

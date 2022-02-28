@@ -94,8 +94,8 @@ class Mail
 	}
 
 	/**
-	 * @param DtoSignatures $sign
-	 * @param int $mailType
+	 * @param SignaturesDto $sign
+	 * @param int           $mailType
 	 * @return string
 	 */
 	static function getMailSubject($sign, $mailType)
@@ -120,9 +120,9 @@ class Mail
 	}
 
 	/**
-	 * @param DtoSignatures $sign
-	 * @param string $mailSubject
-	 * @param int $mailType
+	 * @param SignaturesDto $sign
+	 * @param string        $mailSubject
+	 * @param int           $mailType
 	 * @return string
 	 */
 	static function getMailText($sign, $mailSubject, $mailType)

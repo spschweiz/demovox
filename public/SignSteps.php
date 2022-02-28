@@ -71,7 +71,7 @@ class SignSteps
 			$optIn            = ($optinMode === 'optOut' || $optinMode === 'optOutChk') ? !$optIn : $optIn;
 			$data['is_optin'] = $optIn;
 		}
-		$dtoSign = new DtoSignatures($data);
+		$dtoSign = new SignaturesDto($data);
 		$guid    = $dtoSign->getGuid();
 		$success = $dbSign->insert($dtoSign);
 		if (!$success) {

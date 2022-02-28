@@ -48,7 +48,7 @@ class SignatureList extends ListTable
 	 * @param int $perPage
 	 * @param int $pageNumber
 	 *
-	 * @return DtoSignatures[]
+	 * @return SignaturesDto[]
 	 */
 	public function get_results($where, $perPage = 25, $pageNumber = 1) : array
 	{
@@ -99,8 +99,8 @@ class SignatureList extends ListTable
 	/**
 	 * Render a column when no column specific method exists.
 	 *
-	 * @param DtoSignatures $item
-	 * @param string $column_name
+	 * @param SignaturesDto $item
+	 * @param string        $column_name
 	 *
 	 * @return string
 	 */

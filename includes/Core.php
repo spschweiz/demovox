@@ -130,9 +130,10 @@ class Core
 		 */
 		// The class responsible for DB access and encryption.
 		require_once $pluginDir . 'includes/helpers/Crypt.php';
-		require_once $pluginDir . 'includes/models/Dto.php';
-		require_once $pluginDir . 'includes/models/DtoMails.php';
-		require_once $pluginDir . 'includes/models/DtoSignatures.php';
+		require_once $pluginDir . 'includes/dto/Dto.php';
+		require_once $pluginDir . 'includes/dto/MailsDto.php';
+		require_once $pluginDir . 'includes/dto/SignaturesDto.php';
+		require_once $pluginDir . 'includes/dto/CollectionsDto.php';
 		require_once $pluginDir . 'includes/models/Db.php';
 		require_once $pluginDir . 'includes/models/DbMails.php';
 		require_once $pluginDir . 'includes/models/DbSignatures.php';

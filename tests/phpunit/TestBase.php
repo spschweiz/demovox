@@ -264,7 +264,7 @@ abstract class TestBase extends \WP_UnitTestCase
 		);
 		foreach ($rows as $row) {
 			$dbMailDd = new DbMails();
-			$sign     = new DtoSignatures($row);
+			$sign     = new SignaturesDto($row);
 			$dbMailDd->importRow($sign);
 		}
 		Core::setOption('cron_index_mail_status', CronMailIndex::STATUS_FINISHED);
@@ -291,7 +291,7 @@ abstract class TestBase extends \WP_UnitTestCase
 	{
 		foreach (self::$signaturesMeta as $meta) {
 			$signData = self::genSign($meta);
-			$sign = new DtoSignatures($signData);
+			$sign = new SignaturesDto($signData);
 			$inserts = self::$dbSign->insert($sign);
 			if (!$inserts) {
 				error_log('No signatures were inserted');

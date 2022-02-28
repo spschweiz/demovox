@@ -100,7 +100,7 @@ class CronExportToApi extends CronBase
 	}
 
 	/**
-	 * @return DtoSignatures[]
+	 * @return SignaturesDto[]
 	 */
 	protected function getRows(): array
 	{

@@ -24,13 +24,13 @@ class DbCollections extends db
 	 * @param string|null $where     SQL where statement
 	 * @param string|null $sqlAppend Append SQL statements
 	 *
-	 * @return DtoCollections[] Database query results
+	 * @return CollectionsDto[] Database query results
 	 */
 	public function getResults(array $select, ?string $where = null, ?string $sqlAppend = null): array
 	{
 		$results = parent::getResultsRaw($select, $where, $sqlAppend);
 		foreach ($results as &$row) {
-			$row = new DtoCollections($row, false);
+			$row = new CollectionsDto($row, false);
 		}
 		return $results;
 	}

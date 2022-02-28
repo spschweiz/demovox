@@ -2,7 +2,11 @@
 
 namespace Demovox;
 
-class DtoSignatures extends Dto
+
+/**
+ * Dto for @DbCollections
+ */
+class SignaturesDto extends Dto
 {
 	/** @var int */
 	public int $ID;

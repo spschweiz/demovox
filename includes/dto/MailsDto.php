@@ -2,7 +2,10 @@
 
 namespace Demovox;
 
-class DtoMails extends Dto
+/**
+ * Dto for @DbMails
+ */
+class MailsDto extends Dto
 {
 	/** @var int */
 	public int $ID, $sign_ID, $collection_ID;

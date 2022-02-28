@@ -27,9 +27,9 @@ class CollectionList extends ListTable
 		'shortcode_count',
 	];
 
-	protected function get_db_model(): DtoCollections
+	protected function get_db_model(): CollectionsDto
 	{
-		return new DtoCollections();
+		return new CollectionsDto();
 	}
 
 	/**
@@ -37,7 +37,7 @@ class CollectionList extends ListTable
 	 * @param int $perPage
 	 * @param int $pageNumber
 	 *
-	 * @return DtoCollections[]
+	 * @return CollectionsDto[]
 	 */
 	public function get_results($where, $perPage = 25, $pageNumber = 1) : array
 	{
@@ -55,8 +55,8 @@ class CollectionList extends ListTable
 	/**
 	 * Render a column when no column specific method exists.
 	 *
-	 * @param DtoCollections $item
-	 * @param string $column_name
+	 * @param CollectionsDto $item
+	 * @param string         $column_name
 	 *
 	 * @return string
 	 */

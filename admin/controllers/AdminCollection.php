@@ -175,7 +175,7 @@ class AdminCollection extends BaseController
 	{
 		Core::checkAccess('export');
 
-		$dtoSign = new DtoSignatures();
+		$dtoSign = new SignaturesDto();
 		$dbSign = new DbSignatures();
 		$csvMapper = $dtoSign->getAvailableFields();
 		$csv = implode(',', $csvMapper) . "\n";

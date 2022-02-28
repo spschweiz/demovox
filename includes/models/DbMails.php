@@ -23,7 +23,7 @@ class DbMails extends Db
           UNIQUE KEY mail_index (collection_ID, mail_md5),
           INDEX creation_date_index (creation_date)';
 	/**
-	 * @param DtoSignatures $sign signature row
+	 * @param SignaturesDto $sign signature row
 	 *
 	 * @return string|false 'insert' | 'update' | 'skip' | false for db errors
 	 */
@@ -44,7 +44,7 @@ class DbMails extends Db
 		);
 
 		if (!$mailRow) {
-			$mail = new DtoMails;
+			$mail = new MailsDto;
 			$mail->collection_ID = $sign->collection_ID;
 			$mail->sign_ID = $sign->ID;
 			$mail->mail_md5 = $hashedMail;
@@ -59,7 +59,7 @@ class DbMails extends Db
 			if (!$mailRow->is_step2_done) {
 				return 'skip';
 			}
-			$mail = new DtoMails;
+			$mail = new MailsDto;
 			$mail->sign_ID = $sign->ID;
 			$mail->creation_date = $sign->creation_date;
 			if ($sign->is_step2_done) {
@@ -86,29 +86,29 @@ class DbMails extends Db
 	 * @param string|null $where     SQL where statement
 	 * @param string|null $sqlAppend Append SQL statements
 	 *
-	 * @return DtoMails|null Database query results
+	 * @return MailsDto|null Database query results
 	 */
-	public function getRow(array $select, ?string $where = null, ?string $sqlAppend = null) : ?DtoMails
+	public function getRow(array $select, ?string $where = null, ?string $sqlAppend = null) : ?MailsDto
 	{
 		$row = parent::getRow($select, $where, $sqlAppend);
 		if ($row === null) {
 			return null;
 		}
 
-		return new DtoMails($row, false);
+		return new MailsDto($row, false);
 	}
 	/**
 	 * @param array       $select    Fields to select
 	 * @param string|null $where     SQL where statement
 	 * @param string|null $sqlAppend Append SQL statements
 	 *
-	 * @return DtoMails[] Database query results
+	 * @return MailsDto[] Database query results
 	 */
 	public function getResults(array $select, ?string $where = null, ?string $sqlAppend = null): array
 	{
 		$results = parent::getResultsRaw($select, $where, $sqlAppend);
 		foreach ($results as &$row) {
-			$row = new DtoMails($row, false);
+			$row = new MailsDto($row, false);
 		}
 		return $results;
 	}
