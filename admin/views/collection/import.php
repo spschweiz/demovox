@@ -66,7 +66,13 @@ namespace Demovox;
 		?>
 	</form>
 </div>
+<?php
+$this->loadDatepicker();
+?>
 <script>
+	jQuery(document).ready(function() {
+		jQuery('#deliveryDate').datepicker({dateFormat: 'dd.mm.yy'});
+	});
 	(function (jQuery) {
 		window.$ = jQuery.noConflict();
 		demovoxAdminClass.showOnVal($('#csvFormat'), $('.showOnFormat1'), '1');

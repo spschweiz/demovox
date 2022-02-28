@@ -1,6 +1,7 @@
 <?php
 
 namespace Demovox;
+require_once Infos::getPluginDir() . 'admin/controllers/AdminBaseController.php';
 
 /**
  * The admin-specific functionality of the plugin.
@@ -12,7 +13,7 @@ namespace Demovox;
  * @subpackage Demovox/admin
  * @author     SP Schweiz
  */
-class AdminSettings extends BaseController
+class AdminSettings extends AdminBaseController
 {
 	public function setupSections()
 	{
@@ -88,10 +89,6 @@ class AdminSettings extends BaseController
 		}
 	}
 
-	public function loadDatepicker() {
-		wp_enqueue_script('jquery-ui-datepicker');
-		wp_enqueue_style('jquery-ui', plugin_dir_url(__FILE__) . '../css/jquery-ui.min.css', [], $this->getVersion());
-	}
 
     public function loadTinymce() {
 		// tinymce plugins for version 4.9.11

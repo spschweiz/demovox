@@ -1,6 +1,7 @@
 <?php
 
 namespace Demovox;
+require_once Infos::getPluginDir() . 'admin/controllers/AdminBaseController.php';
 
 /**
  * The admin-specific functionality of the plugin.
@@ -12,7 +13,7 @@ namespace Demovox;
  * @subpackage Demovox/admin
  * @author     SP Schweiz
  */
-class AdminCollection extends BaseController
+class AdminCollection extends AdminBaseController
 {
 	public function pageImport()
 	{
