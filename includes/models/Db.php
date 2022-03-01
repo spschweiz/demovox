@@ -41,7 +41,7 @@ abstract class Db
 	 *
 	 * @return \stdClass|null Database query results
 	 */
-	public function getRow(array $select, ?string $where = null, ?string $sqlAppend = null) : ?Dto
+	public function getRow(array $select, ?string $where = null, ?string $sqlAppend = null)
 	{
 		global $wpdb;
 
@@ -164,7 +164,7 @@ abstract class Db
 	 *
 	 * @return false|int
 	 */
-	public function update($data, array $where, ?int $isEncrypted)
+	public function update($data, array $where, ?int $isEncrypted = null)
 	{
 		global $wpdb;
 		if(!is_array($data)) {
