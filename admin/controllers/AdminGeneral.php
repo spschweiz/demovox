@@ -19,12 +19,16 @@ class AdminGeneral extends AdminBaseController
 	{
 		$dbSign = new DbSignatures();
 		$count = $dbSign->countSignatures(false);
-		$addCount = Config::getValue('add_count');
 		$userLang = Infos::getUserLanguage();
-		$countOptin = $dbSign->count('is_optin = 1 AND is_step2_done = 1 AND is_deleted = 0');
-		$countOptout = $dbSign->count('is_optin = 0 AND is_step2_done = 1 AND is_deleted = 0');
-		$countOptNULL = $dbSign->count('is_optin IS NULL AND is_step2_done = 1 AND is_deleted = 0');
-		$countUnfinished = $dbSign->count('is_step2_done = 0 AND is_deleted = 0');
+
+		if ($count) {
+			$stats = new CollectionStatsDto();
+			$stats->countOptin = $dbSign->count('is_optin = 1 AND is_step2_done = 1 AND is_deleted = 0');
+			$stats->countOptout = $dbSign->count('is_optin = 0 AND is_step2_done = 1 AND is_deleted = 0');
+			$stats->countOptNULL = $dbSign->count('is_optin IS NULL AND is_step2_done = 1 AND is_deleted = 0');
+			$stats->countUnfinished = $dbSign->count('is_step2_done = 0 AND is_deleted = 0');
+		}
+
 		include Infos::getPluginDir() . 'admin/views/general/admin-page.php';
 	}
 
@@ -70,95 +74,6 @@ class AdminGeneral extends AdminBaseController
 		$languages = i18n::getLangsEnabled();
 
 		include Infos::getPluginDir() . 'admin/views/general/sysinfo.php';
-	}
-
-	public function statsCharts()
-	{
-		Core::checkAccess('demovox_stats');
-
-		$dbSign = new DbSignatures();
-		$sqlAppend = ' AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)';
-		$source = isset($_REQUEST['source']) ? sanitize_text_field($_REQUEST['source']) : null;
-		if ($source !== null) {
-			$sqlAppend .= ' AND source=\'' . $source . '\'';
-		}
-		$datasets = [];
-		// sheet_received_date
-		$datasets[] = [
-			'label'           => 'Received signatures',
-			'borderColor'     => 'rgba(50, 100, 150, 1)',
-			'backgroundColor' => 'rgba(50, 100, 150, 0.2)',
-			'data'            => $dbSign->getResultsRaw(
-				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'SUM(is_sheet_received) AS count'],
-				'is_sheet_received<>0' . $sqlAppend
-			),
-		];
-		$datasets[] = [
-			'label'           => 'Received sheets',
-			'borderColor'     => 'rgba(0, 50, 0, 1)',
-			'backgroundColor' => 'rgba(0, 50, 0, 0.2)',
-			'data'            => $dbSign->getResultsRaw(
-				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) AS count'],
-				'is_sheet_received<>0' . $sqlAppend
-			),
-		];
-		$datasets[] = [
-			'label'           => 'Opt-in',
-			'borderColor'     => 'rgba(0, 255, 99, 1)',
-			'backgroundColor' => 'rgba(0, 255, 99, 0.2)',
-			'data'            => $dbSign->getResultsRaw(
-				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
-				'is_optin = 1 AND is_step2_done = 1' . $sqlAppend
-			),
-		];
-		$datasets[] = [
-			'label'           => 'Opt-out',
-			'borderColor'     => 'rgba(255, 206, 86, 1)',
-			'backgroundColor' => 'rgba(255, 206, 86, 0.2)',
-			'data'            => $dbSign->getResultsRaw(
-				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
-				'is_optin = 0 AND is_step2_done = 1' . $sqlAppend
-			),
-		];
-		$datasets[] = [
-			'label'           => 'No opt-in info',
-			'borderColor'     => 'rgb(68,78,255, 1)',
-			'backgroundColor' => 'rgba(68,78,255, 0.2)',
-			'data'            => $dbSign->getResultsRaw(
-				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
-				'is_optin IS NULL AND is_step2_done = 1' . $sqlAppend
-			),
-		];
-		$datasets[] = [
-			'label'           => 'Unfinished',
-			'borderColor'     => 'rgba(255,99,132,1 )',
-			'backgroundColor' => 'rgba(255,99,132, 0.2)',
-			'data'            => $dbSign->getResultsRaw(
-				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
-				'is_step2_done = 0' . $sqlAppend
-			),
-		];
-		include Infos::getPluginDir() . 'admin/views/general/statsCharts.php';
-	}
-
-	public function statsSource()
-	{
-		Core::checkAccess('demovox_stats');
-
-		$dbSign = new DbSignatures();
-		$sourceList = $dbSign->getResultsRaw(
-			[
-				'source',
-				'SUM(is_sheet_received) AS signatures',
-				'SUM(is_sheet_received<>0) AS sheetsRec',
-				'SUM((is_optin<>0 AND is_step2_done<>0 AND is_deleted = 0)) AS optin',
-				'SUM((is_optin=0 AND is_step2_done<>0 AND is_deleted = 0)) AS optout',
-				'SUM((is_step2_done=0 AND is_deleted = 0)) AS unfinished',
-			],
-			'is_deleted = 0',
-			'GROUP BY source ORDER BY source'
-		);
-		include Infos::getPluginDir() . 'admin/views/general/statsSource.php';
 	}
 
 	public function testEncrypt()

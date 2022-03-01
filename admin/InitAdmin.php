@@ -68,6 +68,7 @@ class InitAdmin extends BaseController
 		require_once $pluginDir . 'admin/controllers/AdminGeneralSettings.php';
 
 		require_once $pluginDir . 'admin/controllers/AdminSettings.php';
+		require_once $pluginDir . 'admin/helpers/CollectionStatsDto.php';
 	}
 
 	/**
@@ -105,8 +106,8 @@ class InitAdmin extends BaseController
 		Loader::addAction($prefix . 'mail_test', $this->adminGeneral, 'testMail');
 
 		// demovox_stats
-		Loader::addAction($prefix . 'charts_stats', $this->adminGeneral, 'statsCharts');
-		Loader::addAction($prefix . 'source_stats', $this->adminGeneral, 'statsSource');
+		Loader::addAction($prefix . 'charts_stats', $this->adminCollection, 'statsCharts');
+		Loader::addAction($prefix . 'source_stats', $this->adminCollection, 'statsSource');
 	}
 
 	/**
