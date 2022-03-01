@@ -52,8 +52,13 @@ class DbCollections extends db
 		return $results;
 	}
 
-	protected function createDto(\stdClass $row){
-		if(isset($row->end_date) && $row->end_date=='0000-00-00'){
+	/**
+	 * @param \stdClass $row
+	 * @return CollectionsDto|null
+	 */
+	protected function createDto(\stdClass $row): ?CollectionsDto
+	{
+		if (isset($row->end_date) && $row->end_date == '0000-00-00') {
 			$row->end_date = null;
 		}
 		return new CollectionsDto($row, false);

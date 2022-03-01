@@ -184,8 +184,8 @@ class AdminCollection extends AdminBaseController
 
 		$data = new CollectionsDto();
 		$data->name = sanitize_text_field($_REQUEST['name']);
-		$data->end_date = empty($_REQUEST['endDate']) ? sanitize_text_field($_REQUEST['endDate']) : null;
-		$data->end_message = sanitize_text_field($_REQUEST['endMessage']);
+		$data->end_date = empty($_REQUEST['end_date']) ? sanitize_text_field($_REQUEST['end_date']) : null;
+		$data->end_message = sanitize_text_field($_REQUEST['end_message']);
 		$collection->update($data, ['ID' => $collectionId]);
 	}
 

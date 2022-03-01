@@ -53,6 +53,16 @@ abstract class Dto
 	}
 
 	/**
+	 * @param $id
+	 * @return string|null
+	 */
+	public function getFieldName($id): ?string
+	{
+		$fields = $this->getAvailableFields();
+		return $fields[$id] ?? null;
+	}
+
+	/**
 	 * @return bool
 	 */
 	public function prepareInsert(): bool
