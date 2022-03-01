@@ -15,6 +15,42 @@ require_once Infos::getPluginDir() . 'admin/controllers/AdminBaseController.php'
  */
 class AdminCollection extends AdminBaseController
 {
+	public function getCollectionId()
+	{
+		if (!isset($_REQUEST['collection']) || !is_int($_REQUEST['collection'])) {
+			return $this->getDefaultCollection();
+		}
+		return $_REQUEST['collection'];
+	}
+
+	public function pageOverview()
+	{
+		$dbSign = new DbSignatures();
+		$count = $dbSign->countSignatures(false);
+		$addCount = Config::getValue('add_count');
+		$userLang = Infos::getUserLanguage();
+		$collectionId = $this->getCollectionId();
+
+		$page = 'demovoxCollectionOverview';
+		if (strtolower($_SERVER['REQUEST_METHOD']) === 'post') {
+			$this->saveOverview();
+		}
+
+		$collections = new DbCollections;
+		$collection = $collections->getRow(['name', 'end_date', 'end_message'], 'ID = ' . $collectionId);
+
+		if ($count) {
+			$add = ' AND collection_ID = ' . $collectionId;
+			$stats = new CollectionStatsDto();
+			$stats->countOptin = $dbSign->count('is_optin = 1 AND is_step2_done = 1 AND is_deleted = 0' . $add);
+			$stats->countOptout = $dbSign->count('is_optin = 0 AND is_step2_done = 1 AND is_deleted = 0' . $add);
+			$stats->countOptNULL = $dbSign->count('is_optin IS NULL AND is_step2_done = 1 AND is_deleted = 0' . $add);
+			$stats->countUnfinished = $dbSign->count('is_step2_done = 0 AND is_deleted = 0' . $add);
+		}
+
+		include Infos::getPluginDir() . 'admin/views/collection/overview.php';
+	}
+
 	public function pageImport()
 	{
 		$statusMsg = '';
@@ -49,6 +85,18 @@ class AdminCollection extends AdminBaseController
 		$signatureList = new SignatureList();
 
 		include Infos::getPluginDir() . 'admin/views/collection/data.php';
+	}
+
+	protected function saveOverview()
+	{
+		$collection = new DbCollections;
+		$collectionId = intval($_REQUEST['collection_ID']);
+
+		$data = new CollectionsDto();
+		$data->name = sanitize_text_field($_REQUEST['name']);
+		$data->end_date = empty($_REQUEST['endDate']) ? sanitize_text_field($_REQUEST['endDate']) : null;
+		$data->end_message = sanitize_text_field($_REQUEST['endMessage']);
+		$collection->update($data, ['ID' => $collectionId]);
 	}
 
 	protected function doCsvImport()

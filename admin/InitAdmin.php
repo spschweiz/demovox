@@ -60,6 +60,8 @@ class InitAdmin extends BaseController
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
+		require_once $pluginDir . 'includes/models/DbCollections.php';
+
 		require_once $pluginDir . 'admin/controllers/AdminCollection.php';
 		require_once $pluginDir . 'admin/controllers/AdminCollectionSettings.php';
 		require_once $pluginDir . 'admin/controllers/AdminGeneral.php';
@@ -181,6 +183,10 @@ class InitAdmin extends BaseController
 			'<span style="display:block; margin:1px 0 1px -5px; padding:0; height:1px; background:#CCC;"></span>',
 			"create_users", "#",
 		);
+
+		$menuTitle = 'Collection';
+		$callback = [$this->adminCollection, 'pageOverview'];
+		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityExport, $slug . 'Overview', $callback);
 
 		$menuTitle = 'Signatures Data';
 		$callback  = [$this->adminCollection, 'pageData'];

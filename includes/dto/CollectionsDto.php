@@ -7,7 +7,8 @@ namespace Demovox;
  */
 class CollectionsDto extends Dto
 {
-	public int $ID, $collection_ID;
+	public int $ID;
 	public ?string $name;
 	public ?string $end_date;
+	public ?string $end_message;
 }

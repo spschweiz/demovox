@@ -30,10 +30,6 @@ class PublicHandler extends BaseController
 	 */
 	protected ?array $shortcodeAttributes;
 
-	protected function getDefaultCollection(){
-		return 0;
-	}
-
 	/**
 	 * The [demovox_form] shortcode.
 	 *

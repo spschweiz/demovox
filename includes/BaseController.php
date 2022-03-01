@@ -59,6 +59,10 @@ class BaseController
 		Core::enforceHttps();
 	}
 
+	protected function getDefaultCollection(){
+		return 1;
+	}
+
 	/**
 	 * Get attributes of a shortcode and use defaults
 	 * @param array|null  $atts

@@ -105,14 +105,19 @@ class Activator
 			$update = "ALTER TABLE $dbSignName ADD COLUMN title VARCHAR(10) NULL BEFORE first_name;";
 			self::update($update);
 		}
+		if (!Db::query('SELECT COUNT(ID) as count FROM `' . $dbCollectionName . '`')) {
+			// previous version was < 3
+			$update = 'INSERT INTO `' . $dbCollectionName . '` (ID, name) values (1, \'Default collection\');';
+			self::update($update);
+		}
 		if (!Db::query("SHOW COLUMNS FROM `$dbSignName` LIKE 'collection_ID'")) {
 			// previous version was < 3
 			// add "collection_ID" columns and migrate existing entries with value '0'
-			$update = "ALTER TABLE $dbSignName ADD COLUMN collection_ID int UNSIGNED NOT NULL DEFAULT '0' AFTER ID;";
+			$update = "ALTER TABLE $dbSignName ADD COLUMN collection_ID int UNSIGNED NOT NULL DEFAULT '1' AFTER ID;";
 			self::update($update);
 			$update = "ALTER TABLE $dbSignName ALTER COLUMN collection_ID DROP DEFAULT;";
 			self::update($update);
-			$update = "ALTER TABLE $dbMailDdName ADD COLUMN collection_ID int UNSIGNED NOT NULL DEFAULT '0' AFTER sign_ID;";
+			$update = "ALTER TABLE $dbMailDdName ADD COLUMN collection_ID int UNSIGNED NOT NULL DEFAULT '1' AFTER sign_ID;";
 			self::update($update);
 			$update = "ALTER TABLE $dbMailDdName ALTER COLUMN collection_ID DROP DEFAULT;";
 			self::update($update);
