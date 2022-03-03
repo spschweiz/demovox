@@ -10,14 +10,31 @@ class SignaturesDto extends Dto
 {
 	/** @var int */
 	public int $ID;
+
+	/* strings */
 	/** @var string */
-	public string $guid, $serial, $language, $ip_address, $title, $first_name, $last_name, $birth_date, $mail, $phone, $country, $street, $street_no,
-		$zip, $city, $gde_no, $gde_zip, $gde_name, $gde_canton, $link_pdf, $link_optin, $link_success, $source;
+	public string $guid, $language, $first_name, $last_name, $mail, $source;
+	/** @var string|null */
+	public ?string $serial, $ip_address, $title, $birth_date, $phone, $country, $street, $street_no, $zip, $city,
+		$gde_no, $gde_zip, $gde_name, $gde_canton;
+
+	/* links */
+	/** @var string|null */
+	public ?string $link_success, $link_pdf, $link_optin;
+
+	/* int */
 	/** @var int */
-	public int $collection_ID, $is_optin, $is_step2_done, $is_sheet_received, $is_exported, $is_encrypted, $is_deleted,
+	public int $collection_ID, $is_step2_done, $is_sheet_received, $is_exported, $is_encrypted, $is_deleted,
 		$state_confirm_sent, $state_remind_sheet_sent, $state_remind_signup_sent, $is_outside_scope;
+	/** @var int|null */
+	public ?int $is_optin;
+
+	/* dates */
 	/** @var string */
-	public string $creation_date, $edit_date, $sheet_received_date, $remind_signup_sent_date, $remind_sheet_sent_date;
+	public string $creation_date;
+	/** @var string|null */
+	public ?string $edit_date, $sheet_received_date, $remind_signup_sent_date, $remind_sheet_sent_date;
+
 	/* virtual */
 	/** @var int|null */
 	public ?int $creation_date_hours_ago;
