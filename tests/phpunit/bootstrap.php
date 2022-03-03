@@ -30,7 +30,8 @@ class TestsBootstrap
 
 		ManageCron::loadDependencies();
 
-		require_once $pluginDir . 'admin/AdminSettings.php';
+		require_once $pluginDir . 'admin/base/AdminSettings.php';
+		require_once $pluginDir . 'admin/AdminGeneralSettings.php';
 
 		require_once $pluginDir . 'includes/wp/Activator.php';
 		Activator::activateDb();
@@ -40,7 +41,7 @@ class TestsBootstrap
 
 	function testSetConfigValues()
 	{
-		$adminSettings = new AdminSettings('demovox', '1.0.0');
+		$adminSettings = new AdminGeneralSettings('demovox', '1.0.0');
 		$adminSettings->setupFields();
 
 		$config = [

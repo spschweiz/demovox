@@ -1,7 +1,7 @@
 <?php
 
 namespace Demovox;
-require_once Infos::getPluginDir() . 'admin/controllers/AdminSettings.php';
+require_once Infos::getPluginDir() . 'admin/controllers/base/AdminSettings.php';
 require_once Infos::getPluginDir() . 'admin/helpers/SignatureList.php';
 
 /**

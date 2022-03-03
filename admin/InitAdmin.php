@@ -62,12 +62,14 @@ class InitAdmin extends BaseController
 		 */
 		require_once $pluginDir . 'includes/models/DbCollections.php';
 
+		require_once $pluginDir . 'admin/controllers/base/AdminBaseController.php';
+		require_once $pluginDir . 'admin/controllers/base/AdminSettings.php';
+
 		require_once $pluginDir . 'admin/controllers/AdminCollection.php';
 		require_once $pluginDir . 'admin/controllers/AdminCollectionSettings.php';
 		require_once $pluginDir . 'admin/controllers/AdminGeneral.php';
 		require_once $pluginDir . 'admin/controllers/AdminGeneralSettings.php';
 
-		require_once $pluginDir . 'admin/controllers/AdminSettings.php';
 		require_once $pluginDir . 'admin/helpers/CollectionStatsDto.php';
 	}
 

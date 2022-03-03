@@ -1,7 +1,6 @@
 <?php
 
 namespace Demovox;
-require_once Infos::getPluginDir() . 'admin/controllers/AdminBaseController.php';
 
 /**
  * The admin-specific functionality of the plugin.
