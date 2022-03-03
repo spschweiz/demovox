@@ -2,7 +2,7 @@
 
 namespace Demovox;
 
-require_once Infos::getPluginDir() . 'admin/helpers/List.php';
+require_once Infos::getPluginDir() . 'admin/helpers/ListTable.php';
 
 class CollectionList extends ListTable
 {
@@ -19,15 +19,26 @@ class CollectionList extends ListTable
 	}
 
 	/** @var array */
-	protected $columns = [
-		'ID',
+	protected array $columns = [
 		'name',
 		'end_date',
-		'shortcode_form',
-		'shortcode_count',
+		'shortcode' => 'Shortcode',
+		'show'      => 'Show',
 	];
 
-	protected function get_db_model(): CollectionsDto
+	/** @var array Table columns */
+	protected array $sortableColumns = [
+		'name'          => ['name', false],
+		'end_date'      => ['end_date', true],
+		'creation_date' => ['creation_date', true],
+	];
+
+	protected function get_db_model(): DbCollections
+	{
+		return new DbCollections();
+	}
+
+	protected function get_dto(): CollectionsDto
 	{
 		return new CollectionsDto();
 	}
@@ -49,7 +60,7 @@ class CollectionList extends ListTable
 	 */
 	public function no_items()
 	{
-		_e('No collections available.', 'demovox');
+		echo Strings::__('No collections available.');
 	}
 
 	/**
@@ -62,31 +73,29 @@ class CollectionList extends ListTable
 	 */
 	public function column_default($item, $column_name): string
 	{
-		if (!isset($item->{$column_name})) {
-			return '';
-		}
-
 		switch ($column_name) {
-			case 'shortcode_form':
-				return '<code>[demovox_form collection=' . $item->ID . ']</code>';
-			case 'shortcode_count':
-				return '<code>[demovox_count collection=' . $item->ID . ']</code>';
+			case 'end_date':
+				return $item->{$column_name} ?: Strings::__('- no end date -');
+			case 'shortcode':
+				return '<code>[demovox_form cln=' . $item->ID . ']</code>'
+					. ' <code>[demovox_count cln=' . $item->ID . ']</code>';
+			case 'show':
+				$ret = Strings::getAdminLink('admin.php?page=demovoxOverview&cln=' . $item->ID, 'Overview') . ' | ';
+				if (current_user_can('demovox_data'))
+					$ret .= Strings::getAdminLink('admin.php?page=demovoxData&cln=' . $item->ID, 'Data') . ' | ';
+				if (current_user_can('demovox_import'))
+					$ret .= Strings::getAdminLink('admin.php?page=demovoxImport&cln=' . $item->ID, 'Import') . ' | ';
+				if (current_user_can('manage_options'))
+					$ret .= Strings::getAdminLink('admin.php?page=demovoxSettings&cln=' . $item->ID, 'Settings');
+				return $ret;
+			case 'name':
+				return '<a href="' . Strings::getAdminUrl('admin.php?page=demovoxOverview') . '">'
+					. $item->{$column_name} . '</a>';
 			default:
+				if (!isset($item->{$column_name})) {
+					return '';
+				}
 				return $item->{$column_name};
 		}
-	}
-
-	/**
-	 * Columns to make sortable.
-	 *
-	 * @return array
-	 */
-	public function get_sortable_columns() : array
-	{
-		return [
-			'name' =>          ['name', false],
-			'end_date' =>      ['end_date', true],
-			'creation_date' => ['creation_date', true],
-		];
 	}
 }

@@ -185,20 +185,29 @@ class InitAdmin extends BaseController
 			"create_users", "#",
 		);
 
-		$menuTitle = 'Collection';
-		$callback = [$this->adminCollection, 'pageOverview'];
-		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityExport, $slug . 'Overview', $callback);
+		$collections = new DbCollections;
+		if ($collections->count() < 2) {
+			add_submenu_page(
+				$slug, '',
+				'<span style="display:block; margin:1px 0 1px -5px; padding:0; height:1px; background:#CCC;"></span>',
+				"create_users", "#",
+			);
 
-		$menuTitle = 'Signatures Data';
-		$callback  = [$this->adminCollection, 'pageData'];
-		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityExport, $slug . 'Data', $callback);
+			$menuTitle = 'Collection';
+			$callback = [$this->adminCollection, 'pageOverview'];
+			add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityExport, $slug . 'Overview', $callback);
 
-		$menuTitle = 'Import';
-		$callback  = [$this->adminCollection, 'pageImport'];
-		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityImport, $slug . 'Import', $callback);
+			$menuTitle = 'Signatures Data';
+			$callback = [$this->adminCollection, 'pageData'];
+			add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityExport, $slug . 'Data', $callback);
 
-		$menuTitle = 'Settings';
-		$callback  = [$this->adminCollectionSettings, 'pageSettings'];
-		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySettings, $slug . 'Settings', $callback);
+			$menuTitle = 'Import';
+			$callback = [$this->adminCollection, 'pageImport'];
+			add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityImport, $slug . 'Import', $callback);
+
+			$menuTitle = 'Settings';
+			$callback = [$this->adminCollectionSettings, 'pageSettings'];
+			add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySettings, $slug . 'Settings', $callback);
+		}
 	}
 }

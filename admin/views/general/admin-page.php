@@ -6,6 +6,7 @@ namespace Demovox;
  * @var int                $addCount
  * @var string             $userLang
  * @var CollectionStatsDto $stats
+ * @var CollectionList     $collectionList
  */
 ?>
 <div class="wrap demovox">
@@ -52,11 +53,39 @@ namespace Demovox;
 		<a href="<?= admin_url('/admin.php?page=demovoxSysinfo') ?>">System info page</a>.
 	</p>
 	<h3>Shortcodes</h3>
-	<p>Global shortcodes: <code>[demovox_form]</code> <code>[demovox_count]</code></p>
 	<p>
-		Opt-in page and success pages shortcodes: <code>[demovox_form]</code> <code>[demovox_optin]</code> <code>[demovox_firstname]</code><code>[demovox_street]</code><code>[demovox_street_no]</code><code>[demovox_zip]</code><code>[demovox_city]</code><code>[demovox_mail]</code>
-		<code>[demovox_lastname]</code>
+		Public shortcodes depend on the collection, please use the shortcode in the collection list below. The
+		shortcode demovox_form will show the form and when filled out the signature sheet, demovox_count the current
+		signee count (number).
 	</p>
+	<p>
+		Opt-in page and success pages shortcodes referenced in mail links (includes the URL parameter "sign"):
+		<br/>
+		Signature sheet: <code>[demovox_form]</code> Optin form: <code>[demovox_optin]</code>
+		<br/>
+		User value fields:
+		<code>[demovox_firstname]</code> <code>[demovox_lastname]</code> <code>[demovox_street]</code>
+		<code>[demovox_street_no]</code> <code>[demovox_zip]</code> <code>[demovox_city]</code>
+		<code>[demovox_mail]</code>
+	</p>
+</div>
+<div class="wrap demovox">
+	<h3>Collections</h3>
+	<div id="poststuff">
+		<div id="post-body-content">
+			<div class="meta-box-sortables ui-sortable">
+				<form method="post">
+					<?php $collectionList->prepare_items(); ?>
+					<input type="hidden" name="page" value="demovox"/>
+					<?php
+					$collectionList->search_box('search', 'search_id');
+					$collectionList->display();
+					?>
+				</form>
+			</div>
+		</div>
+		<br class="clear"/>
+	</div>
 </div>
 <div class="wrap demovox">
 	<?php

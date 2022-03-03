@@ -19,7 +19,7 @@ class SignatureList extends ListTable
 	}
 
 	/** @var array */
-	protected $columns = [
+	protected array $columns = [
 		'ID',
 		'first_name',
 		'last_name',
@@ -38,9 +38,17 @@ class SignatureList extends ListTable
 		'serial',
 	];
 
+	/**
+	 * @return DbSignatures
+	 */
 	protected function get_db_model(): DbSignatures
 	{
 		return new DbSignatures();
+	}
+
+	protected function get_dto(): SignaturesDto
+	{
+		return new SignaturesDto();
 	}
 
 	/**
@@ -73,28 +81,6 @@ class SignatureList extends ListTable
 	{
 		echo Strings::__('No signatures available.');
 		echo Strings::__('No signatures available.');
-	}
-
-	/**
-	 * Method for name column
-	 *
-	 * @param array $item an array of DB data
-	 *
-	 * @return string
-	 */
-	function column_name($item) : string
-	{
-		$title = parent::column_name($item);
-
-		// create a nonce
-		$delete_nonce = wp_create_nonce('sp_delete_signature');
-
-		$actions = [
-			'delete' => sprintf('<a href="?page=%s&action=%s&signature=%s&_wpnonce=%s">Delete</a>',
-				esc_attr($_REQUEST['page']), 'delete', absint($item['ID']), $delete_nonce),
-		];
-
-		return $title . $this->row_actions($actions);
 	}
 
 	/**

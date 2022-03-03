@@ -29,6 +29,9 @@ class AdminGeneral extends AdminBaseController
 			$stats->countUnfinished = $dbSign->count('is_step2_done = 0 AND is_deleted = 0');
 		}
 
+		require_once Infos::getPluginDir() . 'admin/helpers/CollectionList.php';
+		$collectionList = new CollectionList();
+
 		include Infos::getPluginDir() . 'admin/views/general/admin-page.php';
 	}
 

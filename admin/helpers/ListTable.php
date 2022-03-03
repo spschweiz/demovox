@@ -9,25 +9,22 @@ if (!class_exists('WP_List_Table')) {
 abstract class ListTable extends \WP_List_Table
 {
 	/** @var array */
-	protected $columns = [];
-
-
-	/**
-	 * Method for name column
-	 *
-	 * @param array $item an array of DB data
-	 *
-	 * @return string
-	 */
-	function column_name($item): string
-	{
-		return '<strong>' . $item['name'] . '</strong>';
-	}
+	protected array $columns = [];
+	/** @var array */
+	protected array $sortableColumns = [];
 
 	/**
 	 * @return Db
 	 */
 	protected function get_db_model()
+	{
+		Core::errorDie('Not implemented', 500);
+	}
+
+	/**
+	 * @return Dto
+	 */
+	protected function get_dto()
 	{
 		Core::errorDie('Not implemented', 500);
 	}
@@ -44,13 +41,38 @@ abstract class ListTable extends \WP_List_Table
 	 */
 	public function get_columns(): array
 	{
-		$dtoSign = new SignaturesDto();
-		$fields = $dtoSign->getAvailableFields();
+		$dtoSign = $this->get_dto();
+		$dto_fields = $dtoSign->getAvailableFields();
 		$columns = [];
-		foreach ($this->columns as $val) {
-			$columns[$val] = isset($fields[$val]) ? $fields[$val] : $val;
+		foreach ($this->columns as $id => $title) {
+			if (is_int($id)) {
+				$id = $title;
+				$columns[$id] = Strings::__(isset($dto_fields[$id]) ? $dto_fields[$id] : $id);
+				continue;
+			}
+			$columns[$id] = Strings::__($title);
 		}
 		$columns = ['cb' => '<input type="checkbox" />',] + $columns;
+
+		return $columns;
+	}
+
+	/**
+	 *  array of db columns to select
+	 *
+	 * @return array
+	 */
+	public function get_db_columns(): array
+	{
+		$dtoSign = $this->get_dto();
+		$dto_fields = $dtoSign->getAvailableFields();
+		$columns = [];
+		foreach ($this->columns as $id => $field) {
+			if (!is_int($id) || !isset($dto_fields[$field])) {
+				continue;
+			}
+			$columns[] = $field;
+		}
 
 		return $columns;
 	}
@@ -92,6 +114,15 @@ abstract class ListTable extends \WP_List_Table
 		$this->items = $this->get_results($where, $per_page, $current_page);
 	}
 
+	/**
+	 * Columns to make sortable.
+	 *
+	 * @return array
+	 */
+	public function get_sortable_columns() : array
+	{
+		return $this->sortableColumns;
+	}
 
 	/**
 	 * Retrieve records from the database
@@ -104,7 +135,7 @@ abstract class ListTable extends \WP_List_Table
 	 */
 	public function get_results($where, $perPage = 25, $pageNumber = 1): array
 	{
-		$select = $this->columns;
+		$select = $this->get_db_columns();
 		array_unshift($select, 'ID');
 		$sqlAppend = '';
 		if (!empty($_REQUEST['orderby'])) {

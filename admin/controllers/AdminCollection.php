@@ -17,10 +17,10 @@ class AdminCollection extends AdminBaseController
 {
 	public function getCollectionId()
 	{
-		if (!isset($_REQUEST['collection']) || !is_int($_REQUEST['collection'])) {
+		if (!isset($_REQUEST['cln']) || !is_int($_REQUEST['cln'])) {
 			return $this->getDefaultCollection();
 		}
-		return $_REQUEST['collection'];
+		return $_REQUEST['cln'];
 	}
 
 	public function pageOverview()
