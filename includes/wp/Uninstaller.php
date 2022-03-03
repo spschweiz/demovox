@@ -45,9 +45,41 @@ class Uninstaller
 		}
 
 		if (Config::getValue('drop_config_on_uninstall')) {
+			self::removeCap();
 			Config::deleteAll();
 			ManageCron::deleteOptions();
 		}
 	}
 
+	/**
+	 * remove capabilities
+	 * @return void
+	 */
+	protected static function removeCap() {
+		Core::delOption('init_capabilities_version');
+		$role = get_role('super admin');
+		if ($role) {
+			$role->remove_cap('demovox');
+			$role->remove_cap('demovox_stats');
+			$role->remove_cap('demovox_import');
+			$role->remove_cap('demovox_export');
+			$role->remove_cap('demovox_data');
+			$role->remove_cap('demovox_edit_collection');
+			$role->remove_cap('demovox_sysinfo');
+		}
+
+		$role = get_role('administrator');
+		$role->remove_cap('demovox');
+		$role->remove_cap('demovox_stats');
+		$role->remove_cap('demovox_import');
+		$role->remove_cap('demovox_export');
+		$role->remove_cap('demovox_data');
+		$role->remove_cap('demovox_edit_collection');
+		$role->remove_cap('demovox_sysinfo');
+
+		$role = get_role('editor');
+		$role->remove_cap('demovox');
+		$role->remove_cap('demovox_stats');
+		$role->remove_cap('demovox_import');
+	}
 }

@@ -36,24 +36,6 @@ class Deactivator
 	public static function deactivate()
 	{
 		ManageCron::deactivate();
-
-		// remove capabilities
-		$role = get_role('super admin');
-		if ($role) {
-			$role->remove_cap('demovox_overview');
-			$role->remove_cap('demovox_stats');
-			$role->remove_cap('demovox_import');
-		}
-
-		$role = get_role('administrator');
-		$role->remove_cap('demovox_overview');
-		$role->remove_cap('demovox_stats');
-		$role->remove_cap('demovox_import');
-
-		$role = get_role('editor');
-		$role->remove_cap('demovox_overview');
-		$role->remove_cap('demovox_stats');
-		$role->remove_cap('demovox_import');
 	}
 
 }

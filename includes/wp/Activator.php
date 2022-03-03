@@ -194,6 +194,10 @@ class Activator
 
 	protected static function createCapabilities(): void
 	{
+		if(Config::getValue('init_capabilities_version')) {
+			return;
+		}
+
 		$role = get_role('super admin');
 		if ($role) {
 			$role->add_cap('demovox');
@@ -218,5 +222,7 @@ class Activator
 		$role->add_cap('demovox');
 		$role->add_cap('demovox_stats');
 		$role->add_cap('demovox_import');
+
+		Config::setValue('init_capabilities_version', 1);
 	}
 }
