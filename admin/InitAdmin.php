@@ -98,16 +98,20 @@ class InitAdmin extends BaseController
 	{
 		$prefix = 'admin_post_demovox_';
 
-		// manage_options
+		// sysinfo
 		Loader::addAction($prefix . 'run_cron', $this->adminGeneral, 'runCron');
 		Loader::addAction($prefix . 'cancel_cron', $this->adminGeneral, 'cancelCron');
 		Loader::addAction($prefix . 'encrypt_test', $this->adminGeneral, 'testEncrypt');
 		Loader::addAction($prefix . 'mail_test', $this->adminGeneral, 'testMail');
 
-		// export
+		// collection
+		// - export
 		Loader::addAction($prefix . 'get_csv', $this->adminCollection, 'getCsv');
 
-		// demovox_stats
+		// - create new collection
+		Loader::addAction($prefix . 'collection_create', $this->adminCollection, 'createNew');
+
+		// - stats
 		Loader::addAction($prefix . 'charts_stats', $this->adminCollection, 'statsCharts');
 		Loader::addAction($prefix . 'source_stats', $this->adminCollection, 'statsSource');
 	}

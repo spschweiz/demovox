@@ -66,6 +66,23 @@ class AdminCollection extends AdminBaseController
 		$delimiter = Core::getOption('importCsvDelimiter') ?: ';';
 		include Infos::getPluginDir() . 'admin/views/collection/import.php';
 	}
+	/**
+	 * ajax action "collection_create"
+	 * @return void
+	 */
+	public function createNew()
+	{
+		Core::requireAccess('demovox_edit_collection');
+
+		$collections = new DbCollections();
+		$latestRecord = $collections->getRow(['ID'], '', 'ORDER BY ID DESC LIMIT 1');
+
+		$newRecord = new CollectionsDto();
+		$newRecord->name = 'Collection ' . ($latestRecord->ID + 1);
+
+		$success = $collections->insert($newRecord);
+		echo $success ? 'ok<script>window.location.reload();</script>' : 'failed';
+	}
 
 	/**
 	 * ajax action "charts_stats"

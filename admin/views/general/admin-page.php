@@ -71,6 +71,14 @@ namespace Demovox;
 </div>
 <div class="wrap demovox">
 	<h3>Collections</h3>
+	<?php if(Core::hasAccess('demovox_edit_collection')): ?>
+	<p>
+		<button class="ajaxButton" data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php', 'demovox_collection_create') ?>">
+			Add new collection
+		</button>
+		<span class="ajaxContainer"></span>
+	</p>
+	<?php endif; ?>
 	<div id="poststuff">
 		<div id="post-body-content">
 			<div class="meta-box-sortables ui-sortable">
