@@ -176,7 +176,7 @@ class InitAdmin extends BaseController
 		add_menu_page($menuTitle, $menuTitle, $capabilityOverview, $slug, $callback, $icon, $position);
 
 		$menuTitle = 'Overview';
-		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityOverview, $slug, $callback);
+		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityOverview, 'demovox', $callback);
 
 		$menuTitle = 'Import';
 		$callback = [$this->adminGeneral, 'pageImport'];
@@ -184,32 +184,34 @@ class InitAdmin extends BaseController
 
 		$menuTitle = 'System info';
 		$callback = [$this->adminGeneral, 'pageSysinfo'];
-		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySysinfo, $slug . 'Sysinfo', $callback);
+		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySysinfo, 'demovoxSysinfo', $callback);
 
 		$menuTitle = 'General Settings';
-		$callback  = [$this->adminGeneralSettings, 'pageGeneralSettings'];
-		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySettings, $slug . 'GeneralSettings', $callback);
+		$callback  = [$this->adminGeneral, 'pageGeneralSettings'];
+		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySettings, 'demovoxGeneralSettings', $callback);
 
+		// collection
 		$collections = new DbCollections;
-		if ($collections->count() < 2) {
-			add_submenu_page(
-				$slug, '',
-				'<span style="display:block; margin:1px 0 1px -5px; padding:0; height:1px; background:#CCC;"></span>',
-				"create_users", "#",
-			);
+		$multipleCollections = $collections->count() > 1;
+		$clnSlug = $multipleCollections ? null : $slug;
 
-			$menuTitle = 'Collection';
-			$callback = [$this->adminCollection, 'pageOverview'];
-			add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityOverview, $slug . 'Overview', $callback);
+		add_submenu_page(
+			$clnSlug, '',
+			'<span style="display:block; margin:1px 0 1px -5px; padding:0; height:1px; background:#CCC;"></span>',
+			$capabilityOverview, '#',
+		);
 
-			$menuTitle = 'Signatures Data';
-			$callback = [$this->adminCollection, 'pageData'];
-			add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityData, $slug . 'Data', $callback);
+		$menuTitle = 'Collection';
+		$callback = [$this->adminCollection, 'pageOverview'];
+		add_submenu_page($clnSlug, $menuTitle, $menuTitle, $capabilityOverview, 'demovoxOverview', $callback);
 
 
-			$menuTitle = 'Settings';
-			$callback = [$this->adminCollectionSettings, 'pageSettings'];
-			add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySettings, $slug . 'Settings', $callback);
-		}
+		$menuTitle = 'Signatures Data';
+		$callback = [$this->adminCollection, 'pageData'];
+		add_submenu_page($clnSlug, $menuTitle, $menuTitle, $capabilityData, 'demovoxData', $callback);
+
+		$menuTitle = 'Settings';
+		$callback = [$this->adminCollectionSettings, 'pageSettings'];
+		add_submenu_page($clnSlug, $menuTitle, $menuTitle, $capabilitySettings, 'demovoxSettings', $callback);
 	}
 }
