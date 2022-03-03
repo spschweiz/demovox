@@ -15,7 +15,7 @@ namespace Demovox;
 		<b><?= $count ?></b> visitors have signed up to this collection
 		<?php if ($addCount) { ?>
 			(and additional <?= $addCount ?> signatures
-			<a href="<?= admin_url('/admin.php?page=demovoxFields') ?>">in the settings</a>)
+			<?= Strings::getAdminLink('/admin.php?page=demovoxSettings', 'in the settings') ?>)
 		<?php } ?>
 	</p>
 	<form method="post" action="<?= Infos::getRequestUri() ?>">

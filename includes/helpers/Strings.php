@@ -67,11 +67,21 @@ class Strings
 		return $serial;
 	}
 
-	public static function getLinkAdmin($url, $action)
+	public static function getAdminUrl(string $url, ?string $action = null)
 	{
 		$url = str_replace('&amp;', '&', $url);
-		$url = add_query_arg('action', $action, $url);
-		return admin_url(wp_nonce_url($url, $action));
+		if ($action !== null) {
+			$url = add_query_arg('action', $action, $url);
+			$url = wp_nonce_url($url, $action);
+		}
+		return admin_url($url);
+	}
+
+	public static function getAdminLink(string $url, string $label)
+	{
+		$url = self::getAdminUrl($url);
+		$label = Strings::__($label);
+		return '<a href="' . $url . '">' . $label . '</a>';
 	}
 
 	public static function getCountries($format = 'php', $locale = null, $echo = null)

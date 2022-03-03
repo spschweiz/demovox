@@ -26,7 +26,7 @@ if (!$tabExists) {
 		<nav class="nav-tab-wrapper woo-nav-tab-wrapper">
 			<?php
 			foreach ($tabs as $tabId => $label) {
-				echo '<a href="' . esc_html(admin_url('admin.php?page=demovoxSettings&tab=' . esc_attr($tabId))) . '" class="nav-tab ' . ($currentTab == $tabId ? 'nav-tab-active' : '') . '">' . esc_html($label) . '</a>';
+				echo '<a href="' . Strings::getAdminUrl('admin.php?page=demovoxSettings&tab=' . esc_attr($tabId)) . '" class="nav-tab ' . ($currentTab == $tabId ? 'nav-tab-active' : '') . '">' . esc_html($label) . '</a>';
 			}
 			?>
 		</nav>

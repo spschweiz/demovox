@@ -126,14 +126,14 @@ namespace Demovox;
 		<?php } ?>
 		<p>
 			<button class="ajaxButton"
-			        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?cron=' . $cron->getId(), 'demovox_run_cron') ?>">
+			        data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?cron=' . $cron->getId(), 'demovox_run_cron') ?>">
 				Run now
 			</button>
 			<span class="ajaxContainer"></span>
 			<br/>
 			Status: <?php if ($cron->isRunning()) { ?>currently running
 				<button class="ajaxButton"
-				        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?cron=' . $cron->getId(), 'demovox_cancel_cron') ?>"
+				        data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?cron=' . $cron->getId(), 'demovox_cancel_cron') ?>"
 				        data-confirm="Force cancel?" data-container=".ajaxCancelContainer">
 					cancel execution
 				</button><span class="ajaxCancelContainer"></span>
@@ -167,40 +167,40 @@ namespace Demovox;
 	<h4>php-encryption</h4>
 	<p>
 		Realistic length fields:
-		<button class="ajaxButton" data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=10', 'demovox_encrypt_test') ?>">
+		<button class="ajaxButton" data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?i=10', 'demovox_encrypt_test') ?>">
 			Test 10 iterations
 		</button>
-		<button class="ajaxButton" data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=50', 'demovox_encrypt_test') ?>">
+		<button class="ajaxButton" data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?i=50', 'demovox_encrypt_test') ?>">
 			Test 50 iterations
 		</button>
 		<button class="ajaxButton"
-		        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=100', 'demovox_encrypt_test') ?>">
+		        data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?i=100', 'demovox_encrypt_test') ?>">
 			Test 100 iterations
 		</button>
 		<button class="ajaxButton"
-		        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=1000', 'demovox_encrypt_test') ?>">
+		        data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?i=1000', 'demovox_encrypt_test') ?>">
 			Test 1'000 iterations
 		</button>
 		<br/>
 		Maxlength fields:
 		<button class="ajaxButton"
-		        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=10&fullLen=1', 'demovox_encrypt_test') ?>">
+		        data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?i=10&fullLen=1', 'demovox_encrypt_test') ?>">
 			Test 10 iterations
 		</button>
 		<button class="ajaxButton"
-		        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=50&fullLen=1', 'demovox_encrypt_test') ?>">
+		        data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?i=50&fullLen=1', 'demovox_encrypt_test') ?>">
 			Test 50 iterations
 		</button>
 		<button class="ajaxButton"
-		        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=100&fullLen=1', 'demovox_encrypt_test') ?>">
+		        data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?i=100&fullLen=1', 'demovox_encrypt_test') ?>">
 			Test 100 iterations
 		</button>
 		<button class="ajaxButton"
-		        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=1000&fullLen=1', 'demovox_encrypt_test') ?>">
+		        data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?i=1000&fullLen=1', 'demovox_encrypt_test') ?>">
 			Test 1'000 iterations
 		</button>
 		<button class="ajaxButton"
-		        data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?i=100&fullLen=1&showStrLen=1', 'demovox_encrypt_test') ?>">
+		        data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?i=100&fullLen=1&showStrLen=1', 'demovox_encrypt_test') ?>">
 			Test 100 iterations and show string lengths
 		</button>
 		<br/>
@@ -216,7 +216,7 @@ namespace Demovox;
 		{
 			?>
 			<button class="ajaxButton"
-			        data-ajax-url="<?= Strings::getLinkAdmin(
+			        data-ajax-url="<?= Strings::getAdminUrl(
 						'/admin-post.php?lang=' . $langId . '&mailType=' . $mailType,
 						'demovox_mail_test'
 					) ?>">

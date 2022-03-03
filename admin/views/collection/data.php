@@ -25,19 +25,19 @@ namespace Demovox;
 <div class="wrap demovox">
 	<h2>Download CSV</h2>
 	<p>
-		<a href="<?= Strings::getLinkAdmin('/admin-post.php?type=' . DbSignatures::WHERE_OPTIN, 'demovox_get_csv') ?>">
+		<a href="<?= Strings::getAdminUrl('/admin-post.php?type=' . DbSignatures::WHERE_OPTIN, 'demovox_get_csv') ?>">
 			<button>All opt-in (<?= $countOptin ?>)</button>
 		</a>
-		<a href="<?= Strings::getLinkAdmin('/admin-post.php?type=' . DbSignatures::WHERE_FINISHED, 'demovox_get_csv') ?>">
+		<a href="<?= Strings::getAdminUrl('/admin-post.php?type=' . DbSignatures::WHERE_FINISHED, 'demovox_get_csv') ?>">
 			<button>Form input finished (<?= $countFinished ?>)</button>
 		</a>
-		<a href="<?= Strings::getLinkAdmin('/admin-post.php?type=' . DbSignatures::WHERE_FINISHED_OUT_SCOPE, 'demovox_get_csv') ?>">
+		<a href="<?= Strings::getAdminUrl('/admin-post.php?type=' . DbSignatures::WHERE_FINISHED_OUT_SCOPE, 'demovox_get_csv') ?>">
 			<button>Finished - Outside limited area (<?= $countOutsideScope ?>)</button>
 		</a>
-		<a href="<?= Strings::getLinkAdmin('/admin-post.php?type=' . DbSignatures::WHERE_UNFINISHED, 'demovox_get_csv') ?>">
+		<a href="<?= Strings::getAdminUrl('/admin-post.php?type=' . DbSignatures::WHERE_UNFINISHED, 'demovox_get_csv') ?>">
 			<button>Unfinished (<?= $countUnfinished ?>)</button>
 		</a>
-		<a href="<?= Strings::getLinkAdmin('/admin-post.php?type=deleted' . DbSignatures::WHERE_DELETED, 'demovox_get_csv') ?>">
+		<a href="<?= Strings::getAdminUrl('/admin-post.php?type=deleted' . DbSignatures::WHERE_DELETED, 'demovox_get_csv') ?>">
 			<button>Deleted (<?= $countDeleted ?>)</button>
 		</a>
 	</p>

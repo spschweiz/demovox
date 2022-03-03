@@ -42,10 +42,10 @@ namespace Demovox;
 		});
 	</script>
 	<p>
-		<button class="ajaxButton" data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php', 'demovox_source_stats') ?>">
+		<button class="ajaxButton" data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php', 'demovox_source_stats') ?>">
 			Source stats
 		</button>
-		<button class="ajaxButton" data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php', 'demovox_charts_stats') ?>">
+		<button class="ajaxButton" data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php', 'demovox_charts_stats') ?>">
 			Historical chart
 		</button>
 		<br/>

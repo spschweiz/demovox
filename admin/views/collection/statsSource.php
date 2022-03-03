@@ -27,7 +27,7 @@ namespace Demovox;
 			<td><?= $source->unfinished ?></td>
 			<td>
 				<button class="ajaxButton"
-						data-ajax-url="<?= Strings::getLinkAdmin('/admin-post.php?source=' . $source->source, 'demovox_charts_stats') ?>"
+						data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?source=' . $source->source, 'demovox_charts_stats') ?>"
 						data-container=".ajaxContainerChart">
 					Show
 				</button>
