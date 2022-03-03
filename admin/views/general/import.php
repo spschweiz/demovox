@@ -17,6 +17,7 @@ namespace Demovox;
  * @var  string          $delimiter
  * @var  string          $page
  * @var  string          $statusMsg
+ * @var  int             $collectionId
  */
 
 ?>

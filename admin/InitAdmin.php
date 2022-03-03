@@ -178,6 +178,10 @@ class InitAdmin extends BaseController
 		$menuTitle = 'Overview';
 		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityOverview, $slug, $callback);
 
+		$menuTitle = 'Import';
+		$callback = [$this->adminGeneral, 'pageImport'];
+		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityImport, 'demovoxImport', $callback);
+
 		$menuTitle = 'System info';
 		$callback = [$this->adminGeneral, 'pageSysinfo'];
 		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySysinfo, $slug . 'Sysinfo', $callback);
@@ -202,9 +206,6 @@ class InitAdmin extends BaseController
 			$callback = [$this->adminCollection, 'pageData'];
 			add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityData, $slug . 'Data', $callback);
 
-			$menuTitle = 'Import';
-			$callback = [$this->adminCollection, 'pageImport'];
-			add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityImport, $slug . 'Import', $callback);
 
 			$menuTitle = 'Settings';
 			$callback = [$this->adminCollectionSettings, 'pageSettings'];
