@@ -96,14 +96,14 @@ class InitAdmin extends BaseController
 	{
 		$prefix = 'admin_post_demovox_';
 
-		// export
-		Loader::addAction($prefix . 'get_csv', $this->adminCollection, 'getCsv');
-
 		// manage_options
 		Loader::addAction($prefix . 'run_cron', $this->adminGeneral, 'runCron');
 		Loader::addAction($prefix . 'cancel_cron', $this->adminGeneral, 'cancelCron');
 		Loader::addAction($prefix . 'encrypt_test', $this->adminGeneral, 'testEncrypt');
 		Loader::addAction($prefix . 'mail_test', $this->adminGeneral, 'testMail');
+
+		// export
+		Loader::addAction($prefix . 'get_csv', $this->adminCollection, 'getCsv');
 
 		// demovox_stats
 		Loader::addAction($prefix . 'charts_stats', $this->adminCollection, 'statsCharts');
@@ -159,8 +159,9 @@ class InitAdmin extends BaseController
 		$icon       = 'dashicons-edit';
 		$position   = 30;
 
-		$capabilityOverview = 'demovox_overview';
-		$capabilityExport   = 'export';
+		$capabilityOverview = 'demovox';
+		$capabilitySysinfo   = 'demovox_sysinfo';
+		$capabilityData   = 'demovox_data';
 		$capabilityImport   = 'demovox_import';
 		$capabilitySettings = 'manage_options';
 
@@ -169,21 +170,15 @@ class InitAdmin extends BaseController
 		add_menu_page($menuTitle, $menuTitle, $capabilityOverview, $slug, $callback, $icon, $position);
 
 		$menuTitle = 'Overview';
-		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySettings, $slug, $callback);
+		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityOverview, $slug, $callback);
 
 		$menuTitle = 'System info';
-		$callback  = [$this->adminGeneral, 'pageSysinfo'];
-		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySettings, $slug . 'Sysinfo', $callback);
+		$callback = [$this->adminGeneral, 'pageSysinfo'];
+		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySysinfo, $slug . 'Sysinfo', $callback);
 
 		$menuTitle = 'General Settings';
 		$callback  = [$this->adminGeneralSettings, 'pageGeneralSettings'];
 		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySettings, $slug . 'GeneralSettings', $callback);
-
-		add_submenu_page(
-			$slug, '',
-			'<span style="display:block; margin:1px 0 1px -5px; padding:0; height:1px; background:#CCC;"></span>',
-			"create_users", "#",
-		);
 
 		$collections = new DbCollections;
 		if ($collections->count() < 2) {
@@ -195,11 +190,11 @@ class InitAdmin extends BaseController
 
 			$menuTitle = 'Collection';
 			$callback = [$this->adminCollection, 'pageOverview'];
-			add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityExport, $slug . 'Overview', $callback);
+			add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityOverview, $slug . 'Overview', $callback);
 
 			$menuTitle = 'Signatures Data';
 			$callback = [$this->adminCollection, 'pageData'];
-			add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityExport, $slug . 'Data', $callback);
+			add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityData, $slug . 'Data', $callback);
 
 			$menuTitle = 'Import';
 			$callback = [$this->adminCollection, 'pageImport'];

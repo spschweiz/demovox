@@ -196,18 +196,26 @@ class Activator
 	{
 		$role = get_role('super admin');
 		if ($role) {
-			$role->add_cap('demovox_overview');
+			$role->add_cap('demovox');
 			$role->add_cap('demovox_stats');
 			$role->add_cap('demovox_import');
+			$role->add_cap('demovox_export');
+			$role->add_cap('demovox_data');
+			$role->add_cap('demovox_edit_collection');
+			$role->add_cap('demovox_sysinfo');
 		}
 
 		$role = get_role('administrator');
-		$role->add_cap('demovox_overview');
+		$role->add_cap('demovox');
 		$role->add_cap('demovox_stats');
 		$role->add_cap('demovox_import');
+		$role->add_cap('demovox_export');
+		$role->add_cap('demovox_data');
+		$role->add_cap('demovox_edit_collection');
+		$role->add_cap('demovox_sysinfo');
 
 		$role = get_role('editor');
-		$role->add_cap('demovox_overview');
+		$role->add_cap('demovox');
 		$role->add_cap('demovox_stats');
 		$role->add_cap('demovox_import');
 	}

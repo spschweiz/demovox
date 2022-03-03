@@ -15,12 +15,17 @@ require_once Infos::getPluginDir() . 'admin/controllers/AdminBaseController.php'
  */
 class AdminCollection extends AdminBaseController
 {
-	public function getCollectionId()
+	protected function getCollectionId()
 	{
 		if (!isset($_REQUEST['cln']) || !is_int($_REQUEST['cln'])) {
 			return $this->getDefaultCollection();
 		}
 		return $_REQUEST['cln'];
+	}
+
+	protected function getCurrentPage()
+	{
+		return sanitize_text_field($_REQUEST['page']);
 	}
 
 	public function pageOverview()
@@ -31,7 +36,7 @@ class AdminCollection extends AdminBaseController
 		$userLang = Infos::getUserLanguage();
 		$collectionId = $this->getCollectionId();
 
-		$page = 'demovoxCollectionOverview';
+		$page = $this->getCurrentPage();
 		if (strtolower($_SERVER['REQUEST_METHOD']) === 'post') {
 			$this->saveOverview();
 		}
@@ -54,7 +59,7 @@ class AdminCollection extends AdminBaseController
 	public function pageImport()
 	{
 		$statusMsg = '';
-		$page = 'demovoxImport';
+		$page = $this->getCurrentPage();
 		if (strtolower($_SERVER['REQUEST_METHOD']) === 'post') {
 			$statusMsg = $this->doCsvImport();
 		}
@@ -63,9 +68,13 @@ class AdminCollection extends AdminBaseController
 		include Infos::getPluginDir() . 'admin/views/collection/import.php';
 	}
 
+	/**
+	 * ajax action "charts_stats"
+	 * @return void
+	 */
 	public function statsCharts()
 	{
-		Core::checkAccess('demovox_stats');
+		Core::requireAccess('demovox_stats');
 
 		$dbSign = new DbSignatures();
 		$sqlAppend = ' AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)';
@@ -133,9 +142,13 @@ class AdminCollection extends AdminBaseController
 		include Infos::getPluginDir() . 'admin/views/collection/statsCharts.php';
 	}
 
+	/**
+	 * ajax action "source_stats"
+	 * @return void
+	 */
 	public function statsSource()
 	{
-		Core::checkAccess('demovox_stats');
+		Core::requireAccess('demovox_stats');
 
 		$dbSign = new DbSignatures();
 		$sourceList = $dbSign->getResultsRaw(
@@ -155,7 +168,7 @@ class AdminCollection extends AdminBaseController
 
 	public function pageData()
 	{
-		$page = 'demovoxData';
+		$page = $this->getCurrentPage();
 		$dbSign = new DbSignatures();
 		$countOptin = $dbSign->count(DbSignatures::WHERE_OPTIN);
 		$countFinished = $dbSign->count(DbSignatures::WHERE_FINISHED_IN_SCOPE);
@@ -179,6 +192,8 @@ class AdminCollection extends AdminBaseController
 
 	protected function saveOverview()
 	{
+		Core::requireAccess('demovox_edit_collection');
+
 		$collection = new DbCollections;
 		$collectionId = intval($_REQUEST['collection_ID']);
 
@@ -191,6 +206,8 @@ class AdminCollection extends AdminBaseController
 
 	protected function doCsvImport()
 	{
+		Core::requireAccess('demovox_import');
+
 		// Validate request & prepare data
 		$deliveryDate = sanitize_text_field($_REQUEST['deliveryDate']);
 		$format = intval($_REQUEST['csvFormat']);
@@ -310,9 +327,13 @@ class AdminCollection extends AdminBaseController
 		return $update !== false;
 	}
 
+	/**
+	 * ajax action "get_csv"
+	 * @return void
+	 */
 	public function getCsv()
 	{
-		Core::checkAccess('export');
+		Core::requireAccess('demovox_export');
 
 		$dtoSign = new SignaturesDto();
 		$dbSign = new DbSignatures();

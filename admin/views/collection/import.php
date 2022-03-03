@@ -29,7 +29,7 @@ namespace Demovox;
 	<?= $statusMsg ?>
 	<form method="post" action="<?= Infos::getRequestUri() ?>">
 		<?php wp_nonce_field($page); ?>
-		<input type="hidden" name="action" value="import">
+		<input type="hidden" name="action" value="<?= $page ?>">
 		<table class="form-table">
 			<tbody>
 			<tr>

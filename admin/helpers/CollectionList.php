@@ -81,11 +81,11 @@ class CollectionList extends ListTable
 					. ' <code>[demovox_count cln=' . $item->ID . ']</code>';
 			case 'show':
 				$ret = Strings::getAdminLink('admin.php?page=demovoxOverview&cln=' . $item->ID, 'Overview') . ' | ';
-				if (current_user_can('demovox_data'))
+				if (Core::hasAccess('demovox_data'))
 					$ret .= Strings::getAdminLink('admin.php?page=demovoxData&cln=' . $item->ID, 'Data') . ' | ';
-				if (current_user_can('demovox_import'))
+				if (Core::hasAccess('demovox_import'))
 					$ret .= Strings::getAdminLink('admin.php?page=demovoxImport&cln=' . $item->ID, 'Import') . ' | ';
-				if (current_user_can('manage_options'))
+				if (Core::hasAccess('manage_options'))
 					$ret .= Strings::getAdminLink('admin.php?page=demovoxSettings&cln=' . $item->ID, 'Settings');
 				return $ret;
 			case 'name':

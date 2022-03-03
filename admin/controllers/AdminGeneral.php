@@ -79,9 +79,14 @@ class AdminGeneral extends AdminBaseController
 		include Infos::getPluginDir() . 'admin/views/general/sysinfo.php';
 	}
 
+	/**
+	 * ajax action "encrypt_test"
+	 * @return void
+	 */
 	public function testEncrypt()
 	{
-		Core::checkAccess('manage_options');
+		Core::requireAccess('demovox_sysinfo');
+
 		if (!defined('DEMOVOX_ENC_KEY') || !defined('DEMOVOX_HASH_KEY')) {
 			echo '<span class="error">Error</span>: Wordpress configs DEMOVOX_ENC_KEY and DEMOVOX_HASH_KEY are required for encryption. Please set them with a random value prior to testing (see examples in System info)';
 			return;
@@ -126,9 +131,13 @@ class AdminGeneral extends AdminBaseController
 		include Infos::getPluginDir() . 'admin/views/general/sysinfo-encrypt.php';
 	}
 
+	/**
+	 * ajax action "mail_test"
+	 * @return void
+	 */
 	public function testMail()
 	{
-		Core::checkAccess('manage_options');
+		Core::requireAccess('demovox_sysinfo');
 
 		$mailTo = $this->getWpMailAddress();
 		$langId = (isset($_REQUEST['lang']) && $_REQUEST['lang']) ? sanitize_text_field($_REQUEST['lang']) : 'de';
@@ -160,18 +169,26 @@ class AdminGeneral extends AdminBaseController
 		include Infos::getPluginDir() . 'admin/views/general/sysinfo-mail.php';
 	}
 
+	/**
+	 * ajax action "run_cron"
+	 * @return void
+	 */
 	public function runCron()
 	{
-		Core::checkAccess('manage_options');
+		Core::requireAccess('demovox_sysinfo');
 
 		$hook = sanitize_text_field($_REQUEST['cron']);
 		ManageCron::triggerCron($hook);
 		echo 'Event triggered at ' . date('d.m.Y G:i:s');
 	}
 
+	/**
+	 * ajax action "cancel_cron"
+	 * @return void
+	 */
 	public function cancelCron()
 	{
-		Core::checkAccess('manage_options');
+		Core::requireAccess('demovox_sysinfo');
 
 		$hook = sanitize_text_field($_REQUEST['cron']);
 		ManageCron::cancel($hook);

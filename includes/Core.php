@@ -69,12 +69,22 @@ class Core
 		$this->pluginName = 'Demovox';
 	}
 
-	public static function checkAccess($capability)
+	/**
+	 * Only needed for ajax actions, as capability of normal requests are checked on initializing their callback
+	 * @param string $capability
+	 * @return void
+	 */
+	public static function requireAccess(string $capability)
 	{
 		Core::checkNonce();
-		if (!current_user_can($capability)) {
-			wp_die(esc_html__('You are not allowed to access this page.', 'wp-control'));
+		if (!Core::hasAccess($capability)) {
+			Core::errorDie('Capability ' . $capability . ' is missing', 403);
 		}
+	}
+
+	public static function hasAccess(string $capability)
+	{
+		return current_user_can($capability);
 	}
 
 	public function run()
@@ -268,12 +278,12 @@ class Core
 		return wp_create_nonce($action);
 	}
 
-	public static function checkNonce()
+	protected static function checkNonce()
 	{
-		$actionName = isset($_REQUEST['action']) ? sanitize_text_field($_REQUEST['action']) : '';
-		if (
-			!isset($_REQUEST['_wpnonce'])
-			|| !wp_verify_nonce($_REQUEST['_wpnonce'], $actionName)) {
+		$actionName = isset($_REQUEST['action'])
+			? sanitize_text_field($_REQUEST['action'])
+			: sanitize_text_field($_REQUEST['page']);
+		if (!isset($_REQUEST['_wpnonce']) || !wp_verify_nonce($_REQUEST['_wpnonce'], $actionName)) {
 			wp_die('Sorry, your nonce did not verify.');
 		}
 	}
@@ -307,6 +317,9 @@ class Core
 			case 401:
 				$msg = 'Unauthorized';
 				break;
+			case 403:
+				$msg = 'You are not allowed to access this page';
+				break;
 			case 404:
 				$msg = 'Requested entry not found';
 				break;
@@ -317,6 +330,7 @@ class Core
 				$msg = 'Internal server error';
 				break;
 		}
+		$msg = Strings::wpMessage(Strings::__($msg), 'error');
 		wp_die($msg, $statusCode);
 	}
 
