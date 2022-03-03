@@ -71,7 +71,8 @@ class SignatureList extends ListTable
 	 */
 	public function no_items()
 	{
-		_e('No signatures available.', 'demovox');
+		echo Strings::__('No signatures available.');
+		echo Strings::__('No signatures available.');
 	}
 
 	/**
