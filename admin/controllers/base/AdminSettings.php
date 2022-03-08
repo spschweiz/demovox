@@ -14,9 +14,19 @@ namespace Demovox;
  */
 class AdminSettings extends AdminBaseController
 {
-	public function setupSections()
+	protected function getSettingsSections(): array
 	{
-		$areas = ConfigVars::getSections();
+		return ConfigVars::getSections();
+	}
+
+	protected function getSettingsFields(): array
+	{
+		return ConfigVars::getFields();
+	}
+
+	protected function registerSections()
+	{
+		$areas = $this->getSettingsSections();
 		foreach ($areas as $name => $section) {
 			add_settings_section($name, $section['title'], null, $section['page']);
 		}
@@ -57,7 +67,7 @@ class AdminSettings extends AdminBaseController
 			return;
 		}
 
-		$sections = ConfigVars::getSections();
+		$sections = $this->getSettingsSections();
 
 		foreach ((array)$wp_settings_sections[$page] as $section) {
 			if (isset($sections[$section['id']]['addPre'])) {
@@ -115,10 +125,10 @@ class AdminSettings extends AdminBaseController
 </script>";
     }
 
-	public function setupFields()
+	protected function registerFields()
 	{
-		$sections = ConfigVars::getSections();
-		$fields = ConfigVars::getFields();
+		$sections = $this->getSettingsSections();
+		$fields = $this->getSettingsFields();
 		$callback = [$this, 'fieldCallback',];
 		foreach ($fields as $field) {
 			$page      = $sections[$field['section']]['page'];

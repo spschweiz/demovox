@@ -92,6 +92,8 @@ class InitAdmin extends BaseController
 		// Hook into the admin menu
 		Loader::addAction('admin_init', $this->adminCollectionSettings, 'setupFields');
 		Loader::addAction('admin_init', $this->adminCollectionSettings, 'setupSections');
+		Loader::addAction('admin_init', $this->adminGeneralSettings, 'setupFields');
+		Loader::addAction('admin_init', $this->adminGeneralSettings, 'setupSections');
 	}
 
 	protected function setupAdminAjaxActions()

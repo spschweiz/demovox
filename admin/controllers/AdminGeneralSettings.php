@@ -22,4 +22,14 @@ class AdminGeneralSettings extends AdminSettings
 		$languages = i18n::getLangs();
 		include Infos::getPluginDir() . 'admin/views/general-settings/settings.php';
 	}
+
+	protected function getSettingsSections(): array
+	{
+		return ConfigVarsGlobal::getSections();
+	}
+
+	protected function getSettingsFields(): array
+	{
+		return ConfigVarsGlobal::getFields();
+	}
 }

@@ -3,9 +3,9 @@
 namespace Demovox;
 
 /**
- * Collection specific config
+ * General demovox config (opposed to collection specific @ConfigVars)
  */
-class ConfigVars
+class ConfigVarsGlobal
 {
 	static private $fieldsCache = null;
 	static private $sectionsCache = null;
@@ -19,7 +19,7 @@ class ConfigVars
 			return self::$fieldsCache;
 		}
 
-		$fields = include('ConfigVars/ConfigFields.php');
+		$fields = include('ConfigVarsGlobal/ConfigFields.php');
 
 		self::$fieldsCache = $fields;
 		return $fields;
@@ -28,13 +28,13 @@ class ConfigVars
 	/**
 	 * @return array
 	 */
-	public static function getSections(): array
+	public static function getSections()
 	{
 		if (self::$sectionsCache !== null) {
 			return self::$sectionsCache;
 		}
 
-		$sections = include('ConfigVars/ConfigSections.php');
+		$sections = include('ConfigVarsGlobal/ConfigSections.php');
 
 		self::$sectionsCache = $sections;
 		return $sections;
