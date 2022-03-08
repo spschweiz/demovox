@@ -11,9 +11,9 @@ class CronMailBase extends CronBase
 
 	public function __construct()
 	{
-		$this->limitPerExecution = intval(Config::getValue('mail_max_per_execution')) ?: 300;
+		$this->limitPerExecution = intval(Settings::getValue('mail_max_per_execution')) ?: 300;
 
-		if (Config::getValue('mail_remind_dedup')) {
+		if (Settings::getValue('mail_remind_dedup')) {
 			$importStatus = Core::getOption('cron_index_mail_status');
 			if ($importStatus === false || $importStatus === CronMailIndex::STATUS_INIT) {
 				$this->setSkipped('Reminder mail deduplication indexing (CronMailsRemindIndex) has not finished initial index yet');
@@ -36,7 +36,7 @@ class CronMailBase extends CronBase
 
 	protected function isReminderActive()
 	{
-		$maxDate = Config::getValue('mail_remind_max_date');
+		$maxDate = Settings::getValue('mail_remind_max_date');
 		if (!$maxDate || !strtotime($maxDate)) {
 			return true;
 		}

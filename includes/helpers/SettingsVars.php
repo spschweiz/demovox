@@ -5,7 +5,7 @@ namespace Demovox;
 /**
  * Collection specific config
  */
-class ConfigVars
+class SettingsVars
 {
 	static private $fieldsCache = null;
 	static private $sectionsCache = null;
@@ -19,7 +19,7 @@ class ConfigVars
 			return self::$fieldsCache;
 		}
 
-		$fields = include('ConfigVars/ConfigFields.php');
+		$fields = include('SettingsVars/ConfigFields.php');
 
 		self::$fieldsCache = $fields;
 		return $fields;
@@ -34,7 +34,7 @@ class ConfigVars
 			return self::$sectionsCache;
 		}
 
-		$sections = include('ConfigVars/ConfigSections.php');
+		$sections = include('SettingsVars/ConfigSections.php');
 
 		self::$sectionsCache = $sections;
 		return $sections;

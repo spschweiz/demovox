@@ -19,7 +19,7 @@ class Infos
 		$load = sys_getloadavg();
 		$loadMinute = $load[0];
 		if ($relative) {
-			$cores = intval(Config::getValue('cron_cores'));
+			$cores = intval(Settings::getValue('cron_cores'));
 			$loadMinute = $loadMinute / $cores;
 		}
 
@@ -35,7 +35,7 @@ class Infos
 		$lang = strtolower(substr($lang, 0, 2));
 		$availableLangs = i18n::getLangsEnabled();
 		if (!isset($availableLangs[$lang])) {
-			$lang = Config::getValue('default_language');
+			$lang = Settings::getValue('default_language');
 		}
 
 		return $lang;
@@ -106,7 +106,7 @@ class Infos
 	public static function isHighLoad($maxLoad = null)
 	{
 		if ($maxLoad === null) {
-			$maxLoad = Config::getValue('cron_max_load');
+			$maxLoad = Settings::getValue('cron_max_load');
 		}
 		$isHigh = intval($maxLoad) < self::getLoad();
 

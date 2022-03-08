@@ -30,14 +30,14 @@ namespace Demovox;
 	</div>
 	<div class="demovox-pdf-ok hidden">
 		<div id="demovox-buttons">
-			<?php if (Config::getValue('download_pdf')): ?>
+			<?php if (Settings::getValue('download_pdf')): ?>
 				<button class="btn btn-success pdf-download"><?= __('Download signature sheet', 'demovox') ?></button>
 			<?php endif;
-			if (Config::getValue('print_pdf')) : ?>
+			if (Settings::getValue('print_pdf')) : ?>
 				<button class="btn btn-success pdf-print"><?= __('Print signature sheet', 'demovox') ?></button>
 			<?php endif; ?>
 		</div>
-		<?php if (Config::getValue('show_pdf')): ?>
+		<?php if (Settings::getValue('show_pdf')): ?>
 			<iframe src="about:blank" class="pdf-iframe" type="application/pdf">PDF not yet ready</iframe>
 		<?php endif; ?>
 		<span id="demovox-permalink" style="display: none;"><?= $permalink; ?></span>

@@ -1,8 +1,5 @@
 <?php
 
-use Demovox\Config;
-use Demovox\i18n;
-
 $fields = [
 	[
 		'uid'          => 'encrypt_signees',

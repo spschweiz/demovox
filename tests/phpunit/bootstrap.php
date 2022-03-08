@@ -48,7 +48,7 @@ class TestsBootstrap
 			'encrypt_signees' => 'disabled',
 		];
 		foreach ($config as $key => $value) {
-			Config::setValue($key, $value);
+			Settings::setValue($key, $value);
 		}
 
 		define(

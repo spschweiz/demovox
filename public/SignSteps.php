@@ -22,8 +22,8 @@ class SignSteps
 	 */
 	public function step1(int $collection)
 	{
-		$textOptin = Config::getValueByUserlang('text_optin');
-		$emailConfirmEnabled = !empty(Config::getValue('email_confirm'));
+		$textOptin = Settings::getValueByUserlang('text_optin');
+		$emailConfirmEnabled = !empty(Settings::getValue('email_confirm'));
 		$optinMode = $this->getOptinMode(1);
 
 		include Infos::getPluginDir() . 'public/views/sign-1.php';
@@ -61,7 +61,7 @@ class SignSteps
 			'mail'          => $mail,
 			'phone'         => $phone,
 		];
-		if (Config::getValue('save_ip') && Config::getValue('encrypt_signees') !== 'disabled') {
+		if (Settings::getValue('save_ip') && Settings::getValue('encrypt_signees') !== 'disabled') {
 			$data['ip_address'] = Infos::getClientIp();
 		}
 		if ($source) {
@@ -91,11 +91,11 @@ class SignSteps
 		$guid = $this->saveStep1($collection);
 
 		// Prepare view variables
-		$textOptin         = Config::getValueByUserlang('text_optin');
-		$titleEnabled      = !empty(Config::getValue('form_title'));
-		$apiAddressEnabled = !empty(Config::getValue('api_address_url')) && !Infos::isNoEc6();
+		$textOptin         = Settings::getValueByUserlang('text_optin');
+		$titleEnabled      = !empty(Settings::getValue('form_title'));
+		$apiAddressEnabled = !empty(Settings::getValue('api_address_url')) && !Infos::isNoEc6();
 		$cantons           = i18n::$cantons;
-		$allowSwissAbroad  = Config::getValue('swiss_abroad_allow') && !Infos::isNoEc6();
+		$allowSwissAbroad  = Settings::getValue('swiss_abroad_allow') && !Infos::isNoEc6();
 		$optinMode         = $this->getOptinMode(2);
 
 		// Render view
@@ -216,13 +216,13 @@ class SignSteps
 	 */
 	protected function getPagesUrls($guid, string $country, string $gdeCanton, string $gdeId, array $data)
 	{
-		$abroadRedirect   = Config::getValue('swiss_abroad_redirect');
+		$abroadRedirect   = Settings::getValue('swiss_abroad_redirect');
 		$isAbroadRedirect = $abroadRedirect && $country !== i18n::$defaultCountry;
 		$isOutsideScope   = false;
-		if (($localIniMode = Config::getValue('local_initiative_mode')) !== 'disabled') {
+		if (($localIniMode = Settings::getValue('local_initiative_mode')) !== 'disabled') {
 			$isOutsideScope =
-				$localIniMode === 'canton' && Config::getValue('local_initiative_canton') !== $gdeCanton
-				|| $localIniMode === 'commune' && Config::getValue('local_initiative_commune') !== $gdeId;
+				$localIniMode === 'canton' && Settings::getValue('local_initiative_canton') !== $gdeCanton
+				|| $localIniMode === 'commune' && Settings::getValue('local_initiative_commune') !== $gdeId;
 		}
 		if ($isAbroadRedirect) {
 			$successPage              = Strings::getPageUrl($guid, $abroadRedirect);
@@ -230,14 +230,14 @@ class SignSteps
 			$data['link_pdf']         = $successPage;
 			$data['is_outside_scope'] = ($localIniMode !== 'disabled') ? 1 : 0;
 		} elseif ($isOutsideScope) {
-			$successPage              = Strings::getPageUrl($guid, Config::getValue('local_initiative_error_redirect'));
+			$successPage              = Strings::getPageUrl($guid, Settings::getValue('local_initiative_error_redirect'));
 			$data['link_success']     = $successPage;
 			$data['link_pdf']         = $successPage;
 			$data['is_outside_scope'] = 1;
 		} else {
-			$successPage          = Strings::getPageUrl($guid, Config::getValue('use_page_as_success'));
+			$successPage          = Strings::getPageUrl($guid, Settings::getValue('use_page_as_success'));
 			$data['link_success'] = $successPage;
-			$data['link_pdf']     = Strings::getPageUrl($guid, Config::getValue('use_page_as_mail_link'));
+			$data['link_pdf']     = Strings::getPageUrl($guid, Settings::getValue('use_page_as_mail_link'));
 		}
 
 		return $data;
@@ -329,7 +329,7 @@ class SignSteps
 		$birthDateYear  = $birthDate ? $birthDate['year'] : '';
 		if ($country && $country !== i18n::$defaultCountry) {
 			$address = [
-				'size' => Config::getValue('swiss_abroad_fontsize'),
+				'size' => Settings::getValue('swiss_abroad_fontsize'),
 				'text' => $street . ' ' . $streetNo . ', ' . $country . '-' . $zip . ' ' . $city,
 			];
 		} else {
@@ -344,31 +344,31 @@ class SignSteps
 			'field_birthdate_year'  => substr($birthDateYear, -2),
 			'field_street'          => $address,
 		];
-		if(Config::getValue('print_names_on_pdf')){
+		if(Settings::getValue('print_names_on_pdf')){
 			$fields['field_first_name'] = $row->first_name;
 			$fields['field_last_name'] = $row->last_name;
 		}
 		$fields = $this->formatFields($fields);
 
 		// PDF QR-code
-		if (($qrMode = Config::getValue('field_qr_mode')) === 'disabled') {
+		if (($qrMode = Settings::getValue('field_qr_mode')) === 'disabled') {
 			$qrData = null;
 		} else {
 			$shortcode  = Strings::getSerial($signId, $qrMode);
-			$qrPosX     = Config::getValueByUserlang('field_qr_img', Config::PART_POS_X);
-			$qrPosY     = Config::getValueByUserlang('field_qr_img', Config::PART_POS_Y);
-			$qrTextPosX = Config::getValueByUserlang('field_qr_text', Config::PART_POS_X);
-			$qrTextPosY = Config::getValueByUserlang('field_qr_text', Config::PART_POS_Y);
-			$fontSize   = Config::getValue('fontsize');
+			$qrPosX     = Settings::getValueByUserlang('field_qr_img', Settings::PART_POS_X);
+			$qrPosY     = Settings::getValueByUserlang('field_qr_img', Settings::PART_POS_Y);
+			$qrTextPosX = Settings::getValueByUserlang('field_qr_text', Settings::PART_POS_X);
+			$qrTextPosY = Settings::getValueByUserlang('field_qr_text', Settings::PART_POS_Y);
+			$fontSize   = Settings::getValue('fontsize');
 			$qrData     = [
 				'text'       => (string)$shortcode,
 				'x'          => intval($qrPosX),
 				'y'          => intval($qrPosY),
-				'size'       => intval(Config::getValueByUserlang('field_qr_img_size')),
-				'rotate'     => intval(Config::getValueByUserlang('field_qr_img', Config::PART_ROTATION)),
+				'size'       => intval(Settings::getValueByUserlang('field_qr_img_size')),
+				'rotate'     => intval(Settings::getValueByUserlang('field_qr_img', Settings::PART_ROTATION)),
 				'textX'      => intval($qrTextPosX),
 				'textY'      => intval($qrTextPosY),
-				'textRotate' => intval(Config::getValueByUserlang('field_qr_text', Config::PART_ROTATION)),
+				'textRotate' => intval(Settings::getValueByUserlang('field_qr_text', Settings::PART_ROTATION)),
 				'textSize'   => intval($fontSize),
 				'textColor'  => $this->textColor,
 			];
@@ -377,7 +377,7 @@ class SignSteps
 		// Prepare view variables
 		$title     = __('signature_sheet', 'demovox');
 		$permalink = Strings::getPageUrl($guid);
-		$pdfUrl    = Config::getValueByUserlang('signature_sheet');
+		$pdfUrl    = Settings::getValueByUserlang('signature_sheet');
 		$fields    = json_encode($fields);
 		$qrData    = $qrData ? json_encode($qrData) : null;
 
@@ -394,14 +394,14 @@ class SignSteps
 
 	private function formatFields($fields)
 	{
-		$fontSize  = Config::getValue('fontsize');
+		$fontSize  = Settings::getValue('fontsize');
 		$textColor = $this->textColor;
 
 		$return = [];
 		foreach ($fields as $name => $value) {
-			$posX   = Config::getValueByUserlang($name, Config::PART_POS_X);
-			$posY   = Config::getValueByUserlang($name, Config::PART_POS_Y);
-			$rotate = Config::getValueByUserlang($name, Config::PART_ROTATION);
+			$posX   = Settings::getValueByUserlang($name, Settings::PART_POS_X);
+			$posY   = Settings::getValueByUserlang($name, Settings::PART_POS_Y);
+			$rotate = Settings::getValueByUserlang($name, Settings::PART_ROTATION);
 			if ($posX === false || $posY === false || $rotate === false) {
 				Core::logMessage('Coordinates for field "' . $name . '" are not defined, please save your Signature sheet settings.', 'warning');
 				continue;
@@ -428,8 +428,8 @@ class SignSteps
 
 	protected function getOptinMode($page)
 	{
-		$optinMode     = Config::getValue('optin_mode');
-		$optinPosition = Config::getValue('optin_position');
+		$optinMode     = Settings::getValue('optin_mode');
+		$optinPosition = Settings::getValue('optin_position');
 		return ($optinMode !== 'disabled' && $optinPosition == $page) ? $optinMode : null;
 	}
 

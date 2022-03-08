@@ -94,22 +94,22 @@ class InitPublic extends BaseController
 	 */
 	public function enqueueScripts()
 	{
-		$successPage  = Config::getValue('use_page_as_success');
+		$successPage  = Settings::getValue('use_page_as_success');
 		$demovoxJsArr = [
 			'language'          => Infos::getUserLanguage(),
 			'ajaxUrl'           => admin_url('admin-ajax.php'),
-			'ajaxForm'          => Config::getValue('form_ajax_submit'),
+			'ajaxForm'          => Settings::getValue('form_ajax_submit'),
 			'successPageRedir'  => $successPage || $successPage === '0',
-			'analyticsMatomo'   => Config::getValue('analytics_matomo'),
+			'analyticsMatomo'   => Settings::getValue('analytics_matomo'),
 			'apiAddressEnabled' => false,
 		];
-		if ($apiAddressUrl = Config::getValue('api_address_url')) {
+		if ($apiAddressUrl = Settings::getValue('api_address_url')) {
 			$demovoxJsArr['apiAddressEnabled']   = true;
-			$demovoxJsArr['apiAddressKey']       = Config::getValue('api_address_key');
+			$demovoxJsArr['apiAddressKey']       = Settings::getValue('api_address_key');
 			$demovoxJsArr['apiAddressUrl']       = $apiAddressUrl;
-			$demovoxJsArr['apiAddressCityInput'] = Config::getValue('api_address_city_input');
-			$demovoxJsArr['apiAddressGdeInput']  = Config::getValue('api_address_gde_input');
-			$demovoxJsArr['apiAddressGdeSelect'] = Config::getValue('api_address_gde_select');
+			$demovoxJsArr['apiAddressCityInput'] = Settings::getValue('api_address_city_input');
+			$demovoxJsArr['apiAddressGdeInput']  = Settings::getValue('api_address_gde_input');
+			$demovoxJsArr['apiAddressGdeSelect'] = Settings::getValue('api_address_gde_select');
 		}
 
 		wp_enqueue_script(

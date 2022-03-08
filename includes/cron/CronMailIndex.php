@@ -12,11 +12,11 @@ class CronMailIndex extends CronBase
 
 	public function run()
 	{
-		if (!Config::getValue('mail_remind_sheet_enabled') && !Config::getValue('mail_remind_signup_enabled')) {
+		if (!Settings::getValue('mail_remind_sheet_enabled') && !Settings::getValue('mail_remind_signup_enabled')) {
 			$this->setSkipped('Reminder mails are disabled in config');
 			return;
 		}
-		if (!Config::getValue('mail_remind_dedup')) {
+		if (!Settings::getValue('mail_remind_dedup')) {
 			$this->setSkipped('Reminder mail deduplication is disabled in config');
 			return;
 		}

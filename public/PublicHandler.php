@@ -185,7 +185,7 @@ class PublicHandler extends BaseController
 	{
 		ob_start();
 
-		$pdfUrl = Config::getValueByUserlang('signature_sheet');
+		$pdfUrl = Settings::getValueByUserlang('signature_sheet');
 		include $pluginDir . 'public/views/fallback.php';
 
 		$output = ob_get_clean();

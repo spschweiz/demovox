@@ -39,7 +39,7 @@ class AdminCollection extends AdminBaseController
 
 		$dbSign = new DbSignatures();
 		$count = $dbSign->countSignatures($collectionId, false);
-		$addCount = Config::getValue('add_count');
+		$addCount = Settings::getValue('add_count');
 		$userLang = Infos::getUserLanguage();
 
 		$page = $this->getCurrentPage();

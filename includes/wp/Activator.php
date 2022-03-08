@@ -41,7 +41,7 @@ class Activator
 
 		self::createCapabilities();
 
-		Config::initDefaults();
+		Settings::initDefaults();
 	}
 
 	/**
@@ -171,11 +171,11 @@ class Activator
 			$signatureSheetPageId = wp_insert_post($postData);
 			Core::setOption('signature_sheet_page_id', $signatureSheetPageId);
 		}
-		if (empty(Config::getValue('use_page_as_mail_link'))) {
+		if (empty(Settings::getValue('use_page_as_mail_link'))) {
 			Core::setOption('use_page_as_mail_link', $signatureSheetPageId);
 		}
 
-		$optinPageId = Config::getValue('use_page_as_optin_link');
+		$optinPageId = Settings::getValue('use_page_as_optin_link');
 
 		if (!self::isPostVisible($optinPageId)) {
 			$content     .= 'Would you like to opt-in to or opt-out from our List?<br/>[demovox_optin]';
@@ -188,13 +188,13 @@ class Activator
 				'post_title'   => 'Opt-in',
 			];
 			$optinPageId = wp_insert_post($post_data);
-			Config::setValue('use_page_as_optin_link', $optinPageId);
+			Settings::setValue('use_page_as_optin_link', $optinPageId);
 		}
 	}
 
 	protected static function createCapabilities(): void
 	{
-		if(Config::getValue('init_capabilities_version')) {
+		if(Settings::getValue('init_capabilities_version')) {
 			return;
 		}
 
@@ -223,6 +223,6 @@ class Activator
 		$role->add_cap('demovox_stats');
 		$role->add_cap('demovox_import');
 
-		Config::setValue('init_capabilities_version', 1);
+		Settings::setValue('init_capabilities_version', 1);
 	}
 }

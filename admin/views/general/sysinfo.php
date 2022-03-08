@@ -157,11 +157,11 @@ namespace Demovox;
 	?>
 	<h4>CPU Load infos (not supported by Windows servers)</h4>
 	Current load: <?= Infos::getLoad() ?>% / Absolute load: <?= Infos::getLoad(false) ?>%<br/>
-	Is high load (&gt; <?= intval(Config::getValue('cron_max_load')) ?>%): <?=
+	Is high load (&gt; <?= intval(Settings::getValue('cron_max_load')) ?>%): <?=
 	Infos::isHighLoad()
 		? '<span class="error">Yes</span> (would <i>NOT</i> execute CRON)'
 		: '<span class="success">No</span> (would execute CRON)' ?><br/>
-	Cores setting: <?= intval(Config::getValue('cron_cores')) ?> (Recommended cores setting: <?= Infos::countCores() ?>)<br/>
+	Cores setting: <?= intval(Settings::getValue('cron_cores')) ?> (Recommended cores setting: <?= Infos::countCores() ?>)<br/>
 	Current load is calculated by dividing absolute load by the amount of cores
 	<h2>Encryption performance</h2>
 	<h4>php-encryption</h4>
@@ -221,7 +221,7 @@ namespace Demovox;
 						'demovox_mail_test'
 					) ?>">
 				<?= $language ?>
-				(<?= Config::getValueByLang('mail_from_address', $langId) ?: 'mail from address not set' ?>)
+				(<?= Settings::getValueByLang('mail_from_address', $langId) ?: 'mail from address not set' ?>)
 			</button>
 			<?php
 		}

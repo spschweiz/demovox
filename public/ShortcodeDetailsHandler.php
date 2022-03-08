@@ -34,7 +34,7 @@ class ShortcodeDetailsHandler extends BaseController
 	{
 		$collectionId = $this->getShortcodeCollectionId($atts);
 		$dbSign = new DbSignatures();
-		if ($sep = Config::getValue('count_thousands_sep')) {
+		if ($sep = Settings::getValue('count_thousands_sep')) {
 			$count = number_format($dbSign->countSignatures($collectionId), 0, '', $sep);
 		} else {
 			$count = $dbSign->countSignatures($collectionId);
@@ -130,7 +130,7 @@ class ShortcodeDetailsHandler extends BaseController
 
 		$signId    = $row->ID;
 		$isOptIn   = $row->is_optin;
-		$textOptin = Config::getValueByUserlang('text_optin');
+		$textOptin = Settings::getValueByUserlang('text_optin');
 
 		// Render view
 		include Infos::getPluginDir() . 'public/views/opt-in.php';

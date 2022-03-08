@@ -36,7 +36,7 @@ class Uninstaller
 	 */
 	public static function uninstall()
 	{
-		if (Config::getValue('drop_tables_on_uninstall')) {
+		if (Settings::getValue('drop_tables_on_uninstall')) {
 			$success = true;
 			$dbs = ModelInfo::getDbServices();
 			foreach ($dbs as $db) {
@@ -44,9 +44,9 @@ class Uninstaller
 			}
 		}
 
-		if (Config::getValue('drop_config_on_uninstall')) {
+		if (Settings::getValue('drop_config_on_uninstall')) {
 			self::removeCap();
-			Config::deleteAll();
+			Settings::deleteAll();
 			ManageCron::deleteOptions();
 		}
 	}

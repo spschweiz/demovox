@@ -20,7 +20,7 @@ class CronMailRemindSignup extends CronMailBase
 
 	public function run()
 	{
-		if (!Config::getValue('mail_remind_signup_enabled')) {
+		if (!Settings::getValue('mail_remind_signup_enabled')) {
 			$this->setSkipped('Reminder mails are disabled in config');
 			return;
 		}
@@ -76,8 +76,8 @@ class CronMailRemindSignup extends CronMailBase
 	protected function sendMail($row)
 	{
 		$clientLang  = $row->language;
-		$fromAddress = Config::getValueByLang('mail_from_address', $clientLang);
-		$fromName    = Config::getValueByLang('mail_from_name', $clientLang);
+		$fromAddress = Settings::getValueByLang('mail_from_address', $clientLang);
+		$fromName    = Settings::getValueByLang('mail_from_name', $clientLang);
 
 		$mailSubject = Mail::getMailSubject($row, Mail::TYPE_REMIND_SIGNUP);
 		$mailText    = Mail::getMailText($row, $mailSubject, Mail::TYPE_REMIND_SIGNUP);
@@ -110,7 +110,7 @@ class CronMailRemindSignup extends CronMailBase
 	 */
 	public function getPending(): array
 	{
-		$minAge  = intval(Config::getValue('mail_remind_signup_min_age'));
+		$minAge  = intval(Settings::getValue('mail_remind_signup_min_age'));
 		$maxDate = date("Y-m-d", strtotime($minAge . ' day ago'));
 		$where   = "creation_date < '{$maxDate}' AND is_step2_done = 0 "
 				   . 'AND state_remind_signup_sent <= 0 AND state_remind_signup_sent > -3';

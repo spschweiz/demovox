@@ -41,7 +41,7 @@ class Crypt
 	 */
 	public static function getEncryptionMode()
 	{
-		return Config::getValue('encrypt_signees');
+		return Settings::getValue('encrypt_signees');
 	}
 
 	/**

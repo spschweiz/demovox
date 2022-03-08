@@ -2,7 +2,7 @@
 
 namespace Demovox;
 
-class Config
+class Settings
 {
 	const GLUE_LANG = '_';
 	const GLUE_PART = '_';
@@ -66,7 +66,7 @@ class Config
 	 */
 	public static function deleteAll()
 	{
-		$fields = ConfigVars::getFields();
+		$fields = SettingsVars::getFields();
 		foreach ($fields as $field) {
 			$fieldType = isset($field['type']) ? $field['type'] : null;
 			switch ($fieldType) {
@@ -74,13 +74,13 @@ class Config
 					Core::delOption($field);
 					break;
 				case 'pos':
-					Core::delOption($field, Config::PART_POS_X);
-					Core::delOption($field, Config::PART_POS_Y);
+					Core::delOption($field, Settings::PART_POS_X);
+					Core::delOption($field, Settings::PART_POS_Y);
 					break;
 				case 'pos_rot':
-					Core::delOption($field, Config::PART_POS_X);
-					Core::delOption($field, Config::PART_POS_Y);
-					Core::delOption($field, Config::PART_ROTATION);
+					Core::delOption($field, Settings::PART_POS_X);
+					Core::delOption($field, Settings::PART_POS_Y);
+					Core::delOption($field, Settings::PART_ROTATION);
 					break;
 			}
 		}
@@ -91,7 +91,7 @@ class Config
 	 */
 	public static function initDefaults()
 	{
-		$fields = ConfigVars::getFields();
+		$fields = SettingsVars::getFields();
 		foreach ($fields as $field) {
 			$id        = $field['uid'];
 			$fieldType = isset($field['type']) ? $field['type'] : null;
@@ -103,21 +103,21 @@ class Config
 					break;
 				case 'pos':
 					if (isset($field['defaultX'])) {
-						self::setDefaultIfUnset($id, $field['defaultX'], Config::PART_POS_X);
+						self::setDefaultIfUnset($id, $field['defaultX'], Settings::PART_POS_X);
 					}
 					if (isset($field['defaultY'])) {
-						self::setDefaultIfUnset($id, $field['defaultY'], Config::PART_POS_Y);
+						self::setDefaultIfUnset($id, $field['defaultY'], Settings::PART_POS_Y);
 					}
 					break;
 				case 'pos_rot':
 					if (isset($field['defaultX'])) {
-						self::setDefaultIfUnset($id, $field['defaultX'], Config::PART_POS_X);
+						self::setDefaultIfUnset($id, $field['defaultX'], Settings::PART_POS_X);
 					}
 					if (isset($field['defaultY'])) {
-						self::setDefaultIfUnset($id, $field['defaultY'], Config::PART_POS_Y);
+						self::setDefaultIfUnset($id, $field['defaultY'], Settings::PART_POS_Y);
 					}
 					if (isset($field['defaultRot'])) {
-						self::setDefaultIfUnset($id, $field['defaultRot'], Config::PART_ROTATION);
+						self::setDefaultIfUnset($id, $field['defaultRot'], Settings::PART_ROTATION);
 					}
 					break;
 			}

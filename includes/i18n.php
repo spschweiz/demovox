@@ -68,9 +68,9 @@ class i18n
 	public static function getLangsEnabled()
 	{
 		$languages = [];
-		$glueLang = Config::GLUE_LANG;
+		$glueLang = Settings::GLUE_LANG;
 		foreach (self::$languages as $langId => $lang) {
-			if (Config::getValue('is_language_enabled' . $glueLang . $langId)) {
+			if (Settings::getValue('is_language_enabled' . $glueLang . $langId)) {
 				$languages[$langId] = $lang;
 			}
 		}

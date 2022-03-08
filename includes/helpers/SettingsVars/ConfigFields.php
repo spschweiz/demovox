@@ -1,6 +1,6 @@
 <?php
 
-use Demovox\Config;
+use Demovox\Settings;
 use Demovox\i18n;
 
 $fields = [
@@ -421,7 +421,7 @@ $fields[]      = [
 	'default'      => 1,
 	'supplemental' => 'Inserts HTML line breaks before all newlines in mail body. Don\'t activate this if you insert the mail body in HTML anyway.',
 ];
-$glueLang      = Config::GLUE_LANG;
+$glueLang      = Settings::GLUE_LANG;
 $wpMailAddress = get_bloginfo('admin_email');
 $wpMailName    = get_bloginfo('name');
 

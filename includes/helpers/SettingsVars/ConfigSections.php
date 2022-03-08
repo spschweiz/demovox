@@ -1,6 +1,5 @@
 <?php
 
-use Demovox\Config;
 use Demovox\i18n;
 
 $sections = [

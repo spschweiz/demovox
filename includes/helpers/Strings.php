@@ -15,7 +15,7 @@ class Strings
 	 */
 	public static function getPageUrl($signGuid, $pageId = null, $baseUrl = null)
 	{
-		$pageId = $pageId ?: Config::getValue('use_page_as_success');
+		$pageId = $pageId ?: Settings::getValue('use_page_as_success');
 		$url = get_permalink($pageId);
 		if ($baseUrl) {
 			$lengthCut = strlen(home_url());
@@ -43,7 +43,7 @@ class Strings
 	public static function getSerial($signId, $qrMode = null)
 	{
 		if ($qrMode === null) {
-			$qrMode = Config::getValue('field_qr_mode');
+			$qrMode = Settings::getValue('field_qr_mode');
 		}
 		switch ($qrMode) {
 			case 'id':
@@ -110,7 +110,7 @@ class Strings
 		$dirBase = Infos::getPluginDir() . 'libs' . $ds . 'composer' . $ds . 'umpirsky' . $ds . 'country-list' . $ds . 'data' . $ds;
 		$dir = $dirBase . $locale;
 		if (!is_dir($dir)) {
-			$dir = $dirBase . Config::getValue('default_language');
+			$dir = $dirBase . Settings::getValue('default_language');
 		}
 		$path = $dir . $ds . 'country.' . $format;
 		if ($echo) {

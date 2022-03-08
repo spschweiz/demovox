@@ -151,7 +151,7 @@ class Core
 		require_once $pluginDir . 'libs/php/RemoteAddress.php';
 		require_once $pluginDir . 'includes/helpers/Infos.php';
 		require_once $pluginDir . 'includes/helpers/Strings.php';
-		require_once $pluginDir . 'includes/helpers/Config.php';
+		require_once $pluginDir . 'includes/helpers/Settings.php';
 		// The class responsible for sending mails.
 		require_once $pluginDir . 'includes/helpers/Mail.php';
 
@@ -254,7 +254,7 @@ class Core
 	 */
 	public static function delOption($id, $valPart = null)
 	{
-		$fullId = $id . ($valPart ? Config::GLUE_PART . $valPart : '');
+		$fullId = $id . ($valPart ? Settings::GLUE_PART . $valPart : '');
 		return delete_option(Core::getWpId($fullId));
 	}
 
@@ -288,7 +288,7 @@ class Core
 		if (Infos::isHttps()) {
 			return;
 		}
-		if (WP_DEBUG && !Config::getValue('redirect_http_to_https')) {
+		if (WP_DEBUG && !Settings::getValue('redirect_http_to_https')) {
 			return;
 		}
 		wp_die(

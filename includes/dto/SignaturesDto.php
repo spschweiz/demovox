@@ -79,7 +79,7 @@ class SignaturesDto extends Dto
 		}
 		$guid = $this->getGuid();
 
-		$linkOptin = Strings::getPageUrl($guid, Config::getValue('use_page_as_optin_link'));
+		$linkOptin = Strings::getPageUrl($guid, Settings::getValue('use_page_as_optin_link'));
 		$this->link_optin = $linkOptin;
 
 		if (isset($this->creation_date_hours_ago)) {
