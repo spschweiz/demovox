@@ -162,11 +162,6 @@ class Core
 		require_once $pluginDir . 'includes/i18n.php';
 
 		/**
-		 * The class responsible for defining all config fields.
-		 */
-		require_once $pluginDir . 'includes/helpers/ConfigVars.php';
-
-		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */

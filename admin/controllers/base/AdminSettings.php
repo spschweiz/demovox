@@ -24,6 +24,14 @@ class AdminSettings extends AdminBaseController
 		return ConfigVars::getFields();
 	}
 
+	public function registerSettings()
+	{
+		require_once Core::getPluginDir() . 'includes/helpers/ConfigVars.php';
+		require_once Core::getPluginDir() . 'includes/helpers/ConfigVarsGlobal.php';
+		$this->registerFields();
+		$this->registerSections();
+	}
+
 	protected function registerSections()
 	{
 		$areas = $this->getSettingsSections();

@@ -18,6 +18,8 @@ class AdminGeneralSettings extends AdminSettings
 {
 	public function pageGeneralSettings()
 	{
+		$this->registerSettings();
+
 		$page = 'demovoxFieldsGlobal';
 		$languages = i18n::getLangs();
 		include Infos::getPluginDir() . 'admin/views/general-settings/settings.php';
