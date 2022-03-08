@@ -4,12 +4,16 @@ namespace Demovox;
 
 class DbSignatures extends Db
 {
-	const WHERE_OPTIN              = 0;
-	const WHERE_FINISHED           = 5;
-	const WHERE_FINISHED_IN_SCOPE  = 1;
-	const WHERE_FINISHED_OUT_SCOPE = 2;
-	const WHERE_UNFINISHED         = 3;
-	const WHERE_DELETED            = 4;
+	const WHERE_OPTIN                 = 0;
+	const WHERE_OPTOUT                = 6;
+	const WHERE_OPTNULL               = 7;
+	const WHERE_FINISHED              = 5;
+	const WHERE_FINISHED_IN_SCOPE     = 1;
+	const WHERE_FINISHED_OUT_SCOPE    = 2;
+	const WHERE_UNFINISHED            = 3;
+	const WHERE_SHEETS_RECEIVED       = 8;
+	const WHERE_SHEETS_SIGNS_RECEIVED = 9;
+	const WHERE_DELETED               = 4;
 
 	/**
 	 * @var string
@@ -90,7 +94,8 @@ class DbSignatures extends Db
 	 */
 	public function countSignatures(bool $publicValue = true)
 	{
-		$count = $this->count('is_deleted = 0 AND is_step2_done = 1 AND is_outside_scope = 0');
+		$count = $this->count(DbSignatures::WHERE_FINISHED_IN_SCOPE);
+
 		if ($publicValue) {
 			$count += intval(Config::getValue('add_count'));
 		}
@@ -121,7 +126,13 @@ class DbSignatures extends Db
 	{
 		switch ($type) {
 			case DbSignatures::WHERE_OPTIN:
-				$where = 'is_optin = 1 AND is_deleted = 0';
+				$where = 'is_step2_done <> 0 AND is_optin = 1 AND is_deleted = 0';
+				break;
+			case DbSignatures::WHERE_OPTOUT:
+				$where = 'is_step2_done <> 0 AND is_optin = 0 AND is_deleted = 0';
+				break;
+			case DbSignatures::WHERE_OPTNULL:
+				$where = 'is_step2_done <> 0 AND is_optin IS NULL AND is_deleted = 0';
 				break;
 			case DbSignatures::WHERE_FINISHED:
 				$where = 'is_step2_done <> 0 AND is_deleted = 0';
@@ -134,6 +145,12 @@ class DbSignatures extends Db
 				break;
 			case DbSignatures::WHERE_UNFINISHED:
 				$where = 'is_step2_done = 0 AND is_deleted = 0';
+				break;
+			case DbSignatures::WHERE_SHEETS_RECEIVED:
+				$where = 'is_sheet_received <> 0';
+				break;
+			case DbSignatures::WHERE_SHEETS_SIGNS_RECEIVED:
+				$where = 'is_sheet_received';
 				break;
 			case DbSignatures::WHERE_DELETED:
 				$where = 'is_deleted <> 0';

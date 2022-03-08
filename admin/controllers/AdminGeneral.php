@@ -22,10 +22,10 @@ class AdminGeneral extends AdminBaseController
 
 		if ($count) {
 			$stats = new CollectionStatsDto();
-			$stats->countOptin = $dbSign->count('is_optin = 1 AND is_step2_done = 1 AND is_deleted = 0');
-			$stats->countOptout = $dbSign->count('is_optin = 0 AND is_step2_done = 1 AND is_deleted = 0');
-			$stats->countOptNULL = $dbSign->count('is_optin IS NULL AND is_step2_done = 1 AND is_deleted = 0');
-			$stats->countUnfinished = $dbSign->count('is_step2_done = 0 AND is_deleted = 0');
+			$stats->countOptin = $dbSign->count(DbSignatures::WHERE_OPTIN);
+			$stats->countOptout = $dbSign->count(DbSignatures::WHERE_OPTOUT);
+			$stats->countOptNULL = $dbSign->count(DbSignatures::WHERE_OPTNULL);
+			$stats->countUnfinished = $dbSign->count(DbSignatures::WHERE_UNFINISHED);
 		}
 
 		require_once Infos::getPluginDir() . 'admin/helpers/CollectionList.php';

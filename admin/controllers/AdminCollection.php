@@ -46,10 +46,10 @@ class AdminCollection extends AdminBaseController
 		if ($count) {
 			$add = ' AND collection_ID = ' . $collectionId;
 			$stats = new CollectionStatsDto();
-			$stats->countOptin = $dbSign->count('is_optin = 1 AND is_step2_done = 1 AND is_deleted = 0' . $add);
-			$stats->countOptout = $dbSign->count('is_optin = 0 AND is_step2_done = 1 AND is_deleted = 0' . $add);
-			$stats->countOptNULL = $dbSign->count('is_optin IS NULL AND is_step2_done = 1 AND is_deleted = 0' . $add);
-			$stats->countUnfinished = $dbSign->count('is_step2_done = 0 AND is_deleted = 0' . $add);
+			$stats->countOptin = $dbSign->count(DbSignatures::WHERE_OPTIN);
+			$stats->countOptout = $dbSign->count(DbSignatures::WHERE_OPTOUT);
+			$stats->countOptNULL = $dbSign->count(DbSignatures::WHERE_OPTNULL);
+			$stats->countUnfinished = $dbSign->count(DbSignatures::WHERE_UNFINISHED);
 		}
 
 		include Infos::getPluginDir() . 'admin/views/collection/overview.php';
@@ -82,11 +82,11 @@ class AdminCollection extends AdminBaseController
 		Core::requireAccess('demovox_stats');
 
 		$dbSign = new DbSignatures();
-		$sqlAppend = ' AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)';
-		$sqlAppend .= ' AND collection_ID = ' . $this->getCollectionId();
+		$whereAppend = ' AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)';
+		$whereAppend .= ' AND collection_ID = ' . $this->getCollectionId();
 		$source = isset($_REQUEST['source']) ? sanitize_text_field($_REQUEST['source']) : null;
 		if ($source !== null) {
-			$sqlAppend .= ' AND source=\'' . $source . '\'';
+			$whereAppend .= ' AND source=\'' . $source . '\'';
 		}
 		$datasets = [];
 		// sheet_received_date
@@ -96,7 +96,7 @@ class AdminCollection extends AdminBaseController
 			'backgroundColor' => 'rgba(50, 100, 150, 0.2)',
 			'data'            => $dbSign->getResultsRaw(
 				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'SUM(is_sheet_received) AS count'],
-				'is_sheet_received<>0' . $sqlAppend
+				'is_sheet_received<>0' . $whereAppend
 			),
 		];
 		$datasets[] = [
@@ -105,7 +105,7 @@ class AdminCollection extends AdminBaseController
 			'backgroundColor' => 'rgba(0, 50, 0, 0.2)',
 			'data'            => $dbSign->getResultsRaw(
 				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) AS count'],
-				'is_sheet_received<>0' . $sqlAppend
+				'is_sheet_received<>0' . $whereAppend
 			),
 		];
 		$datasets[] = [
@@ -114,7 +114,7 @@ class AdminCollection extends AdminBaseController
 			'backgroundColor' => 'rgba(0, 255, 99, 0.2)',
 			'data'            => $dbSign->getResultsRaw(
 				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
-				'is_optin = 1 AND is_step2_done = 1' . $sqlAppend
+				'is_optin = 1 AND is_step2_done = 1' . $whereAppend
 			),
 		];
 		$datasets[] = [
@@ -123,7 +123,7 @@ class AdminCollection extends AdminBaseController
 			'backgroundColor' => 'rgba(255, 206, 86, 0.2)',
 			'data'            => $dbSign->getResultsRaw(
 				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
-				'is_optin = 0 AND is_step2_done = 1' . $sqlAppend
+				'is_optin = 0 AND is_step2_done = 1' . $whereAppend
 			),
 		];
 		$datasets[] = [
@@ -132,7 +132,7 @@ class AdminCollection extends AdminBaseController
 			'backgroundColor' => 'rgba(68,78,255, 0.2)',
 			'data'            => $dbSign->getResultsRaw(
 				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
-				'is_optin IS NULL AND is_step2_done = 1' . $sqlAppend
+				'is_optin IS NULL AND is_step2_done = 1' . $whereAppend
 			),
 		];
 		$datasets[] = [
@@ -141,7 +141,7 @@ class AdminCollection extends AdminBaseController
 			'backgroundColor' => 'rgba(255,99,132, 0.2)',
 			'data'            => $dbSign->getResultsRaw(
 				['DATE_FORMAT(creation_date, "%Y,%m,%d") as date', 'COUNT(*) as count'],
-				'is_step2_done = 0' . $sqlAppend
+				'is_step2_done = 0' . $whereAppend
 			),
 		];
 		include Infos::getPluginDir() . 'admin/views/collection/statsCharts.php';
@@ -159,11 +159,11 @@ class AdminCollection extends AdminBaseController
 		$sourceList = $dbSign->getResultsRaw(
 			[
 				'source',
-				'SUM(is_sheet_received) AS signatures',
-				'SUM(is_sheet_received<>0) AS sheetsRec',
-				'SUM((is_optin<>0 AND is_step2_done<>0 AND is_deleted = 0)) AS optin',
-				'SUM((is_optin=0 AND is_step2_done<>0 AND is_deleted = 0)) AS optout',
-				'SUM((is_step2_done=0 AND is_deleted = 0)) AS unfinished',
+				'SUM(' . $dbSign->getWhere(DbSignatures::WHERE_SHEETS_SIGNS_RECEIVED) . ') AS signatures',
+				'SUM(' . $dbSign->getWhere(DbSignatures::WHERE_SHEETS_RECEIVED) . ') AS sheetsRec',
+				'SUM((' . $dbSign->getWhere(DbSignatures::WHERE_OPTIN) . ')) AS optin',
+				'SUM((' . $dbSign->getWhere(DbSignatures::WHERE_OPTOUT) . ')) AS optout',
+				'SUM((' . $dbSign->getWhere(DbSignatures::WHERE_UNFINISHED) . ')) AS unfinished',
 			],
 			'is_deleted = 0',
 			'GROUP BY source ORDER BY source'
@@ -234,7 +234,7 @@ class AdminCollection extends AdminBaseController
 		$csvMapper = $dtoSign->getAvailableFields();
 		$csv = implode(',', $csvMapper) . "\n";
 		$type = isset($_REQUEST['type']) ? intval($_REQUEST['type']) : null;
-		$allSignatures = $dbSign->getResultsRaw(array_keys($csvMapper), $dbSign->getWhere($type));
+		$allSignatures = $dbSign->getResultsRaw(array_keys($csvMapper));
 
 		foreach ($allSignatures as $signature) {
 			$csvSignature = [];

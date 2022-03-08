@@ -198,7 +198,8 @@ class SignatureList extends ListTable
 	 */
 	protected function getWhere(): string
 	{
-		$where = 'is_deleted = 0 AND is_step2_done <> 0';
+		$dbSign = $this->get_db_model();
+		$where = $dbSign->getWhere(DbSignatures::WHERE_FINISHED);
 		if (!empty($_REQUEST['s'])) {
 			$s = esc_sql(trim($_REQUEST['s']));
 			if (!empty($s)) {
