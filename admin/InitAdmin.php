@@ -187,7 +187,7 @@ class InitAdmin extends BaseController
 		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySysinfo, 'demovoxSysinfo', $callback);
 
 		$menuTitle = 'General Settings';
-		$callback  = [$this->adminGeneral, 'pageGeneralSettings'];
+		$callback  = [$this->adminGeneralSettings, 'pageGeneralSettings'];
 		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySettings, 'demovoxGeneralSettings', $callback);
 
 		// collection
