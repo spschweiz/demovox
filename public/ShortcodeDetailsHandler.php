@@ -32,12 +32,12 @@ class ShortcodeDetailsHandler extends BaseController
 	 */
 	public function countShortcode(array $atts = [])
 	{
-		$collection = $this->getShortcodeCollectionId($atts);
+		$collectionId = $this->getShortcodeCollectionId($atts);
 		$dbSign = new DbSignatures();
 		if ($sep = Config::getValue('count_thousands_sep')) {
-			$count = number_format($dbSign->countSignatures(), 0, '', $sep);
+			$count = number_format($dbSign->countSignatures($collectionId), 0, '', $sep);
 		} else {
-			$count = $dbSign->countSignatures();
+			$count = $dbSign->countSignatures($collectionId);
 		}
 		return $count;
 	}

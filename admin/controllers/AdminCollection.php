@@ -16,10 +16,10 @@ class AdminCollection extends AdminBaseController
 {
 	protected function getCollectionId()
 	{
-		if (!isset($_REQUEST['cln']) || !is_int($_REQUEST['cln'])) {
+		if (!isset($_REQUEST['cln']) || !is_numeric($_REQUEST['cln'])) {
 			return $this->getDefaultCollection();
 		}
-		return $_REQUEST['cln'];
+		return intval($_REQUEST['cln']);
 	}
 
 	protected function getCurrentPage()
@@ -29,27 +29,30 @@ class AdminCollection extends AdminBaseController
 
 	public function pageOverview()
 	{
+		$collectionId = $this->getCollectionId();
+
+		$collections = new DbCollections();
+		$collection = $collections->getRow(['name', 'end_date', 'end_message'], 'ID = ' . $collectionId);
+		if(!$collection) {
+			Core::errorDie('Requested collection not found where ID = ' . $collectionId, 404);
+		}
+
 		$dbSign = new DbSignatures();
-		$count = $dbSign->countSignatures(false);
+		$count = $dbSign->countSignatures($collectionId, false);
 		$addCount = Config::getValue('add_count');
 		$userLang = Infos::getUserLanguage();
-		$collectionId = $this->getCollectionId();
 
 		$page = $this->getCurrentPage();
 		if (strtolower($_SERVER['REQUEST_METHOD']) === 'post') {
 			$this->saveOverview();
 		}
 
-		$collections = new DbCollections;
-		$collection = $collections->getRow(['name', 'end_date', 'end_message'], 'ID = ' . $collectionId);
-
 		if ($count) {
-			$add = ' AND collection_ID = ' . $collectionId;
 			$stats = new CollectionStatsDto();
-			$stats->countOptin = $dbSign->count(DbSignatures::WHERE_OPTIN);
-			$stats->countOptout = $dbSign->count(DbSignatures::WHERE_OPTOUT);
-			$stats->countOptNULL = $dbSign->count(DbSignatures::WHERE_OPTNULL);
-			$stats->countUnfinished = $dbSign->count(DbSignatures::WHERE_UNFINISHED);
+			$stats->countOptin = $dbSign->count(DbSignatures::WHERE_OPTIN, $collectionId);
+			$stats->countOptout = $dbSign->count(DbSignatures::WHERE_OPTOUT, $collectionId);
+			$stats->countOptNULL = $dbSign->count(DbSignatures::WHERE_OPTNULL, $collectionId);
+			$stats->countUnfinished = $dbSign->count(DbSignatures::WHERE_UNFINISHED, $collectionId);
 		}
 
 		include Infos::getPluginDir() . 'admin/views/collection/overview.php';
@@ -165,7 +168,7 @@ class AdminCollection extends AdminBaseController
 				'SUM((' . $dbSign->getWhere(DbSignatures::WHERE_OPTOUT) . ')) AS optout',
 				'SUM((' . $dbSign->getWhere(DbSignatures::WHERE_UNFINISHED) . ')) AS unfinished',
 			],
-			'is_deleted = 0',
+			'collection_ID = ' . $this->getCollectionId(),
 			'GROUP BY source ORDER BY source'
 		);
 		include Infos::getPluginDir() . 'admin/views/collection/statsSource.php';
@@ -173,13 +176,16 @@ class AdminCollection extends AdminBaseController
 
 	public function pageData()
 	{
+		$collectionId = $this->getCollectionId();
 		$page = $this->getCurrentPage();
 		$dbSign = new DbSignatures();
-		$countOptin = $dbSign->count(DbSignatures::WHERE_OPTIN);
-		$countFinished = $dbSign->count(DbSignatures::WHERE_FINISHED_IN_SCOPE);
-		$countOutsideScope = $dbSign->count(DbSignatures::WHERE_FINISHED_OUT_SCOPE);
-		$countUnfinished = $dbSign->count(DbSignatures::WHERE_UNFINISHED);
-		$countDeleted = $dbSign->count(DbSignatures::WHERE_DELETED);
+		$count = [
+			DbSignatures::WHERE_OPTIN              => $dbSign->count(DbSignatures::WHERE_OPTIN, $collectionId),
+			DbSignatures::WHERE_FINISHED_IN_SCOPE  => $dbSign->count(DbSignatures::WHERE_FINISHED_IN_SCOPE, $collectionId),
+			DbSignatures::WHERE_FINISHED_OUT_SCOPE => $dbSign->count(DbSignatures::WHERE_FINISHED_OUT_SCOPE, $collectionId),
+			DbSignatures::WHERE_UNFINISHED         => $dbSign->count(DbSignatures::WHERE_UNFINISHED, $collectionId),
+			DbSignatures::WHERE_DELETED            => $dbSign->count(DbSignatures::WHERE_DELETED, $collectionId)
+		];
 
 		$option = 'per_page';
 		$args = [
@@ -190,7 +196,7 @@ class AdminCollection extends AdminBaseController
 		add_screen_option($option, $args);
 
 		require_once Infos::getPluginDir() . 'admin/helpers/SignatureList.php';
-		$signatureList = new SignatureList();
+		$signatureList = new SignatureList($collectionId);
 
 		include Infos::getPluginDir() . 'admin/views/collection/data.php';
 	}
@@ -231,10 +237,14 @@ class AdminCollection extends AdminBaseController
 
 		$dtoSign = new SignaturesDto();
 		$dbSign = new DbSignatures();
+
+		$collectionId = $this->getCollectionId();
 		$csvMapper = $dtoSign->getAvailableFields();
 		$csv = implode(',', $csvMapper) . "\n";
+
 		$type = isset($_REQUEST['type']) ? intval($_REQUEST['type']) : null;
-		$allSignatures = $dbSign->getResultsRaw(array_keys($csvMapper));
+		$where = $dbSign->getWhere($type) . ' AND collection_ID = ' . $collectionId;
+		$allSignatures = $dbSign->getResultsRaw(array_keys($csvMapper), $where);
 
 		foreach ($allSignatures as $signature) {
 			$csvSignature = [];

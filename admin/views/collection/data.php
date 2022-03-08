@@ -14,31 +14,29 @@ namespace Demovox;
 
 /**
  * @var AdminCollection $this
- * @var int             $countOptin
- * @var int             $countFinished
- * @var int             $countOutsideScope
- * @var int             $countUnfinished
- * @var int             $countDeleted
+ * @var int             $collectionId
+ * @var int[]           $count
  * @var SignatureList   $signatureList
  */
+$url = '/admin-post.php?cln=' . $collectionId . '&type=';
 ?>
 <div class="wrap demovox">
 	<h2>Download CSV</h2>
 	<p>
-		<a href="<?= Strings::getAdminUrl('/admin-post.php?type=' . DbSignatures::WHERE_OPTIN, 'demovox_get_csv') ?>">
-			<button>All opt-in (<?= $countOptin ?>)</button>
+		<a href="<?= Strings::getAdminUrl($url . DbSignatures::WHERE_OPTIN, 'demovox_get_csv') ?>">
+			<button>All opt-in (<?= $count[DbSignatures::WHERE_OPTIN] ?>)</button>
 		</a>
-		<a href="<?= Strings::getAdminUrl('/admin-post.php?type=' . DbSignatures::WHERE_FINISHED, 'demovox_get_csv') ?>">
-			<button>Form input finished (<?= $countFinished ?>)</button>
+		<a href="<?= Strings::getAdminUrl($url . DbSignatures::WHERE_FINISHED_IN_SCOPE, 'demovox_get_csv') ?>">
+			<button>Form input finished (<?= $count[DbSignatures::WHERE_FINISHED_IN_SCOPE] ?>)</button>
 		</a>
-		<a href="<?= Strings::getAdminUrl('/admin-post.php?type=' . DbSignatures::WHERE_FINISHED_OUT_SCOPE, 'demovox_get_csv') ?>">
-			<button>Finished - Outside limited area (<?= $countOutsideScope ?>)</button>
+		<a href="<?= Strings::getAdminUrl($url . DbSignatures::WHERE_FINISHED_OUT_SCOPE, 'demovox_get_csv') ?>">
+			<button>Finished - Outside limited area (<?= $count[DbSignatures::WHERE_FINISHED_OUT_SCOPE] ?>)</button>
 		</a>
-		<a href="<?= Strings::getAdminUrl('/admin-post.php?type=' . DbSignatures::WHERE_UNFINISHED, 'demovox_get_csv') ?>">
-			<button>Unfinished (<?= $countUnfinished ?>)</button>
+		<a href="<?= Strings::getAdminUrl($url . DbSignatures::WHERE_UNFINISHED, 'demovox_get_csv') ?>">
+			<button>Unfinished (<?= $count[DbSignatures::WHERE_UNFINISHED] ?>)</button>
 		</a>
-		<a href="<?= Strings::getAdminUrl('/admin-post.php?type=deleted' . DbSignatures::WHERE_DELETED, 'demovox_get_csv') ?>">
-			<button>Deleted (<?= $countDeleted ?>)</button>
+		<a href="<?= Strings::getAdminUrl($url . DbSignatures::WHERE_DELETED, 'demovox_get_csv') ?>">
+			<button>Deleted (<?= $count[DbSignatures::WHERE_DELETED] ?>)</button>
 		</a>
 	</p>
 </div>

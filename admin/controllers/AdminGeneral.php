@@ -17,7 +17,7 @@ class AdminGeneral extends AdminBaseController
 	public function pageOverview()
 	{
 		$dbSign = new DbSignatures();
-		$count = $dbSign->countSignatures(false);
+		$count = $dbSign->countSignatures(null, false);
 		$userLang = Infos::getUserLanguage();
 
 		if ($count) {

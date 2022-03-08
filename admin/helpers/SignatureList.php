@@ -6,16 +6,20 @@ require_once Infos::getPluginDir() . 'admin/helpers/ListTable.php';
 
 class SignatureList extends ListTable
 {
+	protected int $collectionId;
+
 	/**
 	 * SignatureList constructor.
 	 */
-	public function __construct()
+	public function __construct(int $collectionId)
 	{
 		parent::__construct([
 			'singular' => __('Signature', 'demovox'), //singular name of the listed records
 			'plural'   => __('Signatures', 'demovox'), //plural name of the listed records
 			'ajax'     => false //should this table support ajax?
 		]);
+
+		$this->collectionId = $collectionId;
 	}
 
 	/** @var array */
@@ -79,7 +83,6 @@ class SignatureList extends ListTable
 	 */
 	public function no_items()
 	{
-		echo Strings::__('No signatures available.');
 		echo Strings::__('No signatures available.');
 	}
 
@@ -199,7 +202,8 @@ class SignatureList extends ListTable
 	protected function getWhere(): string
 	{
 		$dbSign = $this->get_db_model();
-		$where = $dbSign->getWhere(DbSignatures::WHERE_FINISHED);
+		$where = $dbSign->getWhere(DbSignatures::WHERE_FINISHED)
+			. ' AND collection_ID = ' . $this->collectionId;
 		if (!empty($_REQUEST['s'])) {
 			$s = esc_sql(trim($_REQUEST['s']));
 			if (!empty($s)) {

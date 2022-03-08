@@ -92,9 +92,9 @@ class DbSignatures extends Db
 	 *
 	 * @return string
 	 */
-	public function countSignatures(bool $publicValue = true)
+	public function countSignatures(?int $collectionId, bool $publicValue = true)
 	{
-		$count = $this->count(DbSignatures::WHERE_FINISHED_IN_SCOPE);
+		$count = $this->count(DbSignatures::WHERE_FINISHED_IN_SCOPE, $collectionId);
 
 		if ($publicValue) {
 			$count += intval(Config::getValue('add_count'));
@@ -109,10 +109,17 @@ class DbSignatures extends Db
 	 *
 	 * @return int
 	 */
-	public function count($where = null) : int
+	public function count($where = null, ?int $collectionId = null): int
 	{
 		if (is_int($where)) {
 			$where = $this->getWhere($where);
+		}
+		if ($collectionId !== null) {
+			if ($where === null) {
+				$where = 'collection_ID = ' . $collectionId;
+			} else {
+				$where .= ' AND collection_ID = ' . $collectionId;
+			}
 		}
 		return parent::count($where);
 	}
