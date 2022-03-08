@@ -7,13 +7,14 @@ namespace Demovox;
  * @var string                  $page
  * @var array                   $tabs
  * @var string                  $currentTab
+ * @var int                     $collectionId
  */
 if (!defined('ABSPATH')) {
 	exit;
 }
 
 $tabExists = isset($tabs[$currentTab]);
-$currentTabLabel = isset($tabs[$currentTab]) ? $tabs[$currentTab] : '';
+$currentTabLabel = $tabs[$currentTab] ?? '';
 
 if (!$tabExists) {
 	wp_safe_redirect(admin_url('admin.php?page=wc-settings'));
@@ -26,7 +27,9 @@ if (!$tabExists) {
 		<nav class="nav-tab-wrapper woo-nav-tab-wrapper">
 			<?php
 			foreach ($tabs as $tabId => $label) {
-				echo '<a href="' . Strings::getAdminUrl('admin.php?page=demovoxSettings&tab=' . esc_attr($tabId)) . '" class="nav-tab ' . ($currentTab == $tabId ? 'nav-tab-active' : '') . '">' . esc_html($label) . '</a>';
+				$url = Strings::getAdminUrl('admin.php?page=demovoxSettings&tab=' . $tabId . '&cln=' . $collectionId);
+				$class = 'nav-tab ' . ($currentTab == $tabId ? 'nav-tab-active' : '');
+				echo '<a href="' . $url . '" class="' . $class . '">' . esc_html($label) . '</a>';
 			}
 			?>
 		</nav>

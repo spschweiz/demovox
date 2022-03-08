@@ -14,7 +14,7 @@ namespace Demovox;
  */
 class AdminCollection extends AdminBaseController
 {
-	protected function getCollectionId()
+	protected function getCollectionId(): int
 	{
 		if (!isset($_REQUEST['cln']) || !is_numeric($_REQUEST['cln'])) {
 			return $this->getDefaultCollection();

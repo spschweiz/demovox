@@ -16,6 +16,14 @@ require_once Infos::getPluginDir() . 'admin/helpers/SignatureList.php';
  */
 class AdminCollectionSettings extends AdminSettings
 {
+	protected function getCollectionId(): int
+	{
+		if (!isset($_REQUEST['cln']) || !is_numeric($_REQUEST['cln'])) {
+			return $this->getDefaultCollection();
+		}
+		return intval($_REQUEST['cln']);
+	}
+
 	public function pageSettings()
 	{
 		$this->registerSettings();
@@ -32,6 +40,7 @@ class AdminCollectionSettings extends AdminSettings
 		$currentTab = !empty($_GET['tab']) && array_key_exists($_GET['tab'], $tabs) ? sanitize_title($_GET['tab']) : $firstTab[0];
 		$page = 'demovoxSettings';
 		$languages = i18n::getLangs();
+		$collectionId = $this->getCollectionId();
 		include Infos::getPluginDir() . 'admin/views/collection-settings/settings-tabs.php';
 	}
 
