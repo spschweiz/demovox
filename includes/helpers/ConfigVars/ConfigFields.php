@@ -164,7 +164,7 @@ $fields = [
 	],
 	[
 		'uid'     => 'save_ip',
-		'label'   => 'Save client IP address',
+		'label'   => 'Store client IP address',
 		'section' => 'security',
 		'type'    => 'checkbox',
 		'class'   => 'showOnEncrypt',
