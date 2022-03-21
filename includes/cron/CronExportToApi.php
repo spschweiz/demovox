@@ -11,7 +11,7 @@ class CronExportToApi extends CronBase
 
 	public function run()
 	{
-		if (!$url = Settings::getValue('api_export_url')) {
+		if (!$url = Settings::getCValue('api_export_url')) {
 			$this->setSkipped('"Export URL disabled in config');
 			return;
 		}
@@ -36,7 +36,7 @@ class CronExportToApi extends CronBase
 			return;
 		}
 
-		$dataJson = Settings::getValue('api_export_data');
+		$dataJson = Settings::getCValue('api_export_data');
 		$data     = json_decode($dataJson);
 		if (!is_object($data)) {
 			$this->setStateMessage('Configuration value "Export Data" is not valid JSON', false);
@@ -106,10 +106,10 @@ class CronExportToApi extends CronBase
 	{
 		$fields = array_merge(['ID', 'is_exported'], self::$fields);
 		$where  = 'is_exported <= 0 AND is_exported > -3 AND is_step2_done = 1 AND is_deleted = 0';
-		if (!Settings::getValue('api_export_no_optin')) {
+		if (!Settings::getCValue('api_export_no_optin')) {
 			$where .= ' AND is_optin = 1';
 		}
-		$maxMails = intval(Settings::getValue('api_export_max_per_execution')) ?: 25;
+		$maxMails = intval(Settings::getCValue('api_export_max_per_execution')) ?: 25;
 		$dbSign   = new DbSignatures();
 		$rows     = $dbSign->getResults($fields, $where, ' LIMIT ' . $maxMails);
 		$this->log(

@@ -105,11 +105,11 @@ class InitAdmin extends BaseController
 		Loader::addAction($prefix . 'run_cron', $this->adminGeneral, 'runCron');
 		Loader::addAction($prefix . 'cancel_cron', $this->adminGeneral, 'cancelCron');
 		Loader::addAction($prefix . 'encrypt_test', $this->adminGeneral, 'testEncrypt');
-		Loader::addAction($prefix . 'mail_test', $this->adminGeneral, 'testMail');
 
 		// collection
 		// - export
 		Loader::addAction($prefix . 'get_csv', $this->adminCollection, 'getCsv');
+		Loader::addAction($prefix . 'mail_test', $this->adminCollection, 'testMail');
 
 		// - create new collection
 		Loader::addAction($prefix . 'collection_create', $this->adminCollection, 'createNew');

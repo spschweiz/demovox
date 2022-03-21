@@ -36,7 +36,7 @@ class CronMailBase extends CronBase
 
 	protected function isReminderActive()
 	{
-		$maxDate = Settings::getValue('mail_remind_max_date');
+		$maxDate = Settings::getCValue('mail_remind_max_date');
 		if (!$maxDate || !strtotime($maxDate)) {
 			return true;
 		}

@@ -27,11 +27,11 @@ class AdminGeneralSettings extends AdminSettings
 
 	protected function getSettingsSections(): array
 	{
-		return SettingsVarsGlobal::getSections();
+		return SettingsVars::getSections();
 	}
 
 	protected function getSettingsFields(): array
 	{
-		return SettingsVarsGlobal::getFields();
+		return SettingsVars::getFields();
 	}
 }

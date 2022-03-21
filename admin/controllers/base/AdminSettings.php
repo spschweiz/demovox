@@ -16,28 +16,12 @@ class AdminSettings extends AdminBaseController
 {
 	protected function getSettingsSections(): array
 	{
-		return SettingsVars::getSections();
+		return SettingsVarsCollection::getSections();
 	}
 
 	protected function getSettingsFields(): array
 	{
-		return SettingsVars::getFields();
-	}
-
-	public function registerSettings()
-	{
-		require_once Core::getPluginDir() . 'includes/helpers/SettingsVars.php';
-		require_once Core::getPluginDir() . 'includes/helpers/SettingsVarsGlobal.php';
-		$this->registerFields();
-		$this->registerSections();
-	}
-
-	protected function registerSections()
-	{
-		$areas = $this->getSettingsSections();
-		foreach ($areas as $name => $section) {
-			add_settings_section($name, $section['title'], null, $section['page']);
-		}
+		return SettingsVarsCollection::getFields();
 	}
 
 	protected function languageChangeWarning($uid)
@@ -65,9 +49,9 @@ class AdminSettings extends AdminBaseController
 	 * Replacement for do_settings_sections()
 	 * Supports to add HTML in 'addPre', 'addPost', and 'sub'
 	 *
-	 * @param $page
+	 * @param string $page
 	 */
-	protected function doSettingsSections($page)
+	protected function doSettingsSections(string $page)
 	{
 		global $wp_settings_sections, $wp_settings_fields;
 
@@ -77,41 +61,53 @@ class AdminSettings extends AdminBaseController
 
 		$sections = $this->getSettingsSections();
 
-		foreach ((array)$wp_settings_sections[$page] as $section) {
-			if (isset($sections[$section['id']]['addPre'])) {
-				echo $sections[$section['id']]['addPre'];
+		foreach ((array)$wp_settings_sections[$page] as $wpSection) {
+			$sectionId = $wpSection['id'];
+			$sectionDetails = $sections[$wpSection['id']];
+
+			if (isset($sectionDetails['addPre'])) {
+				echo $sectionDetails['addPre'];
 			}
 
-			if ($section['title']) {
-				echo "<h2>{$section['title']}</h2>\n";
+			if ($wpSection['title']) {
+				echo "<h2>{$wpSection['title']}</h2>\n";
 			}
 
-			if (isset($sections[$section['id']]['sub'])) {
-				echo $sections[$section['id']]['sub'];
+			if (isset($sectionDetails['sub'])) {
+				echo $sectionDetails['sub'];
 			}
-			if ($section['callback']) {
-				call_user_func($section['callback'], $section);
+			if ($wpSection['callback']) {
+				call_user_func($wpSection['callback'], $wpSection);
 			}
 
-			if (!isset($wp_settings_fields) || !isset($wp_settings_fields[$page]) || !isset($wp_settings_fields[$page][$section['id']])) {
+			if (!isset($wp_settings_fields[$page][$sectionId])) {
+				Core::logMessage('No fields registered for section: ' . $sectionId);
 				continue;
 			}
+
 			echo '<table class="form-table">';
-			do_settings_fields($page, $section['id']);
+			do_settings_fields($page, $sectionId);
 			echo '</table>';
 
-			if (isset($sections[$section['id']]['addPost'])) {
-				echo $sections[$section['id']]['addPost'];
+			if (isset($sectionDetails['addPost'])) {
+				echo $sectionDetails['addPost'];
 			}
 		}
 	}
 
+	public function registerSettings()
+	{
+		require_once Core::getPluginDir() . 'admin/helpers/RegisterSettings.php';
+
+		$settings = new RegisterSettings($this);
+		$settings->register();
+	}
 
     public function loadTinymce() {
 		// tinymce plugins for version 4.9.11
-		wp_enqueue_script('tinymce-plugin-code', plugin_dir_url(__FILE__) . '../js/tinymce-4.9.11/code/plugin.js');
-		wp_enqueue_script('tinymce-plugin-preview', plugin_dir_url(__FILE__) . '../js/tinymce-4.9.11/preview/plugin.js');
-		wp_enqueue_script('tinymce-plugin-table', plugin_dir_url(__FILE__) . '../js/tinymce-4.9.11/table/plugin.js');
+		wp_enqueue_script('tinymce-plugin-code', plugin_dir_url(__FILE__) . '../../js/tinymce-4.9.11/code/plugin.js');
+		wp_enqueue_script('tinymce-plugin-preview', plugin_dir_url(__FILE__) . '../../js/tinymce-4.9.11/preview/plugin.js');
+		wp_enqueue_script('tinymce-plugin-table', plugin_dir_url(__FILE__) . '../../js/tinymce-4.9.11/table/plugin.js');
 
 		// load WP internal tinymce
 		$js_src = includes_url('js/tinymce/') . 'tinymce.min.js';
@@ -122,6 +118,9 @@ class AdminSettings extends AdminBaseController
 
 		echo "<script>
     function placeMce(selector) {
+		if($(selector).length < 1) {
+			console.error('Place MCE: form element not found', selector);
+		}
         tinyMCE.init({
             selector: selector,
             menubar: 'edit view insert format table',
@@ -132,46 +131,6 @@ class AdminSettings extends AdminBaseController
     }
 </script>";
     }
-
-	protected function registerFields()
-	{
-		$sections = $this->getSettingsSections();
-		$fields = $this->getSettingsFields();
-		$callback = [$this, 'fieldCallback',];
-		foreach ($fields as $field) {
-			$page      = $sections[$field['section']]['page'];
-			$id        = Core::getWpId($field['uid']);
-			$fieldType = isset($field['type']) ? $field['type'] : null;
-			$args      = isset($field['default']) ? ['default' => $field['default']] : [];
-			switch ($fieldType) {
-				default:
-					add_settings_field($id, $field['label'], $callback, $page, $field['section'], $field);
-					register_setting($page, $id, $args);
-					break;
-				case'pos_rot':
-					add_settings_field(
-						$id . Settings::GLUE_PART . Settings::PART_POS_X,
-						$field['label'],
-						$callback,
-						$page,
-						$field['section'],
-						$field
-					);
-					$argX   = isset($field['defaultX']) ? ['default' => $field['defaultX']] : [];
-					$argY   = isset($field['defaultY']) ? ['default' => $field['defaultY']] : [];
-					$argRot = isset($field['defaultRot']) ? ['default' => $field['defaultRot']] : [];
-					register_setting($page, $id . Settings::GLUE_PART . Settings::PART_POS_X, $argX);
-					register_setting($page, $id . Settings::GLUE_PART . Settings::PART_POS_Y, $argY);
-					register_setting($page, $id . Settings::GLUE_PART . Settings::PART_ROTATION, $argRot);
-					break;
-				case'wpPage':
-					add_settings_field($id, $field['label'], $callback, $page, $field['section'], $field);
-					register_setting($page, $id, $args);
-					register_setting($page, $id . Settings::GLUE_PART . Settings::PART_PREVIOUS_LANG);
-					break;
-			}
-		}
-	}
 
 	public function fieldCallback($arguments)
 	{

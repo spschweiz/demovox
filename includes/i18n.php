@@ -27,7 +27,7 @@ namespace Demovox;
  */
 class i18n
 {
-	public static $cantons = [
+	public static array $cantons = [
 		''   => '',
 		'ag' => 'Aargau',
 		'ai' => 'Appenzell Innerrhoden',
@@ -57,7 +57,7 @@ class i18n
 		'zh' => 'Zürich',
 	];
 
-	public static $languages = [
+	public static array $languages = [
 		'de' => 'German',
 		'fr' => 'French',
 		'it' => 'Italian',
@@ -65,24 +65,26 @@ class i18n
 		'en' => 'English',
 	];
 
-	public static function getLangsEnabled()
+	public static string $languageDefault = 'de';
+
+	public static string $countryDefault = 'CH';
+
+	public static function getLangsEnabled(): array
 	{
 		$languages = [];
 		$glueLang = Settings::GLUE_LANG;
 		foreach (self::$languages as $langId => $lang) {
-			if (Settings::getValue('is_language_enabled' . $glueLang . $langId)) {
+			if (Settings::getCValue('is_language_enabled' . $glueLang . $langId)) {
 				$languages[$langId] = $lang;
 			}
 		}
 		return $languages;
 	}
 
-	public static function getLangs()
+	public static function getLangs(): array
 	{
 		return self::$languages;
 	}
-
-	public static $defaultCountry = 'CH';
 
 	/**
 	 * Load the plugin text domain for translation.

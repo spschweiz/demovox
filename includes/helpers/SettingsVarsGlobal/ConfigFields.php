@@ -38,6 +38,21 @@ $fields = [
 		'supplemental' => 'Required to recognize correct load',
 	],
 	[
+		'uid'     => 'mail_max_per_execution',
+		'label'   => 'Send up to x emails per cron execution',
+		'section' => 'cron',
+		'type'    => 'number',
+		'default' => 300,
+	],
+	[
+		'uid'          => 'mail_remind_dedup',
+		'label'        => 'Mail deduplication',
+		'section'      => 'cron',
+		'type'         => 'checkbox',
+		'default'      => 1,
+		'supplemental' => 'Only send one reminder per mail address. Might weaken email address encryption security. Applies to both <b>sheet reminder</b> and <b>sign-up reminder</b>.',
+	],
+	[
 		'uid'          => 'analytics_matomo',
 		'label'        => 'Matomo',
 		'section'      => 'analytics',

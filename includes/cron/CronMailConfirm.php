@@ -6,7 +6,7 @@ class CronMailConfirm extends CronMailBase
 {
 	public function run()
 	{
-		if (!Settings::getValue('mail_confirmation_enabled')) {
+		if (!Settings::getCValue('mail_confirmation_enabled')) {
 			$this->setSkipped('Confirmation mails are disabled in config');
 			return;
 		}
@@ -48,8 +48,8 @@ class CronMailConfirm extends CronMailBase
 	protected function sendMail($row)
 	{
 		$clientLang  = $row->language;
-		$fromAddress = Settings::getValueByLang('mail_from_address', $clientLang);
-		$fromName    = Settings::getValueByLang('mail_from_name', $clientLang);
+		$fromAddress = Settings::getCValueByLang('mail_from_address', $clientLang);
+		$fromName    = Settings::getCValueByLang('mail_from_name', $clientLang);
 
 		$mailSubject = Mail::getMailSubject($row, Mail::TYPE_CONFIRM);
 		$mailText    = Mail::getMailText($row, $mailSubject, Mail::TYPE_CONFIRM);

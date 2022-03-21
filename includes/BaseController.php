@@ -25,6 +25,9 @@ class BaseController
 	/** @var $nonceId string */
 	protected $nonceId = 'demovox_ajax_submit';
 
+	/** @var int */
+	protected int $collectionId;
+
 	/**
 	 * @return string
 	 */
@@ -48,7 +51,7 @@ class BaseController
 	 *
 	 * @since 1.0.0
 	 */
-	public function __construct($pluginName, $version)
+	public function __construct(string $pluginName, string $version)
 	{
 		$this->pluginName = $pluginName;
 		$this->version    = $version;
@@ -59,8 +62,9 @@ class BaseController
 		Core::enforceHttps();
 	}
 
-	protected function getDefaultCollection(){
-		return 1;
+	protected function getDefaultCollection(): int
+	{
+		return Infos::getDefaultCollectionId();
 	}
 
 	/**
@@ -84,4 +88,16 @@ class BaseController
 
 		return $atts;
 	}
+
+	protected function setCollectionId(int $collectionId): void
+	{
+		$this->collectionId = $collectionId;
+		Infos::setCollectionId($collectionId);
+	}
+
+	protected function getCollectionId(): int
+	{
+		return $this->collectionId;
+	}
+
 }

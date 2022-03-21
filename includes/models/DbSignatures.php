@@ -97,7 +97,7 @@ class DbSignatures extends Db
 		$count = $this->count(DbSignatures::WHERE_FINISHED_IN_SCOPE, $collectionId);
 
 		if ($publicValue) {
-			$count += intval(Settings::getValue('add_count'));
+			$count += intval(Settings::getCValue('add_count'));
 		}
 		return $count ?: '0';
 	}

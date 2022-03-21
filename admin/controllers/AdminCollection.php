@@ -14,12 +14,10 @@ namespace Demovox;
  */
 class AdminCollection extends AdminBaseController
 {
-	protected function getCollectionId(): int
+	public function __construct(string $pluginName, string $version)
 	{
-		if (!isset($_REQUEST['cln']) || !is_numeric($_REQUEST['cln'])) {
-			return $this->getDefaultCollection();
-		}
-		return intval($_REQUEST['cln']);
+		parent::__construct($pluginName, $version);
+		$this->setCollectionIdByReq();
 	}
 
 	protected function getCurrentPage()
@@ -39,7 +37,7 @@ class AdminCollection extends AdminBaseController
 
 		$dbSign = new DbSignatures();
 		$count = $dbSign->countSignatures($collectionId, false);
-		$addCount = Settings::getValue('add_count');
+		$addCount = Settings::getCValue('add_count', $collectionId);
 		$userLang = Infos::getUserLanguage();
 
 		$page = $this->getCurrentPage();
@@ -55,7 +53,20 @@ class AdminCollection extends AdminBaseController
 			$stats->countUnfinished = $dbSign->count(DbSignatures::WHERE_UNFINISHED, $collectionId);
 		}
 
+		$mailRecipient = $this->getWpMailAddress();
+		$languages = i18n::getLangsEnabled();
+
 		include Infos::getPluginDir() . 'admin/views/collection/overview.php';
+	}
+
+	protected function getWpMailAddress()
+	{
+		return get_bloginfo('admin_email');
+	}
+
+	protected function getWpMailName()
+	{
+		return get_bloginfo('name');
 	}
 
 	/**
@@ -68,9 +79,11 @@ class AdminCollection extends AdminBaseController
 
 		$collections = new DbCollections();
 		$latestRecord = $collections->getRow(['ID'], '', 'ORDER BY ID DESC LIMIT 1');
+		$collectionId = ($latestRecord->ID + 1);
+		$this->setCollectionID($collectionId);
 
 		$newRecord = new CollectionsDto();
-		$newRecord->name = 'Collection ' . ($latestRecord->ID + 1);
+		$newRecord->name = 'Collection ' . $collectionId;
 
 		$success = $collections->insert($newRecord);
 		echo $success ? 'ok<script>window.location.reload();</script>' : 'failed';
@@ -83,10 +96,11 @@ class AdminCollection extends AdminBaseController
 	public function statsCharts()
 	{
 		Core::requireAccess('demovox_stats');
+		$collectionId = $this->getCollectionId();
 
 		$dbSign = new DbSignatures();
 		$whereAppend = ' AND is_deleted = 0 GROUP BY YEAR(creation_date), MONTH(creation_date), DAY(creation_date)';
-		$whereAppend .= ' AND collection_ID = ' . $this->getCollectionId();
+		$whereAppend .= ' AND collection_ID = ' . $collectionId;
 		$source = isset($_REQUEST['source']) ? sanitize_text_field($_REQUEST['source']) : null;
 		if ($source !== null) {
 			$whereAppend .= ' AND source=\'' . $source . '\'';
@@ -157,6 +171,7 @@ class AdminCollection extends AdminBaseController
 	public function statsSource()
 	{
 		Core::requireAccess('demovox_stats');
+		$collectionId = $this->getCollectionId();
 
 		$dbSign = new DbSignatures();
 		$sourceList = $dbSign->getResultsRaw(
@@ -168,7 +183,7 @@ class AdminCollection extends AdminBaseController
 				'SUM((' . $dbSign->getWhere(DbSignatures::WHERE_OPTOUT) . ')) AS optout',
 				'SUM((' . $dbSign->getWhere(DbSignatures::WHERE_UNFINISHED) . ')) AS unfinished',
 			],
-			'collection_ID = ' . $this->getCollectionId(),
+			'collection_ID = ' . $collectionId,
 			'GROUP BY source ORDER BY source'
 		);
 		include Infos::getPluginDir() . 'admin/views/collection/statsSource.php';
@@ -204,9 +219,9 @@ class AdminCollection extends AdminBaseController
 	protected function saveOverview()
 	{
 		Core::requireAccess('demovox_edit_collection');
+		$collectionId = $this->getCollectionId();
 
 		$collection = new DbCollections;
-		$collectionId = intval($_REQUEST['collection_ID']);
 
 		$data = new CollectionsDto();
 		$data->name = sanitize_text_field($_REQUEST['name']);
@@ -234,11 +249,11 @@ class AdminCollection extends AdminBaseController
 	public function getCsv()
 	{
 		Core::requireAccess('demovox_export');
+		$collectionId = $this->getCollectionId();
 
 		$dtoSign = new SignaturesDto();
 		$dbSign = new DbSignatures();
 
-		$collectionId = $this->getCollectionId();
 		$csvMapper = $dtoSign->getAvailableFields();
 		$csv = implode(',', $csvMapper) . "\n";
 
@@ -266,5 +281,45 @@ class AdminCollection extends AdminBaseController
 		header("Content-Transfer-Encoding: binary");
 
 		echo $csv;
+	}
+
+	/**
+	 * ajax action "mail_test"
+	 * @return void
+	 */
+	public function testMail()
+	{
+		Core::requireAccess('demovox_sysinfo');
+
+		$mailTo = $this->getWpMailAddress();
+		$langId = (isset($_REQUEST['lang']) && $_REQUEST['lang']) ? sanitize_text_field($_REQUEST['lang']) : i18n::$languageDefault;
+		$mailType = isset($_REQUEST['mailType']) ? intval($_REQUEST['mailType']) : Mail::TYPE_CONFIRM;
+		$mailFrom = Settings::getCValueByLang('mail_from_address', $langId);
+		$nameFrom = Settings::getCValueByLang('mail_from_name', $langId);
+
+		$sign = new SignaturesDto();
+		$sign->language = $langId;
+		$sign->first_name = $nameFrom;
+		$sign->last_name = 'last name';
+		$sign->title = 'Miss';
+		$sign->mail = $mailFrom;
+		$sign->guid = 'secretguid';
+		$sign->link_pdf = Strings::getPageUrl('SIGNEE_PERSONAL_CODE');
+		$sign->link_optin = Strings::getPageUrl('SIGNEE_PERSONAL_CODE', Settings::getCValue('use_page_as_optin_link'));
+
+		define('WP_SMTPDEBUG', true);
+		Loader::addAction('phpmailer_init', new Mail(), 'config', 10, 1);
+
+		$mailSubject = Mail::getMailSubject($sign, $mailType);
+		$mailText = Mail::getMailText($sign, $mailSubject, $mailType);
+
+		Loader::addAction('wp_mail_failed', new Mail(), 'echoMailerErrors', 20, 1);
+
+		ob_start();
+		$isSent = Mail::send($mailTo, $mailSubject, $mailText, $mailFrom, $nameFrom);
+		$connectionLog = ob_get_contents();
+		ob_end_clean();
+
+		include Infos::getPluginDir() . 'admin/views/general/sysinfo-mail.php';
 	}
 }
