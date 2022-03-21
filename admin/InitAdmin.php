@@ -50,7 +50,7 @@ class InitAdmin extends BaseController
 		$this->adminCollectionSettings = new AdminCollectionSettings($this->getPluginName(), $this->getVersion());
 
 		$this->defineHooks();
-		$this->registerSettingsOnSave();
+		$this->registerSettings();
 		$this->setupAdminAjaxActions();
 	}
 
@@ -87,10 +87,15 @@ class InitAdmin extends BaseController
 		Loader::addAction('admin_menu', $this, 'setupAdminMenu');
 	}
 
-	protected function registerSettingsOnSave()
+	protected function registerSettings()
 	{
-		if (!isset($_REQUEST['option_page']) || substr($_REQUEST['option_page'], 0, 7) != 'demovox' || $_REQUEST['action'] != 'update') {
-			return;
+		$registerOnlyOnSave = Core::getOption('settings_no_register');
+		if ($registerOnlyOnSave) {
+			$isPageDemovoxSettings = isset($_REQUEST['option_page']) && substr($_REQUEST['option_page'], 0, 7) == 'demovox';
+			$actionUpdate = isset($_REQUEST['action']) && $_REQUEST['action'] == 'update';
+			if (!$isPageDemovoxSettings || !$actionUpdate) {
+				return;
+			}
 		}
 		// Hook into the admin menu
 		Loader::addAction('admin_init', $this->adminCollectionSettings, 'registerSettings');
