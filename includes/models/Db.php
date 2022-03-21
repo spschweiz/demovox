@@ -251,7 +251,7 @@ abstract class Db
 	 *
 	 * @return array
 	 */
-	public function createUpdateTable(string $tableDefinition): array
+	public function createMissingTables(string $tableDefinition): array
 	{
 		global $wpdb;
 
