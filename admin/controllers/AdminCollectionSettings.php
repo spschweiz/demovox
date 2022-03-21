@@ -87,7 +87,7 @@ class AdminCollectionSettings extends AdminSettings
 		include Infos::getPluginDir() . 'admin/views/collection-settings/settings-5.php';
 	}
 
-	public function registerSettings()
+	public function registerSettings(): void
 	{
 		require_once Core::getPluginDir() . 'admin/helpers/RegisterSettings.php';
 		require_once Core::getPluginDir() . 'admin/helpers/RegisterSettingsCollection.php';
