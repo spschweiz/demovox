@@ -2,12 +2,12 @@
 
 namespace Demovox;
 
-class CronMailBase extends CronBase
+abstract class CronMailBase extends CronBase
 {
 	/** @var bool */
-	protected $isDedup = false;
+	protected bool $isDedup = false;
 	/** @var int */
-	protected $limitPerExecution;
+	protected int $limitPerExecution;
 
 	public function __construct()
 	{
@@ -34,7 +34,7 @@ class CronMailBase extends CronBase
 		return true;
 	}
 
-	protected function isReminderActive()
+	protected function isReminderActive(): bool
 	{
 		$maxDate = Settings::getCValue('mail_remind_max_date');
 		if (!$maxDate || !strtotime($maxDate)) {

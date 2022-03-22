@@ -4,12 +4,12 @@ namespace Demovox;
 
 class ManageCron
 {
-	static protected $allCrons;
+	static protected array $allCrons;
 
 	/**
 	 * @return string[]
 	 */
-	public static function getCronNames()
+	public static function getCronNames(): array
 	{
 		return CronBase::getCronClassNames();
 	}
@@ -17,9 +17,9 @@ class ManageCron
 	/**
 	 * @return CronBase[]
 	 */
-	public static function getAllCrons()
+	public static function getAllCrons(): array
 	{
-		if (self::$allCrons === null) {
+		if (!isset(self::$allCrons)) {
 			$crons = [];
 			foreach (self::getCronNames() as $cron) {
 				$className = '\\' . __NAMESPACE__ . '\\' . $cron;
@@ -41,14 +41,14 @@ class ManageCron
 		}
 	}
 
-	public static function run($name)
+	public static function run(int $id): bool
 	{
-		$sendMails = self::getClass($name);
-		$sendMails->run();
+		$cron = self::getClass($id);
+		$cron->run();
 		return false;
 	}
 
-	public static function triggerCron($id)
+	public static function triggerCron(int $id)
 	{
 		$hook = self::getClass($id);
 		$name = $hook->getHookName();
@@ -59,7 +59,7 @@ class ManageCron
 	/**
 	 * @param int $id
 	 */
-	public static function cancel($id)
+	public static function cancel(int $id)
 	{
 		$sendMails = self::getClass($id);
 		$sendMails->cancelRunning();
@@ -70,7 +70,7 @@ class ManageCron
 	 *
 	 * @return CronBase
 	 */
-	protected static function getClass($id)
+	protected static function getClass(int $id)
 	{
 		$cronNames = self::getCronNames();
 		if (!isset($cronNames[$id])) {

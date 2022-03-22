@@ -16,7 +16,30 @@ class Mail
 	const TYPE_REMIND_SHEET = 1;
 	const TYPE_REMIND_SIGNUP = 2;
 
-	static function send($to, $subject, $body, $fromAddress = '', $fromName = '')
+	/**
+	 * @param SignaturesDto $row
+	 * @param int           $mailType Mail::TYPE_CONFIRM|Mail::TYPE_REMIND_SHEET|Mail::TYPE_REMIND_SIGNUP
+	 * @return array
+	 */
+	static function sendBySign(SignaturesDto $row, int $mailType): array
+	{
+
+		$clientLang  = $row->language;
+		$fromAddress = Settings::getCValueByLang('mail_from_address', $clientLang);
+		$fromName    = Settings::getCValueByLang('mail_from_name', $clientLang);
+
+		$mailSubject = Mail::getMailSubject($row, $mailType);
+		$mailText    = Mail::getMailText($row, $mailSubject, $mailType);
+
+		$isSent = Mail::send($row->mail, $mailSubject, $mailText, $fromAddress, $fromName);
+
+		$logMsg = 'Mail ' . ($isSent ? '' : 'NOT ') . 'sent for signature ID "' . $row->ID
+				   . '" with language "' . $clientLang . '" with sender ' . $fromName . ' (' . $fromAddress . ')';
+
+		return [$isSent, $logMsg];
+	}
+
+	static function send($to, $subject, $body, $fromAddress = '', $fromName = '') : bool
 	{
 		$headers = '';
 		if ($fromAddress) {
@@ -39,7 +62,11 @@ class Mail
 		return 'text/html';
 	}
 
-	static function config($mailer)
+	/**
+	 * @param $mailer \PHPMailer|\PHPMailer\PHPMailer\PHPMailer
+	 * @return void
+	 */
+	static function config($mailer): void
 	{
 		$method = Settings::getCValue('mail_method');
 		if ($method == 'wp_mail') {
@@ -75,7 +102,7 @@ class Mail
 		}
 	}
 
-	static function validateAddress($address)
+	static function validateAddress(string $address)
 	{
 		$mailer = class_exists('PHPMailer\PHPMailer\PHPMailer') ? \PHPMailer : \PHPMailer\PHPMailer\PHPMailer;
 		return $mailer::validateAddress($address);
@@ -98,7 +125,7 @@ class Mail
 	 * @param int           $mailType
 	 * @return string
 	 */
-	static function getMailSubject($sign, $mailType)
+	static function getMailSubject(SignaturesDto $sign, int $mailType): string
 	{
 		switch($mailType){
 			case self::TYPE_REMIND_SHEET:
@@ -125,7 +152,7 @@ class Mail
 	 * @param int           $mailType
 	 * @return string
 	 */
-	static function getMailText($sign, $mailSubject, $mailType)
+	static function getMailText(SignaturesDto $sign, string $mailSubject, int $mailType): string
 	{
 		$clientLang = $sign->language;
 		$linkHome = get_home_url();

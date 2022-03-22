@@ -18,7 +18,7 @@ class CronMailConfirm extends CronMailBase
 		$this->setRunningStop();
 	}
 
-	protected function sendPendingMails()
+	protected function sendPendingMails(): void
 	{
 		$maxMails = intval(Settings::getValue('mail_max_per_execution')) ?: 300;
 		$dbSign   = new DbSignatures();
@@ -45,24 +45,13 @@ class CronMailConfirm extends CronMailBase
 	/**
 	 * @param SignaturesDto $row
 	 */
-	protected function sendMail($row)
+	protected function sendMail(SignaturesDto $row): void
 	{
-		$clientLang  = $row->language;
-		$fromAddress = Settings::getCValueByLang('mail_from_address', $clientLang);
-		$fromName    = Settings::getCValueByLang('mail_from_name', $clientLang);
-
-		$mailSubject = Mail::getMailSubject($row, Mail::TYPE_CONFIRM);
-		$mailText    = Mail::getMailText($row, $mailSubject, Mail::TYPE_CONFIRM);
-
-		$isSent    = Mail::send($row->mail, $mailSubject, $mailText, $fromAddress, $fromName);
+		[$isSent, $logMsg] = Mail::sendBySign($row, Mail::TYPE_CONFIRM);
 		$stateSent = $isSent ? 1 : ($row->state_confirm_sent - 1);
 		$dbSign    = new DbSignatures();
 		$rows      = $dbSign->updateStatus(['state_confirm_sent' => $stateSent], ['ID' => $row->ID]);
-		$this->log(
-			'Mail ' . ($isSent ? '' : 'NOT ') . 'sent for signature ID "' . $row->ID
-			. '" with language "' . $clientLang . '" with sender ' . $fromName . ' (' . $fromAddress . ')',
-			$isSent ? 'notice' : 'error'
-		);
+		$this->log($logMsg, $isSent ? 'notice' : 'error');
 	}
 
 }

@@ -4,7 +4,7 @@ namespace Demovox;
 
 class CronMailRemindSheet extends CronMailBase
 {
-	protected $scheduleRecurrence = 'daily';
+	protected string $scheduleRecurrence = 'daily';
 	/** @var array */
 	protected $colsSign = [
 		'ID',
@@ -19,7 +19,7 @@ class CronMailRemindSheet extends CronMailBase
 		'state_remind_sheet_sent',
 	];
 
-	public function run()
+	public function run(): void
 	{
 		if (!Settings::getCValue('mail_remind_sheet_enabled')) {
 			$this->setSkipped('Reminder mails are disabled in config');
@@ -33,14 +33,15 @@ class CronMailRemindSheet extends CronMailBase
 		$this->setRunningStop();
 	}
 
-	protected function sendPendingMails()
+	protected function sendPendingMails(): void
 	{
 		$dbSign   = new DbSignatures();
 		$dbMailDd = new DbMails();
 		$rows     = $this->getPending();
 		$maxMails = $this->limitPerExecution;
 		$this->log(
-			'Loaded ' . count($rows) . ' signatures to send mails (select is limited to ' . $maxMails . ' per cron execution)',
+			'Loaded ' . count($rows) . ' signatures to send mails (select is limited to ' . $maxMails
+			. ' per cron execution)',
 			'notice'
 		);
 
@@ -69,20 +70,13 @@ class CronMailRemindSheet extends CronMailBase
 	}
 
 	/**
-	 * @param DbSignatures $row
+	 * @param SignaturesDto $row
 	 *
 	 * @return int
 	 */
-	protected function sendMail($row)
+	protected function sendMail(SignaturesDto $row): int
 	{
-		$clientLang  = $row->language;
-		$fromAddress = Settings::getCValueByLang('mail_from_address', $clientLang);
-		$fromName    = Settings::getCValueByLang('mail_from_name', $clientLang);
-
-		$mailSubject = Mail::getMailSubject($row, Mail::TYPE_REMIND_SHEET);
-		$mailText    = Mail::getMailText($row, $mailSubject, Mail::TYPE_REMIND_SHEET);
-
-		$isSent    = Mail::send($row->mail, $mailSubject, $mailText, $fromAddress, $fromName);
+		[$isSent, $logMsg] = Mail::sendBySign($row, Mail::TYPE_REMIND_SHEET);
 		$stateSent = $isSent ? 1 : ($row->state_remind_sheet_sent - 1);
 
 		$dbSign = new DbSignatures();
@@ -97,11 +91,7 @@ class CronMailRemindSheet extends CronMailBase
 				['ID' => $row->ID]
 			);
 		}
-		$this->log(
-			'Mail ' . ($isSent ? '' : 'NOT ') . 'sent for signature ID "' . $row->ID
-			. '" with language "' . $row->language . '" with sender ' . $fromName . ' (' . $fromAddress . ')',
-			$isSent ? 'notice' : 'error'
-		);
+		$this->log($logMsg, $isSent ? 'notice' : 'error');
 		return $stateSent;
 	}
 

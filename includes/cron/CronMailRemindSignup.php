@@ -4,7 +4,7 @@ namespace Demovox;
 
 class CronMailRemindSignup extends CronMailBase
 {
-	protected $scheduleRecurrence = 'daily';
+	protected string $scheduleRecurrence = 'daily';
 	/** @var array */
 	protected $colsSign = [
 		'ID',
@@ -18,7 +18,7 @@ class CronMailRemindSignup extends CronMailBase
 		'state_remind_signup_sent',
 	];
 
-	public function run()
+	public function run(): void
 	{
 		if (!Settings::getCValue('mail_remind_signup_enabled')) {
 			$this->setSkipped('Reminder mails are disabled in config');
@@ -32,7 +32,7 @@ class CronMailRemindSignup extends CronMailBase
 		$this->setRunningStop();
 	}
 
-	protected function sendPendingMails()
+	protected function sendPendingMails(): void
 	{
 		$rows = $this->getPending();
 
@@ -73,16 +73,9 @@ class CronMailRemindSignup extends CronMailBase
 	 *
 	 * @return int
 	 */
-	protected function sendMail($row)
+	protected function sendMail(SignaturesDto $row): int
 	{
-		$clientLang  = $row->language;
-		$fromAddress = Settings::getCValueByLang('mail_from_address', $clientLang);
-		$fromName    = Settings::getCValueByLang('mail_from_name', $clientLang);
-
-		$mailSubject = Mail::getMailSubject($row, Mail::TYPE_REMIND_SIGNUP);
-		$mailText    = Mail::getMailText($row, $mailSubject, Mail::TYPE_REMIND_SIGNUP);
-
-		$isSent    = Mail::send($row->mail, $mailSubject, $mailText, $fromAddress, $fromName);
+		[$isSent, $logMsg] = Mail::sendBySign($row, Mail::TYPE_REMIND_SIGNUP);
 		$stateSent = $isSent ? 1 : ($row->state_remind_signup_sent - 1);
 
 		$dbSign = new DbSignatures();
@@ -97,11 +90,7 @@ class CronMailRemindSignup extends CronMailBase
 				['ID' => $row->ID]
 			);
 		}
-		$this->log(
-			'Mail ' . ($isSent ? '' : 'NOT ') . 'sent for signature ID "' . $row->ID
-			. '" with language "' . $row->language . '" with sender ' . $fromName . ' (' . $fromAddress . ')',
-			$isSent ? 'notice' : 'error'
-		);
+		$this->log($logMsg, $isSent ? 'notice' : 'error');
 		return $stateSent;
 	}
 
