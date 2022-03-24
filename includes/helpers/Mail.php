@@ -22,7 +22,7 @@ class Mail
 		if ($fromAddress) {
 			$headers = [$fromName ? 'from: ' . $fromName . ' <' . $fromAddress . '>' : 'from: ' . $fromAddress];
 		}
-		if ('wp_mail' == !Settings::getValue('mail_method')) {
+		if ('wp_mail' == !Settings::getCValue('mail_method')) {
 			return wp_mail($to, $subject, $body, $headers);
 		}
 		$mail = new Mail();
@@ -41,7 +41,7 @@ class Mail
 
 	static function config($mailer)
 	{
-		$method = Settings::getValue('mail_method');
+		$method = Settings::getCValue('mail_method');
 		if ($method == 'wp_mail') {
 			return;
 		}
@@ -62,15 +62,15 @@ class Mail
 				break;
 			case 'smtp':
 				$mailer->IsSMTP();
-				$mailer->Host = Settings::getValue('mail_smtp_host');
-				$mailer->Port = Settings::getValue('mail_smtp_port');
-				if ($smtpAuthType = Settings::getValue('mail_smtp_authtype')) {
+				$mailer->Host = Settings::getCValue('mail_smtp_host');
+				$mailer->Port = Settings::getCValue('mail_smtp_port');
+				if ($smtpAuthType = Settings::getCValue('mail_smtp_authtype')) {
 					$mailer->SMTPAuth = true;
-					$mailer->Username = Settings::getValue('mail_smtp_user');
-					$mailer->Password = Settings::getValue('mail_smtp_password');
+					$mailer->Username = Settings::getCValue('mail_smtp_user');
+					$mailer->Password = Settings::getCValue('mail_smtp_password');
 					$mailer->AuthType = $smtpAuthType;
 				}
-				$mailer->SMTPSecure = Settings::getValue('mail_smtp_security');
+				$mailer->SMTPSecure = Settings::getCValue('mail_smtp_security');
 				break;
 		}
 	}
@@ -112,7 +112,7 @@ class Mail
 				$confName = 'mail_confirm_subj';
 				break;
 		}
-		$subject = Settings::getValueByLang($confName, $sign->language);
+		$subject = Settings::getCValueByLang($confName, $sign->language);
 		$subject = str_replace('{title}', $sign->title ? __($sign->title, 'demovox') : '', $subject);
 		$subject = str_replace('{first_name}', $sign->first_name, $subject);
 		$subject = str_replace('{last_name}', $sign->last_name, $subject);
@@ -141,8 +141,8 @@ class Mail
 				$confName = 'mail_confirm_body';
 				break;
 		}
-		$text = Settings::getValueByLang($confName, $clientLang);
-		if (Settings::getValue('mail_nl2br')) {
+		$text = Settings::getCValueByLang($confName, $clientLang);
+		if (Settings::getCValue('mail_nl2br')) {
 			$text = Strings::nl2br($text);
 		}
 		$text = str_replace('{title}', $sign->title ? __($sign->title, 'demovox') : '', $text);

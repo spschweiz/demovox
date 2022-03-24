@@ -10,6 +10,9 @@ class SignSteps
 	/** @var $textColor string RGB */
 	private $textColor = [0, 0, 0];
 
+	/**
+	 * @param string      $nonceId
+	 */
 	public function __construct(string $nonceId)
 	{
 		$this->nonceId = $nonceId;
@@ -17,23 +20,22 @@ class SignSteps
 
 	/**
 	 * Ask signee for basic personal information
-	 * @param int $collection
+	 * @param int $collectionId
 	 * @return void
 	 */
-	public function step1(int $collection)
+	public function step1(int $collectionId)
 	{
-		$textOptin = Settings::getValueByUserlang('text_optin');
-		$emailConfirmEnabled = !empty(Settings::getValue('email_confirm'));
+		$textOptin = Settings::getCValueByUserlang('text_optin');
+		$emailConfirmEnabled = !empty(Settings::getCValue('email_confirm'));
 		$optinMode = $this->getOptinMode(1);
 
 		include Infos::getPluginDir() . 'public/views/sign-1.php';
 	}
 
 	/**
-	 * @param int $collection
 	 * @return string guid
 	 */
-	protected function saveStep1($collection) : string
+	protected function saveStep1(int $collectionId) : string
 	{
 		$dbSign    = new DbSignatures();
 		$lang      = Infos::getUserLanguage();
@@ -54,7 +56,7 @@ class SignSteps
 		}
 
 		$data = [
-			'collection_ID' => $collection,
+			'collection_ID' => $collectionId,
 			'language'      => $lang,
 			'first_name'    => $nameFirst,
 			'last_name'     => $nameLast,
@@ -82,20 +84,20 @@ class SignSteps
 
 	/**
 	 * Ask signee for additional personal information
-	 * @param int $collection
+	 * @param int $collectionId
 	 * @return void
 	 */
-	public function step2(int $collection)
+	public function step2(int $collectionId)
 	{
 		$this->verifyNonce();
-		$guid = $this->saveStep1($collection);
+		$guid = $this->saveStep1($collectionId);
 
 		// Prepare view variables
-		$textOptin         = Settings::getValueByUserlang('text_optin');
-		$titleEnabled      = !empty(Settings::getValue('form_title'));
-		$apiAddressEnabled = !empty(Settings::getValue('api_address_url')) && !Infos::isNoEc6();
+		$textOptin         = Settings::getCValueByUserlang('text_optin');
+		$titleEnabled      = !empty(Settings::getCValue('form_title'));
+		$apiAddressEnabled = !empty(Settings::getCValue('api_address_url')) && !Infos::isNoEc6();
 		$cantons           = i18n::$cantons;
-		$allowSwissAbroad  = Settings::getValue('swiss_abroad_allow') && !Infos::isNoEc6();
+		$allowSwissAbroad  = Settings::getCValue('swiss_abroad_allow') && !Infos::isNoEc6();
 		$optinMode         = $this->getOptinMode(2);
 
 		// Render view
@@ -111,7 +113,7 @@ class SignSteps
 	 *
 	 * @return string
 	 */
-	protected function saveStep2($guid, $isEncrypted)
+	protected function saveStep2(string $guid, int $isEncrypted): string
 	{
 		$dbSign = new DbSignatures();
 		// Load and sanitize form data
@@ -128,7 +130,7 @@ class SignSteps
 
 		// Validate form data
 		if (!isset($_REQUEST['swiss_abroad']) || !$_REQUEST['swiss_abroad']) {
-			$country = i18n::$defaultCountry;
+			$country = i18n::$countryDefault;
 		} else {
 			$country   = isset($_REQUEST['country']) ? strtoupper(sanitize_text_field($_REQUEST['country'])) : null;
 			$zip       = sanitize_text_field($_REQUEST['zip_abroad']);
@@ -216,13 +218,13 @@ class SignSteps
 	 */
 	protected function getPagesUrls($guid, string $country, string $gdeCanton, string $gdeId, array $data)
 	{
-		$abroadRedirect   = Settings::getValue('swiss_abroad_redirect');
-		$isAbroadRedirect = $abroadRedirect && $country !== i18n::$defaultCountry;
+		$abroadRedirect   = Settings::getCValue('swiss_abroad_redirect');
+		$isAbroadRedirect = $abroadRedirect && $country !== i18n::$countryDefault;
 		$isOutsideScope   = false;
-		if (($localIniMode = Settings::getValue('local_initiative_mode')) !== 'disabled') {
+		if (($localIniMode = Settings::getCValue('local_initiative_mode')) !== 'disabled') {
 			$isOutsideScope =
-				$localIniMode === 'canton' && Settings::getValue('local_initiative_canton') !== $gdeCanton
-				|| $localIniMode === 'commune' && Settings::getValue('local_initiative_commune') !== $gdeId;
+				$localIniMode === 'canton' && Settings::getCValue('local_initiative_canton') !== $gdeCanton
+				|| $localIniMode === 'commune' && Settings::getCValue('local_initiative_commune') !== $gdeId;
 		}
 		if ($isAbroadRedirect) {
 			$successPage              = Strings::getPageUrl($guid, $abroadRedirect);
@@ -230,14 +232,14 @@ class SignSteps
 			$data['link_pdf']         = $successPage;
 			$data['is_outside_scope'] = ($localIniMode !== 'disabled') ? 1 : 0;
 		} elseif ($isOutsideScope) {
-			$successPage              = Strings::getPageUrl($guid, Settings::getValue('local_initiative_error_redirect'));
+			$successPage              = Strings::getPageUrl($guid, Settings::getCValue('local_initiative_error_redirect'));
 			$data['link_success']     = $successPage;
 			$data['link_pdf']         = $successPage;
 			$data['is_outside_scope'] = 1;
 		} else {
-			$successPage          = Strings::getPageUrl($guid, Settings::getValue('use_page_as_success'));
+			$successPage          = Strings::getPageUrl($guid, Settings::getCValue('use_page_as_success'));
 			$data['link_success'] = $successPage;
-			$data['link_pdf']     = Strings::getPageUrl($guid, Settings::getValue('use_page_as_mail_link'));
+			$data['link_pdf']     = Strings::getPageUrl($guid, Settings::getCValue('use_page_as_mail_link'));
 		}
 
 		return $data;
@@ -246,21 +248,14 @@ class SignSteps
 	/**
 	 * Show signature sheet partial or return redirect URL
 	 *
-	 * @param string $guid
+	 * @param SignaturesDto $row
 	 */
-	public function step3(string $guid)
+	public function step3(SignaturesDto $row)
 	{
-		$dbSign       = new DbSignatures();
-		$redirect     = isset($_REQUEST['redirect']) && $_REQUEST['redirect'];
+		$redirect = isset($_REQUEST['redirect']) && $_REQUEST['redirect'];
+		$guid     = $row->getGuid();
 
 		// Check if 2nd form step is filled and get encryption mode and success link
-		$row = $dbSign->getRow(
-			['is_step2_done', 'is_encrypted', 'link_success',],
-			"guid = '" . $guid . "'"
-		);
-		if ($row === null) {
-			Core::errorDie('Signature not found with guid="' . $guid . '"', 404);
-		}
 		if (!$row->is_step2_done) {
 			$this->verifyNonce();
 			$successPage = $this->saveStep2($guid, $row->is_encrypted);
@@ -327,9 +322,9 @@ class SignSteps
 		$birthDateDay   = $birthDate ? $birthDate['day'] : '';
 		$birthDateMonth = $birthDate ? $birthDate['month'] : '';
 		$birthDateYear  = $birthDate ? $birthDate['year'] : '';
-		if ($country && $country !== i18n::$defaultCountry) {
+		if ($country && $country !== i18n::$countryDefault) {
 			$address = [
-				'size' => Settings::getValue('swiss_abroad_fontsize'),
+				'size' => Settings::getCValue('swiss_abroad_fontsize'),
 				'text' => $street . ' ' . $streetNo . ', ' . $country . '-' . $zip . ' ' . $city,
 			];
 		} else {
@@ -344,31 +339,31 @@ class SignSteps
 			'field_birthdate_year'  => substr($birthDateYear, -2),
 			'field_street'          => $address,
 		];
-		if(Settings::getValue('print_names_on_pdf')){
+		if(Settings::getCValue('print_names_on_pdf')){
 			$fields['field_first_name'] = $row->first_name;
 			$fields['field_last_name'] = $row->last_name;
 		}
 		$fields = $this->formatFields($fields);
 
 		// PDF QR-code
-		if (($qrMode = Settings::getValue('field_qr_mode')) === 'disabled') {
+		if (($qrMode = Settings::getCValue('field_qr_mode')) === 'disabled') {
 			$qrData = null;
 		} else {
 			$shortcode  = Strings::getSerial($signId, $qrMode);
-			$qrPosX     = Settings::getValueByUserlang('field_qr_img', Settings::PART_POS_X);
-			$qrPosY     = Settings::getValueByUserlang('field_qr_img', Settings::PART_POS_Y);
-			$qrTextPosX = Settings::getValueByUserlang('field_qr_text', Settings::PART_POS_X);
-			$qrTextPosY = Settings::getValueByUserlang('field_qr_text', Settings::PART_POS_Y);
-			$fontSize   = Settings::getValue('fontsize');
+			$qrPosX     = Settings::getCValueByUserlang('field_qr_img', Settings::PART_POS_X);
+			$qrPosY     = Settings::getCValueByUserlang('field_qr_img', Settings::PART_POS_Y);
+			$qrTextPosX = Settings::getCValueByUserlang('field_qr_text', Settings::PART_POS_X);
+			$qrTextPosY = Settings::getCValueByUserlang('field_qr_text', Settings::PART_POS_Y);
+			$fontSize   = Settings::getCValue('fontsize');
 			$qrData     = [
 				'text'       => (string)$shortcode,
 				'x'          => intval($qrPosX),
 				'y'          => intval($qrPosY),
-				'size'       => intval(Settings::getValueByUserlang('field_qr_img_size')),
-				'rotate'     => intval(Settings::getValueByUserlang('field_qr_img', Settings::PART_ROTATION)),
+				'size'       => intval(Settings::getCValueByUserlang('field_qr_img_size')),
+				'rotate'     => intval(Settings::getCValueByUserlang('field_qr_img', Settings::PART_ROTATION)),
 				'textX'      => intval($qrTextPosX),
 				'textY'      => intval($qrTextPosY),
-				'textRotate' => intval(Settings::getValueByUserlang('field_qr_text', Settings::PART_ROTATION)),
+				'textRotate' => intval(Settings::getCValueByUserlang('field_qr_text', Settings::PART_ROTATION)),
 				'textSize'   => intval($fontSize),
 				'textColor'  => $this->textColor,
 			];
@@ -377,7 +372,7 @@ class SignSteps
 		// Prepare view variables
 		$title     = __('signature_sheet', 'demovox');
 		$permalink = Strings::getPageUrl($guid);
-		$pdfUrl    = Settings::getValueByUserlang('signature_sheet');
+		$pdfUrl    = Settings::getCValueByUserlang('signature_sheet');
 		$fields    = json_encode($fields);
 		$qrData    = $qrData ? json_encode($qrData) : null;
 
@@ -392,16 +387,16 @@ class SignSteps
 		}
 	}
 
-	private function formatFields($fields)
+	private function formatFields($fields): array
 	{
-		$fontSize  = Settings::getValue('fontsize');
+		$fontSize  = Settings::getCValue('fontsize');
 		$textColor = $this->textColor;
 
 		$return = [];
 		foreach ($fields as $name => $value) {
-			$posX   = Settings::getValueByUserlang($name, Settings::PART_POS_X);
-			$posY   = Settings::getValueByUserlang($name, Settings::PART_POS_Y);
-			$rotate = Settings::getValueByUserlang($name, Settings::PART_ROTATION);
+			$posX   = Settings::getCValueByUserlang($name, Settings::PART_POS_X);
+			$posY   = Settings::getCValueByUserlang($name, Settings::PART_POS_Y);
+			$rotate = Settings::getCValueByUserlang($name, Settings::PART_ROTATION);
 			if ($posX === false || $posY === false || $rotate === false) {
 				Core::logMessage('Coordinates for field "' . $name . '" are not defined, please save your Signature sheet settings.', 'warning');
 				continue;
@@ -428,8 +423,8 @@ class SignSteps
 
 	protected function getOptinMode($page)
 	{
-		$optinMode     = Settings::getValue('optin_mode');
-		$optinPosition = Settings::getValue('optin_position');
+		$optinMode     = Settings::getCValue('optin_mode');
+		$optinPosition = Settings::getCValue('optin_position');
 		return ($optinMode !== 'disabled' && $optinPosition == $page) ? $optinMode : null;
 	}
 

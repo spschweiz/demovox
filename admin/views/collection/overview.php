@@ -7,6 +7,8 @@ namespace Demovox;
  * @var int                $count
  * @var int                $addCount
  * @var int                $collectionId
+ * @var string             $mailRecipient
+ * @var string[]           $languages
  * @var string             $page
  */
 $allowEdit = Core::hasAccess('demovox_edit_collection');
@@ -19,10 +21,13 @@ $allowEdit = Core::hasAccess('demovox_edit_collection');
 			<?= Strings::getAdminLink('/admin.php?page=demovoxSettings', 'in the settings') ?>)
 		<?php } ?>
 	</p>
+	<?php
+	if (Core::hasAccess('demovox_edit_collection')):
+	?>
 	<form method="post" action="<?= Infos::getRequestUri() ?>">
 		<?php wp_nonce_field($page); ?>
 		<input type="hidden" name="action" value="<?= $page ?>">
-		<input type="hidden" name="collection_ID" value="<?= $collectionId ?>">
+		<input type="hidden" name="cln" value="<?= $collectionId ?>">
 		<table class="form-table">
 			<tbody>
 			<tr>
@@ -59,7 +64,9 @@ $allowEdit = Core::hasAccess('demovox_edit_collection');
 		?>
 	</form>
 	<?php
+	endif;
 	include Infos::getPluginDir() . 'admin/views/collection/stats.php';
+	include Infos::getPluginDir() . 'admin/views/collection/mailTest.php';
 	?>
 </div>
 <?php if ($allowEdit): ?>

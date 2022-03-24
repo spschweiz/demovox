@@ -30,11 +30,11 @@ class ShortcodeDetailsHandler extends BaseController
 	 * @param array|string $atts    Shortcode attributes. Default empty.
 	 * @return string Shortcode output.
 	 */
-	public function countShortcode(array $atts = [])
+	public function countShortcode(array $atts = []): string
 	{
 		$collectionId = $this->getShortcodeCollectionId($atts);
 		$dbSign = new DbSignatures();
-		if ($sep = Settings::getValue('count_thousands_sep')) {
+		if ($sep = Settings::getCValue('count_thousands_sep')) {
 			$count = number_format($dbSign->countSignatures($collectionId), 0, '', $sep);
 		} else {
 			$count = $dbSign->countSignatures($collectionId);
@@ -127,10 +127,11 @@ class ShortcodeDetailsHandler extends BaseController
 		if (!$row) {
 			return '- Record not found -';
 		}
+		Infos::setCollectionId($row->collection_ID);
 
 		$signId    = $row->ID;
 		$isOptIn   = $row->is_optin;
-		$textOptin = Settings::getValueByUserlang('text_optin');
+		$textOptin = Settings::getCValueByUserlang('text_optin');
 
 		// Render view
 		include Infos::getPluginDir() . 'public/views/opt-in.php';

@@ -45,7 +45,7 @@ class Activator
 	}
 
 	/**
-	 * @param $post Post to check if visible
+	 * @param $post int Post to check if visible
 	 *
 	 * @return bool
 	 */
@@ -171,11 +171,11 @@ class Activator
 			$signatureSheetPageId = wp_insert_post($postData);
 			Core::setOption('signature_sheet_page_id', $signatureSheetPageId);
 		}
-		if (empty(Settings::getValue('use_page_as_mail_link'))) {
+		if (empty(Settings::getCValue('use_page_as_mail_link'))) {
 			Core::setOption('use_page_as_mail_link', $signatureSheetPageId);
 		}
 
-		$optinPageId = Settings::getValue('use_page_as_optin_link');
+		$optinPageId = Settings::getCValue('use_page_as_optin_link');
 
 		if (!self::isPostVisible($optinPageId)) {
 			$content     .= 'Would you like to opt-in to or opt-out from our List?<br/>[demovox_optin]';

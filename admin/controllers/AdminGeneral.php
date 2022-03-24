@@ -18,7 +18,7 @@ class AdminGeneral extends AdminBaseController
 	{
 		$dbSign = new DbSignatures();
 		$count = $dbSign->countSignatures(null, false);
-		$userLang = Infos::getUserLanguage();
+		$userLang = Infos::getAdminLanguage();
 
 		if ($count) {
 			$stats = new CollectionStatsDto();
@@ -72,8 +72,6 @@ class AdminGeneral extends AdminBaseController
 			}
 		}
 		$phpDisplayErrors = !!ini_get('display_errors');
-		$mailRecipient = $this->getWpMailAddress();
-		$languages = i18n::getLangsEnabled();
 
 		include Infos::getPluginDir() . 'admin/views/general/sysinfo.php';
 	}
@@ -131,44 +129,6 @@ class AdminGeneral extends AdminBaseController
 	}
 
 	/**
-	 * ajax action "mail_test"
-	 * @return void
-	 */
-	public function testMail()
-	{
-		Core::requireAccess('demovox_sysinfo');
-
-		$mailTo = $this->getWpMailAddress();
-		$langId = (isset($_REQUEST['lang']) && $_REQUEST['lang']) ? sanitize_text_field($_REQUEST['lang']) : 'de';
-		$mailType = isset($_REQUEST['mailType']) ? intval($_REQUEST['mailType']) : Mail::TYPE_CONFIRM;
-		$mailFrom = Settings::getValueByLang('mail_from_address', $langId);
-		$nameFrom = Settings::getValueByLang('mail_from_name', $langId);
-
-		$sign = new SignaturesDto();
-		$sign->language = $langId;
-		$sign->first_name = $nameFrom;
-		$sign->last_name = 'last name';
-		$sign->mail = $mailFrom;
-		$sign->link_pdf = Strings::getPageUrl('SIGNEE_PERSONAL_CODE');
-		$sign->link_optin = Strings::getPageUrl('SIGNEE_PERSONAL_CODE', Settings::getValue('use_page_as_optin_link'));
-
-		define('WP_SMTPDEBUG', true);
-		Loader::addAction('phpmailer_init', new Mail(), 'config', 10, 1);
-
-		$mailSubject = Mail::getMailSubject($sign, $mailType);
-		$mailText = Mail::getMailText($sign, $mailSubject, $mailType);
-
-		Loader::addAction('wp_mail_failed', new Mail(), 'echoMailerErrors', 20, 1);
-
-		ob_start();
-		$isSent = Mail::send($mailTo, $mailSubject, $mailText, $mailFrom, $nameFrom);
-		$connectionLog = ob_get_contents();
-		ob_end_clean();
-
-		include Infos::getPluginDir() . 'admin/views/general/sysinfo-mail.php';
-	}
-
-	/**
 	 * ajax action "run_cron"
 	 * @return void
 	 */
@@ -192,16 +152,6 @@ class AdminGeneral extends AdminBaseController
 		$hook = sanitize_text_field($_REQUEST['cron']);
 		ManageCron::cancel($hook);
 		echo 'Cron cancelled at ' . date('d.m.Y G:i:s');
-	}
-
-	protected function getWpMailAddress()
-	{
-		return get_bloginfo('admin_email');
-	}
-
-	protected function getWpMailName()
-	{
-		return get_bloginfo('name');
 	}
 
 	/**

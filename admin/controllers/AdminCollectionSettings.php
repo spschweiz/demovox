@@ -16,12 +16,10 @@ require_once Infos::getPluginDir() . 'admin/helpers/SignatureList.php';
  */
 class AdminCollectionSettings extends AdminSettings
 {
-	protected function getCollectionId(): int
+	public function __construct(string $pluginName, string $version)
 	{
-		if (!isset($_REQUEST['cln']) || !is_numeric($_REQUEST['cln'])) {
-			return $this->getDefaultCollection();
-		}
-		return intval($_REQUEST['cln']);
+		parent::__construct($pluginName, $version);
+		$this->setCollectionIdByReq();
 	}
 
 	public function pageSettings()
@@ -46,40 +44,55 @@ class AdminCollectionSettings extends AdminSettings
 
 	protected function pageSettings0()
 	{
-		$page = 'demovoxFields0';
+		$collectionId = $this->getCollectionId();
+		$page = $this->getCollectionId() . Settings::GLUE_PART . 'demovoxFields0';
 		$languages = i18n::getLangs();
 		include Infos::getPluginDir() . 'admin/views/collection-settings/settings-0.php';
 	}
 
 	protected function pageSettings1()
 	{
-		$page = 'demovoxFields1';
+		$collectionId = $this->getCollectionId();
+		$page = $this->getCollectionId() . Settings::GLUE_PART . 'demovoxFields1';
 		$languages = i18n::getLangs();
 		include Infos::getPluginDir() . 'admin/views/collection-settings/settings-1.php';
 	}
 
 	protected function pageSettings2()
 	{
-		$page = 'demovoxFields2';
+		$collectionId = $this->getCollectionId();
+		$page = $this->getCollectionId() . Settings::GLUE_PART . 'demovoxFields2';
 		$languages = i18n::getLangs();
 		include Infos::getPluginDir() . 'admin/views/collection-settings/settings-2.php';
 	}
 
 	protected function pageSettings3()
 	{
-		$page = 'demovoxFields3';
+		$collectionId = $this->getCollectionId();
+		$page = $this->getCollectionId() . Settings::GLUE_PART . 'demovoxFields3';
 		include Infos::getPluginDir() . 'admin/views/collection-settings/settings-3.php';
 	}
 
 	protected function pageSettings4()
 	{
-		$page = 'demovoxFields4';
+		$collectionId = $this->getCollectionId();
+		$page = $this->getCollectionId() . Settings::GLUE_PART . 'demovoxFields4';
 		include Infos::getPluginDir() . 'admin/views/collection-settings/settings-4.php';
 	}
 
 	protected function pageSettings5()
 	{
-		$page = 'demovoxFields5';
+		$collectionId = $this->getCollectionId();
+		$page = $this->getCollectionId() . Settings::GLUE_PART . 'demovoxFields5';
 		include Infos::getPluginDir() . 'admin/views/collection-settings/settings-5.php';
+	}
+
+	public function registerSettings()
+	{
+		require_once Core::getPluginDir() . 'admin/helpers/RegisterSettings.php';
+		require_once Core::getPluginDir() . 'admin/helpers/RegisterSettingsCollection.php';
+
+		$settings = new RegisterSettingsCollection($this);
+		$settings->register();
 	}
 }

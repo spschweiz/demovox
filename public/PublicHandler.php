@@ -155,16 +155,29 @@ class PublicHandler extends BaseController
 		switch ($nr) {
 			case 1:
 			default:
-				$collection = $this->shortcodeAttributes['collection'];
-				$sign->step1($collection);
+				$collectionId = $this->shortcodeAttributes['collection'];
+				$this->setCollectionId($collectionId);
+			$this->enqueueAssets();
+				$sign->step1($collectionId);
 				break;
 			case 2:
-				$collection = $this->getCollectionFromRequest();
-				$sign->step2($collection);
+				$collectionId = $this->getCollectionFromRequest();
+				$this->setCollectionId($collectionId);
+				$this->enqueueAssets();
+				$sign->step2($collectionId);
 				break;
 			case 3:
 				$guid = sanitize_key($_REQUEST['sign']);
-				$sign->step3($guid);
+				$dbSign = new DbSignatures();
+				$row = $dbSign->getRow(
+					['is_step2_done', 'is_encrypted', 'link_success', 'collection_ID',],
+					"guid = '" . $guid . "'"
+				);
+				if ($row === null) {
+					Core::errorDie('Signature not found with guid="' . $guid . '"', 404);
+				}
+				$this->setCollectionId($row->collection_ID);
+				$sign->step3($row);
 				break;
 		}
 		$output = ob_get_clean();
@@ -185,7 +198,8 @@ class PublicHandler extends BaseController
 	{
 		ob_start();
 
-		$pdfUrl = Settings::getValueByUserlang('signature_sheet');
+		$collectionId = $this->getCollectionFromRequest();
+		$pdfUrl = Settings::getCValueByUserlang('signature_sheet', $collectionId);
 		include $pluginDir . 'public/views/fallback.php';
 
 		$output = ob_get_clean();

@@ -4,6 +4,18 @@ namespace Demovox;
 
 class Infos
 {
+	protected static int $collectionId;
+
+	public static function getCollectionId()
+	{
+		return self::$collectionId;
+	}
+
+	public static function setCollectionId(int $collectionId)
+	{
+		self::$collectionId = $collectionId;
+	}
+
 	/**
 	 * Get server load (only works on Linux servers)
 	 *
@@ -26,7 +38,7 @@ class Infos
 		return $loadMinute * 100;
 	}
 
-	public static function getUserLanguage($raw = false)
+	public static function getUserLanguage($raw = false): string
 	{
 		$lang = get_user_locale();
 		if ($raw) {
@@ -35,7 +47,21 @@ class Infos
 		$lang = strtolower(substr($lang, 0, 2));
 		$availableLangs = i18n::getLangsEnabled();
 		if (!isset($availableLangs[$lang])) {
-			$lang = Settings::getValue('default_language');
+			$lang = Settings::getCValue('default_language');
+		}
+
+		return $lang;
+	}
+
+	public static function getAdminLanguage($raw = false): string
+	{
+		$lang = get_user_locale();
+		if ($raw) {
+			return $lang;
+		}
+		$lang = strtolower(substr($lang, 0, 2));
+		if (!isset(i18n::$languages[$lang])) {
+			$lang = i18n::$languageDefault;
 		}
 
 		return $lang;
@@ -48,6 +74,10 @@ class Infos
 	public static function getPluginDir()
 	{
 		return Core::getPluginDir();
+	}
+
+	public static function getDefaultCollectionId(){
+		return 1;
 	}
 
 	/**

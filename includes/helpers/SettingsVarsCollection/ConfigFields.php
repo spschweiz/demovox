@@ -269,13 +269,6 @@ $fields = [
 		'class'   => 'showOnMethodSmtp',
 	],
 	[
-		'uid'     => 'mail_max_per_execution',
-		'label'   => 'Send up to x emails per cron execution',
-		'section' => 'mailServer',
-		'type'    => 'number',
-		'default' => 300,
-	],
-	[
 		'uid'     => 'api_address_url',
 		'label'   => 'URL addressinformation',
 		'section' => 'api_address',
@@ -404,14 +397,6 @@ $fields[]      = [
 	'section'      => 'mailBase',
 	'type'         => 'text',
 	'supplemental' => 'Stop sending reminders after this date (format: DD.MM.YYYY, example: "' . date('d.m.Y') . '"). Clear field, to disable. Applies to both <b>sheet reminder</b> and <b>sign-up reminder</b>.',
-];
-$fields[]      = [
-	'uid'          => 'mail_remind_dedup',
-	'label'        => 'Mail deduplication',
-	'section'      => 'mailBase',
-	'type'         => 'checkbox',
-	'default'      => 1,
-	'supplemental' => 'Only send one reminder per mail address. Might weaken email address encryption security. Applies to both <b>sheet reminder</b> and <b>sign-up reminder</b>.',
 ];
 $fields[]      = [
 	'uid'          => 'mail_nl2br',
@@ -667,7 +652,7 @@ $fields[]    = [
 	'section'      => 'enabledLanguages',
 	'type'         => 'select',
 	'options'      => $allLanguages,
-	'default'      => 'de',
+	'default'      => i18n::$languageDefault,
 	'supplemental' => 'Fallback language if the WordPress frontend is not set to any of the enabled demovox languages',
 ];
 

@@ -3,7 +3,7 @@
 namespace Demovox;
 
 /**
- * Collection specific config
+ * General demovox config (opposed to collection specific @SettingsVarsCollection)
  */
 class SettingsVars
 {
@@ -13,13 +13,13 @@ class SettingsVars
 	/**
 	 * @return array|null
 	 */
-	public static function getFields()
+	public static function getFields(): array
 	{
 		if (self::$fieldsCache !== null) {
 			return self::$fieldsCache;
 		}
 
-		$fields = include('SettingsVars/ConfigFields.php');
+		$fields = include(Infos::getPluginDir() . 'includes/helpers/SettingsVarsGlobal/ConfigFields.php');
 
 		self::$fieldsCache = $fields;
 		return $fields;
@@ -34,7 +34,7 @@ class SettingsVars
 			return self::$sectionsCache;
 		}
 
-		$sections = include('SettingsVars/ConfigSections.php');
+		$sections = include(Infos::getPluginDir() . 'includes/helpers/SettingsVarsGlobal/ConfigSections.php');
 
 		self::$sectionsCache = $sections;
 		return $sections;
