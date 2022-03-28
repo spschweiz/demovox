@@ -107,8 +107,6 @@ class InitAdmin extends BaseController
 		$prefix = 'admin_post_demovox_';
 
 		// sysinfo
-		Loader::addAction($prefix . 'run_cron', $this->adminGeneral, 'runCron');
-		Loader::addAction($prefix . 'cancel_cron', $this->adminGeneral, 'cancelCron');
 		Loader::addAction($prefix . 'encrypt_test', $this->adminGeneral, 'testEncrypt');
 
 		// collection

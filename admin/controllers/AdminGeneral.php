@@ -129,32 +129,6 @@ class AdminGeneral extends AdminBaseController
 	}
 
 	/**
-	 * ajax action "run_cron"
-	 * @return void
-	 */
-	public function runCron()
-	{
-		Core::requireAccess('demovox_sysinfo');
-
-		$hook = sanitize_text_field($_REQUEST['cron']);
-		ManageCron::triggerCron($hook);
-		echo 'Event triggered at ' . date('d.m.Y G:i:s');
-	}
-
-	/**
-	 * ajax action "cancel_cron"
-	 * @return void
-	 */
-	public function cancelCron()
-	{
-		Core::requireAccess('demovox_sysinfo');
-
-		$hook = sanitize_text_field($_REQUEST['cron']);
-		ManageCron::cancel($hook);
-		echo 'Cron cancelled at ' . date('d.m.Y G:i:s');
-	}
-
-	/**
 	 * @param $mail
 	 * @return bool success
 	 */

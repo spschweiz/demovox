@@ -1,53 +1,107 @@
 <?php
+
 namespace Demovox;
 /**
  * @var AdminGeneral $this
  * @var CronBase[]   $allCrons
+ * @var int          $collectionId
  */
 
 ?>
-<h3>Cron</h3>
-<p>A cron manager plugin is recommended for detailed wordpress cron configuration</p>
-<?php
+<div class="wrap demovox">
+	<h3>Cron</h3>
+	<p>A cron manager plugin is recommended for detailed wordpress cron configuration</p>
+	<?php
 foreach ($allCrons as $cron) {
 	$dateStart   = $cron->getStatusDateStart();
 	$dateStop    = $cron->getStatusDateStop();
 	$lastSkipped = $cron->getStatusSkipped();
 	$lastMessage = $cron->getStatusMessage();
 	$lastSuccess = $cron->getStatusSuccess();
+	$urlRun      = Strings::getAdminUrl('/admin-post.php?cron=' . $cron->getCronId() . '&cln='
+										. $collectionId, 'demovox_run_cron');
+	$urlCancel   = Strings::getAdminUrl('/admin-post.php?cron=' . $cron->getCronId() . '&cln='
+										. $collectionId, 'demovox_cancel_cron');
 	?>
 	<h4><?= $cron->getName() ?></h4>
-	<?php if ($description = $cron->getDescription()) { ?>
+	<?php if ($description = $cron->getDescription()): ?>
 		<p><?= $description ?></p>
-	<?php } ?>
+	<?php endif; ?>
 	<p>
-		<button class="ajaxButton"
-				data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?cron=' . $cron->getCronId(), 'demovox_run_cron') ?>">
-			Run now
-		</button>
-		<span class="ajaxContainer"></span>
-		<br/>
-		Status: <?php if ($cron->isRunning()) { ?>currently running
-			<button class="ajaxButton"
-					data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?cron=' . $cron->getCronId(), 'demovox_cancel_cron') ?>"
-					data-confirm="Force cancel?" data-container=".ajaxCancelContainer">
-				cancel execution
-			</button><span class="ajaxCancelContainer"></span>
-		<?php } else { ?>
-			finished
-		<?php } ?><br/>
-		Last started: <?= $dateStart ? date('d.m.Y G:i:s', $dateStart) : '-' ?><br/>
-		Last ended: <?= $dateStop ? date('d.m.Y G:i:s', $dateStop) : '-' ?><br/>
-		<?php if ($lastSkipped) { ?>
-			Last skipped execution: <?= date('d.m.Y G:i:s', $lastSkipped) ?> (Reason: <?= $lastMessage ?>)
-			<br/>
-		<?php } elseif ($lastMessage) {
-			echo 'Last status: '
-				 . ($lastSuccess ? '<span class="success">success' : '<span class="error">error') . '</span>: '
-				 . $lastMessage;
-		} ?>
-	</p>
+	<table>
+		<tr>
+			<td>
+				Status:
+			</td>
+			<td>
+				<?php
+				if ($cron->isRunning()) :
+					?>currently running
+					<button class="ajaxButton" data-ajax-url="<?= $urlCancel ?>" data-confirm="Did you wait until the job has stopped running?"
+							data-container=".ajaxCancelContainer">
+						Mark as stopped
+					</button><span class="ajaxCancelContainer"></span>
+				<?php else: ?>
+					finished
+				<?php
+				endif;
+				?>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Last started:
+			</td>
+			<td>
+				<?= $dateStart ? date('d.m.Y G:i:s', $dateStart) : '-' ?>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Last ended:
+			</td>
+			<td>
+				<?= $dateStop ? date('d.m.Y G:i:s', $dateStop) : '-' ?>
+			</td>
+		</tr>
+		<?php if ($lastSkipped) : ?>
+			<tr>
+			<td>
+				Last skipped execution:
+			</td>
+			<td>
+				<?= date('d.m.Y G:i:s', $lastSkipped) ?> (Reason: <?= $lastMessage ?>)
+			</td>
+			<td>
+		<?php elseif ($lastMessage): ?>
+			<tr>
+				<td>
+					Last status:
+				</td>
+				<td>
+					<?=
+					($lastSuccess ? '<span class="success">success' : '<span class="error">error') . '</span>: '
+					. $lastMessage;
+					?>
+				</td>
+			</tr>
+		<?php
+		endif;
+		?>
+		<tr>
+			<td>
+				Start manually:
+			</td>
+			<td>
+				<button class="ajaxButton" data-ajax-url="<?= $urlRun ?>">
+					Run now
+				</button>
+				<span class="ajaxContainer"></span>
+			</td>
+		</tr>
+	</table>
 	<?php
 
 }
 ?>
+</div>
