@@ -84,7 +84,7 @@ class InitPublic extends BaseController
 	 */
 	public function enqueueStyles()
 	{
-		wp_enqueue_style($this->getPluginName(), plugin_dir_url(__FILE__) . 'css/demovox-public.min.css', [], $this->getVersion(), 'all');
+		wp_register_style($this->getPluginName(), plugin_dir_url(__FILE__) . 'css/demovox-public.min.css', [], $this->getVersion(), 'all');
 	}
 
 	/**
@@ -94,39 +94,20 @@ class InitPublic extends BaseController
 	 */
 	public function enqueueScripts()
 	{
-		$successPage  = Settings::getValue('use_page_as_success');
-		$demovoxJsArr = [
-			'language'          => Infos::getUserLanguage(),
-			'ajaxUrl'           => admin_url('admin-ajax.php'),
-			'ajaxForm'          => Settings::getValue('form_ajax_submit'),
-			'successPageRedir'  => $successPage || $successPage === '0',
-			'analyticsMatomo'   => Settings::getValue('analytics_matomo'),
-			'apiAddressEnabled' => false,
-		];
-		if ($apiAddressUrl = Settings::getValue('api_address_url')) {
-			$demovoxJsArr['apiAddressEnabled']   = true;
-			$demovoxJsArr['apiAddressKey']       = Settings::getValue('api_address_key');
-			$demovoxJsArr['apiAddressUrl']       = $apiAddressUrl;
-			$demovoxJsArr['apiAddressCityInput'] = Settings::getValue('api_address_city_input');
-			$demovoxJsArr['apiAddressGdeInput']  = Settings::getValue('api_address_gde_input');
-			$demovoxJsArr['apiAddressGdeSelect'] = Settings::getValue('api_address_gde_select');
-		}
-
-		wp_enqueue_script(
+		wp_register_style(
 			$this->getPluginName(),
 			plugin_dir_url(__FILE__) . 'js/demovox-public.min.js',
 			['jquery', 'jquery-ui-datepicker'],
 			$this->getVersion(),
 			false
 		);
-		wp_enqueue_script(
+		wp_register_script(
 			$this->getPluginName() . '_pdf',
 			plugin_dir_url(__FILE__) . 'js/demovox-public-pdf.min.js',
 			['jquery'],
 			$this->getVersion(),
-			false
+			true
 		);
-		wp_localize_script($this->getPluginName(), 'demovoxData', $demovoxJsArr);
 	}
 
 	public function startSession()
