@@ -4,22 +4,17 @@ namespace Demovox;
 
 abstract class CronBase
 {
-	protected $id;
+	protected int $cronId;
+	protected int $collectionId;
 	protected string $namespace;
 	protected string $cronName;
 	protected string $className;
 	protected string $scheduleRecurrence = 'hourly';
 
-	/**
-	 * @var $cronClassNames array
-	 */
-	static protected array $cronClassNames = [
-		0 => 'CronMailConfirm',
-		1 => 'CronMailIndex',
-		2 => 'CronMailRemindSheet',
-		3 => 'CronMailRemindSignup',
-		4 => 'CronExportToApi',
-	];
+	public function __construct(int $collectionId)
+	{
+		$this->collectionId = $collectionId;
+	}
 
 	protected function defineCronMeta(): void
 	{
@@ -42,18 +37,18 @@ abstract class CronBase
 	 */
 	public static function getCronClassNames(): array
 	{
-		return self::$cronClassNames;
+		return ManageCron::getCronNames();
 	}
 
 	/**
 	 * @return false|int
 	 */
-	public function getId()
+	public function getCronId()
 	{
-		if ($this->id === null) {
-			$this->id = array_search($this->getClassName(), self::$cronClassNames);
+		if (!isset($this->cronId)) {
+			$this->cronId = array_search($this->getClassName(), self::getCronClassNames());
 		}
-		return $this->id;
+		return $this->cronId;
 	}
 
 	/**
@@ -83,7 +78,7 @@ abstract class CronBase
 	 */
 	public function getDescription(): ?string
 	{
-		$id                = $this->getId();
+		$id                = $this->getCronId();
 		$mail_remind_dedup = Settings::getValue('mail_remind_dedup') ? 'enabled' : 'disabled';
 		switch ($id) {
 			case 0: // CronMailConfirm
@@ -236,7 +231,8 @@ abstract class CronBase
 
 	public function cancelRunning(): void
 	{
-		Core::logMessage('Cron ' . $this->getClassName() . ' cancelled by user "' . Infos::getUserName() . '"', 'notice');
+		Core::logMessage('Cron ' . $this->getClassName() . ' cancelled by user "' . Infos::getUserName()
+						 . '"', 'notice');
 		$this->setOption('lock', false);
 		$this->setOption('stop', time());
 	}

@@ -9,7 +9,7 @@ abstract class CronMailBase extends CronBase
 	/** @var int */
 	protected int $limitPerExecution;
 
-	public function __construct()
+	public function __construct(int $collectionId)
 	{
 		$this->limitPerExecution = intval(Settings::getValue('mail_max_per_execution')) ?: 300;
 
@@ -21,6 +21,7 @@ abstract class CronMailBase extends CronBase
 			}
 			$this->isDedup = true;
 		}
+		return parent::__construct($collectionId);
 	}
 
 	protected function prepareRunMailReminder(): bool

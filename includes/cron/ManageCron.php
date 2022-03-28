@@ -5,13 +5,23 @@ namespace Demovox;
 class ManageCron
 {
 	static protected array $allCrons;
+	/**
+	 * @var $cronClassNames array
+	 */
+	static protected array $cronClassNames = [
+		0 => 'CronMailConfirm',
+		1 => 'CronMailIndex',
+		2 => 'CronMailRemindSheet',
+		3 => 'CronMailRemindSignup',
+		4 => 'CronExportToApi',
+	];
 
 	/**
 	 * @return string[]
 	 */
 	public static function getCronNames(): array
 	{
-		return CronBase::getCronClassNames();
+		return self::$cronClassNames;
 	}
 
 	/**

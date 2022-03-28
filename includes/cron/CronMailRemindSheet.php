@@ -6,7 +6,7 @@ class CronMailRemindSheet extends CronMailBase
 {
 	protected string $scheduleRecurrence = 'daily';
 	/** @var array */
-	protected $colsSign = [
+	protected array $colsSign = [
 		'ID',
 		'link_optin',
 		'link_pdf',

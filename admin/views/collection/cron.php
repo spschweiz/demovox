@@ -22,14 +22,14 @@ foreach ($allCrons as $cron) {
 	<?php } ?>
 	<p>
 		<button class="ajaxButton"
-				data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?cron=' . $cron->getId(), 'demovox_run_cron') ?>">
+				data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?cron=' . $cron->getCronId(), 'demovox_run_cron') ?>">
 			Run now
 		</button>
 		<span class="ajaxContainer"></span>
 		<br/>
 		Status: <?php if ($cron->isRunning()) { ?>currently running
 			<button class="ajaxButton"
-					data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?cron=' . $cron->getId(), 'demovox_cancel_cron') ?>"
+					data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?cron=' . $cron->getCronId(), 'demovox_cancel_cron') ?>"
 					data-confirm="Force cancel?" data-container=".ajaxCancelContainer">
 				cancel execution
 			</button><span class="ajaxCancelContainer"></span>
