@@ -27,6 +27,12 @@ class CronMailRemindSignup extends CronMailBase
 		if (!$this->prepareRunMailReminder()) {
 			return;
 		}
+		if (!$this->prepareDedup()) {
+			return;
+		}
+		if (!$this->prepareRun()) {
+			return;
+		}
 		$this->setRunningStart();
 		$this->sendPendingMails();
 		$this->setRunningStop();

@@ -14,6 +14,7 @@ abstract class CronBase
 	public function __construct(int $collectionId)
 	{
 		$this->collectionId = $collectionId;
+		Infos::setCollectionId($collectionId);
 	}
 
 	protected function defineCronMeta(): void
@@ -59,7 +60,7 @@ abstract class CronBase
 		if (!isset($this->cronName)) {
 			$this->defineCronMeta();
 		}
-		return $this->cronName;
+		return $this->cronName . '_' . $this->collectionId;
 	}
 
 	/**
@@ -194,10 +195,10 @@ abstract class CronBase
 	}
 
 	/**
-	 * @param string $msg
-	 * @param bool   $success
+	 * @param string|null $msg
+	 * @param bool        $success
 	 */
-	public function setStateMessage(string $msg, bool $success = true): void
+	public function setStateMessage(?string $msg = null, bool $success = true): void
 	{
 		$this->setOption('statusMsg', $msg);
 		$this->setOption('statusSuccess', $success);

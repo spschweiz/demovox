@@ -122,6 +122,11 @@ class InitAdmin extends BaseController
 		// - stats
 		Loader::addAction($prefix . 'charts_stats', $this->adminCollection, 'statsCharts');
 		Loader::addAction($prefix . 'source_stats', $this->adminCollection, 'statsSource');
+		Loader::addAction($prefix . 'cron', $this->adminCollection, 'pageCron');
+
+		// Cron
+		Loader::addAction($prefix . 'run_cron', $this->adminCollection, 'runCron');
+		Loader::addAction($prefix . 'cancel_cron', $this->adminCollection, 'cancelCron');
 	}
 
 	/**
@@ -190,13 +195,13 @@ class InitAdmin extends BaseController
 		$callback = [$this->adminGeneral, 'pageImport'];
 		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityImport, 'demovoxImport', $callback);
 
-		$menuTitle = 'System info';
-		$callback = [$this->adminGeneral, 'pageSysinfo'];
-		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySysinfo, 'demovoxSysinfo', $callback);
-
 		$menuTitle = 'General Settings';
 		$callback  = [$this->adminGeneralSettings, 'pageGeneralSettings'];
 		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySettings, 'demovoxGeneralSettings', $callback);
+
+		$menuTitle = 'System info';
+		$callback = [$this->adminGeneral, 'pageSysinfo'];
+		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySysinfo, 'demovoxSysinfo', $callback);
 
 		// collection
 		$collections = new DbCollections;
@@ -221,5 +226,9 @@ class InitAdmin extends BaseController
 		$menuTitle = 'Settings';
 		$callback = [$this->adminCollectionSettings, 'pageSettings'];
 		add_submenu_page($clnSlug, $menuTitle, $menuTitle, $capabilitySettings, 'demovoxSettings', $callback);
+
+		$menuTitle = 'Cron';
+		$callback = [$this->adminCollection, 'pageCron'];
+		add_submenu_page($clnSlug, $menuTitle, $menuTitle, $capabilitySettings, 'demovoxCron', $callback);
 	}
 }
