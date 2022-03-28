@@ -12,9 +12,9 @@ $sections = [
 		'page'  => 'demovoxFields0',
 	],
 	'enabledLanguages'     => [
-		'title' => 'demovox option languages',
+		'title' => 'demovox languages',
 		'page'  => 'demovoxFields0',
-		'sub'   => 'Enable languages for the demovox option translations like signature sheets, mails and opt-in text.<br/>'
+		'sub'   => 'Enable languages for demovox like language specific signature sheets, mails and opt-in text.<br/>'
 			. ' The frontend language, like the translation of the form input titles, is affected by the WordPress option'
 			. ' <b>Site Language</b> under <b>General Settings</b>.<br/>'
 			. ' Another way is to set the language by an internationalisation plugin to allow multiple languages for the client.'
@@ -71,8 +71,8 @@ $sections = [
 	'mailBase'             => [
 		'title' => 'Email settings',
 		'page'  => 'demovoxFields4',
-		'sub'   => 'You must also set the mail server settings in the advanced settings. To send test mails or to make sure the mail'
-			. ' crons are executed, take a look at the <b>System info</b> page.',
+		'sub' => 'To send test mails or to make sure the mail crons are executed, take a look at the'
+				 . ' <b>System info</b> page.',
 	],
 	'mailSender'           => [
 		'title' => 'Email sender',
