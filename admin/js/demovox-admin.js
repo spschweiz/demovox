@@ -5,106 +5,9 @@ var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 (function ($) {
 	'use strict';
 
-	var $input;
-	$(function () {
-		var demovoxMediaUploader;
-		$('.demovox .uploadButton').click(function (e) {
-			e.preventDefault();
-			$input = $('#' + $(this).data('inputId'));
-			// If the uploader object has already been created, reopen the dialog.
-			if (demovoxMediaUploader) {
-				demovoxMediaUploader.open();
-				return;
-			}
-			// Extend the wp.media object.
-			demovoxMediaUploader = wp.media.frames.file_frame = wp.media({
-				// Set the values through wp_localize_script so that they can be localised/translated.
-				title: demovoxData.uploader.title,
-				button: {
-					text: demovoxData.uploader.text
-				}, multiple: false
-			});
-			// When a file is selected, grab the URL and set it as the fields value.
-			demovoxMediaUploader.on('select', function () {
-				var attachment = demovoxMediaUploader.state().get('selection').first().toJSON();
-				$input.val(attachment.url);
-			});
-			// Open the uploader dialog.
-			demovoxMediaUploader.open();
-		});
-
-		fontSize = parseInt($('#demovox_fontsize').val());
-		$('.demovox .showPdf').click(function () {
-			var $container = $(this).closest('div'),
-				lang = $(this).data('lang'),
-				qrMode = $('#demovox_field_qr_mode').val(),
-				pdfUrl = $('#demovox_signature_sheet_' + lang).val(),
-				admin = demovoxAdminClass,
-				fields = [
-					admin.createField('BE', 'canton', lang),
-					admin.createField('Bern', 'commune', lang),
-					admin.createField('3001', 'zip', lang),
-					admin.createField('21', 'birthdate_day', lang),
-					admin.createField('10', 'birthdate_month', lang),
-					admin.createField('88', 'birthdate_year', lang),
-					admin.createField('Theaterplatz 4', 'street', lang),
-				],
-				qrData = qrMode === 'disabled'
-					? null
-					: {
-						"text": "JNXWE",
-						"x": admin.getField('qr_img_' + lang + '_x'),
-						"y": admin.getField('qr_img_' + lang + '_y'),
-						"rotate": admin.getField('qr_img_' + lang + '_rot'),
-						"size": admin.getField('qr_img_size_' + lang),
-						"textX": admin.getField('qr_text_' + lang + '_x'),
-						"textY": admin.getField('qr_text_' + lang + '_y'),
-						"textRotate": admin.getField('qr_text_' + lang + '_rot'),
-						"textSize": fontSize,
-						"textColor": textColor
-					};
-			createPdf('preview', pdfUrl, fields, qrData, $container);
-		});
-		initDemovoxAjaxButton($('.demovox'));
-	});
-
-	function initDemovoxAjaxButton($container) {
-		$container.find('.ajaxButton').click(function () {
-			var cont = $(this).data('container'),
-				ajaxUrl = $(this).data('ajax-url'),
-				confirmTxt = $(this).data('confirm'),
-				$ajaxContainer = $(this).parent().find(cont ? cont : '.ajaxContainer');
-			if(!$ajaxContainer.length){
-				if (cont) {
-					$ajaxContainer = $(cont);
-				}
-				if (!$ajaxContainer.length) {
-					console.error('initDemovoxAjaxButton: $ajaxContainer not found', $ajaxContainer);
-					return;
-				}
-			}
-			if (typeof confirmTxt !== 'undefined' && !confirm(confirmTxt)) {
-				return;
-			}
-			$ajaxContainer.css('cursor', 'progress');
-			$ajaxContainer.html('Loading...');
-			$.get(ajaxUrl)
-				.done(function (data) {
-					$ajaxContainer.html(data);
-					initDemovoxAjaxButton($ajaxContainer);
-				})
-				.fail(function () {
-					$ajaxContainer.html('Error');
-				})
-				.always(function () {
-					$ajaxContainer.css('cursor', 'auto');
-				});
-		});
-	}
-
 	var demovoxAdminClass = {
 		getField: function (name) {
-			return parseInt($('#demovox_field_' + name).val())
+			return parseInt(this.configValue('field_' + name))
 		},
 		createField: function (value, name, lang) {
 			var x = this.getField(name + '_' + lang + '_x'),
@@ -188,9 +91,124 @@ var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 		nDate: function (year, month, day) {
 			var monthIndex = month - 1;
 			return new Date(year, monthIndex, day);
+		},
+		configValue: function (selector) {
+			selector = '#demovox_' + this.getCollectionId() + '_' + selector;
+			var $el = $(selector);
+			if ($el.length < 1) {
+				console.error('demovoxAdminClass.configValue: $el not found', {$el: $el, selector: selector});
+				return '';
+			}
+			return $el.val()
+		},
+		getCollectionId: function() {
+			var $el = $('#cln');
+			if ($el.length < 1) {
+				console.error('demovoxAdminClass.getCollectionId: $el not found', $el);
+				return '';
+			}
+			return $el.val()
+		},
+		initShowPdf: function ($btn) {
+			$btn.click(function () {
+				var $container = $(this).closest('div'),
+					lang = $(this).data('lang'),
+					fontSize = parseInt(this.configValue('fontsize')),
+					qrMode = this.configValue('field_qr_mode'),
+					pdfUrl = this.configValue('signature_sheet_' + lang),
+					fields = [
+						this.createField('BE', 'canton', lang),
+						this.createField('Bern', 'commune', lang),
+						this.createField('3001', 'zip', lang),
+						this.createField('21', 'birthdate_day', lang),
+						this.createField('10', 'birthdate_month', lang),
+						this.createField('88', 'birthdate_year', lang),
+						this.createField('Theaterplatz 4', 'street', lang),
+					],
+					qrData = qrMode === 'disabled'
+						? null
+						: {
+							"text": "JNXWE",
+							"x": this.getField('qr_img_' + lang + '_x'),
+							"y": this.getField('qr_img_' + lang + '_y'),
+							"rotate": this.getField('qr_img_' + lang + '_rot'),
+							"size": this.getField('qr_img_size_' + lang),
+							"textX": this.getField('qr_text_' + lang + '_x'),
+							"textY": this.getField('qr_text_' + lang + '_y'),
+							"textRotate": this.getField('qr_text_' + lang + '_rot'),
+							"textSize": fontSize,
+							"textColor": textColor
+						};
+				createPdf('preview', pdfUrl, fields, qrData, $container);
+			});
+		},
+		initAjaxButton: function ($container) {
+			$container.find('.ajaxButton').click(function () {
+				var cont = $(this).data('container'),
+					ajaxUrl = $(this).data('ajax-url'),
+					confirmTxt = $(this).data('confirm'),
+					$ajaxContainer = $(this).parent().find(cont ? cont : '.ajaxContainer');
+				if(!$ajaxContainer.length){
+					if (cont) {
+						$ajaxContainer = $(cont);
+					}
+					if (!$ajaxContainer.length) {
+						console.error('initAjaxButton: $ajaxContainer not found', $ajaxContainer);
+						return;
+					}
+				}
+				if (typeof confirmTxt !== 'undefined' && !confirm(confirmTxt)) {
+					return;
+				}
+				$ajaxContainer.css('cursor', 'progress');
+				$ajaxContainer.html('Loading...');
+				$.get(ajaxUrl)
+					.done(function (data) {
+						$ajaxContainer.html(data);
+						this.initAjaxButton($ajaxContainer);
+					})
+					.fail(function () {
+						$ajaxContainer.html('Error');
+					})
+					.always(function () {
+						$ajaxContainer.css('cursor', 'auto');
+					});
+			});
 		}
 	};
+
 	global.demovoxAdminClass = demovoxAdminClass;
+
+	var $input;
+	$(function () {
+		var demovoxMediaUploader;
+		$('.demovox .uploadButton').click(function (e) {
+			e.preventDefault();
+			$input = $('#' + $(this).data('inputId'));
+			// If the uploader object has already been created, reopen the dialog.
+			if (demovoxMediaUploader) {
+				demovoxMediaUploader.open();
+				return;
+			}
+			// Extend the wp.media object.
+			demovoxMediaUploader = wp.media.frames.file_frame = wp.media({
+				// Set the values through wp_localize_script so that they can be localised/translated.
+				title: demovoxData.uploader.title,
+				button: {
+					text: demovoxData.uploader.text
+				}, multiple: false
+			});
+			// When a file is selected, grab the URL and set it as the fields value.
+			demovoxMediaUploader.on('select', function () {
+				var attachment = demovoxMediaUploader.state().get('selection').first().toJSON();
+				$input.val(attachment.url);
+			});
+			// Open the uploader dialog.
+			demovoxMediaUploader.open();
+		});
+		demovoxAdminClass.initShowPdf($('.demovox .showPdf'));
+		demovoxAdminClass.initAjaxButton($('.demovox'));
+	});
 })(jQuery);
 
 global.demovoxChart = demovoxChart;

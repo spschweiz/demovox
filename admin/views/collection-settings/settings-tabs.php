@@ -21,6 +21,7 @@ if (!$tabExists) {
 	exit;
 }
 ?>
+<input type="hidden" id="cln" name="cln" value="<?= $collectionId ?>">
 <div class="wrap demovox">
 	<form method="post" id="mainform" action="options.php" enctype="multipart/form-data">
 		<?php wp_nonce_field($page); ?>
