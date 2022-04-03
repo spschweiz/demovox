@@ -2,22 +2,22 @@
 
 namespace Demovox;
 
-class CronBase
+abstract class CronBase
 {
-	protected $id;
-	protected $namespace;
-	protected $cronName;
-	protected $className;
-	protected $scheduleRecurrence = 'hourly';
+	protected int $cronId;
+	protected int $collectionId;
+	protected string $namespace;
+	protected string $cronName;
+	protected string $className;
+	protected string $scheduleRecurrence = 'hourly';
 
-	/**
-	 * @var $cronClassNames array
-	 */
-	static protected $cronClassNames = [
-		0 => 'CronMailConfirm', 1 => 'CronMailIndex', 2 => 'CronMailRemindSheet', 3 => 'CronMailRemindSignup', 4 => 'CronExportToApi',
-	];
+	public function __construct(int $collectionId)
+	{
+		$this->collectionId = $collectionId;
+		Infos::setCollectionId($collectionId);
+	}
 
-	protected function defineCronMeta()
+	protected function defineCronMeta(): void
 	{
 		[$namespace, $className] = explode('\\', get_class($this));
 		$cronName = strtolower(
@@ -27,90 +27,95 @@ class CronBase
 				$className
 			)
 		);
+
 		$this->namespace = $namespace;
-		$this->cronName = $cronName;
+		$this->cronName  = $cronName;
 		$this->className = $className;
 	}
 
 	/**
 	 * @return string[]
 	 */
-	public static function getCronClassNames(){
-		return self::$cronClassNames;
+	public static function getCronClassNames(): array
+	{
+		return ManageCron::getCronNames();
 	}
 
 	/**
 	 * @return false|int
 	 */
-	public function getId()
+	public function getCronId()
 	{
-		if ($this->id === null) {
-			$this->id = array_search($this->getClassName(), self::$cronClassNames);
+		if (!isset($this->cronId)) {
+			$this->cronId = array_search($this->getClassName(), self::getCronClassNames());
 		}
-		return $this->id;
+		return $this->cronId;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getName()
+	public function getName(): string
 	{
-		if(!$this->cronName){
+		if (!isset($this->cronName)) {
 			$this->defineCronMeta();
 		}
-		return $this->cronName;
+		return $this->cronName . '_' . $this->collectionId;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getNamespace()
+	public function getNamespace(): string
 	{
-		if(!$this->namespace){
+		if (!isset($this->namespace)) {
 			$this->defineCronMeta();
 		}
 		return $this->namespace;
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getDescription()
+	public function getDescription(): ?string
 	{
-		$id = $this->getId();
+		$id                = $this->getCronId();
 		$mail_remind_dedup = Settings::getValue('mail_remind_dedup') ? 'enabled' : 'disabled';
 		switch ($id) {
 			case 0: // CronMailConfirm
 				$mail_confirmation_enabled = Settings::getCValue('mail_confirmation_enabled') ? 'enabled' : 'disabled';
-				return 'Send sign-up confirmation mails after a client has filled both forms. ' .
-					'Requires the setting <i>Confirmation mail</i> (' . $mail_confirmation_enabled . ') to be enabled.';
+				return 'Send sign-up confirmation mails after a client has filled both forms. '
+					   . 'Requires the setting <i>Confirmation mail</i> (' . $mail_confirmation_enabled
+					   . ') to be enabled.';
 				break;
 			case 1: // CronMailIndex
-				return 'Indexing cron to avoid duplicate reminders for the same mails address (table <i>wp_demovox_mails</i>). ' .
-					'If enabled, this indexer must be executed before reminder cron. ' .
-					'Requires the setting <i>Mail deduplication</i> (' . $mail_remind_dedup . ') to be enabled.';
+				return 'Indexing cron to avoid duplicate reminders for the same mails address (table <i>wp_demovox_mails</i>). '
+					   . 'If enabled, this indexer must be executed before reminder cron. '
+					   . 'Requires the setting <i>Mail deduplication</i> (' . $mail_remind_dedup . ') to be enabled.';
 				break;
 			case 2: // CronMailRemindSheet
 				$mail_remind_sheet_min_age = intval(Settings::getCValue('mail_remind_sheet_min_age'));
 				$mail_remind_sheet_enabled = Settings::getCValue('mail_remind_sheet_enabled') ? 'enabled' : 'disabled';
-				return 'Send a reminder to signees which didn\'t send their signature sheets ' .
-					'after (<strong>' . $mail_remind_sheet_min_age . '</strong>) days. ' .
-					'<i>Mail deduplication</i> (' . $mail_remind_dedup . ') can be applied. ' .
-					'Requires the setting <i>Sheet reminder mail</i> (' . $mail_remind_sheet_enabled . ') to be enabled.';
+				return 'Send a reminder to signees which didn\'t send their signature sheets ' . 'after (<strong>'
+					   . $mail_remind_sheet_min_age . '</strong>) days. '
+					   . '<i>Mail deduplication</i> ('
+					   . $mail_remind_dedup . ') can be applied. ' . 'Requires the setting <i>Sheet reminder mail</i> ('
+					   . $mail_remind_sheet_enabled . ') to be enabled.';
 				break;
 			case 3: // CronMailRemindSignup
 				$mail_remind_signup_min_age = intval(Settings::getCValue('mail_remind_signup_min_age'));
 				$mail_remind_signup_enabled = Settings::getCValue('mail_remind_signup_enabled') ? 'enabled' : 'disabled';
-				return 'Send a reminder to signees which didn\'t finish filling the sign-up form ' .
-					'after (<strong>' . $mail_remind_signup_min_age . '</strong>) days. ' .
-					'<i>Mail deduplication</i> (' . $mail_remind_dedup . ') can be applied. ' .
-					'Requires the setting <i>Sheet reminder mail</i> (' . $mail_remind_signup_enabled . ') to be enabled.';
+				return 'Send a reminder to signees which didn\'t finish filling the sign-up form ' . 'after (<strong>'
+					   . $mail_remind_signup_min_age . '</strong>) days. '
+					   . '<i>Mail deduplication</i> ('
+					   . $mail_remind_dedup . ') can be applied. ' . 'Requires the setting <i>Sheet reminder mail</i> ('
+					   . $mail_remind_signup_enabled . ') to be enabled.';
 				break;
 			case 4: // CronExportToApi
 				$api_export_url = Settings::getCValue('api_export_url');
 				$api_export_url = $api_export_url ? 'enabled and set to "' . $api_export_url . '"' : 'disabled';
-				return 'Export sign-up data to a REST API. ' .
-					'Requires the setting <i>API URL</i> (' . $api_export_url . ').';
+				return 'Export sign-up data to a REST API. '
+					   . 'Requires the setting <i>API URL</i> (' . $api_export_url . ').';
 				break;
 		}
 		return null;
@@ -119,9 +124,9 @@ class CronBase
 	/**
 	 * @return string
 	 */
-	public function getClassName()
+	public function getClassName(): string
 	{
-		if(!$this->className){
+		if (!isset($this->className)) {
 			$this->defineCronMeta();
 		}
 		return $this->className;
@@ -130,7 +135,7 @@ class CronBase
 	/**
 	 * @return string
 	 */
-	public function getHookName()
+	public function getHookName(): string
 	{
 		return strtolower($this->getNamespace()) . '_' . $this->getName();
 	}
@@ -138,7 +143,7 @@ class CronBase
 	/**
 	 * @return string
 	 */
-	public function getRecurrence()
+	public function getRecurrence(): string
 	{
 		return $this->scheduleRecurrence;
 	}
@@ -146,7 +151,7 @@ class CronBase
 	/**
 	 * @return bool
 	 */
-	protected function prepareRun()
+	protected function prepareRun(): bool
 	{
 		if (!Core::isPluginEnabled()) {
 			// wp cannot disable crons without deleting them
@@ -179,10 +184,9 @@ class CronBase
 		return $this->getOption('lock');
 	}
 
-	public function getStausDateStart()
+	public function getStatusDateStart()
 	{
-		$time = $this->getOption('start');
-		return $time;
+		return $this->getOption('start');
 	}
 
 	public function getStatusSkipped()
@@ -191,10 +195,10 @@ class CronBase
 	}
 
 	/**
-	 * @param string $msg
-	 * @param bool   $success
+	 * @param string|null $msg
+	 * @param bool        $success
 	 */
-	public function setStateMessage($msg, $success = true)
+	public function setStateMessage(?string $msg = null, bool $success = true): void
 	{
 		$this->setOption('statusMsg', $msg);
 		$this->setOption('statusSuccess', $success);
@@ -213,11 +217,10 @@ class CronBase
 
 	public function getStatusDateStop()
 	{
-		$time = $this->getOption('stop');
-		return $time;
+		return $this->getOption('stop');
 	}
 
-	protected function setRunningStart()
+	protected function setRunningStart(): void
 	{
 		Core::logMessage('Cron ' . $this->getClassName() . ' started', 'notice');
 		$this->setOption('lock', true);
@@ -227,21 +230,22 @@ class CronBase
 		$this->setStateMessage(null);
 	}
 
-	public function cancelRunning()
+	public function cancelRunning(): void
 	{
-		Core::logMessage('Cron ' . $this->getClassName() . ' cancelled by user "' . Infos::getUserName() . '"', 'notice');
+		Core::logMessage('Cron ' . $this->getClassName() . ' cancelled by user "' . Infos::getUserName()
+						 . '"', 'notice');
 		$this->setOption('lock', false);
 		$this->setOption('stop', time());
 	}
 
-	protected function setSkipped($reason)
+	protected function setSkipped(string $reason): void
 	{
 		Core::logMessage('Cron ' . $this->getClassName() . ' execution skipped. Reason: ' . $reason, 'notice');
 		$this->setOption('lastSkipped', time());
 		$this->setStateMessage($reason);
 	}
 
-	protected function setRunningStop()
+	protected function setRunningStop(): void
 	{
 		Core::logMessage('Cron ' . $this->getClassName() . ' ended', 'notice');
 		$this->setOption('lock', false);
@@ -252,7 +256,7 @@ class CronBase
 	 * @param string $msg
 	 * @param string $level
 	 */
-	protected function log($msg, $level = 'error')
+	protected function log(string $msg, string $level = 'error'): void
 	{
 		Core::logMessage('Cron ' . $this->getClassName() . ' message: ' . $msg, $level);
 	}
@@ -275,7 +279,7 @@ class CronBase
 	 *
 	 * @return bool success
 	 */
-	protected function setOption($id, $value)
+	protected function setOption(string $id, $value): bool
 	{
 		return Core::setOption($this->getName() . '_' . $id, $value);
 	}

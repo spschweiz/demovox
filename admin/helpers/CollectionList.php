@@ -83,6 +83,8 @@ class CollectionList extends ListTable
 				$ret = Strings::getAdminLink('admin.php?page=demovoxOverview&cln=' . $item->ID, 'Overview') . ' | ';
 				if (Core::hasAccess('demovox_data'))
 					$ret .= Strings::getAdminLink('admin.php?page=demovoxData&cln=' . $item->ID, 'Data') . ' | ';
+				if (Core::hasAccess('demovox_sysinfo'))
+					$ret .= Strings::getAdminLink('admin.php?page=demovoxCron&cln=' . $item->ID, 'Cron') . ' | ';
 				if (Core::hasAccess('manage_options'))
 					$ret .= Strings::getAdminLink('admin.php?page=demovoxSettings&cln=' . $item->ID, 'Settings');
 				return $ret;

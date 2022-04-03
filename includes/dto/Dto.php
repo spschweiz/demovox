@@ -28,7 +28,7 @@ abstract class Dto
 		if (is_array($parameters)) {
 			foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $reflectionProperty) {
 				$property = $reflectionProperty->getName();
-				if (!property_exists($parameters, $property)) {
+				if (!isset($parameters[$property])) {
 					continue;
 				}
 				$this->{$property} = $parameters[$property];

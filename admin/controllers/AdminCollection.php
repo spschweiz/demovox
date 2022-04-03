@@ -216,6 +216,39 @@ class AdminCollection extends AdminBaseController
 		include Infos::getPluginDir() . 'admin/views/collection/data.php';
 	}
 
+	public function pageCron()
+	{
+		$collectionId = $this->getCollectionId();
+		$allCrons     = ManageCron::getCrons($collectionId);
+		include Infos::getPluginDir() . 'admin/views/collection/cron.php';
+	}
+
+	/**
+	 * ajax action "run_cron"
+	 * @return void
+	 */
+	public function runCron()
+	{
+		Core::requireAccess('demovox_sysinfo');
+
+		$hook = sanitize_text_field($_REQUEST['cron']);
+		ManageCron::triggerCron($hook, $this->getCollectionId());
+		echo 'Event triggered at ' . date('d.m.Y G:i:s');
+	}
+
+	/**
+	 * ajax action "cancel_cron"
+	 * @return void
+	 */
+	public function cancelCron()
+	{
+		Core::requireAccess('demovox_sysinfo');
+
+		$hook = sanitize_text_field($_REQUEST['cron']);
+		ManageCron::cancel($hook, $this->getCollectionId());
+		echo 'Cron cancelled at ' . date('d.m.Y G:i:s');
+	}
+
 	protected function saveOverview()
 	{
 		Core::requireAccess('demovox_edit_collection');

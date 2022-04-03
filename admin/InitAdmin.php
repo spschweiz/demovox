@@ -50,7 +50,7 @@ class InitAdmin extends BaseController
 		$this->adminCollectionSettings = new AdminCollectionSettings($this->getPluginName(), $this->getVersion());
 
 		$this->defineHooks();
-		$this->registerSettingsOnSave();
+		$this->registerSettings();
 		$this->setupAdminAjaxActions();
 	}
 
@@ -87,10 +87,15 @@ class InitAdmin extends BaseController
 		Loader::addAction('admin_menu', $this, 'setupAdminMenu');
 	}
 
-	protected function registerSettingsOnSave()
+	protected function registerSettings()
 	{
-		if (!isset($_REQUEST['option_page']) || substr($_REQUEST['option_page'], 0, 7) != 'demovox' || $_REQUEST['action'] != 'update') {
-			return;
+		$registerOnlyOnSave = Core::getOption('settings_no_register');
+		if ($registerOnlyOnSave) {
+			$isPageDemovoxSettings = isset($_REQUEST['option_page']) && substr($_REQUEST['option_page'], 0, 7) == 'demovox';
+			$actionUpdate = isset($_REQUEST['action']) && $_REQUEST['action'] == 'update';
+			if (!$isPageDemovoxSettings || !$actionUpdate) {
+				return;
+			}
 		}
 		// Hook into the admin menu
 		Loader::addAction('admin_init', $this->adminCollectionSettings, 'registerSettings');
@@ -102,8 +107,6 @@ class InitAdmin extends BaseController
 		$prefix = 'admin_post_demovox_';
 
 		// sysinfo
-		Loader::addAction($prefix . 'run_cron', $this->adminGeneral, 'runCron');
-		Loader::addAction($prefix . 'cancel_cron', $this->adminGeneral, 'cancelCron');
 		Loader::addAction($prefix . 'encrypt_test', $this->adminGeneral, 'testEncrypt');
 
 		// collection
@@ -117,6 +120,11 @@ class InitAdmin extends BaseController
 		// - stats
 		Loader::addAction($prefix . 'charts_stats', $this->adminCollection, 'statsCharts');
 		Loader::addAction($prefix . 'source_stats', $this->adminCollection, 'statsSource');
+		Loader::addAction($prefix . 'cron', $this->adminCollection, 'pageCron');
+
+		// Cron
+		Loader::addAction($prefix . 'run_cron', $this->adminCollection, 'runCron');
+		Loader::addAction($prefix . 'cancel_cron', $this->adminCollection, 'cancelCron');
 	}
 
 	/**
@@ -185,13 +193,13 @@ class InitAdmin extends BaseController
 		$callback = [$this->adminGeneral, 'pageImport'];
 		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilityImport, 'demovoxImport', $callback);
 
-		$menuTitle = 'System info';
-		$callback = [$this->adminGeneral, 'pageSysinfo'];
-		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySysinfo, 'demovoxSysinfo', $callback);
-
 		$menuTitle = 'General Settings';
 		$callback  = [$this->adminGeneralSettings, 'pageGeneralSettings'];
 		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySettings, 'demovoxGeneralSettings', $callback);
+
+		$menuTitle = 'System info';
+		$callback = [$this->adminGeneral, 'pageSysinfo'];
+		add_submenu_page($slug, $menuTitle, $menuTitle, $capabilitySysinfo, 'demovoxSysinfo', $callback);
 
 		// collection
 		$collections = new DbCollections;
@@ -216,5 +224,9 @@ class InitAdmin extends BaseController
 		$menuTitle = 'Settings';
 		$callback = [$this->adminCollectionSettings, 'pageSettings'];
 		add_submenu_page($clnSlug, $menuTitle, $menuTitle, $capabilitySettings, 'demovoxSettings', $callback);
+
+		$menuTitle = 'Cron';
+		$callback = [$this->adminCollection, 'pageCron'];
+		add_submenu_page($clnSlug, $menuTitle, $menuTitle, $capabilitySettings, 'demovoxCron', $callback);
 	}
 }

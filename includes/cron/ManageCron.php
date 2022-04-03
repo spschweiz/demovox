@@ -4,30 +4,55 @@ namespace Demovox;
 
 class ManageCron
 {
-	static protected $allCrons;
+	/** @var array[] */
+	static protected array $allCrons;
+	/**
+	 * @var $cronClassNames array
+	 */
+	static protected array $cronClassNames = [
+		0 => 'CronMailConfirm',
+		1 => 'CronMailIndex',
+		2 => 'CronMailRemindSheet',
+		3 => 'CronMailRemindSignup',
+		4 => 'CronExportToApi',
+	];
 
 	/**
 	 * @return string[]
 	 */
-	public static function getCronNames()
+	public static function getCronNames(): array
 	{
-		return CronBase::getCronClassNames();
+		return self::$cronClassNames;
 	}
 
 	/**
+	 * @return array[]
+	 */
+	public static function getAllCrons(): array
+	{
+		$allCrons = [];
+		$collections = new DbCollections;
+		foreach ($collections->getResults(['ID']) as $collection) {
+			$allCrons[$collection->ID] = self::getCrons($collection->ID);
+		}
+		return $allCrons;
+	}
+
+	/**
+	 * @param int $collectionId
 	 * @return CronBase[]
 	 */
-	public static function getAllCrons()
+	public static function getCrons($collectionId): array
 	{
-		if (self::$allCrons === null) {
+		if (!isset(self::$allCrons[$collectionId])) {
 			$crons = [];
-			foreach (self::getCronNames() as $cron) {
+			foreach (self::getCronNames() as $id => $cron) {
 				$className = '\\' . __NAMESPACE__ . '\\' . $cron;
-				$crons[]   = new $className();
+				$crons[$id]   = new $className($collectionId);
 			}
-			self::$allCrons = $crons;
+			self::$allCrons[$collectionId] = $crons;
 		}
-		return self::$allCrons;
+		return self::$allCrons[$collectionId];
 	}
 
 	public static function loadDependencies()
@@ -41,82 +66,118 @@ class ManageCron
 		}
 	}
 
-	public static function run($name)
+	public static function run(int $id, ?int $collectionId = null): void
 	{
-		$sendMails = self::getClass($name);
-		$sendMails->run();
-		return false;
+		if(isset($collectionId)){
+			$cron = self::getClass($id, $collectionId);
+			$cron->run();
+			return;
+		}
+		$collections = new DbCollections;
+		foreach ($collections->getResults(['ID']) as $collection) {
+			$cron = self::getClass($id, $collection->ID);
+			$cron->run();
+		}
 	}
 
-	public static function triggerCron($id)
+	/**
+	 * Manually trigger a cron
+	 * @param int $id
+	 * @param int $collectionId
+	 * @return void
+	 */
+	public static function triggerCron(int $id, int $collectionId)
 	{
-		$hook = self::getClass($id);
-		$name = $hook->getHookName();
-		wp_schedule_single_event(time() - 1, $name);
+		$hook = self::getHookName();
+		wp_schedule_single_event(time() - 1, $hook, [$id, $collectionId]);
 		spawn_cron();
 	}
 
 	/**
 	 * @param int $id
 	 */
-	public static function cancel($id)
+	public static function cancel(int $id, int $collectionId)
 	{
-		$sendMails = self::getClass($id);
-		$sendMails->cancelRunning();
+		$cron = self::getClass($id, $collectionId);
+		$cron->cancelRunning();
 	}
 
 	/**
 	 * @param int $id
+	 * @param int $collectionId
 	 *
 	 * @return CronBase
 	 */
-	protected static function getClass($id)
+	protected static function getClass(int $id, int $collectionId)
 	{
 		$cronNames = self::getCronNames();
 		if (!isset($cronNames[$id])) {
 			Core::errorDie('Invalid cron ' . $id, 400);
 		}
 		$name = __NAMESPACE__ . '\\' . $cronNames[$id];
-		return new $name();
+		return new $name($collectionId);
 	}
 
+	/**
+	 * @return string
+	 */
+	public static function getHookName(): string
+	{
+		[$namespace, $className] = explode('\\', __CLASS__);
+		return strtolower($namespace) . '_' . $className;
+	}
+
+	/**
+	 * @return void
+	 */
 	public static function registerHooks()
 	{
-		$cronNames = ManageCron::getAllCrons();
-		foreach ($cronNames as $cron) {
-			$hook = $cron->getHookName();
-			Loader::addAction($hook, $cron, 'run');
-		}
+		Loader::addAction(self::getHookName(), new self(), 'run', 10, 2);
 	}
 
 	public static function activate()
 	{
-		$cronNames = ManageCron::getAllCrons();
-		foreach ($cronNames as $cron) {
-			$hook = $cron->getHookName();
-			if (!wp_next_scheduled($hook)) {
-				$recurrence = $cron->getRecurrence();
-				wp_schedule_event(time(), $recurrence, $hook);
+		$collectionCrons = ManageCron::getAllCrons();
+		foreach($collectionCrons as $cronNames) {
+			foreach ($cronNames as $cron_id => $cron) {
+				$hook = $cron->getHookName();
+				if (!wp_next_scheduled($hook)) {
+					$args       = [$cron_id];
+					$recurrence = $cron->getRecurrence();
+					wp_schedule_event(time(), $recurrence, $hook, $args);
+				}
 			}
 		}
 	}
 
 	public static function deactivate()
 	{
-		$cronNames = ManageCron::getAllCrons();
-		foreach ($cronNames as $cron) {
-			$hook = $cron->getHookName();
-			wp_clear_scheduled_hook($hook);
+		$collectionCrons = ManageCron::getAllCrons();
+		foreach($collectionCrons as $cronNames) {
+			foreach ($cronNames as $cron) {
+				$hook = $cron->getHookName();
+				wp_clear_scheduled_hook($hook);
+			}
 		}
 	}
 
 	public static function deleteOptions()
 	{
+		$collectionCrons = ManageCron::getAllCrons();
+		foreach($collectionCrons as $cronNames) {
+			foreach ($cronNames as $cron) {
+				Core::delOption('cron_' . $cron . '_lock');
+				Core::delOption('cron_' . $cron . '_start');
+				Core::delOption('cron_' . $cron . '_stop');
+				Core::delOption('cron_' . $cron . '_status');
+			}
+		}
 		$crons = self::getCronNames();
 		foreach ($crons as $cron) {
 			Core::delOption('cron_' . $cron . '_lock');
 			Core::delOption('cron_' . $cron . '_start');
 			Core::delOption('cron_' . $cron . '_stop');
+			Core::delOption('cron_' . $cron . '_status');
 		}
 	}
 }

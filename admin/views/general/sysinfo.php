@@ -102,57 +102,12 @@ namespace Demovox;
 	<p>You can find the PHP config here: <?= php_ini_loaded_file() ?></p>
 	<h3>SSL</h3>
 	<p>
-		Notice: The plugin form is not available through unencrypted HTTP, please make sure the clients are forwarded to HTTPS.<br/>
+		Notice: The plugin form is not available when a client requests it over unencrypted HTTP, please make sure
+		all requests are forwarded to HTTPS.<br/>
 		You should also check the encryption quality, for example on
 		<a href="https://www.ssllabs.com/ssltest/analyze.html?d=<?= $_SERVER['HTTP_HOST'] ?>&hideResults=on"
 		   target="_blank">ssllabs.com</a>.
 	</p>
-	<h3>Cron</h3>
-	<p>A cron manager plugin is recommended for detailed wordpress cron configuration</p>
-	<?php
-	$allCrons = ManageCron::getAllCrons();
-	foreach ($allCrons as $cron) {
-		$dateStart   = $cron->getStausDateStart();
-		$dateStop    = $cron->getStatusDateStop();
-		$lastSkipped = $cron->getStatusSkipped();
-		$lastMessage = $cron->getStatusMessage();
-		$lastSuccess = $cron->getStatusSuccess();
-		?>
-		<h4><?= $cron->getName() ?></h4>
-		<?php if ($description = $cron->getDescription()) { ?>
-			<p><?= $description ?></p>
-		<?php } ?>
-		<p>
-			<button class="ajaxButton"
-			        data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?cron=' . $cron->getId(), 'demovox_run_cron') ?>">
-				Run now
-			</button>
-			<span class="ajaxContainer"></span>
-			<br/>
-			Status: <?php if ($cron->isRunning()) { ?>currently running
-				<button class="ajaxButton"
-				        data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?cron=' . $cron->getId(), 'demovox_cancel_cron') ?>"
-				        data-confirm="Force cancel?" data-container=".ajaxCancelContainer">
-					cancel execution
-				</button><span class="ajaxCancelContainer"></span>
-			<?php } else { ?>
-				finished
-			<?php } ?><br/>
-			Last started: <?= $dateStart ? date('d.m.Y G:i:s', $dateStart) : '-' ?><br/>
-			Last ended: <?= $dateStop ? date('d.m.Y G:i:s', $dateStop) : '-' ?><br/>
-			<?php if ($lastSkipped) { ?>
-				Last skipped execution: <?= date('d.m.Y G:i:s', $lastSkipped) ?> (Reason: <?= $lastMessage ?>)
-				<br/>
-			<?php } elseif ($lastMessage) {
-				echo 'Last status: '
-					 . ($lastSuccess ? '<span class="success">success' : '<span class="error">error') . '</span>: '
-					 . $lastMessage;
-			} ?>
-		</p>
-		<?php
-
-	}
-	?>
 	<h4>CPU Load infos (not supported by Windows servers)</h4>
 	Current load: <?= Infos::getLoad() ?>% / Absolute load: <?= Infos::getLoad(false) ?>%<br/>
 	Is high load (&gt; <?= intval(Settings::getValue('cron_max_load')) ?>%): <?=

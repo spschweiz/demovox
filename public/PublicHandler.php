@@ -177,6 +177,7 @@ class PublicHandler extends BaseController
 					Core::errorDie('Signature not found with guid="' . $guid . '"', 404);
 				}
 				$this->setCollectionId($row->collection_ID);
+				$this->enqueueAssets();
 				$sign->step3($row);
 				break;
 		}
@@ -214,5 +215,37 @@ class PublicHandler extends BaseController
 		return isset($_REQUEST['collection']) && intval($_REQUEST['collection'])
 			? intval($_REQUEST['collection'])
 			: $this->getDefaultCollection();
+	}
+
+	/**
+	 * Register the JavaScript and stylesheets for the public-facing side of the site.
+	 *
+	 * @since    1.0.0
+	 */
+	protected function enqueueAssets()
+	{
+		wp_enqueue_style($this->getPluginName());
+
+		$successPage  = Settings::getCValue('use_page_as_success');
+		$demovoxJsArr = [
+			'language'          => Infos::getUserLanguage(),
+			'ajaxUrl'           => admin_url('admin-ajax.php'),
+			'ajaxForm'          => Settings::getValue('form_ajax_submit'),
+			'successPageRedir'  => $successPage || $successPage === '0',
+			'analyticsMatomo'   => Settings::getValue('analytics_matomo'),
+			'apiAddressEnabled' => false,
+		];
+		if ($apiAddressUrl = Settings::getCValue('api_address_url')) {
+			$demovoxJsArr['apiAddressEnabled']   = true;
+			$demovoxJsArr['apiAddressKey']       = Settings::getCValue('api_address_key');
+			$demovoxJsArr['apiAddressUrl']       = $apiAddressUrl;
+			$demovoxJsArr['apiAddressCityInput'] = Settings::getCValue('api_address_city_input');
+			$demovoxJsArr['apiAddressGdeInput']  = Settings::getCValue('api_address_gde_input');
+			$demovoxJsArr['apiAddressGdeSelect'] = Settings::getCValue('api_address_gde_select');
+		}
+
+		wp_enqueue_script($this->getPluginName());
+		wp_enqueue_script($this->getPluginName() . '_pdf');
+		wp_localize_script($this->getPluginName(), 'demovoxData', $demovoxJsArr);
 	}
 }

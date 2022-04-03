@@ -4,7 +4,7 @@ namespace Demovox;
 
 class CronExportToApi extends CronBase
 {
-	static protected $fields = [
+	static protected array $fields = [
 		'language', 'ip_address', 'title', 'first_name', 'last_name', 'birth_date', 'mail', 'phone', 'country', 'street', 'street_no',
 		'zip', 'city', 'gde_no', 'gde_zip', 'gde_name', 'gde_canton', 'is_optin', 'creation_date', 'source',
 	];
@@ -26,7 +26,7 @@ class CronExportToApi extends CronBase
 	/**
 	 * @param string $url
 	 */
-	protected function exportPendingRows($url)
+	protected function exportPendingRows(string $url)
 	{
 		if (substr($url, 0, 8) !== 'https://') {
 			$this->setStateMessage(
@@ -59,13 +59,13 @@ class CronExportToApi extends CronBase
 	}
 
 	/**
-	 * @param DbSignatures $row
-	 * @param string $url
-	 * @param array $data
+	 * @param SignaturesDto $row
+	 * @param string        $url
+	 * @param string[]      $data
 	 *
 	 * @return int
 	 */
-	protected function exportRow($row, $url, $data)
+	protected function exportRow(SignaturesDto $row, string $url, array $data): int
 	{
 		foreach ($data as &$dataVal) {
 			foreach (self::$fields as $fieldName) {

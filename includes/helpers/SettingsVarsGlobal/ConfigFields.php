@@ -83,6 +83,13 @@ $fields = [
 		'type'         => 'checkbox',
 		'supplemental' => 'Drops all signature information when this plugin is uninstalled!',
 	],
+	[
+		'uid'          => 'settings_no_register',
+		'label'        => 'Register settings only when needed',
+		'section'      => 'danger',
+		'type'         => 'checkbox',
+		'supplemental' => 'Improve Wordpress performance by registering setting variables only when they are required for saving the values. This will provoke side effects when other plugins try to identify demovox settings like cleaners of unregistered settings.',
+	],
 ];
 if (WP_DEBUG) {
 	$fields[] = [

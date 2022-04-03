@@ -12,7 +12,7 @@ namespace Demovox;
  * @subpackage Demovox/admin
  * @author     SP Schweiz
  */
-class AdminSettings extends AdminBaseController
+abstract class AdminSettings extends AdminBaseController
 {
 	protected function getSettingsSections(): array
 	{
@@ -24,16 +24,18 @@ class AdminSettings extends AdminBaseController
 		return SettingsVarsCollection::getFields();
 	}
 
-	protected function languageChangeWarning($uid)
+	protected function languageChangeWarning($uid): void
 	{
 		$wpid = Core::getWpId($uid);
+
 		$currUserLang = defined('ICL_LANGUAGE_CODE') ? ICL_LANGUAGE_CODE : '-';
 		$lastUserLang = Core::getOption($uid . Settings::GLUE_PART . Settings::PART_PREVIOUS_LANG);
 		if ($currUserLang != $lastUserLang && $lastUserLang !== false) {
 			echo Strings::wpMessage(
 				'<b>Error: Previously selected page can not be loaded.</b> Don\'t click on "Save" or you might lose this setting.<br/>'
 				. 'Client Wordpress language has changed since this config was last set. (probably with a 3rd party plugin like WPML)<br/>'
-				. 'Please change the language back to "' . $lastUserLang . '" and reload this page or select the page again. '
+				. 'Please change the language back to "' . $lastUserLang
+				. '" and reload this page or select the page again. '
 				. '(Current language: "' . $currUserLang . '")',
 				'error'
 			);
@@ -51,7 +53,7 @@ class AdminSettings extends AdminBaseController
 	 *
 	 * @param string $page
 	 */
-	protected function doSettingsSections(string $page)
+	protected function doSettingsSections(string $page): void
 	{
 		global $wp_settings_sections, $wp_settings_fields;
 
@@ -62,7 +64,7 @@ class AdminSettings extends AdminBaseController
 		$sections = $this->getSettingsSections();
 
 		foreach ((array)$wp_settings_sections[$page] as $wpSection) {
-			$sectionId = $wpSection['id'];
+			$sectionId      = $wpSection['id'];
 			$sectionDetails = $sections[$wpSection['id']];
 
 			if (isset($sectionDetails['addPre'])) {
@@ -95,7 +97,7 @@ class AdminSettings extends AdminBaseController
 		}
 	}
 
-	public function registerSettings()
+	public function registerSettings(): void
 	{
 		require_once Core::getPluginDir() . 'admin/helpers/RegisterSettings.php';
 
@@ -103,18 +105,19 @@ class AdminSettings extends AdminBaseController
 		$settings->register();
 	}
 
-    public function loadTinymce() {
+	public function loadTinymce(): void
+	{
 		// tinymce plugins for version 4.9.11
 		wp_enqueue_script('tinymce-plugin-code', plugin_dir_url(__FILE__) . '../../js/tinymce-4.9.11/code/plugin.js');
 		wp_enqueue_script('tinymce-plugin-preview', plugin_dir_url(__FILE__) . '../../js/tinymce-4.9.11/preview/plugin.js');
 		wp_enqueue_script('tinymce-plugin-table', plugin_dir_url(__FILE__) . '../../js/tinymce-4.9.11/table/plugin.js');
 
 		// load WP internal tinymce
-		$js_src = includes_url('js/tinymce/') . 'tinymce.min.js';
+		$js_src  = includes_url('js/tinymce/') . 'tinymce.min.js';
 		$css_src = includes_url('css/') . 'editor.css';
-        echo '<script src="' . $js_src . '" type="text/javascript"></script>';
-        wp_register_style('tinymce_css', $css_src);
-        wp_enqueue_style('tinymce_css');
+		echo '<script src="' . $js_src . '" type="text/javascript"></script>';
+		wp_register_style('tinymce_css', $css_src);
+		wp_enqueue_style('tinymce_css');
 
 		echo "<script>
     function placeMce(selector) {
@@ -130,14 +133,16 @@ class AdminSettings extends AdminBaseController
         });
     }
 </script>";
-    }
+	}
 
-	public function fieldCallback($arguments)
+	public function fieldCallback($arguments): void
 	{
-		$uid = $arguments['uid'];
+		$uid  = $arguments['uid'];
 		$wpid = Core::getWpId($uid);
 		$type = $arguments['type'];
-		$placeholder = (isset($arguments['placeholder']) && $arguments['placeholder'] !== false && $arguments['placeholder'] !== 0)
+
+		$placeholder = (isset($arguments['placeholder']) && $arguments['placeholder'] !== false
+						&& $arguments['placeholder'] !== 0)
 			? $arguments['placeholder'] : '';
 
 		// Check which type of field we want
@@ -193,7 +198,7 @@ class AdminSettings extends AdminBaseController
 			case 'pos_rot':
 				$valuePosX = Settings::getValue($uid, Settings::PART_POS_X);
 				$valuePosY = Settings::getValue($uid, Settings::PART_POS_Y);
-				$valueRot = Settings::getValue($uid, Settings::PART_ROTATION);
+				$valueRot  = Settings::getValue($uid, Settings::PART_ROTATION);
 				printf(
 					'<input name="%1$s" id="%1$s" type="number" placeholder="%2$s" value="%3$s" size="5" />',
 					$wpid . Settings::GLUE_PART . Settings::PART_POS_X,
@@ -207,8 +212,8 @@ class AdminSettings extends AdminBaseController
 					$valuePosY
 				);
 				$options = [
-					0   => 'Normal orientation',
-					90  => 'Rotate 90° clockwise',
+					0 => 'Normal orientation',
+					90 => 'Rotate 90° clockwise',
 					180 => 'Rotate 180°',
 					270 => 'Rotate 90° counter-clockwise',
 				];
@@ -245,9 +250,9 @@ class AdminSettings extends AdminBaseController
 				break;
 			case 'wpPage': // If it is a select dropdown
 				$value = Settings::getValue($uid);
-				$args = [
-					'name'             => $wpid,
-					'selected'         => $value,
+				$args  = [
+					'name' => $wpid,
+					'selected' => $value,
 					'suppress_filters' => true, // disable WPML language filtering
 				];
 				if (isset($arguments['optionNone']) && $arguments['optionNone']) {

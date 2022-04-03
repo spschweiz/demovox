@@ -65,16 +65,16 @@ class Activator
 
 	public static function activateDb(): void
 	{
+		self::createMissingTables();
 		self::upgradeTables();
-		self::createTables();
 	}
 
-	protected static function createTables(): void
+	protected static function createMissingTables(): void
 	{
 		$dbs = ModelInfo::getDbServices();
 		foreach ($dbs as $db) {
 			$sql = $db->getTableDefinition();
-			$updates = $db->createUpdateTable($sql);
+			$updates = $db->createMissingTables($sql);
 		}
 	}
 
@@ -106,7 +106,7 @@ class Activator
 			self::update($update);
 		}
 		if (!Db::query('SELECT COUNT(ID) as count FROM `' . $dbCollectionName . '`')) {
-			// previous version was < 3
+			// add a default collection
 			$update = 'INSERT INTO `' . $dbCollectionName . '` (ID, name) values (1, \'Default collection\');';
 			self::update($update);
 		}
@@ -124,13 +124,35 @@ class Activator
 
 			// create collections table
 			$sql = $dbCollection->getTableDefinition();
-			$dbCollection->createUpdateTable($sql);
+			$dbCollection->createMissingTables($sql);
 
 			// foreign keys & index
 			$update = "ALTER TABLE $dbSignName ADD FOREIGN KEY (collection_ID) REFERENCES $dbCollectionName (ID);";
 			$update .= "ALTER TABLE $dbMailDdName ADD FOREIGN KEY (collection_ID) REFERENCES $dbCollectionName (ID);";
 			$update .= "ALTER TABLE $dbMailDdName DROP INDEX mail_index, ADD UNIQUE KEY mail_index (collection_ID, mail_md5);";
 			self::update($update);
+
+			// migrate collection specific settings
+			$pluginDir = Core::getPluginDir();
+			$fieldsDef = include($pluginDir . 'includes/helpers/SettingsVarsCollection/ConfigFields.php');
+			foreach ($fieldsDef as $field) {
+				$oldName = $field['uid'];
+				$newName = '1' . Settings::GLUE_PART . $field['uid'];
+				self::renameSetting($oldName, $newName);
+
+				$fieldType = $field['type'] ?? null;
+				switch ($fieldType) {
+					case 'pos':
+						self::renameSetting($oldName, $newName . Settings::GLUE_PART . Settings::PART_POS_X);
+						self::renameSetting($oldName, $newName . Settings::GLUE_PART . Settings::PART_POS_Y);
+						break;
+					case 'pos_rot':
+						self::renameSetting($oldName, $newName . Settings::GLUE_PART . Settings::PART_POS_X);
+						self::renameSetting($oldName, $newName . Settings::GLUE_PART . Settings::PART_POS_Y);
+						self::renameSetting($oldName, $newName . Settings::GLUE_PART . Settings::PART_ROTATION);
+						break;
+				}
+			}
 		}
 	}
 
@@ -143,7 +165,7 @@ class Activator
 	protected static function update(string $sql)
 	{
 		$res = Db::query($sql);
-		if(!$res){
+		if(!$res) {
 			$error = Db::getLastError();
 			throw new \RuntimeException('Sql query failed:<br><code>' . $error . '</code><br>', 500);
 		}
@@ -178,7 +200,7 @@ class Activator
 		$optinPageId = Settings::getCValue('use_page_as_optin_link');
 
 		if (!self::isPostVisible($optinPageId)) {
-			$content     .= 'Would you like to opt-in to or opt-out from our List?<br/>[demovox_optin]';
+			$content     = 'Would you like to opt-in to or opt-out from our List?<br/>[demovox_optin]';
 			$post_data   = [
 				'post_status'  => 'publish',
 				'post_type'    => 'page',
@@ -224,5 +246,20 @@ class Activator
 		$role->add_cap('demovox_import');
 
 		Settings::setValue('init_capabilities_version', 1);
+	}
+
+	/**
+	 * Rename option from demovox settings
+	 *
+	 * @param string $oldName
+	 * @param string $newName
+	 * @return void
+	 */
+	protected static function renameSetting(string $oldName, string $newName): void
+	{
+		$oldId = Core::getWpId($oldName);
+		$newId = Core::getWpId($newName);
+		$update = "UPDATE wp_options SET option_name = '$newId' WHERE option_name = '$oldId';";
+		Db::query($update);
 	}
 }
