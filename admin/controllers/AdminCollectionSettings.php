@@ -16,7 +16,7 @@ require_once Infos::getPluginDir() . 'admin/helpers/SignatureList.php';
  */
 class AdminCollectionSettings extends AdminSettings
 {
-	use AdminCollectionTrait;
+	use CollectionTrait;
 
 	public function __construct(string $pluginName, string $version)
 	{

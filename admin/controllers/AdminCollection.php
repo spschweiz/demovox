@@ -14,7 +14,7 @@ namespace Demovox;
  */
 class AdminCollection extends BaseController
 {
-	use AdminCollectionTrait, AdminScriptsTrait;
+	use CollectionTrait, AdminScriptsTrait;
 
 	public function __construct(string $pluginName, string $version)
 	{

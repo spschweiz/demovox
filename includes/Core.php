@@ -127,6 +127,7 @@ class Core
 	{
 		$pluginDir = self::getPluginDir();
 
+		require_once $pluginDir . 'includes/CollectionTrait.php';
 		require_once $pluginDir . 'includes/BaseController.php';
 
 		/**

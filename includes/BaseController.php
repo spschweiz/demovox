@@ -22,7 +22,9 @@ class BaseController
 	 */
 	private $version;
 
-	/** @var $nonceId string */
+	/**
+	 * @var $nonceId string
+	 */
 	protected $nonceId = 'demovox_ajax_submit';
 
 	/**
@@ -32,6 +34,7 @@ class BaseController
 	{
 		return $this->pluginName;
 	}
+
 	/**
 	 * @return string
 	 */
@@ -58,7 +61,6 @@ class BaseController
 	{
 		Core::enforceHttps();
 	}
-
 
 	/**
 	 * Get attributes of a shortcode and use defaults

@@ -24,6 +24,8 @@ namespace Demovox;
  */
 class PublicHandler extends BaseController
 {
+	use CollectionTrait;
+
 	/**
 	 * Attributes of the called shortcode
 	 * @var null|array
