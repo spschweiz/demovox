@@ -43,7 +43,7 @@ class PublicHandler extends BaseController
 	public function signShortcode($atts = [], string $content = null, string $tag = ''): string
 	{
 		$this->requireHttps();
-		$this->shortcodeAttributes = $this->getShortcodeAttriutes($atts, $tag);
+		$this->shortcodeAttributes = $this->getShortcodeAttributes($atts, $tag);
 		if (!isset($this->shortcodeAttributes['collection']) || !is_numeric($this->shortcodeAttributes['collection'])) {
 			$this->shortcodeAttributes['collection'] = $this->getDefaultCollection();
 		}

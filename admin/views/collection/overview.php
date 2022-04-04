@@ -7,6 +7,7 @@ namespace Demovox;
  * @var int                $count
  * @var int                $addCount
  * @var int                $collectionId
+ * @var string             $collectionName
  * @var string             $mailRecipient
  * @var string[]           $languages
  * @var string             $page
@@ -15,6 +16,7 @@ $allowEdit = Core::hasAccess('demovox_edit_collection');
 $this->loadTinymce();
 ?>
 <div class="wrap demovox">
+	<h1><?= $collectionName ?></h1>
 	<p>
 		<b><?= $count ?></b> visitors have signed up to this collection
 		<?php if ($addCount) { ?>

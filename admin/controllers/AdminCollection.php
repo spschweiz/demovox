@@ -14,6 +14,8 @@ namespace Demovox;
  */
 class AdminCollection extends AdminBaseController
 {
+	use AdminCollectionTrait;
+
 	public function __construct(string $pluginName, string $version)
 	{
 		parent::__construct($pluginName, $version);
@@ -28,6 +30,7 @@ class AdminCollection extends AdminBaseController
 	public function pageOverview()
 	{
 		$collectionId = $this->getCollectionId();
+		$collectionName = $this->getCollectionName();
 
 		$collections = new DbCollections();
 		$collection = $collections->getRow(['name', 'end_date', 'end_message'], 'ID = ' . $collectionId);
@@ -192,6 +195,7 @@ class AdminCollection extends AdminBaseController
 	public function pageData()
 	{
 		$collectionId = $this->getCollectionId();
+		$collectionName = $this->getCollectionName();
 		$page = $this->getCurrentPage();
 		$dbSign = new DbSignatures();
 		$count = [
@@ -218,8 +222,9 @@ class AdminCollection extends AdminBaseController
 
 	public function pageCron()
 	{
-		$collectionId = $this->getCollectionId();
-		$allCrons     = ManageCron::getCrons($collectionId);
+		$collectionId   = $this->getCollectionId();
+		$collectionName = $this->getCollectionName();
+		$allCrons       = ManageCron::getCrons($collectionId);
 		include Infos::getPluginDir() . 'admin/views/collection/cron.php';
 	}
 

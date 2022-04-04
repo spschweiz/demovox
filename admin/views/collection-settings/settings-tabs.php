@@ -8,6 +8,7 @@ namespace Demovox;
  * @var array                   $tabs
  * @var string                  $currentTab
  * @var int                     $collectionId
+ * @var string                  $collectionName
  */
 if (!defined('ABSPATH')) {
 	exit;
@@ -23,6 +24,7 @@ if (!$tabExists) {
 ?>
 <input type="hidden" id="cln" name="cln" value="<?= $collectionId ?>">
 <div class="wrap demovox">
+	<h1><?= $collectionName ?></h1>
 	<form method="post" id="mainform" action="options.php" enctype="multipart/form-data">
 		<?php wp_nonce_field($page); ?>
 		<nav class="nav-tab-wrapper woo-nav-tab-wrapper">

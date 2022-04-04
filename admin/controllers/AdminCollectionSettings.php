@@ -16,6 +16,8 @@ require_once Infos::getPluginDir() . 'admin/helpers/SignatureList.php';
  */
 class AdminCollectionSettings extends AdminSettings
 {
+	use AdminCollectionTrait;
+
 	public function __construct(string $pluginName, string $version)
 	{
 		parent::__construct($pluginName, $version);
@@ -39,6 +41,8 @@ class AdminCollectionSettings extends AdminSettings
 		$page = 'demovoxSettings';
 		$languages = i18n::getLangs();
 		$collectionId = $this->getCollectionId();
+		$collectionName = $this->getCollectionName();
+
 		include Infos::getPluginDir() . 'admin/views/collection-settings/settings-tabs.php';
 	}
 

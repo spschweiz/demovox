@@ -25,9 +25,6 @@ class BaseController
 	/** @var $nonceId string */
 	protected $nonceId = 'demovox_ajax_submit';
 
-	/** @var int */
-	protected int $collectionId;
-
 	/**
 	 * @return string
 	 */
@@ -62,10 +59,6 @@ class BaseController
 		Core::enforceHttps();
 	}
 
-	protected function getDefaultCollection(): int
-	{
-		return Infos::getDefaultCollectionId();
-	}
 
 	/**
 	 * Get attributes of a shortcode and use defaults
@@ -74,7 +67,7 @@ class BaseController
 	 * @param null|array  $default
 	 * @return array
 	 */
-	protected function getShortcodeAttriutes($atts, ?string $tag = null, ?array $default = null): array
+	protected function getShortcodeAttributes($atts, ?string $tag = null, ?array $default = null): array
 	{
 		// normalize attribute keys, lowercase
 		$atts = array_change_key_case((array)$atts, CASE_LOWER);
@@ -87,17 +80,6 @@ class BaseController
 		}
 
 		return $atts;
-	}
-
-	protected function setCollectionId(int $collectionId): void
-	{
-		$this->collectionId = $collectionId;
-		Infos::setCollectionId($collectionId);
-	}
-
-	protected function getCollectionId(): int
-	{
-		return $this->collectionId;
 	}
 
 }

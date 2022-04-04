@@ -5,10 +5,12 @@ namespace Demovox;
  * @var AdminGeneral $this
  * @var CronBase[]   $allCrons
  * @var int          $collectionId
+ * @var string       $collectionName
  */
 
 ?>
 <div class="wrap demovox">
+	<h2><?= $collectionName ?></h2>
 	<h3>Cron</h3>
 	<p>A cron manager plugin is recommended for detailed wordpress cron configuration</p>
 	<?php

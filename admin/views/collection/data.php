@@ -15,12 +15,14 @@ namespace Demovox;
 /**
  * @var AdminCollection $this
  * @var int             $collectionId
+ * @var string          $collectionName
  * @var int[]           $count
  * @var SignatureList   $signatureList
  */
 $url = '/admin-post.php?cln=' . $collectionId . '&type=';
 ?>
 <div class="wrap demovox">
+	<h1><?= $collectionName ?></h1>
 	<h2>Download CSV</h2>
 	<p>
 		<a href="<?= Strings::getAdminUrl($url . DbSignatures::WHERE_OPTIN, 'demovox_get_csv') ?>">
@@ -39,8 +41,6 @@ $url = '/admin-post.php?cln=' . $collectionId . '&type=';
 			<button>Deleted (<?= $count[DbSignatures::WHERE_DELETED] ?>)</button>
 		</a>
 	</p>
-</div>
-<div class="wrap">
 	<h2>Signatures</h2>
 	<div id="poststuff">
 		<div id="post-body-content">
