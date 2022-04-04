@@ -12,9 +12,9 @@ namespace Demovox;
  * @subpackage Demovox/admin
  * @author     SP Schweiz
  */
-class AdminCollection extends AdminBaseController
+class AdminCollection extends BaseController
 {
-	use AdminCollectionTrait;
+	use AdminCollectionTrait, AdminScriptsTrait;
 
 	public function __construct(string $pluginName, string $version)
 	{

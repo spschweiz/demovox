@@ -12,8 +12,10 @@ namespace Demovox;
  * @subpackage Demovox/admin
  * @author     SP Schweiz
  */
-abstract class AdminSettings extends AdminBaseController
+abstract class AdminSettings extends BaseController
 {
+	use AdminScriptsTrait;
+
 	protected function getSettingsSections(): array
 	{
 		return SettingsVarsCollection::getSections();

@@ -2,12 +2,7 @@
 
 namespace Demovox;
 
-/**
- * @package    Demovox
- * @subpackage Demovox/admin
- * @author     SP Schweiz
- */
-abstract class AdminBaseController extends BaseController
+trait AdminScriptsTrait
 {
 	protected function loadDatepicker(): void
 	{
