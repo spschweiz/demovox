@@ -134,7 +134,7 @@ class InitAdmin extends BaseController
 	 */
 	public function enqueueStyles()
 	{
-		wp_enqueue_style($this->getPluginName(), plugin_dir_url(__FILE__) . 'css/demovox-admin.min.css', [], $this->getVersion(), 'all');
+		wp_enqueue_style($this->getPluginName() . '-admin', plugin_dir_url(__FILE__) . 'css/demovox-admin.min.css', [], $this->getVersion(), 'all');
 	}
 
 	/**

@@ -12,7 +12,7 @@ abstract class AdminBaseController extends BaseController
 	protected function loadDatepicker(): void
 	{
 		wp_enqueue_script('jquery-ui-datepicker');
-		wp_enqueue_style('jquery-ui', plugin_dir_url(__FILE__) . '../../css/jquery-ui.min.css', [], $this->getVersion());
+		wp_enqueue_style($this->getPluginName(), plugin_dir_url(__FILE__) . '../../../public/css/demovox-public.min.css', [], $this->getVersion(), 'all');
 	}
 
 	protected function setCollectionIdByReq(): void
