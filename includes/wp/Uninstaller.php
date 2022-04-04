@@ -81,5 +81,14 @@ class Uninstaller
 		$role->remove_cap('demovox');
 		$role->remove_cap('demovox_stats');
 		$role->remove_cap('demovox_import');
+		$role->remove_cap('demovox_export');
+		$role->remove_cap('demovox_data');
+		$role->remove_cap('demovox_edit_collection');
+		$role->remove_cap('demovox_sysinfo');
+
+		$role = get_role('author');
+		$role->remove_cap('demovox');
+		$role->remove_cap('demovox_stats');
+		$role->remove_cap('demovox_import');
 	}
 }
