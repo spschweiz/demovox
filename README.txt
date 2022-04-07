@@ -143,6 +143,7 @@ We do not provide any warranty or free support, but you're welcome to create an 
 * End date for collections with a visual editor for user message
 * PHP 7.4 or higher is now required (7.3 is EoL)
 * Visual editor for mails
+* Basic spambot protection with a form honeypot and a simple calculation captcha if failed
 * Support for single letter signee names
 
 For more details, see our commit log: https://github.com/spschweiz/demovox/commits/master
