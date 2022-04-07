@@ -47,7 +47,7 @@ class InitPublic extends BaseController
 
 		Loader::addAction('init', $this, 'startSession');
 		Loader::addAction('wp_enqueue_scripts', $this, 'enqueueStyles');
-		Loader::addAction('wp_enqueue_scripts', $this, 'enqueueScripts');
+		Loader::addAction('wp_enqueue_scripts', $this, 'registerScripts');
 
 		// demovox_form shortcode ajax
 		Loader::addAjaxPublic('demovox_step2', $this->publicHandler, 'signStep2');
@@ -92,9 +92,9 @@ class InitPublic extends BaseController
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueueScripts()
+	public function registerScripts()
 	{
-		wp_register_style(
+		wp_register_script(
 			$this->getPluginName(),
 			plugin_dir_url(__FILE__) . 'js/demovox-public.min.js',
 			['jquery', 'jquery-ui-datepicker'],
