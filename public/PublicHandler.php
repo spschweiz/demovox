@@ -159,7 +159,7 @@ class PublicHandler extends BaseController
 			default:
 				$collectionId = $this->shortcodeAttributes['collection'];
 				$this->setCollectionId($collectionId);
-			$this->enqueueAssets();
+				$this->enqueueAssets();
 				$sign->step1($collectionId);
 				break;
 			case 2:
@@ -172,7 +172,7 @@ class PublicHandler extends BaseController
 				$guid = sanitize_key($_REQUEST['sign']);
 				$dbSign = new DbSignatures();
 				$row = $dbSign->getRow(
-					['is_step2_done', 'is_encrypted', 'link_success', 'collection_ID',],
+					['is_step2_done', 'is_encrypted', 'link_success', 'collection_ID', 'guid'],
 					"guid = '" . $guid . "'"
 				);
 				if ($row === null) {
@@ -228,12 +228,10 @@ class PublicHandler extends BaseController
 	{
 		wp_enqueue_style($this->getPluginName());
 
-		$successPage  = Settings::getCValue('use_page_as_success');
 		$demovoxJsArr = [
 			'language'          => Infos::getUserLanguage(),
 			'ajaxUrl'           => admin_url('admin-ajax.php'),
 			'ajaxForm'          => Settings::getValue('form_ajax_submit'),
-			'successPageRedir'  => $successPage || $successPage === '0',
 			'analyticsMatomo'   => Settings::getValue('analytics_matomo'),
 			'apiAddressEnabled' => false,
 		];

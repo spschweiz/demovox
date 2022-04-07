@@ -3,7 +3,6 @@
  *
  * @property {string} demovoxData.ajaxUrl <url>|""
  * @property {string} demovoxData.ajaxForm "1"|""
- * @property {string} demovoxData.successPageRedir "1"|""
  * @property {string} demovoxData.analyticsMatomo "1"|""
  *
  * @property {string} demovoxData.apiAddressEnabled "1"|""
@@ -237,17 +236,7 @@ $(() => {
 
 	function submitDemovoxForm() {
 		let formData = $el.form.serialize();
-		let redirect = false, replace = true;
-		if (currentPage === 2) {
-			if (demovoxData.successPageRedir) {
-				redirect = true;
-				formData += '&redirect=true';
-			}
-		}
 		formData += '&ajax=true';
-		if (currentPage === 'opt-in') {
-			replace = true;
-		}
 		$.ajax({
 			method: "POST",
 			url: demovoxData.ajaxUrl,
@@ -256,12 +245,25 @@ $(() => {
 				ajaxIsLoading();
 			},
 		})
-			.done(function (data) {
-				if (redirect) {
-					window.location = data;
-				} else if (replace) {
+			.done(function (data, textStatus, jqXHR) {
+				if (!isObject(data)) {
 					$el.form.replaceWith(data);
 					initDemovoxForm();
+					return;
+				}
+
+				switch (data.action) {
+					case 'captcha':
+						var $captcha = $el.form.find('#demovox-grp-captcha');
+						$captcha.removeClass('hidden');
+						$captcha.find('.task').html(data.challenge);
+						break;
+					case 'redirect':
+						window.location = data.url;
+						break;
+					default:
+						console.error('Server response was JSON, but action is unknown', {json: data});
+						break;
 				}
 			})
 			.fail(function (data) {
@@ -270,6 +272,10 @@ $(() => {
 			.always(function () {
 				ajaxIsLoading(true);
 			});
+	}
+
+	function isObject(value) {
+		return value && typeof value === 'object' && value.constructor === Object;
 	}
 
 	function showFormElements($el) {

@@ -12,11 +12,15 @@ namespace Demovox;
  * @subpackage Demovox/public/partials
  */
 /**
- * @var $this              SignSteps
- * @var $collection        int
- * @var $textOptin         int
+ * @var $this                SignSteps
+ * @var $collection          int
+ * @var $textOptin           int
  * @var $emailConfirmEnabled bool
- * @var $optinMode         string|null
+ * @var $optinMode           string|null
+ * @var $honeypot            bool
+ * @var $honeypotPos         int
+ * @var $honeypotCaptcha     string|null
+ * @var $mailFieldName       string
  */
 ?>
 <div class="wrap">
@@ -34,23 +38,25 @@ namespace Demovox;
 			<input name="name_last" id="demovox-name_last" autocomplete="family-name" class="form-control" type="text" minlength="1" maxlength="64"
 			       required="" pattern="[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{1,}">
 		</div>
-		<div id="demovox-grp-mail-cont" class="form-group">
-			<div id="demovox-grp-mail" class="form-group<?= $emailConfirmEnabled ? ' col-md-6' : '' ?>">
-				<label for="demovox-mail"><?= __('Email', 'demovox') ?></label>
-				<input name="mail" id="demovox-mail" autocomplete="email" class="form-control" type="email" maxlength="128" required="">
-			</div>
-			<?php if($emailConfirmEnabled) { ?>
-				<div id="demovox-grp-mail-validate" class="form-group col-md-6">
-					<label for="demovox-mail-validate"><?= __('Confirm', 'demovox') ?></label>
-					<input name="mail" id="demovox-mail-validate"  data-parsley-equalto="#demovox-mail" autocomplete="email" class="form-control" type="email" maxlength="128" required="">
-				</div>
-			<?php } ?>
-		</div>
+		<?php
+		if($honeypot && $honeypotPos === 1) {
+			include Infos::getPluginDir() . 'public/views/sign-1-honeypot.php';
+		}
+		include Infos::getPluginDir() . 'public/views/sign-1-mail.php';
+		if ($honeypot && $honeypotPos === 2) {
+			include Infos::getPluginDir() . 'public/views/sign-1-honeypot.php';
+		}
+		?>
 		<div id="demovox-grp-phone" class="form-group">
 			<label for="demovox-phone"><?= __('Phone number', 'demovox') ?></label>
 			<input name="phone" id="demovox-phone" autocomplete="tel" class="form-control" type="text" minlength="10" maxlength="64"
-			       pattern="((\+[1-9])|(0\d[1-9]))( |\d)+">
+				   pattern="((\+[1-9])|(0\d[1-9]))( |\d)+">
 		</div>
+		<?php
+		if ($honeypot) {
+			include Infos::getPluginDir() . 'public/views/sign-1-captcha.php';
+		}
+		?>
 		<?php if ($optinMode) { ?>
 			<div id="demovox-grp-is_optin" class="form-group">
 				<div class="form-check">

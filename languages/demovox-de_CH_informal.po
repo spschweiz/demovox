@@ -38,6 +38,10 @@ msgstr "Telefonnummer"
 msgid "Continue"
 msgstr "Weiter"
 
+#: sign-1-captcha.php:8
+msgid "Please solve this task: <span class=\"task\">{captcha}</span>"
+msgstr "Bitte löse diese Aufgabe: <span class=\"task\">{captcha}</span>"
+
 #: sign-2.php:30
 msgid "Title"
 msgstr "Anrede"
@@ -117,6 +121,14 @@ msgstr "Drucke das folgende PDF, dann fülle deinen Namen und Unterschrift aus u
 #: SignSteps.php.php:177
 msgid "signature_sheet"
 msgstr "unterschriftenbogen"
+
+#: SignSteps.php:491
+msgid "captcha_operator_plus"
+msgstr "plus"
+
+#: SignSteps.php:491
+msgid "captcha_operator_minus"
+msgstr "minus"
 
 #: PublicHandler.php.php:198
 msgid "Your settings were saved"

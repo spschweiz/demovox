@@ -259,14 +259,14 @@ class Core
 		return delete_option(Core::getWpId($fullId));
 	}
 
-	public static function setSessionVar($name, $value)
+	public static function setSessionVar($name, $value) : void
 	{
-		return $_SESSION['demovox_' . $name] = $value;
+		$_SESSION['demovox_' . $name] = $value;
 	}
 
 	public static function getSessionVar($name)
 	{
-		return isset($_SESSION['demovox_' . $name]) ? $_SESSION['demovox_' . $name] : null;
+		return $_SESSION['demovox_' . $name] ?? null;
 	}
 
 	public static function createNonce($action = -1)
@@ -296,6 +296,13 @@ class Core
 			'<h3 class="errorTitle">Error: HTTPS required</h3><p>This plugin does not allow access through an unencrypted connection</p>',
 			'Error: HTTPS required'
 		);
+	}
+
+	static function jsonResponse(array $data)
+	{
+		header('Content-Type: text/json; charset=utf-8');
+		echo json_encode($data);
+		exit;
 	}
 
 	static function errorDie($error, $statusCode)
