@@ -9,9 +9,13 @@ namespace Demovox;
 
 <div class="row">
 	<div class="col-md-11">
-		<h4>Historical chart<?= $source !== null ? ' of source "' . $source . '"' : '' ?></h4>
+		<?php if ($source !== null): ?>
+			<h4><?= Strings::__a('Historical chart of source "{source}"', ['{source}' => $source]) ?></h4>
+		<?php else: ?>
+			<h4><?= Strings::__a('Historical chart') ?></h4>
+		<?php endif; ?>
 		<canvas id="dateChart"></canvas>
-		Date always refers to original registration
+		<?= Strings::__a('Date always refers to original registration') ?>
 	</div>
 </div>
 <script>

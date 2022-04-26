@@ -47,10 +47,9 @@ abstract class ListTable extends \WP_List_Table
 		foreach ($this->columns as $id => $title) {
 			if (is_int($id)) {
 				$id = $title;
-				$columns[$id] = Strings::__(isset($dto_fields[$id]) ? $dto_fields[$id] : $id);
-				continue;
+				$title = $dto_fields[$id] ?? $id;
 			}
-			$columns[$id] = Strings::__($title);
+			$columns[$id] = Strings::__a($title);
 		}
 		$columns = ['cb' => '<input type="checkbox" />',] + $columns;
 

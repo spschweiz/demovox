@@ -6,7 +6,7 @@ if (!Core::hasAccess('demovox_stats') || !$stats) {
 	return;
 }
 ?>
-<h3>Sign-up stats</h3>
+<h3><?= Strings::__a('Sign-up stats') ?></h3>
 <div class="row">
 	<div class="col-md-5">
 		<canvas id="pieChart"></canvas>

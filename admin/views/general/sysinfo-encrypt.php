@@ -11,16 +11,16 @@ namespace Demovox;
  * @var array        $enc the encrypted strings
  */
 ?>
-<?= $iterations ?> iterations.<br/>
-	Time to encrypt: <?= $timediffEncrypt; ?>s<br/>
-	Time to decrypt: <?= $timediffDecrypt ?>s
+<?= Strings::__a('{count} iterations.', ['{count}' => $iterations]) ?><br/>
+<?= Strings::__a('Time to encrypt: {time}s', ['{time}' => $timediffEncrypt]) ?><br/>
+<?= Strings::__a('Time to decrypt: {time}s', ['{time}' => $timediffDecrypt]) ?>
 
-	<?php if ($showStrLengths) { ?>
-	<h4>Field lengths</h4>
+<?php if ($showStrLengths): ?>
+	<h4><?= Strings::__a('Field lengths') ?></h4>
 	<table class="table table-striped table-hover">
 		<tr>
-			<th>Original</th>
-			<th>Encrypted</th>
+			<th><?= Strings::__a('Original') ?></th>
+			<th><?= Strings::__a('Encrypted') ?></th>
 		</tr>
 		<?php foreach ($lengths as $length) { ?>
 			<tr>
@@ -29,4 +29,4 @@ namespace Demovox;
 			</tr>
 		<?php } ?>
 	</table>
-<?php } ?>
+<?php endif; ?>

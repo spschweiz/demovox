@@ -70,15 +70,16 @@ abstract class AdminSettings extends BaseController
 			$sectionDetails = $sections[$wpSection['id']];
 
 			if (isset($sectionDetails['addPre'])) {
-				echo $sectionDetails['addPre'];
+				echo Strings::__a($sectionDetails['addPre']);
 			}
 
 			if ($wpSection['title']) {
-				echo "<h2>{$wpSection['title']}</h2>\n";
+				$title = Strings::__a($wpSection['title']);
+				echo "<h2>{$title}</h2>\n";
 			}
 
 			if (isset($sectionDetails['sub'])) {
-				echo $sectionDetails['sub'];
+				echo Strings::__a($sectionDetails['sub']);
 			}
 			if ($wpSection['callback']) {
 				call_user_func($wpSection['callback'], $wpSection);
@@ -94,7 +95,7 @@ abstract class AdminSettings extends BaseController
 			echo '</table>';
 
 			if (isset($sectionDetails['addPost'])) {
-				echo $sectionDetails['addPost'];
+				echo Strings::__a($$sectionDetails['addPost']);
 			}
 		}
 	}
@@ -218,7 +219,8 @@ abstract class AdminSettings extends BaseController
 					$placeholder,
 					$value
 				);
-				echo '<button class="uploadButton" data-input-id="' . $wpid . '">Select</button>';
+				$select = Strings::__a('Select');
+				echo '<button class="uploadButton" data-input-id="' . $wpid . '">' . $select . '</button>';
 				break;
 			case 'wpPage': // If it is a select dropdown
 				$value = Settings::getValue($uid);

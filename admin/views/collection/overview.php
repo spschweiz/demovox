@@ -18,10 +18,14 @@ $this->loadTinymce();
 <div class="wrap demovox">
 	<h1><?= $collectionName ?></h1>
 	<p>
-		<b><?= $count ?></b> visitors have signed up to this collection
-		<?php if ($addCount) { ?>
-			(and additional <?= $addCount ?> signatures
-			<?= Strings::getAdminLink('/admin.php?page=demovoxSettings', 'in the settings') ?>)
+		<?= Strings::__a('<b>{$count}</b> visitors have signed up to this collection', ['{count}' => $count]) ?>
+		<?php if ($addCount) {
+			$settingsLink = Strings::getAdminLink('/admin.php?page=demovoxSettings', 'settings');
+			?>
+			<?= Strings::__a(
+				'(and additional {$count}</b> signatures in the {settings})',
+				['{count}' => $count, 'settings' => $settingsLink]
+			) ?>
 		<?php } ?>
 	</p>
 	<?php
@@ -44,7 +48,7 @@ $this->loadTinymce();
 				<td>
 					<input name="name" id="demovox_name" size="40" value="<?= $collection->name ?>"
 						   required="" <?= $allowEdit ? '' : 'readonly="readonly"' ?>>
-					<p class="description">Internal collection name</p>
+					<p class="description"><?= Strings::__a('Internal collection name') ?></p>
 				</td>
 			</tr>
 			<tr>
@@ -52,7 +56,7 @@ $this->loadTinymce();
 				<td>
 					<input name="end_date" id="demovox_end_date" value="<?= $collection->end_date ?: '' ?>"
 						   size="40" <?= $allowEdit ? '' : 'readonly="readonly"' ?>>
-					<p class="description">Last day the collection is available, leave empty to keep it active</p>
+					<p class="description"><?= Strings::__a('Last day the collection is available, leave empty to keep it active') ?></p>
 				</td>
 			</tr>
 			<tr>
@@ -62,13 +66,13 @@ $this->loadTinymce();
 					<textarea name="end_message" id="demovox_end_message" cols="40"
 							  rows="5" <?= $allowEdit ? '' : 'readonly="readonly"' ?>
 							  maxlength="255"><?= $collection->end_message ?></textarea>
-					<p class="description">Message shown when collection has finished</p></td>
+					<p class="description"><?= Strings::__a('Message shown when collection has finished') ?></p></td>
 			</tr>
 			</tbody>
 		</table>
 		<?php
 		if ($allowEdit) {
-			submit_button('Save');
+			submit_button(Strings::__a('Save'));
 		}
 		?>
 	</form>

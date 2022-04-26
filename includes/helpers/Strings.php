@@ -8,20 +8,20 @@ class Strings
 	/**
 	 * Get permalink to page where to find a visitor specific demovox page
 	 *
-	 * @param string $signGuid
-	 * @param null|int $pageId By default: success page (probably with pdf link)
-	 * @param $baseUrl null|string
+	 * @param string   $signGuid
+	 * @param null|int $pageId  By default: success page (probably with pdf link)
+	 * @param          $baseUrl null|string
 	 * @return string
 	 */
 	public static function getPageUrl($signGuid, $pageId = null, $baseUrl = null)
 	{
 		$pageId = $pageId ?: Settings::getCValue('use_page_as_success');
-		$url = get_permalink($pageId);
+		$url    = get_permalink($pageId);
 		if ($baseUrl) {
 			$lengthCut = strlen(home_url());
-			$url = $baseUrl . substr($url, $lengthCut);
+			$url       = $baseUrl . substr($url, $lengthCut);
 		}
-		if($signGuid) {
+		if ($signGuid) {
 			if (strpos($url, '?') === false) {
 				$url .= '?';
 			} else {
@@ -53,7 +53,7 @@ class Strings
 			case 'hashids':
 				// Hashids requires either the PHP extension GMP or BC Math in order to work. (GMP should be faster)
 				$hashids = new \Hashids\Hashids('salt', 5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890');
-				$serial = $hashids->encode($signId);
+				$serial  = $hashids->encode($signId);
 				break;
 			case 'PseudoCrypt':
 				require __DIR__ . '/../libs/php/PseudoCrypt.php';
@@ -79,14 +79,14 @@ class Strings
 
 	public static function getAdminLink(string $url, string $label)
 	{
-		$url = self::getAdminUrl($url);
-		$label = Strings::__($label);
+		$url   = self::getAdminUrl($url);
+		$label = Strings::__a($label);
 		return '<a href="' . $url . '">' . $label . '</a>';
 	}
 
 	public static function getCountries($format = 'php', $locale = null, $echo = null)
 	{
-		$locale = $locale ?: Infos::getUserLanguage(true);
+		$locale           = $locale ?: Infos::getUserLanguage(true);
 		$availableFormats = [
 			'csv',
 			'html',
@@ -106,9 +106,10 @@ class Strings
 		if ($echo === null) {
 			$echo = ($format === 'json');
 		}
-		$ds = DIRECTORY_SEPARATOR;
-		$dirBase = Infos::getPluginDir() . 'libs' . $ds . 'composer' . $ds . 'umpirsky' . $ds . 'country-list' . $ds . 'data' . $ds;
-		$dir = $dirBase . $locale;
+		$ds      = DIRECTORY_SEPARATOR;
+		$dirBase = Infos::getPluginDir() . 'libs' . $ds . 'composer' . $ds . 'umpirsky' . $ds . 'country-list' . $ds
+				   . 'data' . $ds;
+		$dir     = $dirBase . $locale;
 		if (!is_dir($dir)) {
 			$dir = $dirBase . Settings::getCValue('default_language');
 		}
@@ -122,9 +123,9 @@ class Strings
 
 	public static function generateRandomString($length = 10)
 	{
-		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZäöüÜÄÖç&/ÉÀÈéàèê';
+		$characters       = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZäöüÜÄÖç&/ÉÀÈéàèê';
 		$charactersLength = strlen($characters);
-		$randomString = '';
+		$randomString     = '';
 		for ($i = 0; $i < $length; $i++) {
 			$randomString .= $characters[rand(0, $charactersLength - 1)];
 		}
@@ -133,8 +134,8 @@ class Strings
 
 	public static function parseCsv($csv_string, $delimiter = ",", $skip_empty_lines = true, $trim_fields = true)
 	{
-		$enc = preg_replace('/(?<!")""/', '!!Q!!', $csv_string);
-		$enc = preg_replace_callback(
+		$enc   = preg_replace('/(?<!")""/', '!!Q!!', $csv_string);
+		$enc   = preg_replace_callback(
 			'/\\\"(.*?)\\\"/s',
 			function ($field) {
 				return urlencode(utf8_encode($field[1]));
@@ -157,7 +158,7 @@ class Strings
 	}
 
 	/**
-	 * @param $message
+	 * @param             $message
 	 * @param null|string $status success|warning|error|info
 	 * @return string
 	 */
@@ -165,14 +166,14 @@ class Strings
 	{
 		$status = $status ?: 'info';
 		$string = '<div class="notice ' . $status . ' inline notice-' . $status . ' notice-alt"><p>'
-			. $message . '</p></div>';
+				  . $message . '</p></div>';
 
 		return $string;
 	}
 
 	/**
 	 *
-	 * @param array $options
+	 * @param array  $options
 	 * @param string $value
 	 * @param string $name
 	 * @param string $id
@@ -180,7 +181,7 @@ class Strings
 	 */
 	public static function createSelect($options, $value, $name, $id = null, $attributes = [])
 	{
-		$id = $id === null ? $name : $id;
+		$id            = $id === null ? $name : $id;
 		$optionsMarkup = '’';
 		foreach ($options as $key => $label) {
 			$optionsMarkup .= sprintf(
@@ -238,12 +239,22 @@ class Strings
 	}
 
 	/**
-	 * @param string $text
-	 * @param string $domain
+	 * @param string     $text
+	 * @param array|null $replace
+	 * @param string     $domain
 	 * @return string
 	 */
-	public static function __(string $text, string $domain = 'demovox'): string
+	public static function __(string $text, ?array $replace = null, string $domain = 'demovox'): string
 	{
+		if (count($replace)) {
+			$text = strtr($text, $replace);
+		}
 		return __($text, $domain);
+	}
+
+
+	public static function __a(string $text, ?array $replace = null): string
+	{
+		return self::__($text, $replace, 'demovox.admin');
 	}
 }
