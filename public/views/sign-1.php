@@ -13,7 +13,7 @@ namespace Demovox;
  */
 /**
  * @var $this                SignSteps
- * @var $collection          int
+ * @var $collectionId        int
  * @var $textOptin           int
  * @var $emailConfirmEnabled bool
  * @var $optinMode           string|null
@@ -26,7 +26,7 @@ namespace Demovox;
 <div class="wrap">
 	<form method="post" id="demovox_form_1" class="demovox" action="<?= Infos::getRequestUri() ?>">
 		<input name="action" type="hidden" value="demovox_step2">
-		<input name="collection" type="hidden" value="<?= $collection ?>"">
+		<input name="collection" type="hidden" value="<?= $collectionId ?>"">
 		<input name="nonce" type="hidden" value="<?= Core::createNonce($this->nonceId) ?>">
 		<div id="demovox-grp-name_first" class="form-group">
 			<label for="demovox-name_first"><?= __('First Name', 'demovox') ?></label>
