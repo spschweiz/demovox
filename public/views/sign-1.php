@@ -17,7 +17,7 @@ namespace Demovox;
  * @var $textOptin           int
  * @var $emailConfirmEnabled bool
  * @var $optinMode           string|null
- * @var $honeypot            bool
+ * @var $honeypotEnabled     bool
  * @var $honeypotPos         int
  * @var $honeypotCaptcha     string|null
  * @var $mailFieldName       string
@@ -39,11 +39,11 @@ namespace Demovox;
 			       required="" pattern="[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{1,}">
 		</div>
 		<?php
-		if($honeypot && $honeypotPos === 1) {
+		if($honeypotEnabled && $honeypotPos === 1) {
 			include Infos::getPluginDir() . 'public/views/sign-1-honeypot.php';
 		}
 		include Infos::getPluginDir() . 'public/views/sign-1-mail.php';
-		if ($honeypot && $honeypotPos === 2) {
+		if ($honeypotEnabled && $honeypotPos === 2) {
 			include Infos::getPluginDir() . 'public/views/sign-1-honeypot.php';
 		}
 		?>
@@ -53,7 +53,7 @@ namespace Demovox;
 				   pattern="((\+[1-9])|(0\d[1-9]))( |\d)+">
 		</div>
 		<?php
-		if ($honeypot) {
+		if ($honeypotEnabled) {
 			include Infos::getPluginDir() . 'public/views/sign-1-captcha.php';
 		}
 		?>

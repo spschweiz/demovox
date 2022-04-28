@@ -150,6 +150,7 @@ class PublicHandler extends BaseController
 			return $this->showFallback($pluginDir);
 		}
 
+		require_once $pluginDir . 'public/Honeypot.php';
 		require_once $pluginDir . 'public/SignSteps.php';
 		$sign = new SignSteps($this->nonceId);
 

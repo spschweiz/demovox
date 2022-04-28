@@ -29,25 +29,26 @@ class SignSteps
 		$emailConfirmEnabled = !empty(Settings::getCValue('email_confirm'));
 		$optinMode           = $this->getOptinMode(1);
 
-		$honeypot = boolval(Settings::getValue('form_honeypot'));
-		if ($honeypot) {
+		$honeypot        = new Honeypot();
+		$honeypotEnabled = $honeypot->isEnabled();
+		if ($honeypotEnabled) {
 			$honeypotPos     = rand(1, 2);
-			$honeypotCaptcha = Core::getSessionVar('formHoneypotCaptcha');
+			$honeypotCaptcha = $honeypot->getChallenge();
 		} else {
 			$honeypotPos = $honeypotCaptcha = null;
 		}
-		$mailFieldName = $this->getMailFieldName();
+		$mailFieldName = $honeypot->initMailFieldName();
 
 		include Infos::getPluginDir() . 'public/views/sign-1.php';
 	}
 
 	/**
+	 * @param int    $collectionId
+	 * @param string $mailFieldName
 	 * @return string guid
 	 */
-	protected function saveStep1(int $collectionId): string
+	protected function saveStep1(int $collectionId, string $mailFieldName): string
 	{
-		$mailFieldName = $this->getMailFieldName();
-
 		$dbSign    = new DbSignatures();
 		$lang      = Infos::getUserLanguage();
 		$source    = Core::getSessionVar('source');
@@ -102,7 +103,9 @@ class SignSteps
 	{
 		$this->verifyNonce();
 
-		if ($honeypotCaptcha = $this->checkHoneypot($collectionId)) {
+		$honeypot = new Honeypot();
+		if (!$honeypot->validateForm()) {
+			$honeypotCaptcha = $honeypot->getChallenge();
 			if ($this->isAjax()) {
 				Core::jsonResponse(['action' => 'captcha', 'challenge' => $honeypotCaptcha]);
 			}
@@ -110,9 +113,13 @@ class SignSteps
 			return;
 		}
 
-		$guid = $this->saveStep1($collectionId);
-
-		$this->resetHoneypot();
+		$mailFieldName = $honeypot->getMailFieldName();
+		if (!$mailFieldName) {
+			Core::logMessage('User tried to save step1 with a missing session - forwarding to step1', 'warning');
+			$this->step1($collectionId);
+			return;
+		}
+		$guid = $this->saveStep1($collectionId, $mailFieldName);
 
 		// Prepare view variables
 		$textOptin         = Settings::getCValueByUserlang('text_optin');
@@ -286,7 +293,7 @@ class SignSteps
 			$url = $row->link_success;
 		}
 
-		$successPage  = Settings::getCValue('use_page_as_success');
+		$successPage = Settings::getCValue('use_page_as_success');
 		if ($this->isAjax() && ($successPage || $successPage === '0')) {
 			Core::jsonResponse(['action' => 'redirect', 'url' => $url]);
 		}
@@ -463,58 +470,5 @@ class SignSteps
 	protected function isAjax(): bool
 	{
 		return isset($_REQUEST['ajax']) && $_REQUEST['ajax'];
-	}
-
-	/**
-	 * @param int $collectionId
-	 * @return string|null required captcha
-	 */
-	protected function checkHoneypot(int $collectionId): ?string
-	{
-		$honeypot = boolval(Settings::getValue('form_honeypot'));
-		if (!$honeypot) {
-			return null;
-		}
-
-		$honeypotCaptcha = Core::getSessionVar('formHoneypotCaptcha');
-		if (!isset($_REQUEST['mail']) && $honeypotCaptcha === null) {
-			return null;
-		}
-
-		if (isset($_REQUEST['captcha']) && $_REQUEST['captcha'] !== '') {
-			$honeypotCaptchaSolution = Core::getSessionVar('formHoneypotCaptchaSolution');
-			if (intval($_REQUEST['captcha']) == $honeypotCaptchaSolution) {
-				return null;
-			}
-		}
-
-		$first  = rand(1, 15);
-		$op     = rand(0, 1);
-		$opText = Strings::__('captcha_operator_' . ($op ? 'plus' : 'minus'));
-		$second = rand(1, $first - 1);
-
-		$honeypotCaptcha         = $first . ' ' . $opText . ' ' . $second;
-		$honeypotCaptchaSolution = $op ? ($first + $second) : ($first - $second);
-		Core::setSessionVar('formHoneypotCaptcha', $honeypotCaptcha);
-		Core::setSessionVar('formHoneypotCaptchaSolution', $honeypotCaptchaSolution);
-
-		Core::logMessage('Client fell into honeypot trap', 'error');
-		return $honeypotCaptcha;
-	}
-
-	protected function resetHoneypot(): void
-	{
-		Core::setSessionVar('mailFieldName', null);
-		Core::setSessionVar('formHoneypotCaptcha', null);
-		Core::setSessionVar('formHoneypotCaptchaSolution', null);
-	}
-
-	protected function getMailFieldName(): string
-	{
-		if (!$mailFieldName = Core::getSessionVar('mailFieldName')) {
-			$mailFieldName = uniqid();
-			Core::setSessionVar('mailFieldName', $mailFieldName);
-		}
-		return $mailFieldName;
 	}
 }

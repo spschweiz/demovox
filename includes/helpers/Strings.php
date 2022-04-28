@@ -246,7 +246,7 @@ class Strings
 	 */
 	public static function __(string $text, ?array $replace = null, string $domain = 'demovox'): string
 	{
-		if (count($replace)) {
+		if ($replace && count($replace)) {
 			$text = strtr($text, $replace);
 		}
 		return __($text, $domain);
