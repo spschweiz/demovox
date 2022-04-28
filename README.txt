@@ -140,8 +140,10 @@ We do not provide any warranty or free support, but you're welcome to create an 
 * Multiple collections per installation, which allows to collect signatures for multiple initiatives on one website
 * Current demovox settings are transferred into an initial collection called "Default collection"
 * Settings and Sysinfo is split into global and collection specific content
+* Performance improvements by embedding demovox JS files only when needed
 * End date for collections with a visual editor for user message
 * PHP 7.4 or higher is now required (7.3 is EoL)
+* Admin backend can be translated
 * Visual editor for mails
 * Basic spambot protection with a form honeypot and a simple calculation captcha if failed
 * Support for single letter signee names
