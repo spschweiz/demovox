@@ -147,6 +147,8 @@ class PublicHandler extends BaseController
 		$pluginDir = Infos::getPluginDir();
 
 		if ($this->isRequireFallback($nr)) {
+			$collectionId = $this->getCollectionFromRequest();
+			$this->setCollectionId($collectionId);
 			return $this->showFallback($pluginDir);
 		}
 
@@ -201,9 +203,7 @@ class PublicHandler extends BaseController
 	protected function showFallback($pluginDir)
 	{
 		ob_start();
-
-		$collectionId = $this->getCollectionFromRequest();
-		$pdfUrl = Settings::getCValueByUserlang('signature_sheet', $collectionId);
+		$pdfUrl = Settings::getCValueByUserlang('signature_sheet');
 		include $pluginDir . 'public/views/fallback.php';
 
 		$output = ob_get_clean();
