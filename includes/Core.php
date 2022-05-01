@@ -293,7 +293,7 @@ class Core
 			return;
 		}
 		wp_die(
-			'<h3 class="errorTitle">Error: HTTPS required</h3><p>This plugin does not allow access through an unencrypted connection</p>',
+			'<div class="demovox"><h3 class="errorTitle">Error: HTTPS required</h3><p>demovox does not allow access through an unencrypted connection</p></div>',
 			'Error: HTTPS required'
 		);
 	}
