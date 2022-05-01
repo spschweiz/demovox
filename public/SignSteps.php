@@ -146,8 +146,10 @@ class SignSteps
 	{
 		$dbSign = new DbSignatures();
 		// Load and sanitize form data
-		$birthDate       = sanitize_text_field($_REQUEST['birth_date']);
-		$birthDateParsed = date_parse($birthDate);
+		$birthDateDay    = (string)intval($_REQUEST['birth_date-day']);
+		$birthDateMonth  = (string)intval($_REQUEST['birth_date-month']);
+		$birthDateYear   = (string)intval($_REQUEST['birth_date-year']);
+		$birthDateParsed = date_parse($birthDateDay . '-' . $birthDateMonth . '-' . $birthDateYear);
 		$street          = sanitize_text_field($_REQUEST['street']);
 		$streetNo        = sanitize_text_field($_REQUEST['street_no']);
 		$zip             = sanitize_text_field($_REQUEST['zip']);

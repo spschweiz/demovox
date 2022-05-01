@@ -57,6 +57,12 @@
 		overflow: hidden;
 		margin: 0;
 	}
+
+	.date-inputs {
+		input {
+			width: 100%;
+		}
+	}
 }
 
 .errorTitle {

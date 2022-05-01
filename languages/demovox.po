@@ -62,6 +62,30 @@ msgstr ""
 msgid "Birth date"
 msgstr ""
 
+#: sign-2.php:46
+msgid "Day"
+msgstr ""
+
+#: sign-2.php:51
+msgid "DD"
+msgstr ""
+
+#: sign-2.php:56
+msgid "Month"
+msgstr ""
+
+#: sign-2.php:59
+msgid "MM"
+msgstr ""
+
+#: sign-2.php:64
+msgid "Year"
+msgstr ""
+
+#: sign-2.php:67
+msgid "YYYY"
+msgstr ""
+
 #: sign-2.php:36
 msgid "Swiss abroad"
 msgstr ""

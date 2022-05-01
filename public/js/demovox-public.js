@@ -19,6 +19,7 @@ import 'parsleyjs';
 import 'parsleyjs/src/i18n/de'; // not supported by Browserify (ES6 import() is used)
 import 'parsleyjs/src/i18n/fr';
 import 'parsleyjs/src/i18n/it';
+import moment from 'moment';
 
 $(() => {
 	let currentPage = null,
@@ -325,7 +326,36 @@ $(() => {
 		}
 
 		if (currentPage === 1 || currentPage === 2 || currentPage === 'opt-in') {
-			window.ParsleyValidator.setLocale(demovoxData.language);
+			window.Parsley
+				.setLocale(demovoxData.language)
+				.addValidator(
+					'date',
+					function (value, requirements) {
+						const day = $('.' + requirements + '-day').val(),
+							month = $('.' + requirements + '-month').val(),
+							year = $('.' + requirements + '-year').val(),
+							maxAgeYears = 150;
+
+						if (isNumeric(day) === false
+							|| isNumeric(month) === false
+							|| isNumeric(year) === false
+							|| year.length < 4) {
+							return false;
+						}
+						const date = moment(year + '-' + month + '-' + day, 'YYYY-M-D');
+
+						if (date.isValid()) {
+							return date.diff(moment(), 'years') > -maxAgeYears;
+						}
+						return false;
+					},
+					34
+				)
+				.addMessage('en', 'date', 'Enter a valid date.')
+				.addMessage('de', 'date', 'Geben Sie ein gültiges Datum ein.')
+				.addMessage('fr', 'date', 'Entrez une date valide.')
+				.addMessage('it', 'date', 'Inserisci una data valida.');
+
 			if (!demovoxData.ajaxForm) {
 				$el.form.parsley();
 			} else {
@@ -349,13 +379,6 @@ $(() => {
 			$el.birthDate = $('#demovox-birth_date');
 			$el.swissAbroad = $('#demovox-swiss_abroad');
 
-			$el.birthDate.datepicker({
-				changeMonth: true,
-				changeYear: true,
-				dateFormat: 'dd.mm.yy',
-				yearRange: '-150:-17',
-				defaultDate: '-30y',
-			});
 			$el.birthDate.focus();
 			$el.gdeCanton.select2();
 
@@ -522,6 +545,11 @@ $(() => {
 				}
 			}
 		});
+	}
+
+	// Is `n` a number or numeric string (eg "3")?
+	function isNumeric(n) {
+		return !isNaN(parseFloat(n)) && isFinite(n);
 	}
 
 	function track(name, value) {
