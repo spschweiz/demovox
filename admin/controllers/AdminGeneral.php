@@ -12,8 +12,10 @@ namespace Demovox;
  * @subpackage Demovox/admin
  * @author     SP Schweiz
  */
-class AdminGeneral extends AdminBaseController
+class AdminGeneral extends BaseController
 {
+	use AdminScriptsTrait;
+
 	public function pageOverview()
 	{
 		$dbSign = new DbSignatures();

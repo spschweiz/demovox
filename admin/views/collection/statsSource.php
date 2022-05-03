@@ -7,14 +7,14 @@ namespace Demovox;
 ?>
 <table class="table table-striped table-hover">
 	<tr>
-		<th>Source</th>
-		<th>Signatures received</th>
-		<th>Signed sheets received</th>
-		<th>= signatures per sheet</th>
-		<th>Opt-in form</th>
-		<th>Opt-out form</th>
-		<th>Unfinished form</th>
-		<th>Historical chart</th>
+		<th><?= Strings::__a('Source') ?></th>
+		<th><?= Strings::__a('Signatures received') ?></th>
+		<th><?= Strings::__a('Signed sheets received') ?></th>
+		<th><?= Strings::__a('= signatures per sheet') ?></th>
+		<th><?= Strings::__a('Opt-in form') ?></th>
+		<th><?= Strings::__a('Opt-out form') ?></th>
+		<th><?= Strings::__a('Unfinished form') ?></th>
+		<th><?= Strings::__a('Historical chart') ?></th>
 	</tr>
 	<?php foreach ($sourceList as $source) { ?>
 		<tr>
@@ -29,7 +29,7 @@ namespace Demovox;
 				<button class="ajaxButton"
 						data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php?source=' . $source->source, 'demovox_charts_stats') ?>"
 						data-container=".ajaxContainerChart">
-					Show
+					<?= Strings::__a('Show') ?>
 				</button>
 			</td>
 		</tr>

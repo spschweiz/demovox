@@ -216,7 +216,7 @@ class Activator
 
 	protected static function createCapabilities(): void
 	{
-		if(Settings::getValue('init_capabilities_version')) {
+		if (Settings::getValue('init_capabilities_version')) {
 			return;
 		}
 
@@ -241,6 +241,15 @@ class Activator
 		$role->add_cap('demovox_sysinfo');
 
 		$role = get_role('editor');
+		$role->add_cap('demovox');
+		$role->add_cap('demovox_stats');
+		$role->add_cap('demovox_import');
+		$role->add_cap('demovox_export');
+		$role->add_cap('demovox_data');
+		$role->add_cap('demovox_edit_collection');
+		$role->add_cap('demovox_sysinfo');
+
+		$role = get_role('author');
 		$role->add_cap('demovox');
 		$role->add_cap('demovox_stats');
 		$role->add_cap('demovox_import');

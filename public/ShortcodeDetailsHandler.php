@@ -162,7 +162,7 @@ class ShortcodeDetailsHandler extends BaseController
 	 */
 	protected function getShortcodeCollectionId($atts): int
 	{
-		$shortcodeAttributes = $this->getShortcodeAttriutes($atts);
+		$shortcodeAttributes = $this->getShortcodeAttributes($atts);
 		$collection = $shortcodeAttributes['collection'];
 		if (!isset($shortcodeAttributes['collection']) || !is_numeric($shortcodeAttributes['collection'])) {
 			$collection = $this->getDefaultCollection();

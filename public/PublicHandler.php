@@ -24,6 +24,8 @@ namespace Demovox;
  */
 class PublicHandler extends BaseController
 {
+	use CollectionTrait;
+
 	/**
 	 * Attributes of the called shortcode
 	 * @var null|array
@@ -43,7 +45,7 @@ class PublicHandler extends BaseController
 	public function signShortcode($atts = [], string $content = null, string $tag = ''): string
 	{
 		$this->requireHttps();
-		$this->shortcodeAttributes = $this->getShortcodeAttriutes($atts, $tag);
+		$this->shortcodeAttributes = $this->getShortcodeAttributes($atts, $tag);
 		if (!isset($this->shortcodeAttributes['collection']) || !is_numeric($this->shortcodeAttributes['collection'])) {
 			$this->shortcodeAttributes['collection'] = $this->getDefaultCollection();
 		}
@@ -145,9 +147,12 @@ class PublicHandler extends BaseController
 		$pluginDir = Infos::getPluginDir();
 
 		if ($this->isRequireFallback($nr)) {
+			$collectionId = $this->getCollectionFromRequest();
+			$this->setCollectionId($collectionId);
 			return $this->showFallback($pluginDir);
 		}
 
+		require_once $pluginDir . 'public/Honeypot.php';
 		require_once $pluginDir . 'public/SignSteps.php';
 		$sign = new SignSteps($this->nonceId);
 
@@ -157,7 +162,7 @@ class PublicHandler extends BaseController
 			default:
 				$collectionId = $this->shortcodeAttributes['collection'];
 				$this->setCollectionId($collectionId);
-			$this->enqueueAssets();
+				$this->enqueueAssets();
 				$sign->step1($collectionId);
 				break;
 			case 2:
@@ -170,7 +175,7 @@ class PublicHandler extends BaseController
 				$guid = sanitize_key($_REQUEST['sign']);
 				$dbSign = new DbSignatures();
 				$row = $dbSign->getRow(
-					['is_step2_done', 'is_encrypted', 'link_success', 'collection_ID',],
+					['is_step2_done', 'is_encrypted', 'link_success', 'collection_ID', 'guid'],
 					"guid = '" . $guid . "'"
 				);
 				if ($row === null) {
@@ -198,9 +203,7 @@ class PublicHandler extends BaseController
 	protected function showFallback($pluginDir)
 	{
 		ob_start();
-
-		$collectionId = $this->getCollectionFromRequest();
-		$pdfUrl = Settings::getCValueByUserlang('signature_sheet', $collectionId);
+		$pdfUrl = Settings::getCValueByUserlang('signature_sheet');
 		include $pluginDir . 'public/views/fallback.php';
 
 		$output = ob_get_clean();
@@ -226,12 +229,10 @@ class PublicHandler extends BaseController
 	{
 		wp_enqueue_style($this->getPluginName());
 
-		$successPage  = Settings::getCValue('use_page_as_success');
 		$demovoxJsArr = [
 			'language'          => Infos::getUserLanguage(),
 			'ajaxUrl'           => admin_url('admin-ajax.php'),
 			'ajaxForm'          => Settings::getValue('form_ajax_submit'),
-			'successPageRedir'  => $successPage || $successPage === '0',
 			'analyticsMatomo'   => Settings::getValue('analytics_matomo'),
 			'apiAddressEnabled' => false,
 		];

@@ -83,7 +83,7 @@ class SignatureList extends ListTable
 	 */
 	public function no_items()
 	{
-		echo Strings::__('No signatures available.');
+		echo Strings::__a('No signatures available.');
 	}
 
 	/**

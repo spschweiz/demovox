@@ -51,11 +51,28 @@
 			list-style-type: none;
 		}
 	}
+
+	#demovox-grp-mail {
+		height: 0;
+		overflow: hidden;
+		margin: 0;
+	}
+
+	.date-inputs {
+		input {
+			width: 100%;
+		}
+	}
+
+	.sr-only {
+		@include sr-only();
+	}
+
+	.errorTitle {
+		color: red;
+	}
 }
 
-.errorTitle {
-	color: red;
-}
 
 .ui-datepicker {
 	direction: ltr;

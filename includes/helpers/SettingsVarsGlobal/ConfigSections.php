@@ -14,6 +14,10 @@ $sections = [
 		'title' => 'Analytics',
 		'page'  => 'demovoxFieldsGlobal',
 	],
+	'forms'               => [
+		'title' => 'Form settings',
+		'page'  => 'demovoxFieldsGlobal',
+	],
 	'danger'               => [
 		'title' => 'Danger area',
 		'page'  => 'demovoxFieldsGlobal',

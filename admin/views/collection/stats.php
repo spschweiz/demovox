@@ -46,10 +46,10 @@ if (!Core::hasAccess('demovox_stats') || !$stats) {
 </script>
 <p>
 	<button class="ajaxButton" data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php', 'demovox_source_stats') ?>">
-		Source stats
+		<?= Strings::__a('Source stats') ?>
 	</button>
 	<button class="ajaxButton" data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php', 'demovox_charts_stats') ?>">
-		Historical chart
+		 <?= Strings::__a('Historical chart') ?>
 	</button>
 	<br/>
 	<span class="ajaxContainer"></span>

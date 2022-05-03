@@ -91,24 +91,24 @@ class Settings
 
 	/**
 	 * @param $id           string
-	 * @param $collectionId int|null
 	 * @param $valPart      string|false
+	 * @param $collectionId int|null
 	 * @return mixed Value set for the option.
 	 */
-	public static function getCValueByUserlang(string $id, ?int $collectionId = null, $valPart = null)
+	public static function getCValueByUserlang(string $id, $valPart = null, ?int $collectionId = null)
 	{
 		$lang = Infos::getUserLanguage();
-		return self::getCValueByLang($id, $lang, $collectionId, $valPart);
+		return self::getCValueByLang($id, $lang, $valPart, $collectionId);
 	}
 
 	/**
 	 * @param $id           string
 	 * @param $lang         string
-	 * @param $collectionId int|null
 	 * @param $valPart      string|null
+	 * @param $collectionId int|null
 	 * @return mixed Value set for the config value.
 	 */
-	public static function getCValueByLang(string $id, string $lang, ?int $collectionId = null, ?string $valPart = null)
+	public static function getCValueByLang(string $id, string $lang, ?string $valPart = null, ?int $collectionId = null)
 	{
 		$value = self::getCValue($id . self::GLUE_LANG . $lang, $collectionId, $valPart);
 		if ($value === false) {

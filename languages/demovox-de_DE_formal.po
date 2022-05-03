@@ -62,6 +62,30 @@ msgstr "Keine Anrede"
 msgid "Birth date"
 msgstr "Geburtsdatum"
 
+#: sign-2.php:46
+msgid "Day"
+msgstr "Tag"
+
+#: sign-2.php:51
+msgid "DD"
+msgstr "TT"
+
+#: sign-2.php:56
+msgid "Month"
+msgstr "Monat"
+
+#: sign-2.php:59
+msgid "MM"
+msgstr "MM"
+
+#: sign-2.php:64
+msgid "Year"
+msgstr "Jahr"
+
+#: sign-2.php:67
+msgid "YYYY"
+msgstr "JJJJ"
+
 #: sign-2.php:36
 msgid "Swiss abroad"
 msgstr "Auslandschweizer:in"

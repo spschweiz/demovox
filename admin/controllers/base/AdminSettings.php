@@ -12,8 +12,10 @@ namespace Demovox;
  * @subpackage Demovox/admin
  * @author     SP Schweiz
  */
-abstract class AdminSettings extends AdminBaseController
+abstract class AdminSettings extends BaseController
 {
+	use AdminScriptsTrait;
+
 	protected function getSettingsSections(): array
 	{
 		return SettingsVarsCollection::getSections();
@@ -68,15 +70,16 @@ abstract class AdminSettings extends AdminBaseController
 			$sectionDetails = $sections[$wpSection['id']];
 
 			if (isset($sectionDetails['addPre'])) {
-				echo $sectionDetails['addPre'];
+				echo Strings::__a($sectionDetails['addPre']);
 			}
 
 			if ($wpSection['title']) {
-				echo "<h2>{$wpSection['title']}</h2>\n";
+				$title = Strings::__a($wpSection['title']);
+				echo "<h2>{$title}</h2>\n";
 			}
 
 			if (isset($sectionDetails['sub'])) {
-				echo $sectionDetails['sub'];
+				echo Strings::__a($sectionDetails['sub']);
 			}
 			if ($wpSection['callback']) {
 				call_user_func($wpSection['callback'], $wpSection);
@@ -92,7 +95,7 @@ abstract class AdminSettings extends AdminBaseController
 			echo '</table>';
 
 			if (isset($sectionDetails['addPost'])) {
-				echo $sectionDetails['addPost'];
+				echo Strings::__a($$sectionDetails['addPost']);
 			}
 		}
 	}
@@ -103,36 +106,6 @@ abstract class AdminSettings extends AdminBaseController
 
 		$settings = new RegisterSettings($this);
 		$settings->register();
-	}
-
-	public function loadTinymce(): void
-	{
-		// tinymce plugins for version 4.9.11
-		wp_enqueue_script('tinymce-plugin-code', plugin_dir_url(__FILE__) . '../../js/tinymce-4.9.11/code/plugin.js');
-		wp_enqueue_script('tinymce-plugin-preview', plugin_dir_url(__FILE__) . '../../js/tinymce-4.9.11/preview/plugin.js');
-		wp_enqueue_script('tinymce-plugin-table', plugin_dir_url(__FILE__) . '../../js/tinymce-4.9.11/table/plugin.js');
-
-		// load WP internal tinymce
-		$js_src  = includes_url('js/tinymce/') . 'tinymce.min.js';
-		$css_src = includes_url('css/') . 'editor.css';
-		echo '<script src="' . $js_src . '" type="text/javascript"></script>';
-		wp_register_style('tinymce_css', $css_src);
-		wp_enqueue_style('tinymce_css');
-
-		echo "<script>
-    function placeMce(selector) {
-		if($(selector).length < 1) {
-			console.error('Place MCE: form element not found', selector);
-		}
-        tinyMCE.init({
-            selector: selector,
-            menubar: 'edit view insert format table',
-            plugins: 'link lists charmap hr fullscreen media directionality paste textcolor colorpicker image media code preview table',
-            toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | forecolor backcolor removeformat | charmap image link | fullscreen code preview table',
-            image_advtab: true,
-        });
-    }
-</script>";
 	}
 
 	public function fieldCallback($arguments): void
@@ -246,7 +219,8 @@ abstract class AdminSettings extends AdminBaseController
 					$placeholder,
 					$value
 				);
-				echo '<button class="uploadButton" data-input-id="' . $wpid . '">Select</button>';
+				$select = Strings::__a('Select');
+				echo '<button class="uploadButton" data-input-id="' . $wpid . '">' . $select . '</button>';
 				break;
 			case 'wpPage': // If it is a select dropdown
 				$value = Settings::getValue($uid);

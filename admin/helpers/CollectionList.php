@@ -60,7 +60,7 @@ class CollectionList extends ListTable
 	 */
 	public function no_items()
 	{
-		echo Strings::__('No collections available.');
+		echo Strings::__a('No collections available.');
 	}
 
 	/**
@@ -75,7 +75,7 @@ class CollectionList extends ListTable
 	{
 		switch ($column_name) {
 			case 'end_date':
-				return $item->{$column_name} ?: Strings::__('- no end date -');
+				return $item->{$column_name} ?: Strings::__a('- no end date -');
 			case 'shortcode':
 				return '<code>[demovox_form cln=' . $item->ID . ']</code>'
 					. ' <code>[demovox_count cln=' . $item->ID . ']</code>';

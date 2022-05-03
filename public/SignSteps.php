@@ -1,17 +1,17 @@
 <?php
 
-Namespace Demovox;
+namespace Demovox;
 
 class SignSteps
 {
 	/** @var $nonceId string */
-	private $nonceId;
+	private string $nonceId;
 
-	/** @var $textColor string RGB */
-	private $textColor = [0, 0, 0];
+	/** @var $textColor int[] RGB */
+	private array $textColor = [0, 0, 0];
 
 	/**
-	 * @param string      $nonceId
+	 * @param string $nonceId
 	 */
 	public function __construct(string $nonceId)
 	{
@@ -23,26 +23,38 @@ class SignSteps
 	 * @param int $collectionId
 	 * @return void
 	 */
-	public function step1(int $collectionId)
+	public function step1(int $collectionId): void
 	{
-		$textOptin = Settings::getCValueByUserlang('text_optin');
+		$textOptin           = Settings::getCValueByUserlang('text_optin');
 		$emailConfirmEnabled = !empty(Settings::getCValue('email_confirm'));
-		$optinMode = $this->getOptinMode(1);
+		$optinMode           = $this->getOptinMode(1);
+
+		$honeypot        = new Honeypot();
+		$honeypotEnabled = $honeypot->isEnabled();
+		if ($honeypotEnabled) {
+			$honeypotPos     = rand(1, 2);
+			$honeypotCaptcha = $honeypot->getChallenge();
+		} else {
+			$honeypotPos = $honeypotCaptcha = null;
+		}
+		$mailFieldName = $honeypot->initMailFieldName();
 
 		include Infos::getPluginDir() . 'public/views/sign-1.php';
 	}
 
 	/**
+	 * @param int    $collectionId
+	 * @param string $mailFieldName
 	 * @return string guid
 	 */
-	protected function saveStep1(int $collectionId) : string
+	protected function saveStep1(int $collectionId, string $mailFieldName): string
 	{
 		$dbSign    = new DbSignatures();
 		$lang      = Infos::getUserLanguage();
 		$source    = Core::getSessionVar('source');
 		$nameFirst = sanitize_text_field($_REQUEST['name_first']);
 		$nameLast  = sanitize_text_field($_REQUEST['name_last']);
-		$mail      = sanitize_email($_REQUEST['mail']);
+		$mail      = sanitize_email($_REQUEST[$mailFieldName]);
 		$phone     = sanitize_text_field(str_replace(' ', '', $_REQUEST['phone']));
 		$optIn     = isset($_REQUEST['is_optin']) && $_REQUEST['is_optin'] ? 1 : 0;
 
@@ -52,7 +64,7 @@ class SignSteps
 			|| !is_email($mail)
 			|| ($phone && preg_match('/^((\+[1-9])|(0\d[1-9]))\d+$/', $phone) === false)
 		) {
-			Core::errorDie('Invalid form values received', 400);
+			Core::errorDie('Invalid form values received, please try again', 400);
 		}
 
 		$data = [
@@ -87,10 +99,27 @@ class SignSteps
 	 * @param int $collectionId
 	 * @return void
 	 */
-	public function step2(int $collectionId)
+	public function step2(int $collectionId): void
 	{
 		$this->verifyNonce();
-		$guid = $this->saveStep1($collectionId);
+
+		$honeypot = new Honeypot();
+		if (!$honeypot->validateForm()) {
+			$honeypotCaptcha = $honeypot->getChallenge();
+			if ($this->isAjax()) {
+				Core::jsonResponse(['action' => 'captcha', 'challenge' => $honeypotCaptcha]);
+			}
+			$this->step1($collectionId);
+			return;
+		}
+
+		$mailFieldName = $honeypot->getMailFieldName();
+		if (!$mailFieldName) {
+			Core::logMessage('User tried to save step1 with a missing session - forwarding to step1', 'warning');
+			$this->step1($collectionId);
+			return;
+		}
+		$guid = $this->saveStep1($collectionId, $mailFieldName);
 
 		// Prepare view variables
 		$textOptin         = Settings::getCValueByUserlang('text_optin');
@@ -117,8 +146,10 @@ class SignSteps
 	{
 		$dbSign = new DbSignatures();
 		// Load and sanitize form data
-		$birthDate       = sanitize_text_field($_REQUEST['birth_date']);
-		$birthDateParsed = date_parse($birthDate);
+		$birthDateDay    = (string)intval($_REQUEST['birth_date-day']);
+		$birthDateMonth  = (string)intval($_REQUEST['birth_date-month']);
+		$birthDateYear   = (string)intval($_REQUEST['birth_date-year']);
+		$birthDateParsed = date_parse($birthDateDay . '-' . $birthDateMonth . '-' . $birthDateYear);
 		$street          = sanitize_text_field($_REQUEST['street']);
 		$streetNo        = sanitize_text_field($_REQUEST['street_no']);
 		$zip             = sanitize_text_field($_REQUEST['zip']);
@@ -216,7 +247,7 @@ class SignSteps
 	 *
 	 * @return array
 	 */
-	protected function getPagesUrls($guid, string $country, string $gdeCanton, string $gdeId, array $data)
+	protected function getPagesUrls($guid, string $country, string $gdeCanton, string $gdeId, array $data): array
 	{
 		$abroadRedirect   = Settings::getCValue('swiss_abroad_redirect');
 		$isAbroadRedirect = $abroadRedirect && $country !== i18n::$countryDefault;
@@ -250,25 +281,23 @@ class SignSteps
 	 *
 	 * @param SignaturesDto $row
 	 */
-	public function step3(SignaturesDto $row)
+	public function step3(SignaturesDto $row): void
 	{
-		$redirect = isset($_REQUEST['redirect']) && $_REQUEST['redirect'];
-		$guid     = $row->getGuid();
+		$guid = $row->getGuid();
 
-		// Check if 2nd form step is filled and get encryption mode and success link
 		if (!$row->is_step2_done) {
 			$this->verifyNonce();
-			$successPage = $this->saveStep2($guid, $row->is_encrypted);
+			$url = $this->saveStep2($guid, $row->is_encrypted);
 		} else {
-			if($_REQUEST['birth_date'] || isset($_REQUEST['street'])) {
+			if ($_REQUEST['birth_date'] || isset($_REQUEST['street'])) {
 				Core::logMessage('User tried to save step2 a second time', 'warning');
 			}
-			$successPage = $row->link_success;
+			$url = $row->link_success;
 		}
-		if ($redirect) {
-			// Redirect to success page
-			echo $successPage;
-			wp_die();
+
+		$successPage = Settings::getCValue('use_page_as_success');
+		if ($this->isAjax() && ($successPage || $successPage === '0')) {
+			Core::jsonResponse(['action' => 'redirect', 'url' => $url]);
 		}
 
 		// Show inline success page
@@ -279,7 +308,7 @@ class SignSteps
 	/**
 	 * @param      $guid
 	 */
-	protected function step3successPage($guid)
+	protected function step3successPage($guid): void
 	{
 		$dbSign = new DbSignatures();
 		// Prepare PDF data
@@ -339,9 +368,9 @@ class SignSteps
 			'field_birthdate_year'  => substr($birthDateYear, -2),
 			'field_street'          => $address,
 		];
-		if(Settings::getCValue('print_names_on_pdf')){
+		if (Settings::getCValue('print_names_on_pdf')) {
 			$fields['field_first_name'] = $row->first_name;
-			$fields['field_last_name'] = $row->last_name;
+			$fields['field_last_name']  = $row->last_name;
 		}
 		$fields = $this->formatFields($fields);
 
@@ -380,7 +409,7 @@ class SignSteps
 		include Infos::getPluginDir() . 'public/views/sign-3.php';
 	}
 
-	private function verifyNonce()
+	private function verifyNonce(): void
 	{
 		if (!isset($_REQUEST['nonce']) || !wp_verify_nonce($_REQUEST['nonce'], $this->nonceId)) {
 			Core::errorDie('nonce check failed', 401);
@@ -398,7 +427,8 @@ class SignSteps
 			$posY   = Settings::getCValueByUserlang($name, Settings::PART_POS_Y);
 			$rotate = Settings::getCValueByUserlang($name, Settings::PART_ROTATION);
 			if ($posX === false || $posY === false || $rotate === false) {
-				Core::logMessage('Coordinates for field "' . $name . '" are not defined, please save your Signature sheet settings.', 'warning');
+				Core::logMessage('Coordinates for field "' . $name
+								 . '" are not defined, please save your Signature sheet settings.', 'warning');
 				continue;
 			}
 			if (is_array($value)) {
@@ -421,7 +451,7 @@ class SignSteps
 		return $return;
 	}
 
-	protected function getOptinMode($page)
+	protected function getOptinMode($page): ?string
 	{
 		$optinMode     = Settings::getCValue('optin_mode');
 		$optinPosition = Settings::getCValue('optin_position');
@@ -434,9 +464,13 @@ class SignSteps
 	 */
 	protected function dieOnAjax(): void
 	{
-		if (isset($_REQUEST['ajax']) && $_REQUEST['ajax']) {
+		if ($this->isAjax()) {
 			wp_die();
 		}
 	}
 
+	protected function isAjax(): bool
+	{
+		return isset($_REQUEST['ajax']) && $_REQUEST['ajax'];
+	}
 }

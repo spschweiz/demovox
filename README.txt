@@ -5,7 +5,7 @@ Tags: initiative, referendum, switzerland, collect, signature, signatures
 Requires at least: 4.9
 Tested up to: 5.9
 Stable tag: 1.0
-Requires PHP: 7.0.0
+Requires PHP: 7.4.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -135,5 +135,18 @@ We do not provide any warranty or free support, but you're welcome to create an 
 
 = 2.6.1 =
 * Remove gender-* and replace with ":"
+
+= 3.0 =
+* Multiple collections per installation, which allows to collect signatures for multiple initiatives on one website
+* Current demovox settings are transferred into an initial collection called "Default collection"
+* Settings and Sysinfo is split into global and collection specific content
+* Performance improvements by embedding demovox JS files only when needed
+* End date for collections with a visual editor for user message
+* PHP 7.4 or higher is now required (7.3 is EoL)
+* Admin backend can be translated
+* Visual editor for mails
+* Sign-up form birthday date implemented as input fields instead of datepicker
+* Basic spambot protection with a form honeypot and a simple calculation captcha if failed
+* Support for single letter signee names
 
 For more details, see our commit log: https://github.com/spschweiz/demovox/commits/master

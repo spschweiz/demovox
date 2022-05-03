@@ -15,33 +15,33 @@ namespace Demovox;
 /**
  * @var AdminCollection $this
  * @var int             $collectionId
+ * @var string          $collectionName
  * @var int[]           $count
  * @var SignatureList   $signatureList
  */
 $url = '/admin-post.php?cln=' . $collectionId . '&type=';
 ?>
 <div class="wrap demovox">
-	<h2>Download CSV</h2>
+	<h1><?= $collectionName ?></h1>
+	<h2><?= Strings::__a('Download CSV') ?></h2>
 	<p>
 		<a href="<?= Strings::getAdminUrl($url . DbSignatures::WHERE_OPTIN, 'demovox_get_csv') ?>">
-			<button>All opt-in (<?= $count[DbSignatures::WHERE_OPTIN] ?>)</button>
+			<button><?= Strings::__a('All opt-in ({count})', ['{count}' => $count[DbSignatures::WHERE_OPTIN]]) ?></button>
 		</a>
 		<a href="<?= Strings::getAdminUrl($url . DbSignatures::WHERE_FINISHED_IN_SCOPE, 'demovox_get_csv') ?>">
-			<button>Form input finished (<?= $count[DbSignatures::WHERE_FINISHED_IN_SCOPE] ?>)</button>
+			<button><?= Strings::__a('Form input finished ({count})', ['{count}' => $count[DbSignatures::WHERE_FINISHED_IN_SCOPE]]) ?></button>
 		</a>
 		<a href="<?= Strings::getAdminUrl($url . DbSignatures::WHERE_FINISHED_OUT_SCOPE, 'demovox_get_csv') ?>">
-			<button>Finished - Outside limited area (<?= $count[DbSignatures::WHERE_FINISHED_OUT_SCOPE] ?>)</button>
+			<button><?= Strings::__a('Finished - Outside limited area ({count})', ['{count}' => $count[DbSignatures::WHERE_FINISHED_OUT_SCOPE]]) ?></button>
 		</a>
 		<a href="<?= Strings::getAdminUrl($url . DbSignatures::WHERE_UNFINISHED, 'demovox_get_csv') ?>">
-			<button>Unfinished (<?= $count[DbSignatures::WHERE_UNFINISHED] ?>)</button>
+			<button><?= Strings::__a('Unfinished ({count})', ['{count}' => $count[DbSignatures::WHERE_UNFINISHED]]) ?></button>
 		</a>
 		<a href="<?= Strings::getAdminUrl($url . DbSignatures::WHERE_DELETED, 'demovox_get_csv') ?>">
-			<button>Deleted (<?= $count[DbSignatures::WHERE_DELETED] ?>)</button>
+			<button><?= Strings::__a('Deleted ({count})', ['{count}' => $count[DbSignatures::WHERE_DELETED]]) ?></button>
 		</a>
 	</p>
-</div>
-<div class="wrap">
-	<h2>Signatures</h2>
+	<h2><?= Strings::__a('Signatures') ?></h2>
 	<div id="poststuff">
 		<div id="post-body-content">
 			<div class="meta-box-sortables ui-sortable">
@@ -55,7 +55,7 @@ $url = '/admin-post.php?cln=' . $collectionId . '&type=';
 				</form>
 			</div>
 		</div>
-		Please note that encrypted entries will only be searched for by their serial.
+		<?= Strings::__a('Please note that encrypted entries will only be searched for by their serial.') ?>
 		<br class="clear">
 	</div>
 </div>

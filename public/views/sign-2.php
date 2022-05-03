@@ -39,10 +39,35 @@ namespace Demovox;
 			<div id="demovox-title-errors"></div>
 		</div>
 	<?php } ?>
-	<div id="demovox-grp-birth_date" class="form-group">
-		<label for="demovox-birth_date"><?= __('Birth date', 'demovox') ?></label>
-		<input name="birth_date" id="demovox-birth_date" autocomplete="bday" class="form-control" type="text"
-		       pattern="([0-2]?[0-9]|3[0-2])\.(0?[1-9]|1[0-2])\.\d{2,4}$" required="">
+	<label for="demovox-birth_date"><?= __('Birth date', 'demovox') ?></label>
+	<div id="demovox-grp-birth_date" class="form-group row date-inputs">
+		<div class="col-3">
+			<label class="small">
+				<?= __('Day', 'demovox') ?>
+				<input id="demovox-birth_date" name="birth_date-day" value="" maxlength="2" inputmode="numeric"
+					   pattern="[0-9]*" class="demovox-birth_date-day form-control" required="required"
+					   data-parsley-date="demovox-birth_date"
+					   data-parsley-errors-container="#demovox-grp-birth_date-errors"
+					   placeholder="<?= __('DD', 'demovox') ?>">
+			</label>
+		</div>
+		<div class="col-3">
+			<label class="small">
+				<?= __('Month', 'demovox') ?>
+				<input name="birth_date-month" value="" maxlength="2" inputmode="numeric" pattern="[0-9]*"
+					   data-parsley-errors-messages-disabled class="demovox-birth_date-month form-control"
+					   placeholder="<?= __('MM', 'demovox') ?>">
+			</label>
+		</div>
+		<div class="col-4">
+			<label class="small">
+				<?= __('Year', 'demovox') ?>
+				<input name="birth_date-year" value="" maxlength="4" inputmode="numeric" pattern="[0-9]*"
+					   data-parsley-errors-messages-disabled class="demovox-birth_date-year form-control"
+					   placeholder="<?= __('YYYY', 'demovox') ?>">
+			</label>
+		</div>
+		<div id="demovox-grp-birth_date-errors" class="col-12"></div>
 	</div>
 	<?php if ($allowSwissAbroad) { ?>
 		<div id="demovox-grp-swiss_abroad" class="form-group">
@@ -114,7 +139,7 @@ namespace Demovox;
 		</div>
 		<div id="demovox-grp-gde_canton" class="form-group col-md-4">
 			<label for="demovox-gde_canton"><?= __('Canton', 'demovox') ?></label>
-			<select name="gde_canton" id="demovox-gde_canton" class="form-control" required="" data-parsley-errors-container="#gde_canton-errors">
+			<select name="gde_canton" id="demovox-gde_canton" class="form-control" required="" data-parsley-errors-container="#demovox-gde_canton-errors">
 				<?php
 				foreach ($cantons as $short => $long) {
 					echo '<option value="' . $short . '">' . $long . '</option>';
