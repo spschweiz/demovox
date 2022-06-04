@@ -102,15 +102,15 @@ $fields = [
 if (WP_DEBUG) {
 	$fields[] = [
 		'uid'          => 'redirect_http_to_https',
-		'label'        => 'Redirect clients to secure HTTPS',
+		'label'        => 'Require clients to access via HTTPS',
 		'section'      => 'danger',
 		'default'      => 1,
 		'type'         => 'select',
 		'options'      => [
+			'1'  => 'Enabled (default)',
 			'0'  => 'Disabled - ONLY for tests on non-productive systems!',
-			'1'  => 'Enabled',
 		],
-		'supplemental' => 'DO NOT DISABLE this option on a productive system. Automatically redirect clients to encrypted connection.',
+		'supplemental' => 'DO NOT DISABLE this option on a productive system. Disables personal data submission without an encrypted connection.',
 	];
 }
 
