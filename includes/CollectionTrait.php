@@ -46,7 +46,7 @@ trait CollectionTrait
 		$collections  = new DbCollections();
 		$collection   = $collections->getRow(['name'], "ID='$collectionId'");
 
-		return $collection->name;
+		return $collection->name ?: '';
 	}
 
 }
