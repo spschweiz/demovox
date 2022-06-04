@@ -105,11 +105,6 @@ class Activator
 			$update = "ALTER TABLE $dbSignName ADD COLUMN title VARCHAR(10) NULL BEFORE first_name;";
 			self::update($update);
 		}
-		if (!Db::query('SELECT COUNT(ID) as count FROM `' . $dbCollectionName . '`')) {
-			// add a default collection
-			$update = 'INSERT INTO `' . $dbCollectionName . '` (ID, name) values (1, \'Default collection\');';
-			self::update($update);
-		}
 		if (!Db::query("SHOW COLUMNS FROM `$dbSignName` LIKE 'collection_ID'")) {
 			// previous version was < 3
 			// add "collection_ID" columns and migrate existing entries with value '0'
@@ -154,6 +149,11 @@ class Activator
 				}
 			}
 		}
+		if (!$dbCollection->count()) {
+			// add a default collection
+			$update = 'INSERT INTO `' . $dbCollectionName . '` (ID, name) values (1, \'Default collection\');';
+			self::update($update);
+		}
 	}
 
 	/**
@@ -174,7 +174,7 @@ class Activator
 
 	protected static function createPages(): void
 	{
-		$signatureSheetPageId = Core::getOption('signature_sheet_page_id');
+		$signatureSheetPageId = Settings::getCValue('signature_sheet_page_id');
 		if (!self::isPostVisible($signatureSheetPageId)) {
 			$content              = '<p>' . __('Almost there', 'demovox') . '</p>';
 			$content              .= '<p>' .
@@ -191,10 +191,10 @@ class Activator
 				'post_title'   => 'Signature sheet',
 			];
 			$signatureSheetPageId = wp_insert_post($postData);
-			Core::setOption('signature_sheet_page_id', $signatureSheetPageId);
+			Settings::setCValue('signature_sheet_page_id', $signatureSheetPageId);
 		}
 		if (empty(Settings::getCValue('use_page_as_mail_link'))) {
-			Core::setOption('use_page_as_mail_link', $signatureSheetPageId);
+			Settings::setCValue('use_page_as_mail_link', $signatureSheetPageId);
 		}
 
 		$optinPageId = Settings::getCValue('use_page_as_optin_link');
@@ -210,7 +210,7 @@ class Activator
 				'post_title'   => 'Opt-in',
 			];
 			$optinPageId = wp_insert_post($post_data);
-			Settings::setValue('use_page_as_optin_link', $optinPageId);
+			Settings::setCValue('use_page_as_optin_link', $optinPageId);
 		}
 	}
 
