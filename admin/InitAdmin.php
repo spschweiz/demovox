@@ -91,9 +91,20 @@ class InitAdmin extends BaseController
 	{
 		$registerOnlyOnSave = Core::getOption('settings_no_register');
 		if ($registerOnlyOnSave) {
-			$isPageDemovoxSettings = isset($_REQUEST['option_page']) && substr($_REQUEST['option_page'], 0, 7) == 'demovox';
+			$isPageSettings = isset($_REQUEST['option_page']);
+			if (!$isPageSettings) {
+				return;
+			}
+
 			$actionUpdate = isset($_REQUEST['action']) && $_REQUEST['action'] == 'update';
-			if (!$isPageDemovoxSettings || !$actionUpdate) {
+			if (!$actionUpdate) {
+				return;
+			}
+
+			$isPageDemovoxSettings =
+				substr($_REQUEST['option_page'], 0, 7) == 'demovox'
+				|| substr($_REQUEST['option_page'], 2, 7) == 'demovox';
+			if (!$isPageDemovoxSettings) {
 				return;
 			}
 		}
