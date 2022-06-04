@@ -367,4 +367,21 @@ abstract class Db
 
 		return $row;
 	}
+
+	/**
+	 * @param string|null $field
+	 * @return string|null
+	 */
+	protected function formatDate(?string $field): ?string
+	{
+		if (isset($field)) {
+			if ($field == '0000-00-00') {
+				$field = null;
+			} else {
+				$endDate = strtotime($field);
+				$field = $endDate ? date('d.m.Y', $endDate) : null;
+			}
+		}
+		return $field;
+	}
 }

@@ -58,9 +58,7 @@ class DbCollections extends db
 	 */
 	protected function createDto(\stdClass $row): ?CollectionsDto
 	{
-		if (isset($row->end_date) && $row->end_date == '0000-00-00') {
-			$row->end_date = null;
-		}
+		$row->end_date = $this->formatDate($row->end_date);
 		return new CollectionsDto($row, false);
 	}
 }

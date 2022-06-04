@@ -29,6 +29,10 @@ class AdminCollection extends BaseController
 
 	public function pageOverview()
 	{
+		if (strtolower($_SERVER['REQUEST_METHOD']) === 'post') {
+			$this->saveOverview();
+		}
+
 		$collectionId = $this->getCollectionId();
 		$collectionName = $this->getCollectionName();
 
@@ -44,9 +48,6 @@ class AdminCollection extends BaseController
 		$userLang = Infos::getUserLanguage();
 
 		$page = $this->getCurrentPage();
-		if (strtolower($_SERVER['REQUEST_METHOD']) === 'post') {
-			$this->saveOverview();
-		}
 
 		if ($count) {
 			$stats = new CollectionStatsDto();
@@ -261,9 +262,13 @@ class AdminCollection extends BaseController
 
 		$collection = new DbCollections;
 
-		$data = new CollectionsDto();
-		$data->name = sanitize_text_field($_REQUEST['name']);
-		$data->end_date = empty($_REQUEST['end_date']) ? sanitize_text_field($_REQUEST['end_date']) : null;
+		$data           = new CollectionsDto();
+		$data->name     = sanitize_text_field($_REQUEST['name']);
+		$data->end_date = '';
+		if (!empty($_REQUEST['end_date'])) {
+			$endDate        = strtotime(sanitize_text_field($_REQUEST['end_date']));
+			$data->end_date = $endDate ? date('Y-m-d', $endDate) : '';
+		}
 		$data->end_message = sanitize_text_field($_REQUEST['end_message']);
 		$collection->update($data, ['ID' => $collectionId]);
 	}
