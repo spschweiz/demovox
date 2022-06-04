@@ -95,7 +95,7 @@ abstract class AdminSettings extends BaseController
 			echo '</table>';
 
 			if (isset($sectionDetails['addPost'])) {
-				echo Strings::__a($$sectionDetails['addPost']);
+				echo Strings::__a($sectionDetails['addPost']);
 			}
 		}
 	}

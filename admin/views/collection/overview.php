@@ -18,25 +18,19 @@ $this->loadTinymce();
 <div class="wrap demovox">
 	<h1><?= $collectionName ?></h1>
 	<p>
-		<?= Strings::__a('<b>{$count}</b> visitors have signed up to this collection', ['{count}' => $count]) ?>
+		<?= Strings::__a('<b>{count}</b> visitors have signed up to this collection', ['{count}' => $count]) ?>
 		<?php if ($addCount) {
 			$settingsLink = Strings::getAdminLink('/admin.php?page=demovoxSettings', 'settings');
 			?>
 			<?= Strings::__a(
-				'(and additional {$count}</b> signatures in the {settings})',
-				['{count}' => $count, 'settings' => $settingsLink]
+				'(and additional {count}</b> signatures in the {settings})',
+				['{count}' => $count, '{settings}' => $settingsLink]
 			) ?>
 		<?php } ?>
 	</p>
 	<?php
 	if (Core::hasAccess('demovox_edit_collection')):
 	?>
-	<script>
-		(function (jQuery) {
-			window.$ = jQuery.noConflict();
-			placeMce('#demovox_end_message');
-		})(jQuery);
-	</script>
 	<form method="post" action="<?= Infos::getRequestUri() ?>">
 		<?php wp_nonce_field($page); ?>
 		<input type="hidden" name="action" value="<?= $page ?>">
@@ -76,6 +70,12 @@ $this->loadTinymce();
 		}
 		?>
 	</form>
+		<script>
+			(function (jQuery) {
+				window.$ = jQuery.noConflict();
+				placeMce('#demovox_end_message');
+			})(jQuery);
+		</script>
 	<?php
 	endif;
 	include Infos::getPluginDir() . 'admin/views/collection/stats.php';
