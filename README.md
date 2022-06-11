@@ -17,7 +17,7 @@ This Plugin was developed by the [Socialist Party of Switzerland](https://www.sp
 
 ## Requirements
 
-* PHP >= 7.0 (feature "Hashid" requires >= 7.1.3)
+* PHP >= 7.4
 * MySQL >= 5.6.5
 * WordPress >= 4.9
 * SSL certificate for HTTPS (non-https is only allowed for development)
