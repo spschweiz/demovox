@@ -194,10 +194,7 @@ abstract class CronBase
 		return true;
 	}
 
-	public function run()
-	{
-		Core::errorDie('Not implemented', 500);
-	}
+	abstract public function run();
 
 	/**
 	 * TODO: recognize old tasks as not running

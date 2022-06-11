@@ -16,18 +16,12 @@ abstract class ListTable extends \WP_List_Table
 	/**
 	 * @return Db
 	 */
-	protected function get_db_model()
-	{
-		Core::errorDie('Not implemented', 500);
-	}
+	abstract protected function get_db_model(): Db;
 
 	/**
 	 * @return Dto
 	 */
-	protected function get_dto()
-	{
-		Core::errorDie('Not implemented', 500);
-	}
+	abstract protected function get_dto(): Dto;
 
 	protected function get_hidden_columns(): array
 	{

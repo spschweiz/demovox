@@ -8,12 +8,12 @@ class Strings
 	/**
 	 * Get permalink to page where to find a visitor specific demovox page
 	 *
-	 * @param string   $signGuid
-	 * @param null|int $pageId  By default: success page (probably with pdf link)
-	 * @param          $baseUrl null|string
+	 * @param string $signGuid
+	 * @param int|null $pageId  By default: success page (probably with pdf link)
+	 * @param          $baseUrl string|null
 	 * @return string
 	 */
-	public static function getPageUrl($signGuid, $pageId = null, $baseUrl = null)
+	public static function getPageUrl(string $signGuid, ?int $pageId = null, ?string $baseUrl = null): string
 	{
 		$pageId = $pageId ?: Settings::getCValue('use_page_as_success');
 		$url    = get_permalink($pageId);
@@ -40,7 +40,7 @@ class Strings
 	 * @param $signId
 	 * @return string
 	 */
-	public static function getSerial($signId, $qrMode = null)
+	public static function getSerial($signId, $qrMode = null): string
 	{
 		if ($qrMode === null) {
 			$qrMode = Settings::getCValue('field_qr_mode');
@@ -77,14 +77,20 @@ class Strings
 		return admin_url($url);
 	}
 
-	public static function getAdminLink(string $url, string $label)
+	public static function getAdminLink(string $url, string $label): string
 	{
 		$url   = self::getAdminUrl($url);
 		$label = Strings::__a($label);
 		return '<a href="' . $url . '">' . $label . '</a>';
 	}
 
-	public static function getCountries($format = 'php', $locale = null, $echo = null)
+	/**
+	 * @param string $format
+	 * @param string|null $locale
+	 * @param string|null $echo
+	 * @return mixed|void
+	 */
+	public static function getCountries(string $format = 'php', ?string $locale = null, ?string $echo = null)
 	{
 		$locale           = $locale ?: Infos::getUserLanguage(true);
 		$availableFormats = [
@@ -121,7 +127,7 @@ class Strings
 		}
 	}
 
-	public static function generateRandomString($length = 10)
+	public static function generateRandomString($length = 10): string
 	{
 		$characters       = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZäöüÜÄÖç&/ÉÀÈéàèê';
 		$charactersLength = strlen($characters);
@@ -132,7 +138,7 @@ class Strings
 		return $randomString;
 	}
 
-	public static function parseCsv($csv_string, $delimiter = ",", $skip_empty_lines = true, $trim_fields = true)
+	public static function parseCsv($csv_string, $delimiter = ",", $skip_empty_lines = true, $trim_fields = true): array
 	{
 		$enc   = preg_replace('/(?<!")""/', '!!Q!!', $csv_string);
 		$enc   = preg_replace_callback(
@@ -162,7 +168,7 @@ class Strings
 	 * @param null|string $status success|warning|error|info
 	 * @return string
 	 */
-	public static function wpMessage($message, $status = null)
+	public static function wpMessage($message, $status = null): string
 	{
 		$status = $status ?: 'info';
 		$string = '<div class="notice ' . $status . ' inline notice-' . $status . ' notice-alt"><p>'
@@ -172,14 +178,14 @@ class Strings
 	}
 
 	/**
-	 *
-	 * @param array  $options
+	 * @param array $options
 	 * @param string $value
 	 * @param string $name
-	 * @param string $id
+	 * @param string|null $id
+	 * @param array $attributes
 	 * @return string select id
 	 */
-	public static function createSelect($options, $value, $name, $id = null, $attributes = [])
+	public static function createSelect(array $options, string $value, string $name, ?string $id = null, array $attributes = []): string
 	{
 		$id            = $id === null ? $name : $id;
 		$optionsMarkup = '’';
@@ -192,8 +198,8 @@ class Strings
 			);
 		}
 		$addAttribs = '';
-		foreach ($attributes as $name => $value) {
-			$addAttribs .= ' ' . $name . '="' . $value . '"';
+		foreach ($attributes as $attName => $value) {
+			$addAttribs .= ' ' . $attName . '="' . $value . '"';
 		}
 		printf('<select name="%1$s" id="%2$s"%4$s>%3$s</select>', $name, $id, $optionsMarkup, $addAttribs);
 
@@ -205,7 +211,7 @@ class Strings
 	 * @param string $text
 	 * @return string
 	 */
-	public static function nl2br($text)
+	public static function nl2br(string $text): string
 	{
 		return str_replace(["\r\n", "\r", "\n"], "<br/>", $text);
 	}
@@ -214,7 +220,7 @@ class Strings
 	 * @param string $email
 	 * @return false|string
 	 */
-	public static function hashMail($email)
+	public static function hashMail(string $email)
 	{
 		if (!defined('DEMOVOX_HASH_KEY')) {
 			Core::errorDie('Mail hashing failed: Constant DEMOVOX_HASH_KEY is not defined in wp-config.php', 500);
@@ -226,7 +232,7 @@ class Strings
 	 * Create a GUID
 	 * @return string
 	 */
-	public static function createGuid()
+	public static function createGuid(): string
 	{
 		if (function_exists('com_create_guid') === true) {
 			return trim(com_create_guid(), '{}');

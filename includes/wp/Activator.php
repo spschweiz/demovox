@@ -49,7 +49,7 @@ class Activator
 	 *
 	 * @return bool
 	 */
-	protected static function isPostVisible($post)
+	protected static function isPostVisible(int $post): bool
 	{
 		if (!empty($post)) {
 			$post_info = get_post($post);
