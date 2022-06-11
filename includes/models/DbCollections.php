@@ -58,7 +58,9 @@ class DbCollections extends db
 	 */
 	protected function createDto(\stdClass $row): ?CollectionsDto
 	{
-		$row->end_date = $this->formatDate($row->end_date);
+		if(isset($row->end_date)) {
+			$row->end_date = $this->formatDate($row->end_date);
+		}
 		return new CollectionsDto($row, false);
 	}
 }
