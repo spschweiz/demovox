@@ -46,8 +46,6 @@ class InitPublic extends BaseController
 	{
 
 		Loader::addAction('init', $this, 'startSession');
-		Loader::addAction('wp_enqueue_scripts', $this, 'enqueueStyles');
-		Loader::addAction('wp_enqueue_scripts', $this, 'registerScripts');
 
 		// demovox_form shortcode ajax
 		Loader::addAjaxPublic('demovox_step2', $this->publicHandler, 'signStep2');
@@ -75,39 +73,6 @@ class InitPublic extends BaseController
 		// Deprecated shortcodes
 		Loader::addShortcode('demovox_form_shortcode', $this->publicHandler, 'signShortcode');
 		Loader::addShortcode('demovox_count_shortcode', $this->shortcodeDetailsHandler, 'countShortcode');
-	}
-
-	/**
-	 * Register the stylesheets for the public-facing side of the site.
-	 *
-	 * @since    1.0.0
-	 */
-	public function enqueueStyles()
-	{
-		wp_register_style($this->getPluginName(), plugin_dir_url(__FILE__) . 'css/demovox-public.min.css', [], $this->getVersion(), 'all');
-	}
-
-	/**
-	 * Register the JavaScript for the public-facing side of the site.
-	 *
-	 * @since    1.0.0
-	 */
-	public function registerScripts()
-	{
-		wp_register_script(
-			$this->getPluginName(),
-			plugin_dir_url(__FILE__) . 'js/demovox-public.min.js',
-			['jquery', 'jquery-ui-datepicker'],
-			$this->getVersion(),
-			false
-		);
-		wp_register_script(
-			$this->getPluginName() . '_pdf',
-			plugin_dir_url(__FILE__) . 'js/demovox-public-pdf.min.js',
-			['jquery'],
-			$this->getVersion(),
-			true
-		);
 	}
 
 	public function startSession()

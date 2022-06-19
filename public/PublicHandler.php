@@ -144,6 +144,7 @@ class PublicHandler extends BaseController
 	 */
 	protected function signStep(int $nr)
 	{
+		Loader::addAction('wp_enqueue_scripts', $this, 'enqueueAssets');
 		$pluginDir = Infos::getPluginDir();
 
 		if ($this->isRequireFallback($nr)) {
@@ -162,13 +163,11 @@ class PublicHandler extends BaseController
 			default:
 				$collectionId = $this->shortcodeAttributes['collection'];
 				$this->setCollectionId($collectionId);
-				$this->enqueueAssets();
 				$sign->step1($collectionId);
 				break;
 			case 2:
 				$collectionId = $this->getCollectionFromRequest();
 				$this->setCollectionId($collectionId);
-				$this->enqueueAssets();
 				$sign->step2($collectionId);
 				break;
 			case 3:
@@ -182,7 +181,6 @@ class PublicHandler extends BaseController
 					Core::errorDie('Signature not found with guid="' . $guid . '"', 404);
 				}
 				$this->setCollectionId($row->collection_ID);
-				$this->enqueueAssets();
 				$sign->step3($row);
 				break;
 		}
@@ -190,7 +188,7 @@ class PublicHandler extends BaseController
 		return $output;
 	}
 
-	protected function isRequireFallback($nr)
+	protected function isRequireFallback($nr): bool
 	{
 		return $nr === 3 && Infos::isNoEc6();
 	}
@@ -225,9 +223,9 @@ class PublicHandler extends BaseController
 	 *
 	 * @since    1.0.0
 	 */
-	protected function enqueueAssets()
+	public function enqueueAssets()
 	{
-		wp_enqueue_style($this->getPluginName());
+		wp_enqueue_style($this->getPluginName(), plugin_dir_url(__FILE__) . 'css/demovox-public.min.css', [], $this->getVersion(), 'all');
 
 		$demovoxJsArr = [
 			'language'          => Infos::getUserLanguage(),
@@ -245,8 +243,20 @@ class PublicHandler extends BaseController
 			$demovoxJsArr['apiAddressGdeSelect'] = Settings::getCValue('api_address_gde_select');
 		}
 
-		wp_enqueue_script($this->getPluginName());
-		wp_enqueue_script($this->getPluginName() . '_pdf');
+		wp_enqueue_script(
+			$this->getPluginName(),
+			plugin_dir_url(__FILE__) . 'js/demovox-public.min.js',
+			['jquery', 'jquery-ui-datepicker'],
+			$this->getVersion(),
+			false
+		);
+		wp_enqueue_script(
+			$this->getPluginName() . '_pdf',
+			plugin_dir_url(__FILE__) . 'js/demovox-public-pdf.min.js',
+			['jquery'],
+			$this->getVersion(),
+			true
+		);
 		wp_localize_script($this->getPluginName(), 'demovoxData', $demovoxJsArr);
 	}
 }
