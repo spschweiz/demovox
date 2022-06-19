@@ -547,9 +547,13 @@ $(() => {
 		});
 	}
 
-	// Is `n` a number or numeric string (eg "3")?
-	function isNumeric(n) {
-		return !isNaN(parseFloat(n)) && isFinite(n);
+	function loadScript(url, callback) {
+		jQuery.ajax({
+			url: url,
+			dataType: 'script',
+			success: callback,
+			async: true
+		});
 	}
 
 	function track(name, value) {
@@ -570,5 +574,7 @@ $(() => {
 		if ($('form.demovox').length) {
 			initDemovoxForm();
 		}
+
+		initCreatePdf();
 	});
 });
