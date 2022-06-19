@@ -19,7 +19,6 @@ import 'parsleyjs';
 import 'parsleyjs/src/i18n/de'; // not supported by Browserify (ES6 import() is used)
 import 'parsleyjs/src/i18n/fr';
 import 'parsleyjs/src/i18n/it';
-import moment from 'moment';
 
 $(() => {
 	let currentPage = null,
@@ -312,6 +311,35 @@ $(() => {
 		});
 	}
 
+	function initCreatePdf() {
+		const $createPdf = $('#createPdf');
+
+		if (!$createPdf) {
+			return;
+		}
+		if (typeof $createPdf.data('pdfJsUrl') == 'undefined') {
+			console.error('$createPdf element param "data-pdf-js-url" missing', {$createPdf: $createPdf});
+			return;
+		}
+
+		const params = jQuery.parseJSON($createPdf.data('params'));
+
+		if (typeof params.title == 'undefined' || typeof params.pdfUrl == 'undefined' ||
+			typeof params.fields == 'undefined' || typeof params.qrData == 'undefined') {
+			console.error('$createPdf element param "data-params" requires: title, pdfUrl, fields, qrData',
+				{$createPdf: $createPdf, params: params});
+			return;
+		}
+
+		if (typeof window.createPdf == 'undefined') {
+			loadScript($createPdf.data('pdfJsUrl'), () => {
+				window.createPdf(params.title, params.pdfUrl, params.fields, params.qrData).then();
+			})
+		} else {
+			window.createPdf(params.title, params.pdfUrl, params.fields, params.qrData).then();
+		}
+	}
+
 	function initDemovoxForm() {
 		$el.form = $('form.demovox');
 
@@ -331,21 +359,23 @@ $(() => {
 				.addValidator(
 					'date',
 					function (value, requirements) {
-						const day = $('.' + requirements + '-day').val(),
-							month = $('.' + requirements + '-month').val(),
-							year = $('.' + requirements + '-year').val(),
+						let day = parseInt($('.' + requirements + '-day').val()),
+							month = parseInt($('.' + requirements + '-month').val()),
+							year = parseInt($('.' + requirements + '-year').val()),
 							maxAgeYears = 150;
 
-						if (isNumeric(day) === false
-							|| isNumeric(month) === false
-							|| isNumeric(year) === false
-							|| year.length < 4) {
+						if (!day || !month || !year || year.length < 4) {
 							return false;
 						}
-						const date = moment(year + '-' + month + '-' + day, 'YYYY-M-D');
 
-						if (date.isValid()) {
-							return date.diff(moment(), 'years') > -maxAgeYears;
+						var dt = new Date(year,month-1,day,0,0,0,0),
+							m = dt.getMonth() + 1,
+							d = dt.getDate(),
+							y  = dt.getYear() + 1900;
+						var currentYear = new Date().getFullYear();
+
+						if (month === m && year === y && day === d) {
+							return year > currentYear - maxAgeYears;
 						}
 						return false;
 					},
