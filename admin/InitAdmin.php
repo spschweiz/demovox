@@ -49,6 +49,8 @@ class InitAdmin extends BaseController
 		$this->adminCollection         = new AdminCollection($this->getPluginName(), $this->getVersion());
 		$this->adminCollectionSettings = new AdminCollectionSettings($this->getPluginName(), $this->getVersion());
 
+		Loader::addAction('plugins_loaded', $this, 'loadPluginTextdomain');
+
 		$this->defineHooks();
 		$this->registerSettings();
 		$this->setupAdminAjaxActions();
@@ -239,5 +241,23 @@ class InitAdmin extends BaseController
 		$menuTitle = 'Cron';
 		$callback = [$this->adminCollection, 'pageCron'];
 		add_submenu_page($clnSlug, $menuTitle, $menuTitle, $capabilitySettings, 'demovoxCron', $callback);
+	}
+	/**
+	 * Load the plugin text domain for translation.
+	 *
+	 * @since    1.0.0
+	 */
+	public function loadPluginTextdomain()
+	{
+		load_plugin_textdomain(
+			'demovox.adminsettings',
+			false,
+			dirname(plugin_basename(__FILE__), 2) . '/languages/'
+		);
+		load_plugin_textdomain(
+			'demovox.admin',
+			false,
+			dirname(plugin_basename(__FILE__), 2) . '/languages/'
+		);
 	}
 }

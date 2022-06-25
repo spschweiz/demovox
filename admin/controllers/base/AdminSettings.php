@@ -70,16 +70,16 @@ abstract class AdminSettings extends BaseController
 			$sectionDetails = $sections[$wpSection['id']];
 
 			if (isset($sectionDetails['addPre'])) {
-				echo Strings::__a($sectionDetails['addPre']);
+				echo $sectionDetails['addPre'];
 			}
 
 			if ($wpSection['title']) {
-				$title = Strings::__a($wpSection['title']);
+				$title = __($wpSection['title'], 'demovox.adminsettings');
 				echo "<h2>{$title}</h2>\n";
 			}
 
 			if (isset($sectionDetails['sub'])) {
-				echo Strings::__a($sectionDetails['sub']);
+				echo __($sectionDetails['sub'], 'demovox.adminsettings');
 			}
 			if ($wpSection['callback']) {
 				call_user_func($wpSection['callback'], $wpSection);
@@ -95,7 +95,7 @@ abstract class AdminSettings extends BaseController
 			echo '</table>';
 
 			if (isset($sectionDetails['addPost'])) {
-				echo Strings::__a($sectionDetails['addPost']);
+				echo $sectionDetails['addPost'];
 			}
 		}
 	}
@@ -208,7 +208,11 @@ abstract class AdminSettings extends BaseController
 				break;
 			case 'select': // If it is a select dropdown
 				if (!empty ($arguments['options']) && is_array($arguments['options'])) {
-					Strings::createSelect($arguments['options'], Settings::getValue($uid), $wpid);
+					$options = $arguments['options'];
+					foreach($options as &$option) {
+						$option = __($option, 'demovox.adminsettings');
+					}
+					Strings::createSelect($options, Settings::getValue($uid), $wpid);
 				}
 				break;
 			case 'wpMedia':
@@ -244,7 +248,7 @@ abstract class AdminSettings extends BaseController
 
 		// If there is supplemental text
 		if (isset($arguments['supplemental']) && $supplemental = $arguments['supplemental']) {
-			printf('<p class="description">%s</p>', $supplemental); // Show it
+			printf('<p class="description">%s</p>', __($supplemental, 'demovox.adminsettings')); // Show it
 		}
 	}
 }

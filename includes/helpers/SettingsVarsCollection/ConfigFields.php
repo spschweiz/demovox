@@ -23,7 +23,7 @@ $fields = [
 		'uid'          => 'use_page_as_success',
 		'label'        => 'Success page redirect',
 		'supplemental' => 'Replace the user form by ajax with the signature sheet or redirect user to this page after successfully filling out the form.'
-			. ' You might want to use the same page as set for "Link this page in mails" and you should include <code>[demovox_form]</code> on that page to show the signature sheet. ',
+			. ' You might want to use the same page as set for "Link this page in mails" and you should include <code>[demovox_form]</code> on that page to show the signature sheet.',
 		'section'      => 'signatureSheet',
 		'type'         => 'wpPage',
 		'optionNone'   => '[No, show on current page]',
@@ -614,7 +614,7 @@ foreach ($allLanguages as $langId => $language) {
 		'label'        => 'Body',
 		'section'      => 'mailRemindSignup_' . $langId,
 		'type'         => 'textarea',
-		'supplemental' => 'Available placeholders: <code>{title}</code>, <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>, <code>{link_optin}</code> (opt-in form), <code>{link_home}</code> (WordPress Front Page), <code>{subject}</code>, <code>{guid}</code>. ',
+		'supplemental' => 'Available placeholders: <code>{title}</code>, <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>, <code>{link_optin}</code> (opt-in form), <code>{link_home}</code> (WordPress Front Page), <code>{subject}</code>, <code>{guid}</code>.',
 	];
 }
 $cantons     = i18n::$cantons;

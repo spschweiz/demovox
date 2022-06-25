@@ -64,7 +64,7 @@ class RegisterSettings
 	{
 		$callback = [$this->settingsController, 'fieldCallback',];
 
-		$label = $field['label'];
+		$label = __($field['label'], 'demovox.adminsettings');
 		$sectionId = $field['section'];
 		$section = $this->getSettingsSection($sectionId);
 		$page = $section['page'];

@@ -12,7 +12,7 @@ $fields = [
 		],
 		'default'      => 'disabled',
 		'supplemental' => 'Recommended! Encrypt personal details, only affects new entries. <code>DEMOVOX_ENC_KEY</code> and <code>DEMOVOX_HASH_KEY</code> have to be set in wp-config.php (see <b>System info</b>). '
-			. 'Protects against DB data theft like SQL injections or direct database access by a intruder, but not on file system access. ',
+			. 'Protects against DB data theft like SQL injections or direct database access by a intruder, but not on file system access.',
 	],
 	[
 		'uid'     => 'save_ip',
