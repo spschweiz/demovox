@@ -43,7 +43,7 @@ abstract class ListTable extends \WP_List_Table
 				$id = $title;
 				$title = $dto_fields[$id] ?? $id;
 			}
-			$columns[$id] = Strings::__a($title);
+			$columns[$id] = __($title, 'demovox.admin');
 		}
 		$columns = ['cb' => '<input type="checkbox" />',] + $columns;
 

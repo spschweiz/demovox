@@ -10,12 +10,12 @@ namespace Demovox;
 <div class="row">
 	<div class="col-md-11">
 		<?php if ($source !== null): ?>
-			<h4><?= Strings::__a('Historical chart of source "{source}"', ['{source}' => $source]) ?></h4>
+			<h4><?= strtr(__('Historical chart of source "{source}"', 'demovox.admin'), ['{source}' => $source]) ?></h4>
 		<?php else: ?>
-			<h4><?= Strings::__a('Historical chart') ?></h4>
+			<h4><?= __('Historical chart', 'demovox.admin') ?></h4>
 		<?php endif; ?>
 		<canvas id="dateChart"></canvas>
-		<?= Strings::__a('Date always refers to original registration') ?>
+		<?= __('Date always refers to original registration', 'demovox.admin') ?>
 	</div>
 </div>
 <script>

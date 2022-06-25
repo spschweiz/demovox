@@ -85,56 +85,81 @@ abstract class CronBase
 		switch ($id) {
 			case 0: // CronMailConfirm
 				$status = $this->getStatusLabel(Settings::getCValue('mail_confirmation_enabled'));
-				$desc  = 'Send sign-up confirmation mails after a client has filled both forms. '
-						  . 'Requires the setting <i>Confirmation mail ({status})</i> to be enabled.';
-				$desc  = Strings::__a($desc, ['{status}' => $status]);
+				$desc   = strtr(
+					__(
+						'Send sign-up confirmation mails after a client has filled both forms. '
+						. 'Requires the setting <i>Confirmation mail ({status})</i> to be enabled.',
+						'demovox.admin'
+					),
+					['{status}' => $status]
+				);
 				break;
 			case 1: // CronMailIndex
-				$desc = 'Indexing cron to avoid duplicate reminders for the same mails address (table <i>wp_demovox_mails</i>). '
-						 . 'If enabled, this indexer must be executed before reminder cron. '
-						 . 'Requires the setting <i>Mail deduplication ({status_dedup})</i> to be enabled.';
-				$desc = Strings::__a($desc, ['{status_dedup}' => $mail_remind_dedup]);
+				$desc = strtr(
+					__(
+						'Indexing cron to avoid duplicate reminders for the same mails address (table <i>wp_demovox_mails</i>). '
+						. 'If enabled, this indexer must be executed before reminder cron. '
+						. 'Requires the setting <i>Mail deduplication ({status_dedup})</i> to be enabled.',
+						'demovox.admin'
+					),
+					['{status_dedup}' => $mail_remind_dedup]
+				);
 				break;
 			case 2: // CronMailRemindSheet
 				$mail_remind_sheet_min_age = intval(Settings::getCValue('mail_remind_sheet_min_age'));
-				$status                    = $this->getStatusLabel(Settings::getCValue('mail_remind_sheet_enabled'));
+				$status = $this->getStatusLabel(Settings::getCValue('mail_remind_sheet_enabled'));
 
-				$desc = 'Send a reminder to signees which didn\'t send their signature sheets ' . 'after (<strong>{mail_remind_signup_min_age}</strong>) days. '
-						 . '<i>Mail deduplication ({status_dedup})</i> can be applied. '
-						 . 'Requires the setting <i>Sheet reminder mail ({status})</i> to be enabled.';
-				$desc = Strings::__a(
-					$desc,
+				$desc = strtr(
+					__(
+						'Send a reminder to signees which didn\'t send their signature sheets ' . 'after (<strong>{mail_remind_signup_min_age}</strong>) days. '
+						. '<i>Mail deduplication ({status_dedup})</i> can be applied. '
+						. 'Requires the setting <i>Sheet reminder mail ({status})</i> to be enabled.',
+						'demovox.admin'
+					),
 					[
 						'{mail_remind_signup_min_age}' => $mail_remind_sheet_min_age,
-						'{status}' => $status,
-						'{status_dedup}' => $mail_remind_dedup
+						'{status}'                     => $status,
+						'{status_dedup}'               => $mail_remind_dedup,
 					]
 				);
 				break;
 			case 3: // CronMailRemindSignup
 				$mail_remind_signup_min_age = intval(Settings::getCValue('mail_remind_signup_min_age'));
-				$status                     = $this->getStatusLabel(Settings::getCValue('mail_remind_signup_enabled'));
+				$status = $this->getStatusLabel(Settings::getCValue('mail_remind_signup_enabled'));
 
-				$desc = 'Send a reminder to signees which didn\'t finish filling the sign-up form '
-						 . 'after (<strong>{mail_remind_signup_min_age}</strong>) days. '
-						 . '<i>Mail deduplication ({status_dedup})</i> can be applied. '
-						 . 'Requires the setting <i>Sheet reminder mail ({status})</i> to be enabled.';
-				$desc = Strings::__a(
-					$desc,
+				$desc = strtr(
+					__('Send a reminder to signees which didn\'t finish filling the sign-up form '
+						. 'after (<strong>{mail_remind_signup_min_age}</strong>) days. '
+						. '<i>Mail deduplication ({status_dedup})</i> can be applied. '
+						. 'Requires the setting <i>Sheet reminder mail ({status})</i> to be enabled.',
+						'demovox.admin'
+					),
 					[
 						'{mail_remind_signup_min_age}' => $mail_remind_signup_min_age,
-						'{status}' => $status,
-						'{status_dedup}' => $mail_remind_dedup
+						'{status}'                     => $status,
+						'{status_dedup}'               => $mail_remind_dedup,
 					]
 				);
 				break;
 			case 4: // CronExportToApi
 				$api_export_url = Settings::getCValue('api_export_url');
 
-				$status = $api_export_url ? 'enabled and set to "{url}"' : '<span class="error">disabled</span>';
-				$status = Strings::__a($status, ['{url}' => $api_export_url]);
-				$desc  = 'Export sign-up data to a REST API. '
-						  . 'Requires the setting <i>API URL (' . $status . ')</i>.';
+				$status = $api_export_url
+					? __('enabled and set to "{url}"', 'demovox.admin')
+					: __('<span class="error">disabled</span>', 'demovox.admin');
+
+				$status = strtr(
+					$status,
+					['{url}' => $api_export_url]
+				);
+				$desc = strtr(
+					__(
+						'Export sign-up data to a REST API. '
+						. 'Requires the setting <i>API URL ({status})</i>.',
+						'demovox.admin'
+					),
+					['{status}' => $status]
+				);
 				break;
 		}
 		return $desc;
@@ -142,8 +167,8 @@ abstract class CronBase
 
 	protected function getStatusLabel(bool $status): string
 	{
-		$label = Strings::__a($status ? 'enabled' : 'disabled');
-		return '<span class="'.($status ? 'success' : 'error').'">' . $label . '</span>';
+		$label = $status ? __('enabled', 'demovox.admin') : __('disabled', 'demovox.admin');
+		return '<span class="' . ($status ? 'success' : 'error') . '">' . $label . '</span>';
 	}
 
 	/**

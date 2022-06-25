@@ -11,8 +11,8 @@ namespace Demovox;
 ?>
 <div class="wrap demovox">
 	<h2><?= $collectionName ?></h2>
-	<h3><?= Strings::__a('Cron') ?></h3>
-	<p><?= Strings::__a('A cron manager plugin is recommended for detailed wordpress cron configuration') ?></p>
+	<h3><?= __('Cron', 'demovox.admin') ?></h3>
+	<p><?= __('A cron manager plugin is recommended for detailed wordpress cron configuration', 'demovox.admin') ?></p>
 	<?php
 	foreach ($allCrons as $cron) {
 		$dateStart   = $cron->getStatusDateStart();
@@ -37,20 +37,20 @@ namespace Demovox;
 		<table class="wp-list-table widefat striped table-view-list cron">
 			<tr>
 				<td style="width: 180px">
-					<?= Strings::__a('Status:') ?>
+					<?= __('Status:', 'demovox.admin') ?>
 				</td>
 				<td>
 					<?php
 					if ($cron->isRunning()) :
 						?>
-						<?= Strings::__a('currently running') ?>
+						<?= __('currently running', 'demovox.admin') ?>
 						<button class="ajaxButton" data-ajax-url="<?= $urlCancel ?>"
-								data-confirm="<?= Strings::__a('Did you wait until the job has stopped running?') ?>"
+								data-confirm="<?= __('Did you wait until the job has stopped running?', 'demovox.admin') ?>"
 								data-container=".ajaxCancelContainer">
-							<?= Strings::__a('Mark as stopped') ?>
+							<?= __('Mark as stopped', 'demovox.admin') ?>
 						</button><span class="ajaxCancelContainer"></span>
 					<?php else: ?>
-						<span class="success"><?= Strings::__a('finished') ?></span>
+						<span class="success"><?= __('finished', 'demovox.admin') ?></span>
 					<?php
 					endif;
 					?>
@@ -58,7 +58,7 @@ namespace Demovox;
 			</tr>
 			<tr>
 				<td>
-					<?= Strings::__a('Last started:') ?>
+					<?= __('Last started:', 'demovox.admin') ?>
 				</td>
 				<td>
 					<?= $dateStart ? date('d.m.Y G:i:s', $dateStart) : '-' ?>
@@ -66,7 +66,7 @@ namespace Demovox;
 			</tr>
 			<tr>
 				<td>
-					<?= Strings::__a('Last ended:') ?>
+					<?= __('Last ended:', 'demovox.admin') ?>
 				</td>
 				<td>
 					<?= $dateStop ? date('d.m.Y G:i:s', $dateStop) : '-' ?>
@@ -75,7 +75,7 @@ namespace Demovox;
 			<?php if ($lastSkipped) : ?>
 				<tr>
 					<td>
-						<?= Strings::__a('Last skipped execution:') ?>
+						<?= __('Last skipped execution:', 'demovox.admin') ?>
 					</td>
 					<td>
 						<?= date('d.m.Y G:i:s', $lastSkipped) ?> (Reason: <?= $lastMessage ?>)
@@ -84,7 +84,7 @@ namespace Demovox;
 			<?php elseif ($lastMessage): ?>
 				<tr>
 					<td>
-						<?= Strings::__a('Last status:') ?>
+						<?= __('Last status:', 'demovox.admin') ?>
 					</td>
 					<td>
 						<?=
@@ -98,11 +98,11 @@ namespace Demovox;
 			?>
 			<tr>
 				<td>
-					<?= Strings::__a('Start manually:') ?>
+					<?= __('Start manually:', 'demovox.admin') ?>
 				</td>
 				<td>
 					<button class="ajaxButton" data-ajax-url="<?= $urlRun ?>">
-						<?= Strings::__a('Run now') ?>
+						<?= __('Run now', 'demovox.admin') ?>
 					</button>
 					<span class="ajaxContainer"></span>
 				</td>

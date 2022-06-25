@@ -60,7 +60,7 @@ class CollectionList extends ListTable
 	 */
 	public function no_items()
 	{
-		echo Strings::__a('No collections available.');
+		echo __('No collections available.', 'demovox.admin');
 	}
 
 	/**
@@ -75,18 +75,18 @@ class CollectionList extends ListTable
 	{
 		switch ($column_name) {
 			case 'end_date':
-				return $item->{$column_name} ?: Strings::__a('- no end date -');
+				return $item->{$column_name} ?: __('- no end date -', 'demovox.admin');
 			case 'shortcode':
 				return '<code>[demovox_form cln=' . $item->ID . ']</code>'
 					. ' <code>[demovox_count cln=' . $item->ID . ']</code>';
 			case 'show':
-				$ret = Strings::getAdminLink('admin.php?page=demovoxOverview&cln=' . $item->ID, 'Overview') . ' | ';
+				$ret = Strings::getAdminLink('admin.php?page=demovoxOverview&cln=' . $item->ID, __('Overview', 'demovox.admin')) . ' | ';
 				if (Core::hasAccess('demovox_data'))
-					$ret .= Strings::getAdminLink('admin.php?page=demovoxData&cln=' . $item->ID, 'Data') . ' | ';
+					$ret .= Strings::getAdminLink('admin.php?page=demovoxData&cln=' . $item->ID, __('Data', 'demovox.admin')) . ' | ';
 				if (Core::hasAccess('demovox_sysinfo'))
-					$ret .= Strings::getAdminLink('admin.php?page=demovoxCron&cln=' . $item->ID, 'Cron') . ' | ';
+					$ret .= Strings::getAdminLink('admin.php?page=demovoxCron&cln=' . $item->ID, __('Cron', 'demovox.admin')) . ' | ';
 				if (Core::hasAccess('manage_options'))
-					$ret .= Strings::getAdminLink('admin.php?page=demovoxSettings&cln=' . $item->ID, 'Settings');
+					$ret .= Strings::getAdminLink('admin.php?page=demovoxSettings&cln=' . $item->ID, __('Settings', 'demovox.admin'));
 				return $ret;
 			case 'name':
 				return '<a href="' . Strings::getAdminUrl('admin.php?page=demovoxOverview') . '">'

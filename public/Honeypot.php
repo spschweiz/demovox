@@ -115,7 +115,7 @@ class Honeypot
 	{
 		$first  = rand(1, 15);
 		$op     = rand(0, 1);
-		$opText = Strings::__('captcha_operator_' . ($op ? 'plus' : 'minus'));
+		$opText = $op ? __('captcha_operator_plus') : __('captcha_operator_minus');
 		$second = rand(1, $first - 1);
 
 		$honeypotCaptcha         = $first . ' ' . $opText . ' ' . $second;

@@ -79,8 +79,7 @@ class Strings
 
 	public static function getAdminLink(string $url, string $label): string
 	{
-		$url   = self::getAdminUrl($url);
-		$label = Strings::__a($label);
+		$url = self::getAdminUrl($url);
 		return '<a href="' . $url . '">' . $label . '</a>';
 	}
 
@@ -242,25 +241,5 @@ class Strings
 		$data[6] = chr(ord($data[6]) & 0x0f | 0x40);
 		$data[8] = chr(ord($data[8]) & 0x3f | 0x80);
 		return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
-	}
-
-	/**
-	 * @param string     $text
-	 * @param array|null $replace
-	 * @param string     $domain
-	 * @return string
-	 */
-	public static function __(string $text, ?array $replace = null, string $domain = 'demovox'): string
-	{
-		if ($replace && count($replace)) {
-			$text = strtr($text, $replace);
-		}
-		return __($text, $domain);
-	}
-
-
-	public static function __a(string $text, ?array $replace = null): string
-	{
-		return self::__($text, $replace, 'demovox.admin');
 	}
 }

@@ -83,7 +83,7 @@ class SignatureList extends ListTable
 	 */
 	public function no_items()
 	{
-		echo Strings::__a('No signatures available.');
+		echo __('No signatures available.', 'demovox.admin');
 	}
 
 	/**

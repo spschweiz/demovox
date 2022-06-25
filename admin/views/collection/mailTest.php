@@ -7,7 +7,7 @@ namespace Demovox;
  * @var string[]           $languages
  */
 ?>
-<h2><?= Strings::__a('Email config test') ?></h2>
+<h2><?= __('Email config test', 'demovox.admin') ?></h2>
 <p>
 	<input type="hidden" id="cln" name="cln" value="<?= $collectionId ?>">
 	<?php
@@ -25,17 +25,17 @@ namespace Demovox;
 		<?php
 	}
 	?>
-	<?= Strings::__a('Send test mails to {mail}.', ['{mail}' => $mailRecipient]) ?><br/>
-	<?= Strings::__a('Confirmation mail:') ?>
+	<?= strtr(__('Send test mails to {mail}.', 'demovox.admin'), ['{mail}' => $mailRecipient]) ?><br/>
+	<?= __('Confirmation mail:', 'demovox.admin') ?>
 	<?php foreach ($languages as $langId => $language) {
 		createMailButton($langId, $language, Mail::TYPE_CONFIRM);
 	} ?><br/>
-	<?= Strings::__a('Sheet reminder mail:') ?>
+	<?= __('Sheet reminder mail:', 'demovox.admin') ?>
 	<?php foreach ($languages as $langId => $language) {
 		createMailButton($langId, $language, Mail::TYPE_REMIND_SHEET);
 	} ?>
 	<br/>
-	<?= Strings::__a('Sign reminder mail:') ?>
+	<?= __('Sign reminder mail:', 'demovox.admin') ?>
 	<?php foreach ($languages as $langId => $language) {
 		createMailButton($langId, $language, Mail::TYPE_REMIND_SIGNUP);
 	} ?>

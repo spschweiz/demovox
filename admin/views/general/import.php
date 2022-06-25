@@ -22,12 +22,14 @@ namespace Demovox;
 
 ?>
 <div class="wrap demovox">
-	<h2><?= Strings::__a('Import received signature sheets') ?></h2>
+	<h2><?= __('Import received signature sheets', 'demovox.admin') ?></h2>
 	<p>
-		<?= Strings::__a(
+		<?= __(
 			'To send reminder mails and create statistics, you need to record the received signatures here. '
 			. 'You need to scan the QR code from the sheets, we recommend to use a smartphone app '
-			. 'which can export the scanned serials as CSV.') ?>
+			. 'which can export the scanned serials as CSV.',
+			'demovox.admin'
+		) ?>
 	</p>
 	<?= $statusMsg ?>
 	<form method="post" action="<?= Infos::getRequestUri() ?>">
@@ -36,12 +38,12 @@ namespace Demovox;
 		<table class="form-table">
 			<tbody>
 			<tr>
-				<th scope="row"><label for="deliveryDate"><?= Strings::__a('Delivery date') ?></label></th>
+				<th scope="row"><label for="deliveryDate"><?= __('Delivery date', 'demovox.admin') ?></label></th>
 				<td><input name="deliveryDate" id="deliveryDate" size="40" value="<?= date('d.m.Y') ?>" required="">
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><label for="csvFormat"><?= Strings::__a('CSV format') ?></label></th>
+				<th scope="row"><label for="csvFormat"><?= __('CSV format', 'demovox.admin') ?></label></th>
 				<td>
 					<?php
 					$options = ['' => 'Please select', 1 => 'serial', 2 => 'serial' . $delimiter . 'count',];
@@ -50,23 +52,23 @@ namespace Demovox;
 				</td>
 			</tr>
 			<tr class="showOnFormat1">
-				<th scope="row"><label for="signCount"><?= Strings::__a('Number of signatures') ?></label></th>
+				<th scope="row"><label for="signCount"><?= __('Number of signatures', 'demovox.admin') ?></label></th>
 				<td><input name="signCount" id="signCount" type="number" value="" size="40">
-					<p class="description"><?= Strings::__a('Number of signatures on each of the currently importing sheets') ?></p>
+					<p class="description"><?= __('Number of signatures on each of the currently importing sheets', 'demovox.admin') ?></p>
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><label for="delimiter"><?= Strings::__a('Delimiter') ?></label></th>
-				<td><input name="delimiter" id="delimiter" type="input" value="<?= $delimiter ?>" size="3"></td>
+				<th scope="row"><label for="delimiter"><?= __('Delimiter', 'demovox.admin') ?></label></th>
+				<td><input name="delimiter" id="delimiter" type="text" value="<?= $delimiter ?>" size="3"></td>
 			</tr>
 			<tr>
-				<th scope="row"><label for="csv"><?= Strings::__a('CSV') ?></label></th>
+				<th scope="row"><label for="csv"><?= __('CSV', 'demovox.admin') ?></label></th>
 				<td><textarea name="csv" id="csv" cols="50" rows="10" required=""></textarea></td>
 			</tr>
 			</tbody>
 		</table>
 		<?php
-		submit_button(Strings::__a('Import'));
+		submit_button(__('Import', 'demovox.admin'));
 		?>
 	</form>
 </div>

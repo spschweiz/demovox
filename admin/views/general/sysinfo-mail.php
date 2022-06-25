@@ -9,9 +9,9 @@ namespace Demovox;
  */
 ?>
 <?php if ($isSent): ?>
-	<h3><?= Strings::__a('Mail sent to {mail}', ['{mail}' => $mailTo]) ?></h3>
+	<h3><?= strtr(__('Mail sent to {mail}', 'demovox.admin'), ['{mail}' => $mailTo]) ?></h3>
 <?php else: ?>
-	<h3><?= Strings::__a('Sending failed') ?></h3>
+	<h3><?= __('Sending failed', 'demovox.admin') ?></h3>
 <?php endif; ?>
-<h4><?= Strings::__a('Logs') ?></h4>
+<h4><?= __('Logs', 'demovox.admin') ?></h4>
 <pre><?= Strings::nl2br($connectionLog) ?></pre>

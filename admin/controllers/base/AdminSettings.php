@@ -223,7 +223,7 @@ abstract class AdminSettings extends BaseController
 					$placeholder,
 					$value
 				);
-				$select = Strings::__a('Select');
+				$select = __('Select', 'demovox.admin');
 				echo '<button class="uploadButton" data-input-id="' . $wpid . '">' . $select . '</button>';
 				break;
 			case 'wpPage': // If it is a select dropdown

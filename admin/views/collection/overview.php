@@ -18,14 +18,11 @@ $this->loadTinymce();
 <div class="wrap demovox">
 	<h1><?= $collectionName ?></h1>
 	<p>
-		<?= Strings::__a('<b>{count}</b> visitors have signed up to this collection', ['{count}' => $count]) ?>
+		<?= strtr(__('<b>{count}</b> visitors have signed up to this collection', 'demovox.admin'), ['{count}' => $count]) ?>
 		<?php if ($addCount) {
-			$settingsLink = Strings::getAdminLink('/admin.php?page=demovoxSettings', 'settings');
+			$settingsLink = Strings::getAdminLink('/admin.php?page=demovoxSettings', __('Settings', 'demovox.admin'));
 			?>
-			<?= Strings::__a(
-				'(and additional {count}</b> signatures in the {settings})',
-				['{count}' => $count, '{settings}' => $settingsLink]
-			) ?>
+			<?= strtr(__('(and additional {count}</b> signatures in the {settings})', 'demovox.admin'), ['{count}' => $count, '{settings}' => $settingsLink]) ?>
 		<?php } ?>
 	</p>
 	<?php
@@ -42,7 +39,7 @@ $this->loadTinymce();
 				<td>
 					<input name="name" id="demovox_name" size="40" value="<?= $collection->name ?>"
 						   required="" <?= $allowEdit ? '' : 'readonly="readonly"' ?>>
-					<p class="description"><?= Strings::__a('Internal collection name') ?></p>
+					<p class="description"><?= __('Internal collection name', 'demovox.admin') ?></p>
 				</td>
 			</tr>
 			<tr>
@@ -50,7 +47,7 @@ $this->loadTinymce();
 				<td>
 					<input name="end_date" id="demovox_end_date" value="<?= $collection->end_date ?: '' ?>"
 						   size="40" <?= $allowEdit ? '' : 'readonly="readonly"' ?>>
-					<p class="description"><?= Strings::__a('Last day the collection is available, leave empty to keep it active') ?></p>
+					<p class="description"><?= __('Last day the collection is available, leave empty to keep it active', 'demovox.admin') ?></p>
 				</td>
 			</tr>
 			<tr>
@@ -60,13 +57,13 @@ $this->loadTinymce();
 					<textarea name="end_message" id="demovox_end_message" cols="40"
 							  rows="5" <?= $allowEdit ? '' : 'readonly="readonly"' ?>
 							  maxlength="255"><?= $collection->end_message ?></textarea>
-					<p class="description"><?= Strings::__a('Message shown when collection has finished') ?></p></td>
+					<p class="description"><?= __('Message shown when collection has finished', 'demovox.admin') ?></p></td>
 			</tr>
 			</tbody>
 		</table>
 		<?php
 		if ($allowEdit) {
-			submit_button(Strings::__a('Save'));
+			submit_button(__('Save', 'demovox.admin'));
 		}
 		?>
 	</form>

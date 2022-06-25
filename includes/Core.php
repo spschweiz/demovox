@@ -312,28 +312,28 @@ class Core
 		http_response_code($statusCode);
 		switch ($statusCode) {
 			default:
-				$msg = 'Unknown error';
+				$msg = __('Unknown error');
 				break;
 			case 400:
-				$msg = 'Invalid form values received';
+				$msg = __('Invalid form values received');
 				break;
 			case 401:
-				$msg = 'Unauthorized';
+				$msg = __('Unauthorized');
 				break;
 			case 403:
-				$msg = 'You are not allowed to access this page';
+				$msg = __('You are not allowed to access this page');
 				break;
 			case 404:
-				$msg = 'Requested entry not found';
+				$msg = __('Requested entry not found');
 				break;
 			case 405:
-				$msg = 'Requested resource does not support this operation';
+				$msg = __('Requested resource does not support this operation');
 				break;
 			case 500:
-				$msg = 'Internal server error';
+				$msg = __('Internal server error');
 				break;
 		}
-		$msg = Strings::wpMessage(Strings::__($msg), 'error');
+		$msg = Strings::wpMessage($msg, 'error');
 		wp_die($msg, $statusCode);
 	}
 
