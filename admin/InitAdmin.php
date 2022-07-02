@@ -121,6 +121,7 @@ class InitAdmin extends BaseController
 
 		// sysinfo
 		Loader::addAction($prefix . 'encrypt_test', $this->adminGeneral, 'testEncrypt');
+		Loader::addAction($prefix . 'generate_i18n', $this->adminGeneral, 'generateTranslations');
 
 		// collection
 		// - export

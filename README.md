@@ -116,6 +116,9 @@ Show all other available commands:
 grunt availabletasks
 ```
 
+#### Generate admin settings .po files
+Enable WP_DEBUG and open the System info (WP backend -> demovox -> System info) to generate the .po file for the setting strings.
+
 ## Changelog
 
 See README.txt and [commit log](https://github.com/spschweiz/demovox/commits/master).

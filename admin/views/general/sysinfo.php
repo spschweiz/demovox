@@ -204,4 +204,19 @@ namespace Demovox;
 		<br/>
 		<span class="ajaxContainer"></span>
 	</p>
+	<?php
+	if (WP_DEBUG):
+		?>
+		<h2><?= __('Translations', 'demovox.admin') ?></h2>
+		<p>
+			<?= __('Generate settings translation file (.po):', 'demovox.admin') ?>
+			<button class="ajaxButton"
+					data-ajax-url="<?= Strings::getAdminUrl('/admin-post.php', 'demovox_generate_i18n') ?>">
+				<?= __('Run', 'demovox.admin') ?>
+			</button>
+			<span class="ajaxContainer"></span>
+		</p>
+	<?php
+	endif;
+	?>
 </div>

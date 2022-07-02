@@ -1,0 +1,15 @@
+# Copyright (C) {year} SP Schweiz
+# This file is distributed under the GPLv3.
+msgid ""
+msgstr ""
+"Project-Id-Version: demovox {version}\n"
+"Report-Msgid-Bugs-To: https://github.com/spschweiz/demovox\n"
+"Last-Translator: SP Schweiz <info@spschweiz.ch>\n"
+"Language-Team: SP Schweiz <info@spschweiz.ch>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: {date}\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: demovox 2.6.0\n"
+"X-Domain: demovox.admin\n"

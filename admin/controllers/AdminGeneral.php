@@ -263,4 +263,93 @@ class AdminGeneral extends BaseController
 		}
 		return $return;
 	}
+
+	public function generateTranslations()
+	{
+		Core::requireAccess('demovox_sysinfo');
+
+		$pluginDir = Infos::getPluginDir();
+		$filename = $pluginDir . '/languages/demovox.adminsettings.po';
+		$filenameTpl = $pluginDir . '/languages/demovox.adminsettings.template.po';
+
+		$fp = fopen($filename, "w");
+		$fpTpl = fopen($filenameTpl, "r");
+
+		$template = fread($fpTpl, filesize($filenameTpl));
+		$template = strtr($template, [
+			'{version}' => DEMOVOX_VERSION,
+			'{year}'    => date('Y'),
+			'{date}'    => date(DATE_ATOM),
+		]);
+		fwrite($fp, $template . "\n");
+		fclose($fpTpl);
+
+		$title = "includes/docker/SettingsVars/ConfigSections.php";
+		$contents = SettingsVars::getSections();
+		$searchIns = ['title', 'sub'];
+		$this->generateTranslationContent($contents, $searchIns, $title, $fp);
+
+		$title = "includes/docker/SettingsVars/ConfigFields.php";
+		$contents = SettingsVars::getFields();
+		$searchIns = ['supplemental', 'label', 'options'];
+		$this->generateTranslationContent($contents, $searchIns, $title, $fp);
+
+		$title = "includes/docker/SettingsVarsCollection/ConfigSections.php";
+		$contents = SettingsVarsCollection::getSections();
+		$searchIns = ['title', 'sub'];
+		$this->generateTranslationContent($contents, $searchIns, $title, $fp);
+
+		$title = "includes/docker/SettingsVarsCollection/ConfigFields.php";
+		$contents = SettingsVarsCollection::getFields();
+		$searchIns = ['supplemental', 'label', 'options'];
+		$this->generateTranslationContent($contents, $searchIns, $title, $fp);
+
+		fclose($fp);
+
+		echo 'Done';
+	}
+
+	/**
+	 * @param array|null $contents
+	 * @param array $searchIns
+	 * @param string $title
+	 * @param resource $fp
+	 * @return void
+	 */
+	protected function generateTranslationContent(?array $contents, array $searchIns, string $title, $fp): void
+	{
+		$messages = [];
+		$stack = "### $title ###\n\n";
+		foreach ($contents as $content) {
+			foreach ($searchIns as $searchIn)
+				if (isset($content[$searchIn])) {
+					if (is_array($content[$searchIn])) {
+						foreach ($content[$searchIn] as $message) {
+							if(is_numeric($message)){
+								continue;
+							}
+							$message = str_replace('"', '\"', $message);
+							if (!in_array($message, $messages)) {
+								$messages[] = $message;
+							}
+						}
+						continue;
+					}
+					$message = $content[$searchIn];
+					if(is_numeric($message)){
+						continue;
+					}
+					$message = str_replace('"', '\"', $message);
+					if (!in_array($message, $messages)) {
+						$messages[] = $message;
+					}
+				}
+		}
+
+		foreach ($messages as $message) {
+			$stack .= "msgid \"$message\"\nmsgstr \"\"\n\n";
+		}
+
+		fwrite($fp, "\n$stack\n");
+	}
 }

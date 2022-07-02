@@ -1,0 +1,743 @@
+# Copyright (C) 2022 SP Schweiz
+# This file is distributed under the GPLv3.
+msgid ""
+msgstr ""
+"Project-Id-Version: demovox 3.0.0-alpha.3\n"
+"Report-Msgid-Bugs-To: https://github.com/spschweiz/demovox\n"
+"Last-Translator: SP Schweiz <info@spschweiz.ch>\n"
+"Language-Team: SP Schweiz <info@spschweiz.ch>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2022-06-04T22:52:24+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: demovox 2.6.0\n"
+"X-Domain: demovox.admin\n"
+
+
+### includes/docker/SettingsVars/ConfigSections.php ###
+
+msgid "Security"
+msgstr ""
+
+msgid "Cron"
+msgstr ""
+
+msgid "To make sure the mail crons are executed, take a look at the System info page."
+msgstr ""
+
+msgid "Analytics"
+msgstr ""
+
+msgid "Form settings"
+msgstr ""
+
+msgid "Danger area"
+msgstr ""
+
+msgid "This is where you can enable the dangerous stuff"
+msgstr ""
+
+
+
+### includes/docker/SettingsVars/ConfigFields.php ###
+
+msgid "Recommended! Encrypt personal details, only affects new entries. <code>DEMOVOX_ENC_KEY</code> and <code>DEMOVOX_HASH_KEY</code> have to be set in wp-config.php (see <b>System info</b>). Protects against DB data theft like SQL injections or direct database access by a intruder, but not on file system access."
+msgstr ""
+
+msgid "Encrypt signee details"
+msgstr ""
+
+msgid "Disabled"
+msgstr ""
+
+msgid "Yes, php-encryption (requires at least PHP 5.6 and OpenSSL 1.0.1)"
+msgstr ""
+
+msgid "Store client IP address"
+msgstr ""
+
+msgid "When server load is higher than this value in percent, crons won't be started (Not supported by Windows)"
+msgstr ""
+
+msgid "Cron max server load %"
+msgstr ""
+
+msgid "Required to recognize correct load"
+msgstr ""
+
+msgid "Server cores"
+msgstr ""
+
+msgid "Send up to x emails per cron execution"
+msgstr ""
+
+msgid "Only send one reminder per mail address. Might weaken email address encryption security. Applies to both <b>sheet reminder</b> and <b>sign-up reminder</b>."
+msgstr ""
+
+msgid "Mail deduplication"
+msgstr ""
+
+msgid "Send tracking events to a Matomo script, which has to be embedded on the website"
+msgstr ""
+
+msgid "Matomo"
+msgstr ""
+
+msgid "Add an invisible form field to block some spam bots (recommended)"
+msgstr ""
+
+msgid "Spambot honeypot"
+msgstr ""
+
+msgid "Use AJAX for form submission (recommended)"
+msgstr ""
+
+msgid "AJAX form submission"
+msgstr ""
+
+msgid "Drops configuration when this plugin is uninstalled"
+msgstr ""
+
+msgid "Drop Config on uninstall"
+msgstr ""
+
+msgid "Drops all signature information when this plugin is uninstalled!"
+msgstr ""
+
+msgid "Drop signatures on uninstall"
+msgstr ""
+
+msgid "Improve Wordpress performance by registering setting variables only when they are required for saving the values. This will provoke side effects when other plugins try to identify demovox settings like cleaners of unregistered settings."
+msgstr ""
+
+msgid "Register settings only when needed"
+msgstr ""
+
+msgid "DO NOT DISABLE this option on a productive system. Disables personal data submission without an encrypted connection."
+msgstr ""
+
+msgid "Require clients to access via HTTPS"
+msgstr ""
+
+msgid "Enabled (default)"
+msgstr ""
+
+msgid "Disabled - ONLY for tests on non-productive systems!"
+msgstr ""
+
+
+
+### includes/docker/SettingsVarsCollection/ConfigSections.php ###
+
+msgid "Base settings"
+msgstr ""
+
+msgid "Signature counter"
+msgstr ""
+
+msgid "demovox languages"
+msgstr ""
+
+msgid "Enable languages for demovox like language specific signature sheets, mails and opt-in text.<br/> The frontend language, like the translation of the form input titles, is affected by the WordPress option <b>Site Language</b> under <b>General Settings</b>.<br/> Another way is to set the language by an internationalisation plugin to allow multiple languages for the client. This is currently tested with <a href=\"https://wpml.org/\" target=\"_blank\">WPML</a>, with the WPML option <a href=\"https://wpml.org/documentation/getting-started-guide/language-setup/enabling-language-cookie-to-support-ajax-filtering/\" target=\"_blank\">Language filtering for AJAX operations</a> enabled. <a href=\"https://polylang.pro/\">Polylang</a> doesn't translate the generated URLs and therefore you must define them manually in the reminder templates."
+msgstr ""
+
+msgid "Form options"
+msgstr ""
+
+msgid "Opt-in"
+msgstr ""
+
+msgid "Opt-in checkbox label"
+msgstr ""
+
+msgid "Text beside the checkbox, specify as exactly as possible how the data will be used. <code>&lt;a&gt;</code> tags can be used.<br/> If you use the opt-out mode, invert the description logic accordingly. <br/><br/>Example: <code>Mit dem Unterzeichnen akzeptiere ich die &lt;a href=\"https://beispiel.ch/datenschutz-bestimmungen\" target=\"_blank\"&gt;Datenschutzbestimmungen&lt;/a&gt;.</code>"
+msgstr ""
+
+msgid "Signature sheet"
+msgstr ""
+
+msgid "This page usually shows the link for the PDF download. When you change a page, already signed up users will still use the old previously configured."
+msgstr ""
+
+msgid "Swiss Abroad"
+msgstr ""
+
+msgid "Allow swiss abroad people to sign."
+msgstr ""
+
+msgid "Local initiative"
+msgstr ""
+
+msgid "Restrict initiative to a local area by redirecting other visitors to another success page. Disables reminder mails and ignores signature in the signature counter. Requires \"Success page redirect\" to be enabled."
+msgstr ""
+
+msgid "Signature sheet PDF"
+msgstr ""
+
+msgid "Upload and select the signature sheet. If you use language specific domains on your page, adapt the paths accordingly."
+msgstr ""
+
+msgid "Signature sheet fields"
+msgstr ""
+
+msgid "Fields on the signature sheet"
+msgstr ""
+
+msgid "Email settings"
+msgstr ""
+
+msgid "To send test mails or to make sure the mail crons are executed, take a look at the <b>System info</b> page."
+msgstr ""
+
+msgid "Email sender"
+msgstr ""
+
+msgid "Email tasks"
+msgstr ""
+
+msgid "Remember the <code>{link_&hellip;}</code> placeholders only contain the URL. Therefore you might want to use <code>&lt;a&gt;</code>-tags to create a link. <br/>Some translation plugins like Polylang do not translate those URLs correctly. As a orkaround, you can define them manually and use the <code>{guid}</code> placeholder to create the <code>sign</code>-parameter."
+msgstr ""
+
+msgid "Address lookup API"
+msgstr ""
+
+msgid "Lookup API for the address information, used in the address form for autocompletion and commune identification. Check <a href=\"https://demovox.ch/\" target=\"_blank\">documentation on demovox.ch</a> if you want to use our service."
+msgstr ""
+
+msgid "Export API"
+msgstr ""
+
+msgid "Used to export sign-up data to a REST API of a CRM (server-side based submission, HTTPS required!)."
+msgstr ""
+
+msgid "Signature sheet field positions German"
+msgstr ""
+
+msgid "German<br/>Confirmation mail"
+msgstr ""
+
+msgid "German<br/>Sheet reminder mail"
+msgstr ""
+
+msgid "German<br/>Sign-up reminder mail"
+msgstr ""
+
+msgid "Signature sheet field positions French"
+msgstr ""
+
+msgid "French<br/>Confirmation mail"
+msgstr ""
+
+msgid "French<br/>Sheet reminder mail"
+msgstr ""
+
+msgid "French<br/>Sign-up reminder mail"
+msgstr ""
+
+msgid "Signature sheet field positions Italian"
+msgstr ""
+
+msgid "Italian<br/>Confirmation mail"
+msgstr ""
+
+msgid "Italian<br/>Sheet reminder mail"
+msgstr ""
+
+msgid "Italian<br/>Sign-up reminder mail"
+msgstr ""
+
+msgid "Signature sheet field positions Romansh"
+msgstr ""
+
+msgid "Romansh<br/>Confirmation mail"
+msgstr ""
+
+msgid "Romansh<br/>Sheet reminder mail"
+msgstr ""
+
+msgid "Romansh<br/>Sign-up reminder mail"
+msgstr ""
+
+msgid "Signature sheet field positions English"
+msgstr ""
+
+msgid "English<br/>Confirmation mail"
+msgstr ""
+
+msgid "English<br/>Sheet reminder mail"
+msgstr ""
+
+msgid "English<br/>Sign-up reminder mail"
+msgstr ""
+
+msgid "Email engine / server"
+msgstr ""
+
+msgid "To send test mails, take a look at the System info page."
+msgstr ""
+
+
+
+### includes/docker/SettingsVarsCollection/ConfigFields.php ###
+
+msgid "Add to public count to include manually collected signs"
+msgstr ""
+
+msgid "Add to signature count"
+msgstr ""
+
+msgid "Thousands separator on signature count"
+msgstr ""
+
+msgid "Replace the user form by ajax with the signature sheet or redirect user to this page after successfully filling out the form. You might want to use the same page as set for \"Link this page in mails\" and you should include <code>[demovox_form]</code> on that page to show the signature sheet."
+msgstr ""
+
+msgid "Success page redirect"
+msgstr ""
+
+msgid "You should include <code>[demovox_form]</code> on that page to show the signature sheet. This setting is used for the link in mails as the placeholder <code>{link_pdf}</code>."
+msgstr ""
+
+msgid "Link this page in mails"
+msgstr ""
+
+msgid "Show button to download signature sheet on the on the success page"
+msgstr ""
+
+msgid "Download button"
+msgstr ""
+
+msgid "Show print button  on the success page. Not supported by Firefox, sheet will be opened in a new window instead."
+msgstr ""
+
+msgid "Print button"
+msgstr ""
+
+msgid "Show signature sheet PDF on the success page in an iFrame"
+msgstr ""
+
+msgid "Show signature sheet"
+msgstr ""
+
+msgid "Show a country selection for swiss abroad to sign the initiative"
+msgstr ""
+
+msgid "Swiss abroad"
+msgstr ""
+
+msgid "Redirect user to a different page if he has a swiss abroad address as you might want to add special instructions. You should include <code>[demovox_form]</code> on that page to show the signature sheet. This setting is also used for the link in mails as the placeholder <code>{link_pdf}</code>.  Requires both \"Success page redirect\" and \"Swiss abroad\" to be enabled."
+msgstr ""
+
+msgid "Success page for swiss abroad"
+msgstr ""
+
+msgid "Commune requires Address lookup API for the address information to be set up first (see \"advanced\" tab)."
+msgstr ""
+
+msgid "Restriction mode"
+msgstr ""
+
+msgid "Canton"
+msgstr ""
+
+msgid "Commune"
+msgstr ""
+
+msgid "Needed to show/hide \"Swiss abroad font size\""
+msgstr ""
+
+msgid "Font size on the signature sheet"
+msgstr ""
+
+msgid "Font size"
+msgstr ""
+
+msgid "Font size for the address of swiss abroad"
+msgstr ""
+
+msgid "Swiss abroad font size"
+msgstr ""
+
+msgid "Place signee names on the sheet, usually not allowed"
+msgstr ""
+
+msgid "Signee names"
+msgstr ""
+
+msgid "Don't change algorithm on a productive system! The mode <b>Hashids</b> is recommended, obfuscation helps not to confuse numbers when entering them manually.<br/>Information about required PHP modules: <a href=\"https://secure.php.net/manual/en/book.gmp.php\" target=\"_blank\">GMP</a> and <a href=\"https://secure.php.net/manual/en/book.bc.php\" target=\"_blank\">BC Math</a>."
+msgstr ""
+
+msgid "QR mode"
+msgstr ""
+
+msgid "Hashids (5 chars alphanumeric. PHP 7.1.3 and module GMP or BC Math required)"
+msgstr ""
+
+msgid "BaseIntEncoder (1-4 chars alphanumeric, no obfuscation, BC Math required)"
+msgstr ""
+
+msgid "PseudoCrypt (1-5 chars alphanumeric, confusable letters incl, BC Math required)"
+msgstr ""
+
+msgid "ID (no obfuscation)"
+msgstr ""
+
+msgid "Ask visitor for a title"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Email address has to be entered twice"
+msgstr ""
+
+msgid "Email confirm"
+msgstr ""
+
+msgid "Opt-in mode"
+msgstr ""
+
+msgid "Opt-out"
+msgstr ""
+
+msgid "Opt-in, enabled by default (not recommended)"
+msgstr ""
+
+msgid "Opt-out, disabled by default (not recommended)"
+msgstr ""
+
+msgid "Show on form page number"
+msgstr ""
+
+msgid "This page can be linked in mails as opt-in edit page with theplaceholder <code>{link_optin}</code>. On this page, you should include the shortcode <code>[demovox_optin]</code> to show the opt-in edit form. When you change this setting, already signed up users will still use the old page."
+msgstr ""
+
+msgid "Link this page as opt-in page"
+msgstr ""
+
+msgid "Mail engine"
+msgstr ""
+
+msgid "PHP mail()"
+msgstr ""
+
+msgid "Wordpress wp_mail"
+msgstr ""
+
+msgid "SMTP"
+msgstr ""
+
+msgid "sendmail"
+msgstr ""
+
+msgid "SMTP server address"
+msgstr ""
+
+msgid "SMTP server port"
+msgstr ""
+
+msgid "SMTP auth type"
+msgstr ""
+
+msgid "No auth required"
+msgstr ""
+
+msgid "CRAM-MD5"
+msgstr ""
+
+msgid "LOGIN"
+msgstr ""
+
+msgid "PLAIN"
+msgstr ""
+
+msgid "SMTP auth username"
+msgstr ""
+
+msgid "SMTP auth password"
+msgstr ""
+
+msgid "SMTP server security"
+msgstr ""
+
+msgid "SSL"
+msgstr ""
+
+msgid "TLS"
+msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "URL addressinformation"
+msgstr ""
+
+msgid "Key"
+msgstr ""
+
+msgid "Also allow client to use the manually entered city name. Otherwise only allow to use one of the suggested options."
+msgstr ""
+
+msgid "Allow custom city name"
+msgstr ""
+
+msgid "Allow custom commune name"
+msgstr ""
+
+msgid "Allow custom commune selection"
+msgstr ""
+
+msgid "URL of a HTTPS REST API to send the signatures to. Ex: \"https://server.ch/api/rest/\""
+msgstr ""
+
+msgid "API URL"
+msgstr ""
+
+msgid "JSON which will be used to generate the POST data payload for to the REST API.<br/>Avaiblable placeholders: <code>{language}</code>, <code>{ip_address}</code>, <code>{title}</code>, <code>{first_name}</code>, <code>{last_name}</code> <code>{birth_date}</code>, <code>{mail}</code>, <code>{phone}</code>, <code>{country}</code>, <code>{street}</code>, <code>{street_no}</code>, <code>{zip}</code>, <code>{city}</code>, <code>{gde_no}</code> <code>{gde_zip}</code>, <code>{gde_name}</code>, <code>{gde_canton}</code>, <code>{is_optin}</code>, <code>{creation_date}</code>, <code>{source}</code>"
+msgstr ""
+
+msgid "Export Data (JSON payload)"
+msgstr ""
+
+msgid "Send upto x rows per cron execution"
+msgstr ""
+
+msgid "Also export signatures without optin"
+msgstr ""
+
+msgid "Optin not required"
+msgstr ""
+
+msgid "This mail is sent to the signee, just after signing up. If this option is enabled after people have already signed up, confirmations will also be sent for those who did not receive any mail yet."
+msgstr ""
+
+msgid "Confirmation mail enabled"
+msgstr ""
+
+msgid "Send a reminder to signees which didn't send their signature sheets. To use this function, you must regularly import the received signature sheets."
+msgstr ""
+
+msgid "Sheet reminder mail enabled"
+msgstr ""
+
+msgid "Minimum age of a signature before a sheet reminder is sent."
+msgstr ""
+
+msgid "Sheet reminder - minimum signature age"
+msgstr ""
+
+msgid "Send a reminder to signees which didn't finish filling the sign-up form."
+msgstr ""
+
+msgid "Sign-up reminder mail enabled"
+msgstr ""
+
+msgid "Minimum age of a signature before a form reminder is sent."
+msgstr ""
+
+msgid "Sign-up reminder - Minimum signature age"
+msgstr ""
+
+msgid "Stop sending reminders after this date (format: DD.MM.YYYY, example: \"04.06.2022\"). Clear field, to disable. Applies to both <b>sheet reminder</b> and <b>sign-up reminder</b>."
+msgstr ""
+
+msgid "Last reminder date"
+msgstr ""
+
+msgid "Inserts HTML line breaks before all newlines in mail body. Don't activate this if you insert the mail body in HTML anyway."
+msgstr ""
+
+msgid "Newline to BR"
+msgstr ""
+
+msgid "German"
+msgstr ""
+
+msgid "Position on the sign sheet \"x-y\" while y is measured from bottom to top"
+msgstr ""
+
+msgid "ZIP"
+msgstr ""
+
+msgid "Last Name"
+msgstr ""
+
+msgid "First Name"
+msgstr ""
+
+msgid "Birth date day"
+msgstr ""
+
+msgid "Birth date month"
+msgstr ""
+
+msgid "Birth date year"
+msgstr ""
+
+msgid "Street"
+msgstr ""
+
+msgid "QR code image"
+msgstr ""
+
+msgid "Size of one module in pixels"
+msgstr ""
+
+msgid "QR code image size"
+msgstr ""
+
+msgid "QR code text"
+msgstr ""
+
+msgid "German<br/>From name"
+msgstr ""
+
+msgid "From address"
+msgstr ""
+
+msgid "Available placeholders: <code>{title}</code>, <code>{first_name}</code>, <code>{last_name}</code>."
+msgstr ""
+
+msgid "Subject"
+msgstr ""
+
+msgid "Available placeholders: <code>{title}</code>, <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>, <code>{link_pdf}</code> (success page), <code>{link_optin}</code> (opt-in form), <code>{link_home}</code> (WordPress Front Page), <code>{subject}</code>, <code>{guid}</code>."
+msgstr ""
+
+msgid "Body"
+msgstr ""
+
+msgid "Available placeholders: <code>{title}</code>, <code>{first_name}</code>, <code>{last_name}</code>. This mail is sent to the signee after signing up."
+msgstr ""
+
+msgid "Available placeholders: <code>{title}</code>, <code>{first_name}</code>, <code>{last_name}</code>, <code>{mail}</code>, <code>{link_optin}</code> (opt-in form), <code>{link_home}</code> (WordPress Front Page), <code>{subject}</code>, <code>{guid}</code>."
+msgstr ""
+
+msgid "French"
+msgstr ""
+
+msgid "French<br/>From name"
+msgstr ""
+
+msgid "Italian"
+msgstr ""
+
+msgid "Italian<br/>From name"
+msgstr ""
+
+msgid "Romansh"
+msgstr ""
+
+msgid "Romansh<br/>From name"
+msgstr ""
+
+msgid "English"
+msgstr ""
+
+msgid "English<br/>From name"
+msgstr ""
+
+msgid "Restrict on canton"
+msgstr ""
+
+msgid "[Please select]"
+msgstr ""
+
+msgid "Aargau"
+msgstr ""
+
+msgid "Appenzell Innerrhoden"
+msgstr ""
+
+msgid "Appenzell Ausserrhoden"
+msgstr ""
+
+msgid "Bern"
+msgstr ""
+
+msgid "Basel-Landschaft"
+msgstr ""
+
+msgid "Basel-Stadt"
+msgstr ""
+
+msgid "Fribourg"
+msgstr ""
+
+msgid "Genève"
+msgstr ""
+
+msgid "Glarus"
+msgstr ""
+
+msgid "Graubünden"
+msgstr ""
+
+msgid "Jura"
+msgstr ""
+
+msgid "Luzern"
+msgstr ""
+
+msgid "Neuchâtel"
+msgstr ""
+
+msgid "Nidwalden"
+msgstr ""
+
+msgid "Obwalden"
+msgstr ""
+
+msgid "St. Gallen"
+msgstr ""
+
+msgid "Schaffhausen"
+msgstr ""
+
+msgid "Solothurn"
+msgstr ""
+
+msgid "Schwyz"
+msgstr ""
+
+msgid "Thurgau"
+msgstr ""
+
+msgid "Ticino"
+msgstr ""
+
+msgid "Uri"
+msgstr ""
+
+msgid "Vaud"
+msgstr ""
+
+msgid "Valais"
+msgstr ""
+
+msgid "Zug"
+msgstr ""
+
+msgid "Zürich"
+msgstr ""
+
+msgid "Commune ID from API"
+msgstr ""
+
+msgid "Restrict on commune"
+msgstr ""
+
+msgid "Redirect user to this page if he has an address outside the allowed area."
+msgstr ""
+
+msgid "Success page for disallowed visitors"
+msgstr ""
+
+msgid "Fallback language if the WordPress frontend is not set to any of the enabled demovox languages"
+msgstr ""
+
+msgid "Default language"
+msgstr ""
+
+
