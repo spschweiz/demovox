@@ -1,0 +1,536 @@
+# Copyright (C) 2022 SP Schweiz
+# This file is distributed under the GPLv3.
+msgid ""
+msgstr ""
+"Project-Id-Version: demovox 3.0.0-alpha.3\n"
+"Report-Msgid-Bugs-To: https://github.com/spschweiz/demovox\n"
+"Last-Translator: SP Schweiz <info@spschweiz.ch>\n"
+"Language-Team: SP Schweiz <info@spschweiz.ch>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2022-06-04T20:32:25+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.6.0\n"
+"X-Domain: demovox.admin\n"
+
+#: admin/controllers/base/AdminSettings.php:222
+msgid "Select"
+msgstr ""
+
+#: admin/helpers/CollectionList.php:63
+msgid "No collections available."
+msgstr ""
+
+#: admin/helpers/CollectionList.php:78
+msgid "- no end date -"
+msgstr ""
+
+#: admin/helpers/CollectionList.php:83
+msgid "Overview"
+msgstr ""
+
+#: admin/helpers/CollectionList.php:85
+msgid "Data"
+msgstr ""
+
+#: admin/helpers/CollectionList.php:87
+#: admin/views/collection/cron.php:14
+msgid "Cron"
+msgstr ""
+
+#: admin/helpers/CollectionList.php:89
+#: admin/views/collection/overview.php:23
+msgid "Settings"
+msgstr ""
+
+#: admin/helpers/SignatureList.php:86
+msgid "No signatures available."
+msgstr ""
+
+#: admin/views/collection/cron.php:15
+msgid "A cron manager plugin is recommended for detailed wordpress cron configuration"
+msgstr ""
+
+#: admin/views/collection/cron.php:40
+msgid "Status:"
+msgstr ""
+
+#: admin/views/collection/cron.php:46
+msgid "currently running"
+msgstr ""
+
+#: admin/views/collection/cron.php:48
+msgid "Did you wait until the job has stopped running?"
+msgstr ""
+
+#: admin/views/collection/cron.php:50
+msgid "Mark as stopped"
+msgstr ""
+
+#: admin/views/collection/cron.php:53
+msgid "finished"
+msgstr ""
+
+#: admin/views/collection/cron.php:61
+msgid "Last started:"
+msgstr ""
+
+#: admin/views/collection/cron.php:69
+msgid "Last ended:"
+msgstr ""
+
+#: admin/views/collection/cron.php:78
+msgid "Last skipped execution:"
+msgstr ""
+
+#: admin/views/collection/cron.php:87
+msgid "Last status:"
+msgstr ""
+
+#: admin/views/collection/cron.php:101
+msgid "Start manually:"
+msgstr ""
+
+#: admin/views/collection/cron.php:105
+msgid "Run now"
+msgstr ""
+
+#: admin/views/collection/data.php:26
+msgid "Download CSV"
+msgstr ""
+
+#: admin/views/collection/data.php:29
+msgid "All opt-in ({count})"
+msgstr ""
+
+#: admin/views/collection/data.php:32
+msgid "Form input finished ({count})"
+msgstr ""
+
+#: admin/views/collection/data.php:35
+msgid "Finished - Outside limited area ({count})"
+msgstr ""
+
+#: admin/views/collection/data.php:38
+msgid "Unfinished ({count})"
+msgstr ""
+
+#: admin/views/collection/data.php:41
+msgid "Deleted ({count})"
+msgstr ""
+
+#: admin/views/collection/data.php:58
+msgid "Please note that encrypted entries will only be searched for by their serial."
+msgstr ""
+
+#: admin/views/collection/mailTest.php:10
+msgid "Email config test"
+msgstr ""
+
+#: admin/views/collection/mailTest.php:28
+msgid "Send test mails to {mail}."
+msgstr ""
+
+#: admin/views/collection/mailTest.php:29
+msgid "Confirmation mail:"
+msgstr ""
+
+#: admin/views/collection/mailTest.php:33
+msgid "Sheet reminder mail:"
+msgstr ""
+
+#: admin/views/collection/mailTest.php:38
+msgid "Sign reminder mail:"
+msgstr ""
+
+#: admin/views/collection/overview.php:21
+msgid "<b>{count}</b> visitors have signed up to this collection"
+msgstr ""
+
+#: admin/views/collection/overview.php:25
+msgid "(and additional {count}</b> signatures in the {settings})"
+msgstr ""
+
+#: admin/views/collection/overview.php:42
+msgid "Internal collection name"
+msgstr ""
+
+#: admin/views/collection/overview.php:50
+msgid "Last day the collection is available, leave empty to keep it active"
+msgstr ""
+
+#: admin/views/collection/overview.php:60
+msgid "Message shown when collection has finished"
+msgstr ""
+
+#: admin/views/collection/overview.php:66
+msgid "Save"
+msgstr ""
+
+#: admin/views/collection/stats.php:49
+msgid "Source stats"
+msgstr ""
+
+#: admin/views/collection/stats.php:52
+#: admin/views/collection/statsCharts.php:15
+#: admin/views/collection/statsSource.php:17
+msgid "Historical chart"
+msgstr ""
+
+#: admin/views/collection/statsCharts.php:13
+msgid "Historical chart of source \"{source}\""
+msgstr ""
+
+#: admin/views/collection/statsCharts.php:18
+msgid "Date always refers to original registration"
+msgstr ""
+
+#: admin/views/collection/statsSource.php:10
+msgid "Source"
+msgstr ""
+
+#: admin/views/collection/statsSource.php:11
+msgid "Signatures received"
+msgstr ""
+
+#: admin/views/collection/statsSource.php:12
+msgid "Signed sheets received"
+msgstr ""
+
+#: admin/views/collection/statsSource.php:13
+msgid "= signatures per sheet"
+msgstr ""
+
+#: admin/views/collection/statsSource.php:14
+msgid "Opt-in form"
+msgstr ""
+
+#: admin/views/collection/statsSource.php:15
+msgid "Opt-out form"
+msgstr ""
+
+#: admin/views/collection/statsSource.php:16
+msgid "Unfinished form"
+msgstr ""
+
+#: admin/views/collection/statsSource.php:32
+msgid "Show"
+msgstr ""
+
+#: admin/views/general/admin-page.php:13
+msgid "demovox - Overview"
+msgstr ""
+
+#: admin/views/general/admin-page.php:30
+msgid "Overall, <b>{count}</b> visitors have signed up"
+msgstr ""
+
+#: admin/views/general/admin-page.php:34
+msgid "Don't forget to check the <a href=\"{url}\">System info page</a> before publishing the plugin"
+msgstr ""
+
+#: admin/views/general/admin-page.php:37
+msgid "Privacy reminder"
+msgstr ""
+
+#: admin/views/general/admin-page.php:39
+msgid "You are responsible for protecting the date stored by this plugin, as signee information consists of <a href=\"https://www.admin.ch/opc/en/classified-compilation/19920153/index.html#a3\" target=\"_blank\">sensitive personal data</a>."
+msgstr ""
+
+#: admin/views/general/admin-page.php:48
+msgid "For example by blocking any FTP access (unencrypted protocol!), protecting WordPress accounts with good passwords and <a href=\"https://en.wikipedia.org/wiki/Multi-factor_authentication\" target=\"_blank\">MFA</a>, disabling external access to the database, only installing trustworthy plugins and taking care of security updates. demovox has a recommended option to encrypt signee data (see \"Advanced\" tab) which helps on database attacks, and you can find some help to avoid WordPress misconfiguration on the <a href=\"{url_sysinfo}\">System info page</a>."
+msgstr ""
+
+#: admin/views/general/admin-page.php:60
+msgid "Public shortcodes"
+msgstr ""
+
+#: admin/views/general/admin-page.php:62
+msgid "Public shortcodes can be placed anywhere on your website, but they depend on a collection. Please use the shortcode in the collection list below. The shortcode <i>demovox_form</i> will show the form and when filled out the signature sheet, <i>demovox_count</i> the current signee count (number)."
+msgstr ""
+
+#: admin/views/general/admin-page.php:69
+msgid "Opt-in page and success page shortcodes"
+msgstr ""
+
+#: admin/views/general/admin-page.php:71
+msgid "Opt-in page and success page shortcodes are dependent on a signature the visitor has given. Those pages are linked in mails or are forwarded to after signing (links include the URL parameter \"sign\"):"
+msgstr ""
+
+#: admin/views/general/admin-page.php:77
+msgid "Signature sheet:"
+msgstr ""
+
+#: admin/views/general/admin-page.php:79
+msgid "Optin form:"
+msgstr ""
+
+#: admin/views/general/admin-page.php:81
+msgid "User information (strings):"
+msgstr ""
+
+#: admin/views/general/admin-page.php:93
+msgid "Add new collection"
+msgstr ""
+
+#: admin/views/general/import.php:25
+msgid "Import received signature sheets"
+msgstr ""
+
+#: admin/views/general/import.php:27
+msgid "To send reminder mails and create statistics, you need to record the received signatures here. You need to scan the QR code from the sheets, we recommend to use a smartphone app which can export the scanned serials as CSV."
+msgstr ""
+
+#: admin/views/general/import.php:41
+msgid "Delivery date"
+msgstr ""
+
+#: admin/views/general/import.php:46
+msgid "CSV format"
+msgstr ""
+
+#: admin/views/general/import.php:55
+msgid "Number of signatures"
+msgstr ""
+
+#: admin/views/general/import.php:57
+msgid "Number of signatures on each of the currently importing sheets"
+msgstr ""
+
+#: admin/views/general/import.php:61
+msgid "Delimiter"
+msgstr ""
+
+#: admin/views/general/import.php:65
+msgid "CSV"
+msgstr ""
+
+#: admin/views/general/import.php:71
+msgid "Import"
+msgstr ""
+
+#: admin/views/general/stats.php:9
+msgid "Sign-up stats"
+msgstr ""
+
+#: admin/views/general/sysinfo-encrypt.php:14
+msgid "{count} iterations."
+msgstr ""
+
+#: admin/views/general/sysinfo-encrypt.php:15
+msgid "Time to encrypt: {time}s"
+msgstr ""
+
+#: admin/views/general/sysinfo-encrypt.php:16
+msgid "Time to decrypt: {time}s"
+msgstr ""
+
+#: admin/views/general/sysinfo-encrypt.php:19
+msgid "Field lengths"
+msgstr ""
+
+#: admin/views/general/sysinfo-encrypt.php:22
+msgid "Original"
+msgstr ""
+
+#: admin/views/general/sysinfo-encrypt.php:23
+msgid "Encrypted"
+msgstr ""
+
+#: admin/views/general/sysinfo-mail.php:12
+msgid "Mail sent to {mail}"
+msgstr ""
+
+#: admin/views/general/sysinfo-mail.php:14
+msgid "Sending failed"
+msgstr ""
+
+#: admin/views/general/sysinfo-mail.php:16
+msgid "Logs"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:13
+msgid "System info"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:14
+msgid "Wordpress"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:20
+msgid "Keys need to be set in config to enable encryption or reminder mail"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:22
+msgid "You need to put the following line at the end of wp-config.php and backup them in a secure location:"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:36
+msgid "If this is a restored this wordpress instance with a previous demovox database, you need to set the original encryption keys instead."
+msgstr ""
+
+#: admin/views/general/sysinfo.php:48
+msgid "<a href=\"https://codex.wordpress.org/WP_DEBUG\" target=\"_blank\">WP_DEBUG_DISPLAY</a> is enabled, this could lead to the disclosure of sensitive information about the website and server setup"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:62
+msgid "Please <a href=\"https://api.wordpress.org/secret-key/1.1/salt/\">generate missing salts</a> and save them in wp-config.php. You might have to reset your Wordpress password and sign in again afterwards."
+msgstr ""
+
+#: admin/views/general/sysinfo.php:75
+msgid "DISABLE_WP_CRON is enabled, cronjobs like sending mails will <i>not</i> be executed"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:81
+msgid "Success: Wordpress config looks fine"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:84
+msgid "You can find the Wordpress config here on your webserver: {path}"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:87
+msgid "Optional feature \"Hashids\" requires a PHP module, either GMP or BC Math:"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:90
+msgid "GMP is installed and enabled"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:92
+msgid "GMP is <i>not</i> available"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:98
+msgid "BC Math is installed and enabled"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:100
+msgid "BC Math is <i>not</i> available"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:109
+msgid "PHP <a href=\"https://www.php.net/manual/en/errorfunc.configuration.php\" target=\"_blank\">display_errors</a> is enabled"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:115
+msgid "PHP display_errors stack traces can display the arguments passed to methods on the call stack.<br/> The value of encryption passwords and other personally sensitive data may be leaked out to an attacker."
+msgstr ""
+
+#: admin/views/general/sysinfo.php:126
+msgid "Success: PHP config looks fine."
+msgstr ""
+
+#: admin/views/general/sysinfo.php:128
+msgid "You can find the PHP config here: {path}"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:129
+msgid "SSL"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:132
+msgid "Notice: The plugin form is not available when a client requests it over unencrypted HTTP, please make sure all requests are forwarded to HTTPS.<br/> You should also check the encryption quality, for example on <a href=\"https://www.ssllabs.com/ssltest/analyze.html?d={host}&hideResults=on\" target=\"_blank\">ssllabs.com</a>."
+msgstr ""
+
+#: admin/views/general/sysinfo.php:141
+msgid "CPU Load infos (not supported by Windows servers)"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:142
+msgid "Current load: {current}% / Absolute load: {absolute}%"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:147
+msgid "Is high load (&gt; {max}%): "
+msgstr ""
+
+#: admin/views/general/sysinfo.php:150
+msgid "<span class=\"error\">Yes</span> (would currently <i>NOT</i> execute CRON)"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:151
+msgid "<span class=\"success\">No</span> (would currently execute CRON)"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:154
+msgid "Cores setting: {cores} (Recommended cores setting: {recommended})"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:159
+msgid "Current load is calculated by dividing absolute load by the amount of cores"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:160
+msgid "Encryption performance"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:161
+msgid "php-encryption"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:163
+#: admin/views/general/sysinfo.php:212
+msgid "Realistic length fields:"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:166
+#: admin/views/general/sysinfo.php:170
+#: admin/views/general/sysinfo.php:174
+#: admin/views/general/sysinfo.php:178
+#: admin/views/general/sysinfo.php:184
+#: admin/views/general/sysinfo.php:188
+#: admin/views/general/sysinfo.php:192
+#: admin/views/general/sysinfo.php:196
+#: admin/views/general/sysinfo.php:215
+msgid "Test {count} iterations"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:200
+msgid "Test {count} iterations and show string lengths"
+msgstr ""
+
+#: admin/views/general/sysinfo.php:203
+msgid "The test is executed single-threaded."
+msgstr ""
+
+#: admin/views/general/sysinfo.php:210
+msgid "Translations"
+msgstr ""
+
+#: includes/cron/CronBase.php:89
+msgid "Send sign-up confirmation mails after a client has filled both forms. Requires the setting <i>Confirmation mail ({status})</i> to be enabled."
+msgstr ""
+
+#: includes/cron/CronBase.php:99
+msgid "Indexing cron to avoid duplicate reminders for the same mails address (table <i>wp_demovox_mails</i>). If enabled, this indexer must be executed before reminder cron. Requires the setting <i>Mail deduplication ({status_dedup})</i> to be enabled."
+msgstr ""
+
+#: includes/cron/CronBase.php:113
+msgid "Send a reminder to signees which didn't send their signature sheets after (<strong>{mail_remind_signup_min_age}</strong>) days. <i>Mail deduplication ({status_dedup})</i> can be applied. Requires the setting <i>Sheet reminder mail ({status})</i> to be enabled."
+msgstr ""
+
+#: includes/cron/CronBase.php:131
+msgid "Send a reminder to signees which didn't finish filling the sign-up form after (<strong>{mail_remind_signup_min_age}</strong>) days. <i>Mail deduplication ({status_dedup})</i> can be applied. Requires the setting <i>Sheet reminder mail ({status})</i> to be enabled."
+msgstr ""
+
+#: includes/cron/CronBase.php:148
+msgid "enabled and set to \"{url}\""
+msgstr ""
+
+#: includes/cron/CronBase.php:149
+msgid "<span class=\"error\">disabled</span>"
+msgstr ""
+
+#: includes/cron/CronBase.php:156
+msgid "Export sign-up data to a REST API. Requires the setting <i>API URL ({status})</i>."
+msgstr ""
+
+#: includes/cron/CronBase.php:170
+msgid "enabled"
+msgstr ""
+
+#: includes/cron/CronBase.php:170
+msgid "disabled"
+msgstr ""

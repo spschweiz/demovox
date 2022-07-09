@@ -1,147 +1,194 @@
-# Copyright (C) 2019 demovox
-# This file is distributed under the same license as the demovox package.
-#, fuzzy
+# Copyright (C) 2022 SP Schweiz
+# This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: demovox 0.0.1\n"
+"Project-Id-Version: demovox 3.0.0-alpha.3\n"
 "Report-Msgid-Bugs-To: https://github.com/spschweiz/demovox\n"
-"POT-Creation-Date: 2019-02-21 11:16+0100\n"
-"PO-Revision-Date: 2019-02-21 11:16+0100\n"
+"Last-Translator: SP Schweiz <info@spschweiz.ch>\n"
 "Language-Team: SP Schweiz <info@spschweiz.ch>\n"
-"Language: en_UK\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"POT-Creation-Date: 2022-06-04T20:32:21+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.6.0\n"
+"X-Domain: demovox\n"
 
-#: sign-1.php:22
-msgid "First Name"
+#. Plugin Name of the plugin
+msgid "demovox"
 msgstr ""
 
-#: sign-1.php:26
-msgid "Last Name"
+#. Plugin URI of the plugin
+msgid "https://demovox.ch/"
 msgstr ""
 
-#: sign-1.php:30
-msgid "Email"
+#. Description of the plugin
+msgid "demovox is a tool to collect signatures for Swiss popular initiatives by offering the visitor a personalized signature sheet."
 msgstr ""
 
-#: sign-1.php:39
-msgid "Confirm"
+#. Author of the plugin
+msgid "SP Schweiz"
 msgstr ""
 
-#: sign-1.php:34
-msgid "Phone number"
+#. Author URI of the plugin
+msgid "https://www.sp-ps.ch/"
 msgstr ""
 
-#: sign-1.php:38
-msgid "Continue"
+#: admin/helpers/CollectionList.php:15
+msgid "Collection"
 msgstr ""
 
-#: sign-2.php:30
-msgid "Title"
+#: admin/helpers/CollectionList.php:16
+msgid "Collections"
 msgstr ""
 
-#: sign-2.php:32
-msgid "Please select..."
+#: admin/helpers/SignatureList.php:17
+msgid "Signature"
 msgstr ""
 
-#: sign-2.php:32
-msgid "Mister"
+#: admin/helpers/SignatureList.php:18
+msgid "Signatures"
 msgstr ""
 
-#: sign-2.php:33
-msgid "Miss"
-msgstr ""
-
-#: sign-2.php:34
-msgid "No title"
-msgstr ""
-
-#: sign-2.php:25
-msgid "Birth date"
-msgstr ""
-
-#: sign-2.php:46
-msgid "Day"
-msgstr ""
-
-#: sign-2.php:51
-msgid "DD"
-msgstr ""
-
-#: sign-2.php:56
-msgid "Month"
-msgstr ""
-
-#: sign-2.php:59
-msgid "MM"
-msgstr ""
-
-#: sign-2.php:64
-msgid "Year"
-msgstr ""
-
-#: sign-2.php:67
-msgid "YYYY"
-msgstr ""
-
-#: sign-2.php:36
-msgid "Swiss abroad"
-msgstr ""
-
-#: sign-2.php:29
-msgid "Country"
-msgstr ""
-
-#: sign-2.php:40
-msgid "Street"
-msgstr ""
-
-#: sign-2.php:44
-msgid "Street number"
-msgstr ""
-
-#: sign-2.php:50
-msgid "ZIP"
-msgstr ""
-
-#: sign-2.php:54
-msgid "City"
-msgstr ""
-
-#: sign-2.php:66
-msgid "Political commune"
-msgstr ""
-
-#: sign-2.php:72
-msgid "Canton"
-msgstr ""
-
-#: sign-3.php:30
+#: includes/helpers/SettingsVarsCollection/ConfigSections.php:116
+#: public/views/sign-3.php:29
 msgid "Preparing your signature sheet, please wait..."
 msgstr ""
 
-#: sign-3.php:35
-msgid "Download signature sheet"
-msgstr ""
-
-#: sign-3.php:41
-msgid "Print signature sheet"
-msgstr ""
-
-#: Activator.php:84
+#: includes/wp/Activator.php:179
 msgid "Almost there"
 msgstr ""
 
-#: Activator.php:85
+#: includes/wp/Activator.php:181
 msgid "Print the following PDF, then fill it with your name and signature and send it to us:"
 msgstr ""
 
-#: SignSteps.php.php:177
+#: public/PublicHandler.php:97
+msgid "Your settings were saved"
+msgstr ""
+
+#: public/SignSteps.php:402
 msgid "signature_sheet"
 msgstr ""
 
-#: PublicHandler.php.php:198
-msgid "Your settings were saved"
+#: public/views/fallback.php:21
+#: public/views/sign-3.php:34
+#: public/views/sign-3.php:50
+msgid "Download signature sheet"
+msgstr ""
+
+#: public/views/opt-in.php:33
+#: public/views/sign-1.php:70
+#: public/views/sign-2.php:162
+msgid "Continue"
+msgstr ""
+
+#: public/views/sign-1-captcha.php:8
+#: public/views/sign-1-mail.php:11
+msgid "Please solve this task: <span class=\"task\">{captcha}</span>"
+msgstr ""
+
+#: public/views/sign-1-honeypot.php:2
+#: public/views/sign-1-mail.php:16
+msgid "Email"
+msgstr ""
+
+#: public/views/sign-1-mail.php:22
+msgid "Confirm"
+msgstr ""
+
+#: public/views/sign-1.php:32
+msgid "First Name"
+msgstr ""
+
+#: public/views/sign-1.php:37
+msgid "Last Name"
+msgstr ""
+
+#: public/views/sign-1.php:51
+msgid "Phone number"
+msgstr ""
+
+#: public/views/sign-2.php:32
+msgid "Title"
+msgstr ""
+
+#: public/views/sign-2.php:34
+msgid "Please select..."
+msgstr ""
+
+#: public/views/sign-2.php:35
+msgid "Mister"
+msgstr ""
+
+#: public/views/sign-2.php:36
+msgid "Miss"
+msgstr ""
+
+#: public/views/sign-2.php:37
+msgid "No title"
+msgstr ""
+
+#: public/views/sign-2.php:42
+msgid "Birth date"
+msgstr ""
+
+#: public/views/sign-2.php:46
+msgid "Day"
+msgstr ""
+
+#: public/views/sign-2.php:51
+msgid "DD"
+msgstr ""
+
+#: public/views/sign-2.php:56
+msgid "Month"
+msgstr ""
+
+#: public/views/sign-2.php:59
+msgid "MM"
+msgstr ""
+
+#: public/views/sign-2.php:64
+msgid "Year"
+msgstr ""
+
+#: public/views/sign-2.php:67
+msgid "YYYY"
+msgstr ""
+
+#: public/views/sign-2.php:76
+msgid "Swiss abroad"
+msgstr ""
+
+#: public/views/sign-2.php:82
+msgid "Street"
+msgstr ""
+
+#: public/views/sign-2.php:86
+msgid "Street number"
+msgstr ""
+
+#: public/views/sign-2.php:92
+msgid "ZIP"
+msgstr ""
+
+#: public/views/sign-2.php:101
+msgid "City"
+msgstr ""
+
+#: public/views/sign-2.php:120
+msgid "Country"
+msgstr ""
+
+#: public/views/sign-2.php:128
+msgid "Political commune"
+msgstr ""
+
+#: public/views/sign-2.php:141
+msgid "Canton"
+msgstr ""
+
+#: public/views/sign-3.php:37
+msgid "Print signature sheet"
 msgstr ""

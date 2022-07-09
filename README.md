@@ -62,8 +62,8 @@ Start `buildserver` from `docker/docker-compose.yaml`. The plugin is monted in `
 
 If you don't want to use the docker container, install the following build dependencies:
 [Python](https://www.python.org/), [Ruby](https://www.ruby-lang.org/),
-[node.js](https://nodejs.org/) (use v8.10.0 as po2mo fails with higher versions), [composer](https://getcomposer.org/),
-[gettext](https://packages.ubuntu.com/bionic/gettext).
+[node.js](https://nodejs.org/) (use v9, as po2mo fails with higher versions; tested with v9.11.2 installed with [NVM](https://github.com/nvm-sh/nvm)), [composer](https://getcomposer.org/),
+[gettext](https://packages.ubuntu.com/jammy/gettext) for translation conversion.
 Install required NPM packages with `npm install grunt-cli sass -g`
  
 #### Install required project packages
@@ -114,6 +114,14 @@ grunt buildZip
 Show all other available commands:
 ```
 grunt availabletasks
+```
+
+### Generate translation files
+`.po` files are used to manage translations. They are generated from source code and converted into `.mo` files for runtime by the grunt task (you can also use `bin/translations-po2mo.sh`). 
+
+#### Generate frontend and admin .po files
+```
+cd bin && ./translations-generate.sh
 ```
 
 #### Generate admin settings .po files
