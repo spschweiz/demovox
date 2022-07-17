@@ -166,8 +166,15 @@ class Settings
 	 */
 	public static function initDefaults(int $collectionId = null) : void
 	{
+		if( $collectionId === null ) {
+			self::initDefaultsGlobal();
+		}
+		self::initDefaultsCollection($collectionId);
+	}
+
+	protected static function initDefaultsGlobal() : void
+	{
 		require_once Infos::getPluginDir() . 'includes/helpers/SettingsVars.php';
-		require_once Infos::getPluginDir() . 'includes/helpers/SettingsVarsCollection.php';
 		$fieldsGlobal = SettingsVars::getFields();
 
 		foreach ($fieldsGlobal as $field) {
@@ -179,10 +186,16 @@ class Settings
 			}
 		}
 
-		$collectionId = $collectionId === null ? Infos::getDefaultCollectionId() : $collectionId;
-		$fieldsCollection = SettingsVarsCollection::getFields();
+	}
 
-		foreach ($fieldsCollection as $field) {
+	protected static function initDefaultsCollection(int $collectionId = null) : void
+	{
+		require_once Infos::getPluginDir() . 'includes/helpers/SettingsVarsCollection.php';
+
+		$collectionId = $collectionId === null ? Infos::getDefaultCollectionId() : $collectionId;
+		$fieldsDef = include(Infos::getPluginDir() . 'includes/helpers/SettingsVarsCollection/ConfigFields.php');
+
+		foreach ($fieldsDef as $field) {
 			$id        = $field['uid'];
 			$fieldType = $field['type'] ?? null;
 			switch ($fieldType) {
