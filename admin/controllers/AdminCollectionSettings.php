@@ -26,8 +26,6 @@ class AdminCollectionSettings extends AdminSettings
 
 	public function pageSettings()
 	{
-		$this->registerSettings();
-
 		$tabs = [
 			'General',
 			'Sign-up form',
