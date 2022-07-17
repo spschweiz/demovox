@@ -68,28 +68,23 @@ class RegisterSettings
 		$sectionId = $field['section'];
 		$section = $this->getSettingsSection($sectionId);
 		$page = $section['page'];
-		$fieldType = isset($field['type']) ? $field['type'] : null;
-		$args = isset($field['default']) ? ['default' => $field['default']] : [];
+		$fieldType = $field[ 'type' ] ?? null;
 
 		switch ($fieldType) {
 			default:
 				add_settings_field($id, $label, $callback, $page, $sectionId, $field);
-				register_setting($page, $id, $args);
+				register_setting($page, $id);
 				break;
 			case'pos_rot':
 				$id = $id . Settings::GLUE_PART . Settings::PART_POS_X;
-				$argX = isset($field['defaultX']) ? ['default' => $field['defaultX']] : [];
-				$argY = isset($field['defaultY']) ? ['default' => $field['defaultY']] : [];
-				$argRot = isset($field['defaultRot']) ? ['default' => $field['defaultRot']] : [];
-
 				add_settings_field($id, $label, $callback, $page, $sectionId, $field);
-				register_setting($page, $id . Settings::GLUE_PART . Settings::PART_POS_X, $argX);
-				register_setting($page, $id . Settings::GLUE_PART . Settings::PART_POS_Y, $argY);
-				register_setting($page, $id . Settings::GLUE_PART . Settings::PART_ROTATION, $argRot);
+				register_setting($page, $id . Settings::GLUE_PART . Settings::PART_POS_X);
+				register_setting($page, $id . Settings::GLUE_PART . Settings::PART_POS_Y);
+				register_setting($page, $id . Settings::GLUE_PART . Settings::PART_ROTATION);
 				break;
 			case'wpPage':
 				add_settings_field($id, $label, $callback, $page, $sectionId, $field);
-				register_setting($page, $id, $args);
+				register_setting($page, $id);
 				register_setting($page, $id . Settings::GLUE_PART . Settings::PART_PREVIOUS_LANG);
 				break;
 		}
