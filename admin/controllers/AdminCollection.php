@@ -87,9 +87,12 @@ class AdminCollection extends BaseController
 		$this->setCollectionID($collectionId);
 
 		$newRecord = new CollectionsDto();
+		$newRecord->ID = $collectionId;
 		$newRecord->name = 'Collection ' . $collectionId;
 
 		$success = $collections->insert($newRecord);
+
+		Settings::initDefaults($collectionId);
 		echo $success ? 'ok<script>window.location.reload();</script>' : 'failed';
 	}
 
