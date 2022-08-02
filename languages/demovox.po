@@ -4,191 +4,189 @@ msgid ""
 msgstr ""
 "Project-Id-Version: demovox 3.0.0-alpha.3\n"
 "Report-Msgid-Bugs-To: https://github.com/spschweiz/demovox\n"
+"POT-Creation-Date: 2022-06-04T20:32:21+00:00\n"
+"PO-Revision-Date: 2022-07-28 01:08+0200\n"
 "Last-Translator: SP Schweiz <info@spschweiz.ch>\n"
 "Language-Team: SP Schweiz <info@spschweiz.ch>\n"
+"Language: de_CH\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-06-04T20:32:21+00:00\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.6.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.1.1\n"
 "X-Domain: demovox\n"
 
 #. Plugin Name of the plugin
 msgid "demovox"
-msgstr ""
+msgstr "demovox"
 
 #. Plugin URI of the plugin
 msgid "https://demovox.ch/"
-msgstr ""
+msgstr "https://demovox.ch/"
 
 #. Description of the plugin
 msgid "demovox is a tool to collect signatures for Swiss popular initiatives by offering the visitor a personalized signature sheet."
-msgstr ""
+msgstr "Demovox ist ein Tool, um für Initiativen und Referenden in der Schweiz Unterschriften zu sammeln, indem den Besucher:innen einer Website ermöglicht wird, personalisierte Unterschriftenbogen zu erstellen."
 
 #. Author of the plugin
 msgid "SP Schweiz"
-msgstr ""
+msgstr "SP Schweiz"
 
 #. Author URI of the plugin
 msgid "https://www.sp-ps.ch/"
-msgstr ""
+msgstr "https://www.sp-ps.ch/"
 
 #: admin/helpers/CollectionList.php:15
 msgid "Collection"
-msgstr ""
+msgstr "Unterschriftensammlung"
 
 #: admin/helpers/CollectionList.php:16
 msgid "Collections"
-msgstr ""
+msgstr "Unterschriftensammlungen"
 
 #: admin/helpers/SignatureList.php:17
 msgid "Signature"
-msgstr ""
+msgstr "Unterschrift"
 
 #: admin/helpers/SignatureList.php:18
 msgid "Signatures"
-msgstr ""
+msgstr "Unterschriften"
 
 #: includes/helpers/SettingsVarsCollection/ConfigSections.php:116
 #: public/views/sign-3.php:29
 msgid "Preparing your signature sheet, please wait..."
-msgstr ""
+msgstr "Dein Unterschriftenbogen wird erstellt, bitte rasch warten..."
 
 #: includes/wp/Activator.php:179
 msgid "Almost there"
-msgstr ""
+msgstr "Fast geschafft"
 
 #: includes/wp/Activator.php:181
 msgid "Print the following PDF, then fill it with your name and signature and send it to us:"
-msgstr ""
+msgstr "Das folgende PDF ausdrucken, Deinen Namen und Deine Unterschrift ergänzen und per Post an uns senden:"
 
 #: public/PublicHandler.php:97
 msgid "Your settings were saved"
-msgstr ""
+msgstr "Deine Einstellungen wurden gespeichert."
 
 #: public/SignSteps.php:402
 msgid "signature_sheet"
-msgstr ""
+msgstr "signature_sheet"
 
-#: public/views/fallback.php:21
-#: public/views/sign-3.php:34
+#: public/views/fallback.php:21 public/views/sign-3.php:34
 #: public/views/sign-3.php:50
 msgid "Download signature sheet"
-msgstr ""
+msgstr "Deinen Unterschriftenbogen herunterladen"
 
-#: public/views/opt-in.php:33
-#: public/views/sign-1.php:70
+#: public/views/opt-in.php:33 public/views/sign-1.php:70
 #: public/views/sign-2.php:162
 msgid "Continue"
-msgstr ""
+msgstr "Weiter"
 
-#: public/views/sign-1-captcha.php:8
-#: public/views/sign-1-mail.php:11
+#: public/views/sign-1-captcha.php:8 public/views/sign-1-mail.php:11
 msgid "Please solve this task: <span class=\"task\">{captcha}</span>"
-msgstr ""
+msgstr "Bitte diese Aufgabe lösen: <span class=\"task\">{captcha}</span>"
 
-#: public/views/sign-1-honeypot.php:2
-#: public/views/sign-1-mail.php:16
+#: public/views/sign-1-honeypot.php:2 public/views/sign-1-mail.php:16
 msgid "Email"
-msgstr ""
+msgstr "E-Mail"
 
 #: public/views/sign-1-mail.php:22
 msgid "Confirm"
-msgstr ""
+msgstr "Bestätigen"
 
 #: public/views/sign-1.php:32
 msgid "First Name"
-msgstr ""
+msgstr "Vorname"
 
 #: public/views/sign-1.php:37
 msgid "Last Name"
-msgstr ""
+msgstr "Nachname"
 
 #: public/views/sign-1.php:51
 msgid "Phone number"
-msgstr ""
+msgstr "Telefonnummer"
 
 #: public/views/sign-2.php:32
 msgid "Title"
-msgstr ""
+msgstr "Anrede"
 
 #: public/views/sign-2.php:34
 msgid "Please select..."
-msgstr ""
+msgstr "Bitte auswählen"
 
 #: public/views/sign-2.php:35
 msgid "Mister"
-msgstr ""
+msgstr "Herr"
 
 #: public/views/sign-2.php:36
 msgid "Miss"
-msgstr ""
+msgstr "Frau"
 
 #: public/views/sign-2.php:37
 msgid "No title"
-msgstr ""
+msgstr "divers"
 
 #: public/views/sign-2.php:42
 msgid "Birth date"
-msgstr ""
+msgstr "Geburtsdatum"
 
 #: public/views/sign-2.php:46
 msgid "Day"
-msgstr ""
+msgstr "Tag"
 
 #: public/views/sign-2.php:51
 msgid "DD"
-msgstr ""
+msgstr "DD"
 
 #: public/views/sign-2.php:56
 msgid "Month"
-msgstr ""
+msgstr "Monat"
 
 #: public/views/sign-2.php:59
 msgid "MM"
-msgstr ""
+msgstr "MM"
 
 #: public/views/sign-2.php:64
 msgid "Year"
-msgstr ""
+msgstr "Jahr"
 
 #: public/views/sign-2.php:67
 msgid "YYYY"
-msgstr ""
+msgstr "YYYY"
 
 #: public/views/sign-2.php:76
 msgid "Swiss abroad"
-msgstr ""
+msgstr "Auslandschweizer:in"
 
 #: public/views/sign-2.php:82
 msgid "Street"
-msgstr ""
+msgstr "Strasse"
 
 #: public/views/sign-2.php:86
 msgid "Street number"
-msgstr ""
+msgstr "Hausnummer"
 
 #: public/views/sign-2.php:92
 msgid "ZIP"
-msgstr ""
+msgstr "Postleitzahl"
 
 #: public/views/sign-2.php:101
 msgid "City"
-msgstr ""
+msgstr "Ort"
 
 #: public/views/sign-2.php:120
 msgid "Country"
-msgstr ""
+msgstr "Land"
 
 #: public/views/sign-2.php:128
 msgid "Political commune"
-msgstr ""
+msgstr "Politische Gemeinde"
 
 #: public/views/sign-2.php:141
 msgid "Canton"
-msgstr ""
+msgstr "Kanton"
 
 #: public/views/sign-3.php:37
 msgid "Print signature sheet"
-msgstr ""
+msgstr "Unterschriftenbogen ausdrucken"
