@@ -9,7 +9,7 @@ var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 		getField: function (name) {
 			return parseInt(this.configValue('field_' + name))
 		},
-		createField: function (value, name, lang) {
+		createField: function (value, name, lang, fontSize) {
 			var x = this.getField(name + '_' + lang + '_x'),
 				y = this.getField(name + '_' + lang + '_y'),
 				rotate = this.getField(name + '_' + lang + '_rot');
@@ -110,32 +110,33 @@ var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 			return $el.val()
 		},
 		initShowPdf: function ($btn) {
-			$btn.click(function () {
+			let self = this;
+			$btn.click(function() {
 				var $container = $(this).closest('div'),
 					lang = $(this).data('lang'),
-					fontSize = parseInt(this.configValue('fontsize')),
-					qrMode = this.configValue('field_qr_mode'),
-					pdfUrl = this.configValue('signature_sheet_' + lang),
+					fontSize = parseInt(self.configValue('fontsize')),
+					qrMode = self.configValue('field_qr_mode'),
+					pdfUrl = self.configValue('signature_sheet_' + lang),
 					fields = [
-						this.createField('BE', 'canton', lang),
-						this.createField('Bern', 'commune', lang),
-						this.createField('3001', 'zip', lang),
-						this.createField('21', 'birthdate_day', lang),
-						this.createField('10', 'birthdate_month', lang),
-						this.createField('88', 'birthdate_year', lang),
-						this.createField('Theaterplatz 4', 'street', lang),
+						self.createField('BE', 'canton', lang, fontSize),
+						self.createField('Bern', 'commune', lang, fontSize),
+						self.createField('3001', 'zip', lang, fontSize),
+						self.createField('21', 'birthdate_day', lang, fontSize),
+						self.createField('10', 'birthdate_month', lang, fontSize),
+						self.createField('88', 'birthdate_year', lang, fontSize),
+						self.createField('Theaterplatz 4', 'street', lang, fontSize),
 					],
 					qrData = qrMode === 'disabled'
 						? null
 						: {
 							"text": "JNXWE",
-							"x": this.getField('qr_img_' + lang + '_x'),
-							"y": this.getField('qr_img_' + lang + '_y'),
-							"rotate": this.getField('qr_img_' + lang + '_rot'),
-							"size": this.getField('qr_img_size_' + lang),
-							"textX": this.getField('qr_text_' + lang + '_x'),
-							"textY": this.getField('qr_text_' + lang + '_y'),
-							"textRotate": this.getField('qr_text_' + lang + '_rot'),
+							"x": self.getField('qr_img_' + lang + '_x'),
+							"y": self.getField('qr_img_' + lang + '_y'),
+							"rotate": self.getField('qr_img_' + lang + '_rot'),
+							"size": self.getField('qr_img_size_' + lang),
+							"textX": self.getField('qr_text_' + lang + '_x'),
+							"textY": self.getField('qr_text_' + lang + '_y'),
+							"textRotate": self.getField('qr_text_' + lang + '_rot'),
 							"textSize": fontSize,
 							"textColor": textColor
 						};
@@ -143,7 +144,7 @@ var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 			});
 		},
 		initAjaxButton: function ($container) {
-			$container.find('.ajaxButton').click(function () {
+			$container.find('.ajaxButton').click(() => {
 				var cont = $(this).data('container'),
 					ajaxUrl = $(this).data('ajax-url'),
 					confirmTxt = $(this).data('confirm'),

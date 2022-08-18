@@ -322,7 +322,7 @@ $(() => {
 			return;
 		}
 
-		const params = jQuery.parseJSON($createPdf.data('params'));
+		const params = $createPdf.data('params');
 
 		if (typeof params.title == 'undefined' || typeof params.pdfUrl == 'undefined' ||
 			typeof params.fields == 'undefined' || typeof params.qrData == 'undefined') {

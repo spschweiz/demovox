@@ -43,7 +43,7 @@ namespace Demovox;
 		<span id="demovox-permalink" style="display: none;"><?= $permalink; ?></span>
 	</div>
 	<div id="createPdf"
-		 data-params="{'title': '<?= $title ?>', 'pdfUrl': '<?= $pdfUrl ?>', 'fields': '<?= $fields ?>', 'qrData': '<?= $qrData ?>'}"
+		 data-params='{"title": "<?= $title ?>", "pdfUrl": "<?= $pdfUrl ?>", "fields": <?= $fields ?>, "qrData": "<?= $qrData ?>"}'
 		 data-pdf-js-url="<?= plugin_dir_url(__FILE__) . 'js/demovox-public-pdf.min.js' ?>"></div>
 	<noscript>
 		JavaScript is disabled in your browser. Personalized signature sheet unavailable, you can use this one instead:<br/>
