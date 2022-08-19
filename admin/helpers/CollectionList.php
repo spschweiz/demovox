@@ -89,7 +89,7 @@ class CollectionList extends ListTable
 					$ret .= Strings::getAdminLink('admin.php?page=demovoxSettings&cln=' . $item->ID, __('Settings', 'demovox.admin'));
 				return $ret;
 			case 'name':
-				return '<a href="' . Strings::getAdminUrl('admin.php?page=demovoxOverview') . '">'
+				return '<a href="' . Strings::getAdminUrl('admin.php?page=demovoxOverview&cln=' . $item->ID ) . '">'
 					. $item->{$column_name} . '</a>';
 			default:
 				if (!isset($item->{$column_name})) {
