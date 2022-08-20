@@ -17,6 +17,7 @@ if (!defined('ABSPATH')) {
 $tabExists = isset($tabs[$currentTab]);
 $currentTabLabel = $tabs[$currentTab] ?? '';
 
+$enabledLanguages = i18n::getLangsEnabled();
 if (!$tabExists) {
 	wp_safe_redirect(admin_url('admin.php?page=wc-settings'));
 	exit;
@@ -25,6 +26,14 @@ if (!$tabExists) {
 <input type="hidden" id="cln" name="cln" value="<?= $collectionId ?>">
 <div class="wrap demovox">
 	<h1><?= $collectionName ?></h1>
+	<?php
+	if (!$enabledLanguages) {
+		?>
+		<span class="error">No languages enabled!</span><br/>
+		It's essential to enable at least one language for your collection.
+		<?php
+	}
+	?>
 	<form method="post" id="mainform" action="options.php" enctype="multipart/form-data">
 		<?php wp_nonce_field($page); ?>
 		<nav class="nav-tab-wrapper woo-nav-tab-wrapper">
