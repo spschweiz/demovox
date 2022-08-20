@@ -22,8 +22,8 @@ class AdminGeneral extends BaseController
 		$count = $dbSign->countSignatures(null, false);
 		$userLang = Infos::getAdminLanguage();
 
+		$stats = new CollectionStatsDto();
 		if ($count) {
-			$stats = new CollectionStatsDto();
 			$stats->countOptin = $dbSign->count(DbSignatures::WHERE_OPTIN);
 			$stats->countOptout = $dbSign->count(DbSignatures::WHERE_OPTOUT);
 			$stats->countOptNULL = $dbSign->count(DbSignatures::WHERE_OPTNULL);

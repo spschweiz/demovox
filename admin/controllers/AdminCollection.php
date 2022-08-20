@@ -49,8 +49,8 @@ class AdminCollection extends BaseController
 
 		$page = $this->getCurrentPage();
 
+		$stats = new CollectionStatsDto();
 		if ($count) {
-			$stats = new CollectionStatsDto();
 			$stats->countOptin = $dbSign->count(DbSignatures::WHERE_OPTIN, $collectionId);
 			$stats->countOptout = $dbSign->count(DbSignatures::WHERE_OPTOUT, $collectionId);
 			$stats->countOptNULL = $dbSign->count(DbSignatures::WHERE_OPTNULL, $collectionId);
