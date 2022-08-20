@@ -88,25 +88,26 @@ class DbSignatures extends Db
 	];
 
 	/**
+	 * @param int|null $collectionId
 	 * @param bool $publicValue
 	 *
-	 * @return string
+	 * @return int
 	 */
-	public function countSignatures(?int $collectionId, bool $publicValue = true)
+	public function countSignatures(?int $collectionId, bool $publicValue = true): int
 	{
 		$count = $this->count(DbSignatures::WHERE_FINISHED_IN_SCOPE, $collectionId);
 
 		if ($publicValue) {
 			$count += intval(Settings::getCValue('add_count'));
 		}
-		return $count ?: '0';
+		return $count ?: 0;
 	}
 
 	/**
 	 * Count results for a where statement
 	 *
 	 * @param string|int|null $where
-	 *
+	 * @param int|null $collectionId
 	 * @return int
 	 */
 	public function count($where = null, ?int $collectionId = null): int
@@ -115,7 +116,7 @@ class DbSignatures extends Db
 			$where = $this->getWhere($where);
 		}
 		if ($collectionId !== null) {
-			if ($where === null) {
+			if ($where) {
 				$where = 'collection_ID = ' . $collectionId;
 			} else {
 				$where .= ' AND collection_ID = ' . $collectionId;
