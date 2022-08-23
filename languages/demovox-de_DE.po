@@ -65,6 +65,16 @@ msgstr "Fast geschafft"
 msgid "Print the following PDF, then fill it with your name and signature and send it to us:"
 msgstr "Das folgende PDF ausdrucken, Deinen Namen und Deine Unterschrift ergänzen und per Post an uns senden:"
 
+#. translators: denotes the mathematical operands plus and minus
+#: public/Honeypot.php:119
+msgid "captcha_operator_plus"
+msgstr "+"
+
+#. translators: denotes the mathematical operands plus and minus
+#: public/Honeypot.php:119
+msgid "captcha_operator_minus"
+msgstr "-"
+
 #: public/PublicHandler.php:97
 msgid "Your settings were saved"
 msgstr "Deine Einstellungen wurden gespeichert."

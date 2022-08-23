@@ -115,6 +115,16 @@ msgstr "Quasi fatto"
 msgid "Print the following PDF, then fill it with your name and signature and send it to us:"
 msgstr "Stampa il seguente PDF, quindi compila il tuo nome e firma e inviacelo:"
 
+#. translators: denotes the mathematical operands plus and minus
+#: public/Honeypot.php:119
+msgid "captcha_operator_plus"
+msgstr "+"
+
+#. translators: denotes the mathematical operands plus and minus
+#: public/Honeypot.php:119
+msgid "captcha_operator_minus"
+msgstr "-"
+
 #: SignSteps.php.php:177
 msgid "signature_sheet"
 msgstr "formulario_raccolta_firme"
