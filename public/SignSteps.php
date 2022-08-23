@@ -248,7 +248,7 @@ class SignSteps
 	 */
 	protected function getPagesUrls($guid, string $country, string $gdeCanton, string $gdeId, array $data): array
 	{
-		$abroadRedirect   = Settings::getCValue('swiss_abroad_redirect');
+		$abroadRedirect   = Settings::getCValue('swiss_abroad_redirect') ?: null;
 		$isAbroadRedirect = $abroadRedirect && $country !== i18n::$countryDefault;
 		$isOutsideScope   = false;
 		if (($localIniMode = Settings::getCValue('local_initiative_mode')) !== 'disabled') {
@@ -262,14 +262,14 @@ class SignSteps
 			$data['link_pdf']         = $successPage;
 			$data['is_outside_scope'] = ($localIniMode !== 'disabled') ? 1 : 0;
 		} elseif ($isOutsideScope) {
-			$successPage              = Strings::getPageUrl($guid, Settings::getCValue('local_initiative_error_redirect'));
+			$successPage              = Strings::getPageUrl($guid, Settings::getCValue('local_initiative_error_redirect') ?: null);
 			$data['link_success']     = $successPage;
 			$data['link_pdf']         = $successPage;
 			$data['is_outside_scope'] = 1;
 		} else {
-			$successPage          = Strings::getPageUrl($guid, Settings::getCValue('use_page_as_success'));
+			$successPage          = Strings::getPageUrl($guid, Settings::getCValue('use_page_as_success') ?: null);
 			$data['link_success'] = $successPage;
-			$data['link_pdf']     = Strings::getPageUrl($guid, Settings::getCValue('use_page_as_mail_link'));
+			$data['link_pdf']     = Strings::getPageUrl($guid, Settings::getCValue('use_page_as_mail_link') ?: null);
 		}
 
 		return $data;
