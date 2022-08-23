@@ -77,8 +77,8 @@ class CollectionList extends ListTable
 			case 'end_date':
 				return $item->{$column_name} ?: __('- no end date -', 'demovox.admin');
 			case 'shortcode':
-				return '<code>[demovox_form cln=' . $item->ID . ']</code>'
-					. ' <code>[demovox_count cln=' . $item->ID . ']</code>';
+				return '<code>[demovox_form collection=' . $item->ID . ']</code>'
+					. ' <code>[demovox_count collection=' . $item->ID . ']</code>';
 			case 'show':
 				$ret = Strings::getAdminLink('admin.php?page=demovoxOverview&cln=' . $item->ID, __('Overview', 'demovox.admin')) . ' | ';
 				if (Core::hasAccess('demovox_data'))
