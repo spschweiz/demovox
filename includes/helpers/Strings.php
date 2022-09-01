@@ -16,6 +16,7 @@ class Strings
 	public static function getPageUrl(string $signGuid, ?int $pageId = null, ?string $baseUrl = null): string
 	{
 		$pageId = $pageId ?: Settings::getCValue('use_page_as_success');
+		$pageId = i18n::getTranslatedPageId($pageId);
 		$url    = get_permalink($pageId);
 		if ($baseUrl) {
 			$lengthCut = strlen(home_url());
