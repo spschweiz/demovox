@@ -105,8 +105,8 @@ abstract class Db
 	public function count(?string $where = null): int
 	{
 		global $wpdb;
-		if ($where !== null) {
-			$where = 'WHERE ' . $where;
+		if ($where) {
+			$where = ' WHERE ' . $where;
 		}
 		$tableName = $this->getWpTableName();
 		$count     = $wpdb->get_var('SELECT COUNT(ID) as count FROM `' . $tableName . '`' . $where);

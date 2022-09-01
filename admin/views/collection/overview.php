@@ -20,7 +20,11 @@ $this->loadTinymce();
 	<p>
 		<?= strtr(__('<b>{count}</b> visitors have signed up to this collection', 'demovox.admin'), ['{count}' => $count]) ?>
 		<?php if ($addCount) {
-			$settingsLink = Strings::getAdminLink('/admin.php?page=demovoxSettings&cln=' . $this->collectionId, __('Settings', 'demovox.admin'));
+			if (Core::hasAccess('manage_options')) {
+				$settingsLink = Strings::getAdminLink('/admin.php?page=demovoxSettings&cln=' . Infos::getCollectionId(), __('Settings', 'demovox.admin') );
+			} else {
+				$settingsLink = __('Settings', 'demovox.admin');
+			}
 			?>
 			<?= strtr(__('(and additional {count}</b> signatures in the {settings})', 'demovox.admin'), ['{count}' => $count, '{settings}' => $settingsLink]) ?>
 		<?php } ?>

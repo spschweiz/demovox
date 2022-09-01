@@ -48,7 +48,7 @@ class Core
 	 * @access   protected
 	 * @var      string $version The current version of the plugin.
 	 */
-	protected $version;
+	protected static $version;
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -62,9 +62,9 @@ class Core
 	public function __construct()
 	{
 		if (defined('DEMOVOX_VERSION')) {
-			$this->version = DEMOVOX_VERSION;
+			self::$version = DEMOVOX_VERSION;
 		} else {
-			$this->version = '1.0.0';
+			self::$version = '1.0.0';
 		}
 		$this->pluginName = 'Demovox';
 	}
@@ -94,11 +94,11 @@ class Core
 
 		if (is_admin()) {
 			require_once Infos::getPluginDir() . 'admin/InitAdmin.php';
-			$admin = new InitAdmin($this->pluginName, $this->version);
+			$admin = new InitAdmin($this->pluginName, self::$version);
 			$admin->run();
 		}
 		require_once Infos::getPluginDir() . 'public/InitPublic.php';
-		$public = new InitPublic($this->pluginName, $this->version);
+		$public = new InitPublic($this->pluginName, self::$version);
 		$public->run();
 
 		ManageCron::registerHooks();
@@ -382,4 +382,37 @@ class Core
 		include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 		return is_plugin_active('demovox/demovox.php');
 	}
+
+	/**
+	 * @param string $src
+	 * @return string
+	 */
+	public static function prependPluginUri(string $src): string
+	{
+		return $src ? self::getPluginUri() . $src : '';
+	}
+
+	/**
+	 * Public uri to the plugin's base directory
+	 * @return string
+	 */
+	protected static function getPluginUri(): string
+	{
+		return plugin_dir_url(dirname(__FILE__));
+	}
+
+	public static function addScript($handle, string $src = '', array $deps = [], bool $in_footer = false, $ver = 'demovox'): void
+	{
+		$src = self::prependPluginUri($src);
+		$ver = $ver === 'demovox' ? self::$version : $ver;
+		wp_enqueue_script($handle, $src, $deps, $ver, $in_footer);
+	}
+
+	public static function addStyle($handle, string $src = '', array $deps = [], string $media = 'all', $ver = 'demovox'): void
+	{
+		$src = self::prependPluginUri($src);
+		$ver = $ver === 'demovox' ? self::$version : $ver;
+		wp_enqueue_style($handle, $src, $deps, $ver, $media);
+	}
+
 }

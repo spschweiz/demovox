@@ -148,7 +148,7 @@ class InitAdmin extends BaseController
 	 */
 	public function enqueueStyles()
 	{
-		wp_enqueue_style($this->getPluginName() . '-admin', plugin_dir_url(__FILE__) . 'css/demovox-admin.min.css', [], $this->getVersion(), 'all');
+		Core::addStyle($this->getPluginName() . '-admin', 'admin/css/demovox-admin.min.css');
 	}
 
 	/**
@@ -158,19 +158,15 @@ class InitAdmin extends BaseController
 	 */
 	public function enqueueScripts()
 	{
-		wp_enqueue_script(
+		Core::addScript(
 			$this->getPluginName() . '_admin',
-			plugin_dir_url(__FILE__) . 'js/demovox-admin.min.js',
-			['jquery'],
-			$this->getVersion(),
-			false
+			'admin/js/demovox-admin.min.js',
+			['jquery']
 		);
-		wp_enqueue_script(
+		Core::addScript(
 			$this->getPluginName() . '_pdf',
-			plugin_dir_url(__FILE__) . '../public/js/demovox-public-pdf.min.js',
-			['jquery'],
-			$this->getVersion(),
-			false
+			'public/js/demovox-public-pdf.min.js',
+			['jquery']
 		);
 
 		wp_enqueue_media();

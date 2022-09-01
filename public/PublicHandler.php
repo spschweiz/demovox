@@ -225,7 +225,7 @@ class PublicHandler extends BaseController
 	 */
 	public function enqueueAssets()
 	{
-		wp_enqueue_style($this->getPluginName(), plugin_dir_url(__FILE__) . 'css/demovox-public.min.css', [], $this->getVersion(), 'all');
+		Core::addStyle($this->getPluginName(), 'public/css/demovox-public.min.css');
 
 		$demovoxJsArr = [
 			'language'          => Infos::getUserLanguage(),
@@ -243,18 +243,15 @@ class PublicHandler extends BaseController
 			$demovoxJsArr['apiAddressGdeSelect'] = Settings::getCValue('api_address_gde_select');
 		}
 
-		wp_enqueue_script(
+		Core::addScript(
 			$this->getPluginName(),
-			plugin_dir_url(__FILE__) . 'js/demovox-public.min.js',
+			'public/js/demovox-public.min.js',
 			['jquery', 'jquery-ui-datepicker'],
-			$this->getVersion(),
-			false
 		);
-		wp_enqueue_script(
+		Core::addScript(
 			$this->getPluginName() . '_pdf',
-			plugin_dir_url(__FILE__) . 'js/demovox-public-pdf.min.js',
+			'public/js/demovox-public-pdf.min.js',
 			['jquery'],
-			$this->getVersion(),
 			true
 		);
 		wp_localize_script($this->getPluginName(), 'demovoxData', $demovoxJsArr);
