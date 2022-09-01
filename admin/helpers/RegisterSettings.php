@@ -76,7 +76,6 @@ class RegisterSettings
 				register_setting($page, $id);
 				break;
 			case'pos_rot':
-				$id = $id . Settings::GLUE_PART . Settings::PART_POS_X;
 				add_settings_field($id, $label, $callback, $page, $sectionId, $field);
 				register_setting($page, $id . Settings::GLUE_PART . Settings::PART_POS_X);
 				register_setting($page, $id . Settings::GLUE_PART . Settings::PART_POS_Y);
