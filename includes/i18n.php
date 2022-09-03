@@ -100,4 +100,22 @@ class i18n
 		);
 	}
 
+	/**
+	 * Returns the page id of the translation of the given page id
+	 *
+	 * Uses the WPML icl_object_id function to find the translation
+	 * of the given page. Returns the original if WPML (and no
+	 * compatible plugin) are present or if no translation exists.
+	 *
+	 * @param $pageId
+	 *
+	 * @return int|mixed|null
+	 */
+	public static function getTranslatedPageId($pageId) {
+		if ($pageId && function_exists( 'icl_object_id')) {
+			return icl_object_id($pageId, 'page', true);
+		}
+
+		return $pageId;
+	}
 }

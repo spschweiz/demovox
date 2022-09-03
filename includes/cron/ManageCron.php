@@ -138,11 +138,11 @@ class ManageCron
 	public static function activate()
 	{
 		$collectionCrons = ManageCron::getAllCrons();
-		foreach($collectionCrons as $cronNames) {
+		foreach($collectionCrons as $collectionId => $cronNames) {
 			foreach ($cronNames as $cron_id => $cron) {
 				$hook = $cron->getHookName();
 				if (!wp_next_scheduled($hook)) {
-					$args       = [$cron_id];
+					$args       = [$cron_id, $collectionId];
 					$recurrence = $cron->getRecurrence();
 					wp_schedule_event(time(), $recurrence, $hook, $args);
 				}
