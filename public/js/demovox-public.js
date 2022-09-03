@@ -314,7 +314,7 @@ $(() => {
 	function initCreatePdf() {
 		const $createPdf = $('#createPdf');
 
-		if (!$createPdf) {
+		if (!$createPdf.length) {
 			return;
 		}
 		if (typeof $createPdf.data('pdfJsUrl') == 'undefined') {

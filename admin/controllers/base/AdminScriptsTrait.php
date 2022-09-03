@@ -31,7 +31,7 @@ trait AdminScriptsTrait
 		echo "<script>
 	function placeMce(selector) {
 		if($(selector).length < 1) {
-			console.error('Place MCE: form element not found', selector);
+			console.log('Place MCE: form element not found', selector);
 		}
 		tinyMCE.init({
 			selector: selector,

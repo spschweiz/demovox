@@ -22,6 +22,12 @@ $(() => {
 		}
 		showContainer('loading');
 
+		if (pdfUrl === '') {
+			showContainer('error', '<strong>PDF download failed</strong> Please try again later or contact the site owner, who should check the JavaScript console');
+			console.error('PDF url is empty, please specify a signature sheet');
+			return;
+		}
+
 		const xhr = new XMLHttpRequest();
 		xhr.open('GET', pdfUrl, true);
 		xhr.responseType = 'arraybuffer';
