@@ -8,6 +8,7 @@ trait AdminScriptsTrait
 	{
 		// load WP internal datepicker
 		wp_enqueue_script('jquery-ui-datepicker');
+		wp_localize_jquery_ui_datepicker();
 		Core::addStyle($this->getPluginName(), 'public/css/demovox-public.min.css');
 	}
 
