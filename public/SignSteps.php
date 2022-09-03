@@ -403,7 +403,7 @@ class SignSteps
 		$permalink = Strings::getPageUrl($guid);
 		$pdfUrl    = Settings::getCValueByUserlang('signature_sheet');
 		$fields    = json_encode($fields);
-		$qrData    = $qrData ? json_encode($qrData) : null;
+		$qrData    = $qrData ? json_encode($qrData) : '""';
 
 		// Render view
 		include Infos::getPluginDir() . 'public/views/sign-3.php';
