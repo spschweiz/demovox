@@ -144,7 +144,6 @@ class PublicHandler extends BaseController
 	 */
 	protected function signStep(int $nr)
 	{
-		Loader::addAction('wp_enqueue_scripts', $this, 'enqueueAssets');
 		$pluginDir = Infos::getPluginDir();
 
 		if ($this->isRequireFallback($nr)) {
@@ -184,6 +183,7 @@ class PublicHandler extends BaseController
 				$sign->step3($row);
 				break;
 		}
+		$this->enqueueAssets();
 		$output = ob_get_clean();
 		return $output;
 	}
