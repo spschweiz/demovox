@@ -144,7 +144,7 @@ var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 			});
 		},
 		initAjaxButton: function ($container) {
-			$container.find('.ajaxButton').click(() => {
+			$container.find('.ajaxButton').click(function() {
 				var cont = $(this).data('container'),
 					ajaxUrl = $(this).data('ajax-url'),
 					confirmTxt = $(this).data('confirm'),
@@ -166,7 +166,7 @@ var fontSize, textColor = [0, 0, 0], fontFamily = 'Helvetica';
 				$.get(ajaxUrl)
 					.done(function (data) {
 						$ajaxContainer.html(data);
-						this.initAjaxButton($ajaxContainer);
+						demovoxAdminClass.initAjaxButton($ajaxContainer);
 					})
 					.fail(function () {
 						$ajaxContainer.html('Error');
