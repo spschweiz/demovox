@@ -33,6 +33,7 @@ $this->loadTinymce();
         foreach (i18n::getLangsEnabled() as $langId => $lang):
         ?>
         placeMce('#demovox_<?= $collectionId ?>_mail_confirm_body_<?= $langId ?>');
+        placeMce('#demovox_<?= $collectionId ?>_mail_remind_sheet_body_<?= $langId ?>');
         <?php
         endforeach;
         ?>
