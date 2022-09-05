@@ -63,6 +63,30 @@ msgstr "Seleziona ..."
 msgid "Birth date"
 msgstr "Compleanno"
 
+#: public/views/sign-2.php:46
+msgid "Day"
+msgstr "Jour"
+
+#: public/views/sign-2.php:51
+msgid "DD"
+msgstr "DD"
+
+#: public/views/sign-2.php:56
+msgid "Month"
+msgstr "Mois"
+
+#: public/views/sign-2.php:59
+msgid "MM"
+msgstr "MM"
+
+#: public/views/sign-2.php:64
+msgid "Year"
+msgstr "Année"
+
+#: public/views/sign-2.php:67
+msgid "YYYY"
+msgstr "YYYY"
+
 #: sign-2.php:36
 msgid "Swiss abroad"
 msgstr "Svizzere o Svizzeri all’estero"
