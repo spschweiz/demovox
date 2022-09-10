@@ -5,7 +5,7 @@ msgstr ""
 "POT-Creation-Date: 2019-02-21 11:16+0100\n"
 "PO-Revision-Date: 2019-02-21 11:16+0100\n"
 "Language-Team: SP Schweiz <info@spschweiz.ch>\n"
-"Language: fr_FR\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -58,6 +58,30 @@ msgstr "Pas de titre"
 #: sign-2.php:25
 msgid "Birth date"
 msgstr "Date de naissance"
+
+#: public/views/sign-2.php:46
+msgid "Day"
+msgstr "Jour"
+
+#: public/views/sign-2.php:51
+msgid "DD"
+msgstr "DD"
+
+#: public/views/sign-2.php:56
+msgid "Month"
+msgstr "Mois"
+
+#: public/views/sign-2.php:59
+msgid "MM"
+msgstr "MM"
+
+#: public/views/sign-2.php:64
+msgid "Year"
+msgstr "Année"
+
+#: public/views/sign-2.php:67
+msgid "YYYY"
+msgstr "YYYY"
 
 #: sign-2.php:36
 msgid "Swiss abroad"
