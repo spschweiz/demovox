@@ -229,7 +229,10 @@ class Core
 	public static function getOption($id)
 	{
 		$wpId = self::getWpId($id);
-		return get_option($wpId);
+		global $wpdb;
+                $query = $wpdb->get_results("SELECT * FROM $wpdb->options WHERE " . $wpdb->options . ".option_name = '$wpId'");
+                $val = $query[ 0 ]->option_value;
+                return $val;
 	}
 
 	/**
