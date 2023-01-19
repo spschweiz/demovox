@@ -133,6 +133,20 @@ class ManageCron
 	public static function registerHooks()
 	{
 		Loader::addAction(self::getHookName(), new self(), 'run', 10, 2);
+
+		// Include dependencies that aren't otherwise loaded if using WP_CLI
+		$pluginDir = Infos::getPluginDir();
+		require_once $pluginDir . 'includes/models/Db.php';
+		require_once $pluginDir . 'includes/models/DbCollections.php';
+
+		// Add the cron actions for the individual crons (per cron class and collection)
+		$collectionCrons = self::getAllCrons();
+		foreach($collectionCrons as $cronNames) {
+			foreach ( $cronNames as $cron ) {
+				$hook = $cron->getHookName();
+				Loader::addAction($hook, new self(), 'run', 10, 2);
+			}
+		}
 	}
 
 	public static function activate()
