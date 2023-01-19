@@ -14,7 +14,7 @@ namespace Demovox;
 	function createMailButton($langId, $language, $mailType = Mail::TYPE_CONFIRM)
 	{
 		$url = Strings::getAdminUrl(
-			'/admin-post.php?lang=' . $langId . '&mailType=' . $mailType,
+			'/admin-post.php?lang=' . $langId . '&mailType=' . $mailType . '&cln=' . Infos::getCollectionId(),
 			'demovox_mail_test'
 		);
 		?>
