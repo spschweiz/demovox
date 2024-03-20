@@ -101,7 +101,7 @@ msgstr "Strada"
 
 #: sign-2.php:44
 msgid "Street number"
-msgstr "Civico"
+msgstr "Numero civico"
 
 #: sign-2.php:50
 msgid "ZIP"
